@@ -6,10 +6,10 @@ FilesCacher = require './cache/filesCacher'
 
 
 exports.create = (configurationParams, stores, modelRpcConnection, filesSuffix, logger) ->
-	filesCacher = FilesCacher.create 'unexpected error', configurationParams, './cache/unexpectedError.json', filesSuffix, logger
+	filesCacher = FilesCacher.create 'unexpected error', configurationParams, 'front/roots/unexpectedError.json', filesSuffix, logger
 	return new UnexpectedErrorHandler configurationParams, stores, modelRpcConnection, filesCacher, filesSuffix, logger
 
 
 class UnexpectedErrorHandler extends RequestHandler
 	handleRequest: (request, response) =>
-		response.end 'Unexpected Error'
+		response.render 'roots/unexpectedError'

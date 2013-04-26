@@ -6,7 +6,7 @@ FilesCacher = require './cache/filesCacher'
 
 
 exports.create = (configurationParams, stores, modelRpcConnection, filesSuffix, logger) ->
-	filesCacher = FilesCacher.create 'installation wizard', configurationParams, './cache/installationWizard.json', filesSuffix, logger
+	filesCacher = FilesCacher.create 'installation wizard', configurationParams, 'front/roots/installationWizard.json', filesSuffix, logger
 	return new InstallationWizardHandler configurationParams, stores, modelRpcConnection, filesCacher, filesSuffix, logger
 
 
@@ -15,7 +15,7 @@ class InstallationWizardHandler extends RequestHandler
 		# just in case there's a lingering session
 		delete request.session.userId
 
-		response.render 'installationWizard', 
+		response.render 'roots/installationWizard', 
 			fileSuffix: @fileSuffix
 			csrfToken: request.session.csrfToken
 			cssFiles: @cssFilesString

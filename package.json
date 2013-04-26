@@ -22,7 +22,10 @@
   },
 
   "devDependencies": {
-    "grunt": "0.4.1"
+    "grunt": "0.4.1",
+    "grunt-contrib-uglify": "0.2.0",
+    "grunt-contrib-watch": "0.3.1",
+    "grunt-shell": "0.2.2"
   },
 
   "engines": {
@@ -31,6 +34,10 @@
   },
 
   "scripts": {
-    "test": "karma start front/test/karma.unit.conf.js --browsers PhantomJS --single-run"
-  }
+    "test": "grunt test"
+  },
+
+  "author": "Koality Team",
+
+  "private": true
 }

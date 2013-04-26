@@ -6,7 +6,7 @@ FilesCacher = require './cache/filesCacher'
 
 
 exports.create = (configurationParams, stores, modelRpcConnection, filesSuffix, logger) ->
-	filesCacher = FilesCacher.create 'index', configurationParams, './cache/index.json', filesSuffix, logger
+	filesCacher = FilesCacher.create 'index', configurationParams, 'front/roots/index.json', filesSuffix, logger
 	return new IndexHandler configurationParams, stores, modelRpcConnection, filesCacher, filesSuffix, logger
 
 
@@ -17,7 +17,7 @@ class IndexHandler extends RequestHandler
 				request.session.destroy()
 				response.end 'internal server error'
 			else 
-				response.render 'index', templateValues
+				response.render 'roots/index', templateValues
 
 
 	getTemplateValues: (session, callback) =>
