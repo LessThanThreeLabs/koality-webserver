@@ -29,7 +29,6 @@ module.exports = (grunt) ->
 
 			runServer:
 				command: [
-					'mkdir -p redis/logs',
 					'(redis-server redis/conf/sessionStoreRedis.conf &)',
 					'(redis-server redis/conf/createAccountRedis.conf &)',
 					'(redis-server redis/conf/createRepositoryRedis.conf &)',
@@ -38,7 +37,6 @@ module.exports = (grunt) ->
 
 			runServerProduction:
 				command: [
-					'mkdir -p redis/logs',
 					'(redis-server redis/conf/sessionStoreRedis.conf &)',
 					'(redis-server redis/conf/createAccountRedis.conf &)',
 					'(redis-server redis/conf/createRepositoryRedis.conf &)',
