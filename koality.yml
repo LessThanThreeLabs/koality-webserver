@@ -1,0 +1,19 @@
+--- #Koality: 0.1.5
+languages:
+  nodejs: 0.8.12
+setup:
+  - packages:
+    - system:
+      - fontconfig  # for phantomjs
+    - npm:
+      - iced-coffee-script
+      - karma
+      - npm install
+  - scripts:
+    - path: ci/scripts
+      script: ./install_phantomjs.sh
+test:
+  scripts:
+    - unit tests:
+        script:
+          - grunt test
