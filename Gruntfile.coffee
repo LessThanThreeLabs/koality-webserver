@@ -29,16 +29,16 @@ module.exports = (grunt) ->
 
 			runServer:
 				command: [
-					'mkdir -p logs/redis',
+					'mkdir -p redis/logs',
 					'(redis-server redis/conf/sessionStoreRedis.conf &)',
 					'(redis-server redis/conf/createAccountRedis.conf &)',
 					'(redis-server redis/conf/createRepositoryRedis.conf &)',
-					'node --harmony <%= backCompiledDirectory %>/index.js --httpsPort 10443',
+					'node --harmony <%= backCompiledDirectory %>/index.js --httpsPort 10443 --mode development',
 				].join ' && '
 
 			runServerProduction:
 				command: [
-					'mkdir -p logs/redis',
+					'mkdir -p redis/logs',
 					'(redis-server redis/conf/sessionStoreRedis.conf &)',
 					'(redis-server redis/conf/createAccountRedis.conf &)',
 					'(redis-server redis/conf/createRepositoryRedis.conf &)',
