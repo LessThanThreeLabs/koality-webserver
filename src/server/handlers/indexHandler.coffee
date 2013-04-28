@@ -6,7 +6,7 @@ FilesCacher = require './cache/filesCacher'
 
 
 exports.create = (configurationParams, stores, modelRpcConnection, filesSuffix, logger) ->
-	filesCacher = FilesCacher.create 'index', configurationParams, 'front/roots/index.json', filesSuffix, logger
+	filesCacher = FilesCacher.create 'index', configurationParams.staticFiles.rootDirectory, 'front/roots/index.json', filesSuffix, logger
 	return new IndexHandler configurationParams, stores, modelRpcConnection, filesCacher, filesSuffix, logger
 
 

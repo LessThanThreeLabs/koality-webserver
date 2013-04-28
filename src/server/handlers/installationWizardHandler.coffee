@@ -6,7 +6,7 @@ FilesCacher = require './cache/filesCacher'
 
 
 exports.create = (configurationParams, stores, modelRpcConnection, filesSuffix, logger) ->
-	filesCacher = FilesCacher.create 'installation wizard', configurationParams, 'front/roots/installationWizard.json', filesSuffix, logger
+	filesCacher = FilesCacher.create 'installation wizard', configurationParams.staticFiles.rootDirectory, 'front/roots/installationWizard.json', filesSuffix, logger
 	return new InstallationWizardHandler configurationParams, stores, modelRpcConnection, filesCacher, filesSuffix, logger
 
 

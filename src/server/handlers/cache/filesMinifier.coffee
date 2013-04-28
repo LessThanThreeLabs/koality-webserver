@@ -1,18 +1,13 @@
 fs = require 'fs'
 assert = require 'assert'
 crypto = require 'crypto'
-cleanCss = require 'clean-css'
 
 
-exports.create = (configurationParams) ->
-	return new FilesMinifier configurationParams
+exports.create = () ->
+	return new FilesMinifier()
 
 
 class FilesMinifier
-	constructor: (@configurationParams) ->
-		assert.ok @configurationParams?
-
-
 	replaceWithMinifiedFiles: (files, callback) =>
 		crypto.randomBytes 8, (error, buffer) =>
 			if error?

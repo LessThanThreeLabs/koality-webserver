@@ -6,7 +6,7 @@ FilesCacher = require './cache/filesCacher'
 
 
 exports.create = (configurationParams, stores, modelRpcConnection, filesSuffix, logger) ->
-	filesCacher = FilesCacher.create 'invalid permissions', configurationParams, 'front/roots/invalidPermissions.json', filesSuffix, logger
+	filesCacher = FilesCacher.create 'invalid permissions', configurationParams.staticFiles.rootDirectory, 'front/roots/invalidPermissions.json', filesSuffix, logger
 	return new InvalidPermissionsHandler configurationParams, stores, modelRpcConnection, filesCacher, filesSuffix, logger
 
 

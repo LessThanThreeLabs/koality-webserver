@@ -2,13 +2,15 @@ fs = require 'fs'
 assert = require 'assert'
 
 
-exports.create = (configurationParams, filesToLoadUri, filesSuffix) ->
-	return new FilesLoader configurationParams, filesToLoadUri, filesSuffix
+exports.create = (rootDirectory, filesToLoadUri, filesSuffix) ->
+	return new FilesLoader rootDirectory, filesToLoadUri, filesSuffix
 
 
 class FilesLoader
-	constructor: (@configurationParams, @filesToLoadUri, @filesSuffix) ->
-		assert.ok @configurationParams? and @filesToLoadUri? and @filesSuffix?
+	constructor: (@rootDirectory, @filesToLoadUri, @filesSuffix) ->
+		assert.ok @rootDirectory? and typeof @rootDirectory is 'string'
+		assert.ok @filesToLoadUri? and typeof @filesToLoadUri is 'string'
+		assert.ok @filesSuffix? and typeof @filesSuffix is 'string'
 
 
 	load: (callback) =>
@@ -56,7 +58,7 @@ class FilesLoader
 
 
 	_getFileLocation: (fileName) =>
-		return @configurationParams.staticFiles.rootDirectory + fileName
+		return @rootDirectory + fileName
 
 
 	_getFileNameWithSuffix: (fileName, fileType) =>

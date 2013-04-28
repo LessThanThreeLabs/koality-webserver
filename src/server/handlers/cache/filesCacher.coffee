@@ -6,18 +6,21 @@ FilesMinifier = require './filesMinifier'
 FilesCompressor = require './filesCompressor'
 
 
-exports.create = (name, configurationParams, filesToLoadUri, filesSuffix, logger) ->
-	filesLoader = FilesLoader.create configurationParams, filesToLoadUri, filesSuffix
-	filesMinifier = FilesMinifier.create configurationParams
-	filesCompressor = FilesCompressor.create configurationParams
-	return new FilesCacher name, configurationParams, filesLoader, filesMinifier, filesCompressor
+exports.create = (name, rootDirectory, filesToLoadUri, filesSuffix, logger) ->
+	filesLoader = FilesLoader.create rootDirectory, filesToLoadUri, filesSuffix
+	filesMinifier = FilesMinifier.create()
+	filesCompressor = FilesCompressor.create()
+	return new FilesCacher name, filesLoader, filesMinifier, filesCompressor
 
 
 class FilesCacher
 	_files: null
 
-	constructor: (@name, @configurationParams, @filesLoader, @filesMinifier, @filesCompressor) ->
-		assert.ok @name, @configurationParams? and @filesLoader? and @filesMinifier? and @filesCompressor?
+	constructor: (@name, @filesLoader, @filesMinifier, @filesCompressor) ->
+		assert.ok @name? and typeof @name is 'string'
+		assert.ok @filesLoader? and typeof @filesLoader is 'object'
+		assert.ok @filesMinifier? and typeof @filesMinifier is 'object'
+		assert.ok @filesCompressor? and typeof @filesCompressor is 'object'
 
 
 	loadFiles: (callback) =>

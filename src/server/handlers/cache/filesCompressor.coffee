@@ -2,15 +2,11 @@ zlib = require 'zlib'
 assert = require 'assert'
 
 
-exports.create = (configurationParams) ->
-	return new FilesCompressor configurationParams
+exports.create = () ->
+	return new FilesCompressor()
 
 
 class FilesCompressor
-	constructor: (@configurationParams) ->
-		assert.ok @configurationParams?
-
-
 	addCompressedFiles: (files, callback) =>
 		await
 			for fileType of files

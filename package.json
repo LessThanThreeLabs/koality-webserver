@@ -4,7 +4,6 @@
 
   "dependencies": {
     "amqp": "0.1.4",
-    "clean-css": "0.9.0",
     "colors": "0.6.0",
     "commander": "1.1.1",
     "connect-redis": "1.4.5",
@@ -17,8 +16,7 @@
     "koality-resource-connection": "git+ssh://git@github.com:LessThanThreeLabs/koality-resource-connection.git",
     "mailgun": "0.4.2",
     "msgpack": "0.1.8",
-    "redis": "0.8.2",
-    "uglify-js": "2.2.2"
+    "redis": "0.8.2"
   },
 
   "devDependencies": {
