@@ -15,7 +15,7 @@ files = [
   'js/libs/angular.js',
   'js/libs/angularMock.js',
   'js/src/**/*.js',
-  'test/js/unit/*.js'
+  'test/unit/*.coffee'
 ];
 
 
