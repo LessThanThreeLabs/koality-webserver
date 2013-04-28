@@ -1,5 +1,3 @@
-crypto = require 'crypto'
-
 
 module.exports = (grunt) ->
 
@@ -8,7 +6,10 @@ module.exports = (grunt) ->
 		backSourceDirectory: 'src'
 		backCompiledDirectory: 'libs'
 		backUglifiedDirectory: 'uglified'
-		frontCompiledDirectory: 'front/js/src'
+		frontSourceDirectory: 'front/src'
+		frontTestDirectory: 'front/test'
+		frontCoffeeCompiledDirectory: 'front/js/src'
+		frontLessCompiledDirectory: 'front/css/src'
 		frontUglifiedDirectory: 'front/uglified'
 		tarredPackageName: '<%= package.name %>-<%= package.version %>.tgz'
 		s3Prefix: 'cd855575be99a357'
@@ -20,10 +21,10 @@ module.exports = (grunt) ->
 				stderr: true
 				failOnError: true
 
-			compile:
+			compileCoffee:
 				command: [
 					'iced --compile --lint --output <%= backCompiledDirectory %>/ <%= backSourceDirectory %>/',
-					'front/compile.sh'
+					'iced --compile --lint --output <%= frontCoffeeCompiledDirectory %>/ <%= frontSourceDirectory %>/'
 				].join ' && '
 
 			runServer:
@@ -35,8 +36,21 @@ module.exports = (grunt) ->
 					'node --harmony <%= backCompiledDirectory %>/index.js --httpsPort 10443',
 				].join ' && '
 
+			runServerProduction:
+				command: [
+					'mkdir -p logs/redis',
+					'(redis-server redis/conf/sessionStoreRedis.conf &)',
+					'(redis-server redis/conf/createAccountRedis.conf &)',
+					'(redis-server redis/conf/createRepositoryRedis.conf &)',
+					'node --harmony <%= backCompiledDirectory %>/index.js --httpsPort 10443 --mode production',
+				].join ' && '
+
 			removeCompile:
-				command: 'rm -rf <%= backCompiledDirectory %>'
+				command: [
+					'rm -rf <%= backCompiledDirectory %>',
+					'rm -rf <%= frontCoffeeCompiledDirectory %>',
+					'rm -rf <%= frontLessCompiledDirectory %>'
+				].join ' && '
 
 			removeUglify:
 				command: [
@@ -48,8 +62,8 @@ module.exports = (grunt) ->
 				command: [
 					'rm -rf <%= backCompiledDirectory %>',
 					'mv <%= backUglifiedDirectory %> <%= backCompiledDirectory %>',
-					'rm -rf <%= frontCompiledDirectory %>',
-					'mv <%= frontUglifiedDirectory %> <%= frontCompiledDirectory %>'
+					'rm -rf <%= frontCoffeeCompiledDirectory %>',
+					'mv <%= frontUglifiedDirectory %> <%= frontCoffeeCompiledDirectory %>'
 					].join ' && '
 
 			pack:
@@ -77,29 +91,57 @@ module.exports = (grunt) ->
 			front:
 				files: [
 					expand: true
-					cwd: '<%= frontCompiledDirectory %>/'
+					cwd: '<%= frontCoffeeCompiledDirectory %>/'
 					src: ['**/*.js']
 					dest: '<%= frontUglifiedDirectory %>/'
 					ext: '.js'
 				]
 
+		less:
+			development:
+				files: [
+					expand: true
+					cwd: '<%= frontSourceDirectory %>/'
+					src: ['**/*.less']
+					dest: '<%= frontLessCompiledDirectory %>/'
+					ext: '.css'
+				]
+
+			production:
+				options:
+					yuicompress: true
+				files: [
+					expand: true
+					cwd: '<%= frontSourceDirectory %>/'
+					src: ['**/*.less']
+					dest: '<%= frontLessCompiledDirectory %>/'
+					ext: '.css'
+				]
+
 		watch:
 			compile:
-				files: '<%= backSourceDirectory %>/**/*.coffee'
+				files: ['<%= backSourceDirectory %>/**/*.coffee', '<%= frontSourceDirectory %>/**/*.coffee', '<%= frontSourceDirectory %>/**/*.less']
 				tasks: 'compile'
 
 			test:
-				files: ['<%= backSourceDirectory %>/**/*.coffee', '<%= testDirectory %>/**/*.spec.coffee']
+				files: ['<%= backSourceDirectory %>/**/*.coffee', '<%= frontSourceDirectory %>/**/*.coffee', '<%= frontSourceDirectory %>/**/*.less', '<%= frontTestDirectory %>/**/*.coffee']
 				tasks: 'test'
 
 	grunt.loadNpmTasks 'grunt-contrib-uglify'
+	grunt.loadNpmTasks 'grunt-contrib-less'
 	grunt.loadNpmTasks 'grunt-contrib-watch'
 	grunt.loadNpmTasks 'grunt-shell'
 
 	grunt.registerTask 'default', ['compile']
-	grunt.registerTask 'compile', ['shell:removeCompile', 'shell:compile']
+	grunt.registerTask 'compile', ['shell:removeCompile', 'shell:compileCoffee', 'less:development']
+	grunt.registerTask 'compile-production', ['shell:removeCompile', 'shell:compileCoffee', 'less:production']
+
 	grunt.registerTask 'run', ['compile', 'shell:runServer']
 	grunt.registerTask 'test', ['compile', 'shell:test']
+
 	grunt.registerTask 'make-ugly', ['shell:removeUglify', 'uglify']
-	grunt.registerTask 'production', ['compile', 'make-ugly', 'shell:replaceCompiledWithUglified']
+
+	grunt.registerTask 'production', ['compile-production', 'make-ugly', 'shell:replaceCompiledWithUglified']
+	grunt.registerTask 'run-production', ['production', 'shell:runServerProduction']
+
 	grunt.registerTask 'publish', ['production', 'shell:pack', 'shell:publish']

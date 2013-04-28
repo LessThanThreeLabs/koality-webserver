@@ -1,7 +1,6 @@
 fs = require 'fs'
 assert = require 'assert'
 crypto = require 'crypto'
-uglifyJs = require 'uglify-js'
 cleanCss = require 'clean-css'
 
 
@@ -26,7 +25,7 @@ class FilesMinifier
 
 
 	_replaceJs: (files) =>
-		minifiedJsCode = @_getMinifiedJs files.js
+		minifiedJsCode = @_concatenateFileContents files.js
 
 		minifiedJsFile =
 			plain: minifiedJsCode
@@ -36,29 +35,8 @@ class FilesMinifier
 		files.js["/js/#{@randomPrefix}_minified.js"] = minifiedJsFile
 
 
-	_getMinifiedJs: (jsFiles) =>
-		topLevelAst = null
-		for jsFileName, jsFile of jsFiles
-			topLevelAst = uglifyJs.parse jsFile.plain,
-				filename: jsFile.name
-				toplevel: topLevelAst
-
-		topLevelAst.figure_out_scope()
-
-		compressor = uglifyJs.Compressor warnings: false
-		compressedAst = topLevelAst.transform compressor
-
-		compressedAst.figure_out_scope()
-		compressedAst.compute_char_frequency()
-		compressedAst.mangle_names()
-
-		return compressedAst.print_to_string
-			 comments: (node, commentToken) =>
-			 	return commentToken.type is 'comment2'
-
-
 	_replaceCss: (files) =>
-		minifiedCssCode = @_getMinifiedCss files.css
+		minifiedCssCode = @_concatenateFileContents files.css
 
 		minifiedCssFile =
 			plain: minifiedCssCode
@@ -68,10 +46,9 @@ class FilesMinifier
 		files.css["/css/#{@randomPrefix}_minified.css"] = minifiedCssFile
 
 
-	_getMinifiedCss: (cssFiles) =>
-		minifiedCssToCombine = []
-		for cssFileName, cssFile of cssFiles
-			minifiedCss = cleanCss.process cssFile.plain, removeEmpty: true
-			minifiedCssToCombine.push minifiedCss
+	_concatenateFileContents: (files) =>
+		textToConcatenate = []
+		for fileName, file of files
+			textToConcatenate.push file.plain
 
-		return minifiedCssToCombine.join ' '
+		return textToConcatenate.join '\n'
