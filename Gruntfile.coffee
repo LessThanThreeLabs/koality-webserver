@@ -5,10 +5,11 @@ module.exports = (grunt) ->
 
 	grunt.initConfig
 		package: grunt.file.readJSON('package.json');
-		sourceDirectory: 'src'
-		testDirectory: 'test'
-		compiledDirectory: 'libs'
-		uglifiedDirectory: 'uglified'
+		backSourceDirectory: 'src'
+		backCompiledDirectory: 'libs'
+		backUglifiedDirectory: 'uglified'
+		frontCompiledDirectory: 'front/js/src'
+		frontUglifiedDirectory: 'front/uglified'
 		tarredPackageName: '<%= package.name %>-<%= package.version %>.tgz'
 		s3Prefix: 'cd855575be99a357'
 		s3TarredPackageLocation: 's3://koality_code/libraries/<%= s3Prefix %>-<%= tarredPackageName %>'
@@ -20,7 +21,10 @@ module.exports = (grunt) ->
 				failOnError: true
 
 			compile:
-				command: 'iced --compile --lint --output <%= compiledDirectory %>/ <%= sourceDirectory %>/'
+				command: [
+					'iced --compile --lint --output <%= backCompiledDirectory %>/ <%= backSourceDirectory %>/',
+					'front/compile.sh'
+				].join ' && '
 
 			runServer:
 				command: [
@@ -28,19 +32,24 @@ module.exports = (grunt) ->
 					'(redis-server redis/conf/sessionStoreRedis.conf &)',
 					'(redis-server redis/conf/createAccountRedis.conf &)',
 					'(redis-server redis/conf/createRepositoryRedis.conf &)',
-					'node --harmony <%= compiledDirectory %>/index.js --httpsPort 10443',
+					'node --harmony <%= backCompiledDirectory %>/index.js --httpsPort 10443',
 				].join ' && '
 
 			removeCompile:
-				command: 'rm -rf <%= compiledDirectory %>'
+				command: 'rm -rf <%= backCompiledDirectory %>'
 
 			removeUglify:
-				command: 'rm -rf <%= uglifiedDirectory %>'
+				command: [
+					'rm -rf <%= backUglifiedDirectory %>',
+					'rm -rf <%= frontUglifiedDirectory %>'
+				].join ' && '
 
 			replaceCompiledWithUglified:
 				command: [
-					'rm -rf <%= compiledDirectory %>'
-					'mv <%= uglifiedDirectory %> <%= compiledDirectory %>'
+					'rm -rf <%= backCompiledDirectory %>',
+					'mv <%= backUglifiedDirectory %> <%= backCompiledDirectory %>',
+					'rm -rf <%= frontCompiledDirectory %>',
+					'mv <%= frontUglifiedDirectory %> <%= frontCompiledDirectory %>'
 					].join ' && '
 
 			pack:
@@ -56,22 +65,31 @@ module.exports = (grunt) ->
 			options:
 				preserveComments: 'some'
 
-			libs:
+			back:
 				files: [
 					expand: true
-					cwd: '<%= compiledDirectory %>/'
+					cwd: '<%= backCompiledDirectory %>/'
 					src: ['**/*.js']
-					dest: '<%= uglifiedDirectory %>/'
+					dest: '<%= backUglifiedDirectory %>/'
+					ext: '.js'
+				]
+
+			front:
+				files: [
+					expand: true
+					cwd: '<%= frontCompiledDirectory %>/'
+					src: ['**/*.js']
+					dest: '<%= frontUglifiedDirectory %>/'
 					ext: '.js'
 				]
 
 		watch:
 			compile:
-				files: '<%= sourceDirectory %>/**/*.coffee'
+				files: '<%= backSourceDirectory %>/**/*.coffee'
 				tasks: 'compile'
 
 			test:
-				files: ['<%= sourceDirectory %>/**/*.coffee', '<%= testDirectory %>/**/*.spec.coffee']
+				files: ['<%= backSourceDirectory %>/**/*.coffee', '<%= testDirectory %>/**/*.spec.coffee']
 				tasks: 'test'
 
 	grunt.loadNpmTasks 'grunt-contrib-uglify'
