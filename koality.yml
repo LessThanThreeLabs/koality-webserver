@@ -17,4 +17,4 @@ test:
   scripts:
     - unit tests:
         script:
-          - grunt test
+          - npm test
