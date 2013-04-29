@@ -1,8 +1,8 @@
 fs = require 'fs'
 assert = require 'assert'
 
+FilesCacher = require 'koality-files-cacher'
 RequestHandler = require './requestHandler'
-FilesCacher = require './cache/filesCacher'
 
 
 exports.create = (configurationParams, stores, modelRpcConnection, filesSuffix, logger) ->

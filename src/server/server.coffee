@@ -1,5 +1,6 @@
 fs = require 'fs'
 assert = require 'assert'
+colors = require 'colors'
 https = require 'https'
 express = require 'express'
 csrf = require './csrf'

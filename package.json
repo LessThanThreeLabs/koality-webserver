@@ -11,6 +11,7 @@
     "ejs": "0.8.3",
     "express":  "3.0.5",
     "iced-coffee-script": "1.4.0a",
+    "koality-files-cacher": "git+ssh://git@github.com:LessThanThreeLabs/koality-files-cacher.git",
     "koality-logger": "git+ssh://git@github.com:LessThanThreeLabs/koality-logger.git",
     "koality-model-connection": "git+ssh://git@github.com:LessThanThreeLabs/koality-model-connection.git",
     "koality-resource-connection": "git+ssh://git@github.com:LessThanThreeLabs/koality-resource-connection.git",
