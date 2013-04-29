@@ -11,7 +11,7 @@ setup:
       - karma
       - npm install
   - scripts:
-    - path: ci/scripts
+    - path: scripts
       script: ./install_phantomjs.sh
 test:
   scripts:
