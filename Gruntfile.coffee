@@ -119,11 +119,11 @@ module.exports = (grunt) ->
 		watch:
 			compile:
 				files: ['<%= backSourceDirectory %>/**/*.coffee', '<%= frontSourceDirectory %>/**/*.coffee', '<%= frontSourceDirectory %>/**/*.less']
-				tasks: 'compile'
+				tasks: ['compile']
 
 			test:
 				files: ['<%= backSourceDirectory %>/**/*.coffee', '<%= frontSourceDirectory %>/**/*.coffee', '<%= frontSourceDirectory %>/**/*.less', '<%= frontTestDirectory %>/**/*.coffee']
-				tasks: 'test'
+				tasks: ['compile', 'test']
 
 	grunt.loadNpmTasks 'grunt-contrib-uglify'
 	grunt.loadNpmTasks 'grunt-contrib-less'
@@ -134,12 +134,11 @@ module.exports = (grunt) ->
 	grunt.registerTask 'compile', ['shell:removeCompile', 'shell:compileCoffee', 'less:development']
 	grunt.registerTask 'compile-production', ['shell:removeCompile', 'shell:compileCoffee', 'less:production']
 
-	grunt.registerTask 'run', ['compile', 'shell:runServer']
-	grunt.registerTask 'test', ['compile', 'shell:test']
+	grunt.registerTask 'run', ['shell:runServer']
+	grunt.registerTask 'run-production', ['shell:runServerProduction']
+
+	grunt.registerTask 'test', ['shell:test']
 
 	grunt.registerTask 'make-ugly', ['shell:removeUglify', 'uglify']
-
 	grunt.registerTask 'production', ['compile-production', 'make-ugly', 'shell:replaceCompiledWithUglified']
-	grunt.registerTask 'run-production', ['production', 'shell:runServerProduction']
-
 	grunt.registerTask 'publish', ['production', 'shell:pack', 'shell:publish']

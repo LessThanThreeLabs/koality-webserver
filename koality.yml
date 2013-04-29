@@ -13,6 +13,9 @@ setup:
   - scripts:
     - path: scripts
       script: ./install_phantomjs.sh
+compile:
+  scripts:
+    - grunt compile
 test:
   scripts:
     - unit tests:
