@@ -8,14 +8,6 @@ angular.module('koalitySetup', ['ngSanitize', 'koality.service', 'koality.direct
 				controller: Wizard
 				reloadOnSearch: false
 			).
-			when('/unexpectedError',
-				templateUrl: "/html/unexpectedError#{fileSuffix}.html"
-				controller: UnexpectedError
-			).
-			when('/invalidPermissions',
-				templateUrl: "/html/invalidPermissions#{fileSuffix}.html"
-				controller: InvalidPermissions
-			).
 			otherwise(
 				redirectTo: '/wizard'
 			)

@@ -276,6 +276,15 @@ window.RepositoryStageDetails = ['$scope', '$location', 'rpc', 'events', ($scope
 	$scope.$on '$routeUpdate', updateUrl
 	updateUrl()
 
+	retrieveCurrentChangeExportUris = () ->
+		$scope.exportUris = []
+		return if not $scope.currentChangeId? or $scope.currentStageId?
+
+		rpc.makeRequest 'changes', 'read', 'getChangeExportUris', id: $scope.currentChangeId, (error, uris) ->
+			console.log uris
+			$scope.$apply () ->
+				$scope.exportUris = uris
+
 	retrieveLines = () ->
 		$scope.lines = []
 		return if not $scope.currentStageId?
@@ -304,6 +313,9 @@ window.RepositoryStageDetails = ['$scope', '$location', 'rpc', 'events', ($scope
 		if $scope.currentStageId?
 			addedLineEvents = events.listen('buildConsoles', 'new output', $scope.currentStageId).setCallback(handleLinesAdded).subscribe()
 	$scope.$on '$destroy', () -> addedLineEvents.unsubscribe() if addedLineEvents?
+
+	$scope.$watch 'currentChangeId', (newValue, oldValue) ->
+		retrieveCurrentChangeExportUris()
 
 	$scope.$watch 'currentStageId', (newValue, oldValue) ->
 		retrieveLines()

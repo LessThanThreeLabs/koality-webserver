@@ -126,7 +126,7 @@ class Server
 		@_configure expressServer
 
 		@modelConnection.rpcConnection.systemSettings.read.is_deployment_initialized (error, initialized) =>
-			if error? @logger.error error
+			if error? then @logger.error error
 			else
 				if initialized then addProjectBindings()
 				else addInstallationWizardBindings()
