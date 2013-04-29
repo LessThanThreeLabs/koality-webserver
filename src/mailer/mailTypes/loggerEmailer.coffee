@@ -9,8 +9,6 @@ exports.create = (configurationParams, emailSender, domainRetriever) ->
 
 class LoggerEmailer extends Emailer
 	send: (body, callback) =>
-		console.log body
-		
 		@getDomain (error, domain) =>
 			if error? then callback error
 			else

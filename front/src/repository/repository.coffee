@@ -278,10 +278,9 @@ window.RepositoryStageDetails = ['$scope', '$location', 'rpc', 'events', ($scope
 
 	retrieveCurrentChangeExportUris = () ->
 		$scope.exportUris = []
-		return if not $scope.currentChangeId? or $scope.currentStageId?
+		return if not $scope.currentChangeId?
 
 		rpc.makeRequest 'changes', 'read', 'getChangeExportUris', id: $scope.currentChangeId, (error, uris) ->
-			console.log uris
 			$scope.$apply () ->
 				$scope.exportUris = uris
 
@@ -296,6 +295,10 @@ window.RepositoryStageDetails = ['$scope', '$location', 'rpc', 'events', ($scope
 				for lineNumber, lineText of lines
 					addLine lineNumber, lineText
 
+	handleExportUrisAdded = (data) -> $scope.$apply () ->
+		$scope.exportUris ?= []
+		$scope.exportUris = $scope.exportUris.concat data.uris
+
 	addLine = (lineNumber, lineText) ->
 		$scope.lines[lineNumber-1] = lineText
 
@@ -303,6 +306,16 @@ window.RepositoryStageDetails = ['$scope', '$location', 'rpc', 'events', ($scope
 		$scope.lines ?= []
 		for lineNumber, lineText of data
 			addLine lineNumber, lineText
+
+	addedExportUrisEvents = null
+	updateExportUrisAddedListener = () ->
+		if addedExportUrisEvents?
+			addedExportUrisEvents.unsubscribe()
+			addedExportUrisEvents = null
+
+		if $scope.currentChangeId?
+			addedExportUrisEvents = events.listen('changes', 'export uris added', $scope.currentChangeId).setCallback(handleExportUrisAdded).subscribe()
+	$scope.$on '$destroy', () -> addedExportUrisEvents.unsubscribe() if addedExportUrisEvents?
 
 	addedLineEvents = null
 	updateAddedLineListener = () ->
@@ -315,9 +328,10 @@ window.RepositoryStageDetails = ['$scope', '$location', 'rpc', 'events', ($scope
 	$scope.$on '$destroy', () -> addedLineEvents.unsubscribe() if addedLineEvents?
 
 	$scope.$watch 'currentChangeId', (newValue, oldValue) ->
+		updateExportUrisAddedListener()
 		retrieveCurrentChangeExportUris()
 
 	$scope.$watch 'currentStageId', (newValue, oldValue) ->
-		retrieveLines()
 		updateAddedLineListener()
+		retrieveLines()
 ]

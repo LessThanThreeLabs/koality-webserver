@@ -60,11 +60,10 @@
 						<styled-form-field label="Branch">{{currentChangeInformation.target}}</styled-form-field>
 						<styled-form-field label="Head sha">{{currentChangeInformation.headCommit.sha}}</styled-form-field>
 						<styled-form-field label="Head commit"><span ng-bind-html="currentChangeInformation.headCommit.message | newLine"></span></styled-form-field>
+						<styled-form-field label="Exported files" hide="{{exportUris.length == 0}}">
+							<div ng-repeat="uri in exportUris"><a href="{{uri}}" target="_blank">{{uri}}</a></div>
+						</styled-form-field>
 					</styled-form>
-
-					<div id="repositoryStageDetailsSummaryUris">
-						<div class="repositoryChangeUri" ng-repeat="uri in exportUris">{{uri}}</div>
-					</div>
 				</div>
 
 				<div id="repositoryStageDetailsOutput" ng-show="currentChangeId != null && currentStageId != null">
