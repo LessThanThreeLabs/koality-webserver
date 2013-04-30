@@ -162,7 +162,7 @@ window.AdminRepositories = ['$scope', '$location', 'initialState', 'rpc', 'event
 ]
 
 
-window.AdminAws = ['$scope', 'rpc', 'events', ($scope, rpc, events) ->
+window.AdminAws = ['$scope', 'rpc', ($scope, rpc) ->
 	getAwsKeys = () ->
 		rpc.makeRequest 'systemSettings', 'read', 'getAwsKeys', null, (error, awsKeys) ->
 			$scope.$apply () ->
@@ -192,6 +192,22 @@ window.AdminAws = ['$scope', 'rpc', 'events', ($scope, rpc, events) ->
 ]
 
 
+window.AdminS3 = ['$scope', 'rpc', ($scope, rpc) ->
+	getS3BucketName = () ->
+		rpc.makeRequest 'systemSettings', 'read', 'getS3BucketName', null, (error, bucketName) ->
+			$scope.$apply () -> $scope.s3.bucketName = bucketName
+
+	$scope.s3 = {}
+	getS3BucketName()
+
+	$scope.submit = () ->
+		rpc.makeRequest 'systemSettings', 'update', 'setS3BucketName', bucketName: $scope.s3.bucketName, (error) ->
+			$scope.$apply () ->
+				$scope.showSuccess = true if not error?
+
+	$scope.$watch 's3', (() -> $scope.showSuccess = false), true
+]
+
 window.AdminApi = ['$scope', 'rpc', ($scope, rpc) ->
 	getApiKey = () ->
 		rpc.makeRequest 'systemSettings', 'read', 'getAdminApiKey', null, (error, apiKey) ->
@@ -208,7 +224,7 @@ window.AdminApi = ['$scope', 'rpc', ($scope, rpc) ->
 ]
 
 
-window.AdminUpgrade = ['$scope', 'rpc', 'events', ($scope, rpc, events) ->
+window.AdminUpgrade = ['$scope', 'rpc', ($scope, rpc) ->
 	$scope.performUpgrade = () ->
 		console.log 'need to perform upgrade here'
 ]

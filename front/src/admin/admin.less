@@ -12,7 +12,7 @@
 		width: @menuWidth;
 	}
 
-	#adminWebsite, #adminUsers, #adminRepositories, #adminAws, #adminApi, #adminUpgrade {
+	#adminWebsite, #adminUsers, #adminRepositories, #adminAws, #adminApi, #adminS3, #adminUpgrade {
 		position: absolute;
 		top: 0px;
 		left: @menuWidth + @panelSpacing;
@@ -263,6 +263,19 @@
 			margin-left: 30px;
 
 			#adminAwsSubmitButton {
+				float: right;
+				margin-right: 30px;
+			}
+		}
+	}
+
+	#adminS3 {
+
+		#adminS3Content {
+			margin-top: 30px;
+			margin-left: 30px;
+
+			#adminS3SubmitButton {
 				float: right;
 				margin-right: 30px;
 			}
