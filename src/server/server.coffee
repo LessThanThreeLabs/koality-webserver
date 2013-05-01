@@ -7,7 +7,7 @@ csrf = require './csrf'
 gzip = require './gzip'
 
 ResourceConnection = require 'koality-resource-connection'
-StaticServer = require './static/staticServer'
+StaticServer = require 'koality-static-server'
 
 SessionStore = require './stores/sessionStore'
 CreateAccountStore = require './stores/createAccountStore'
