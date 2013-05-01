@@ -48,8 +48,14 @@ exports.create = (configurationParams, modelConnection, mailer, logger) ->
 
 class Server
 	constructor: (@configurationParams, @httpsOptions, @modelConnection, @resourceConnection, @stores, @handlers, @staticServer, @logger) ->
-		assert.ok @configurationParams? and @httpsOptions? and @modelConnection? and
-			@resourceConnection? and @stores? and @handlers? and @staticServer? and @logger?
+		assert.ok @configurationParams?
+		assert.ok @httpsOptions?
+		assert.ok @modelConnection?
+		assert.ok @resourceConnection?
+		assert.ok @stores?
+		assert.ok @handlers?
+		assert.ok @staticServer?
+		assert.ok @logger?
 
 
 	initialize: (callback) =>
