@@ -28,7 +28,8 @@ exports.create = (configurationParams, modelConnection, mailer, logger) ->
 	cookieName = configurationParams.session.cookie.name
 	transports = configurationParams.socket.transports
 	resourceConnection = ResourceConnection.create configurationParams.resources, modelConnection, stores, cookieName, transports, mailer, logger
-	staticServer = StaticServer.create configurationParams
+	
+	staticServer = StaticServer.create()
 
 	httpsOptions =
 		key: fs.readFileSync configurationParams.https.security.key
