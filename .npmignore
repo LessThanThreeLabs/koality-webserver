@@ -1,0 +1,4 @@
+Gruntfile.coffee
+node_modules/
+src/
+test/
