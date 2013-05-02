@@ -20,7 +20,7 @@ startEverything = () ->
 
 	environment.setEnvironmentMode configurationParams.mode
 
-	domainRetriever = getDomain: (callback) -> callback ''
+	domainRetriever = getDomain: (callback) -> callback 'not connected to model server'
 
 	mailer = Mailer.create configurationParams.mailer, domainRetriever
 
