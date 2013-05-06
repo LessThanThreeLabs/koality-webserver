@@ -168,7 +168,7 @@ class Server
 		expressServer.use gzip()
 
 		expressServer.set 'view engine', 'ejs'
-		expressServer.set 'views', @configurationParams.staticFiles.rootDirectory
+		expressServer.set 'views', @configurationParams.staticFiles.rootDirectory + '/roots'
 		expressServer.locals.layout = false
 
 

@@ -6,10 +6,11 @@ RequestHandler = require './requestHandler'
 
 
 exports.create = (configurationParams, stores, modelRpcConnection, fileSuffix, logger) ->
-	filesCacher = FilesCacher.create 'unexpected error', configurationParams.staticFiles.rootDirectory, 'front/roots/unexpectedError.json', fileSuffix, logger
+	filesCacher = FilesCacher.create 'unexpected error', configurationParams.staticFiles.rootDirectory, 
+		configurationParams.staticFiles.rootDirectory + '/roots/unexpectedError.json', fileSuffix, logger
 	return new UnexpectedErrorHandler configurationParams, stores, modelRpcConnection, filesCacher, fileSuffix, logger
 
 
 class UnexpectedErrorHandler extends RequestHandler
 	handleRequest: (request, response) =>
-		response.render 'roots/unexpectedError'
+		response.render 'unexpectedError'
