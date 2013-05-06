@@ -16,7 +16,7 @@ startEverything = () ->
 	commandLineParser = CommandLineParser.create()
 
 	configurationParams = getConfiguration commandLineParser.getConfigFile(),
-		commandLineParser.getMode(), commandLineParser.getHttpsPort()
+		commandLineParser.getMode(), commandLineParser.getHttpPort()
 
 	environment.setEnvironmentMode configurationParams.mode
 
@@ -47,10 +47,10 @@ startEverything = () ->
 				else server.start()
 
 
-getConfiguration = (configFileLocation = './config.json', mode, httpsPort) ->
+getConfiguration = (configFileLocation = './config.json', mode, httpPort) ->
 	config = JSON.parse(fs.readFileSync configFileLocation, 'ascii')
 	if mode? then config.mode = mode
-	if httpsPort? then config.server.https.port = httpsPort
+	if httpPort? then config.server.http.port = httpPort
 	return Object.freeze config
 
 

@@ -31,7 +31,7 @@ module.exports = (grunt) ->
 					'(redis-server redis/conf/sessionStoreRedis.conf &)',
 					'(redis-server redis/conf/createAccountRedis.conf &)',
 					'(redis-server redis/conf/createRepositoryRedis.conf &)',
-					'node --harmony <%= backCompiledDirectory %>/index.js --httpsPort 10443 --mode development',
+					'node --harmony <%= backCompiledDirectory %>/index.js --httpPort 1080 --mode development',
 				].join ' && '
 
 			runServerProduction:
@@ -39,7 +39,7 @@ module.exports = (grunt) ->
 					'(redis-server redis/conf/sessionStoreRedis.conf &)',
 					'(redis-server redis/conf/createAccountRedis.conf &)',
 					'(redis-server redis/conf/createRepositoryRedis.conf &)',
-					'node --harmony <%= backCompiledDirectory %>/index.js --httpsPort 10443 --mode production',
+					'node --harmony <%= backCompiledDirectory %>/index.js --httpPort 1080 --mode production',
 				].join ' && '
 
 			removeCompile:

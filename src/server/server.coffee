@@ -1,7 +1,7 @@
 fs = require 'fs'
 assert = require 'assert'
 colors = require 'colors'
-https = require 'https'
+http = require 'http'
 express = require 'express'
 csrf = require './csrf'
 gzip = require './gzip'
@@ -33,11 +33,6 @@ exports.create = (configurationParams, modelConnection, mailer, logger) ->
 	staticServer = StaticServer.create()
 	apiServer = ApiServer.create modelConnection, logger
 
-	httpsOptions =
-		key: fs.readFileSync configurationParams.https.security.key
-		cert: fs.readFileSync configurationParams.https.security.certificate
-		ca: fs.readFileSync configurationParams.https.security.certrequest
-
 	filesSuffix = '_' + (new Date()).getTime().toString 36
 	handlers =
 		indexHandler: IndexHandler.create configurationParams, stores, modelConnection.rpcConnection, filesSuffix, logger
@@ -45,13 +40,12 @@ exports.create = (configurationParams, modelConnection, mailer, logger) ->
 		unexpectedErrorHandler: UnexpectedErrorHandler.create configurationParams, stores, modelConnection.rpcConnection, filesSuffix, logger
 		invalidPermissionsHandler: InvalidPermissionsHandler.create configurationParams, stores, modelConnection.rpcConnection, filesSuffix, logger
 
-	return new Server configurationParams, httpsOptions, modelConnection, resourceConnection, stores, handlers, staticServer, apiServer, logger
+	return new Server configurationParams, modelConnection, resourceConnection, stores, handlers, staticServer, apiServer, logger
 
 
 class Server
-	constructor: (@configurationParams, @httpsOptions, @modelConnection, @resourceConnection, @stores, @handlers, @staticServer, @apiServer, @logger) ->
+	constructor: (@configurationParams, @modelConnection, @resourceConnection, @stores, @handlers, @staticServer, @apiServer, @logger) ->
 		assert.ok @configurationParams?
-		assert.ok @httpsOptions?
 		assert.ok @modelConnection?
 		assert.ok @resourceConnection?
 		assert.ok @stores?
@@ -141,16 +135,19 @@ class Server
 				if initialized then addProjectBindings()
 				else addInstallationWizardBindings()
 
-				server = https.createServer @httpsOptions, expressServer
-				server.listen @configurationParams.https.port
+				server = http.createServer expressServer
+				server.listen @configurationParams.http.port
 
 				@resourceConnection.start server
 
-				@logger.info 'server started'
-				console.log "SERVER STARTED on port #{@configurationParams.https.port}".bold.magenta
+				@logger.info 'server started on ' + @configurationParams.http.port
+				console.log "SERVER STARTED on port #{@configurationParams.http.port}".bold.magenta
 
 
 	_configure: (expressServer) =>
+		if process.env.NODE_ENV is 'production'
+			console.log 'WARNING:'.bold.yellow + ' assuming webserver is behind a ssl terminator'.bold.cyan
+
 		# ORDER IS IMPORTANT HERE!!!!
 		expressServer.use express.favicon 'front/favicon.ico'
 		expressServer.use express.cookieParser()
@@ -162,10 +159,12 @@ class Server
 	    	cookie:
 	    		path: '/'
 	    		httpOnly: true
-	    		secure: true
+	    		secure: true if process.env.NODE_ENV is 'production'
 	    	store: @stores.sessionStore
 		expressServer.use csrf()
 		expressServer.use gzip()
+
+		expressServer.enable 'trust proxy' if process.env.NODE_ENV is 'production'
 
 		expressServer.set 'view engine', 'ejs'
 		expressServer.set 'views', @configurationParams.staticFiles.rootDirectory + '/roots'

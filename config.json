@@ -2,14 +2,8 @@
 	"mode": "development",
 
 	"server": {
-		"https": {
-			"port": 443,
-
-			"security": {
-				"key": "keys/privatekey.pem",
-				"certificate": "keys/certificate.pem",
-				"certrequest": "keys/certrequest.csr"
-			}
+		"http": {
+			"port": 1080
 		},
 
 		"staticFiles": {
@@ -20,7 +14,7 @@
 			"secret": "e0140cbb6dee1e7ceea9ca2219081c95b8e14a14",
 
 			"cookie": {
-				"name": "session.id"
+				"name": "koality.session.id"
 			},
 
 			"rememberMeDuration": 2592000000

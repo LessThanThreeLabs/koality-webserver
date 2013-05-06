@@ -12,7 +12,7 @@ class CommandLineParser
 	initialize: () =>
 		commander.version('0.1.0')
 			.option('--mode <development/production>', 'The mode to use')
-			.option('--httpsPort <n>', 'The https port to use', parseInt)
+			.option('--httpPort <n>', 'The http port to use', parseInt)
 			.option('--configFile <file>', 'The configuration file to use')
 			.parse(process.argv)
 
@@ -21,8 +21,8 @@ class CommandLineParser
 		return commander.mode
 
 
-	getHttpsPort: () =>
-		return commander.httpsPort
+	getHttpPort: () =>
+		return commander.httpPort
 
 
 	getConfigFile: () =>
