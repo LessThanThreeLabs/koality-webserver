@@ -5,9 +5,9 @@ FilesCacher = require 'koality-files-cacher'
 RequestHandler = require './requestHandler'
 
 
-exports.create = (configurationParams, stores, modelRpcConnection, filesSuffix, logger) ->
-	filesCacher = FilesCacher.create 'installation wizard', configurationParams.staticFiles.rootDirectory, 'front/roots/installationWizard.json', filesSuffix, logger
-	return new InstallationWizardHandler configurationParams, stores, modelRpcConnection, filesCacher, filesSuffix, logger
+exports.create = (configurationParams, stores, modelRpcConnection, fileSuffix, logger) ->
+	filesCacher = FilesCacher.create 'installation wizard', configurationParams.staticFiles.rootDirectory, 'front/roots/installationWizard.json', fileSuffix, logger
+	return new InstallationWizardHandler configurationParams, stores, modelRpcConnection, filesCacher, fileSuffix, logger
 
 
 class InstallationWizardHandler extends RequestHandler

@@ -8,6 +8,7 @@ gzip = require './gzip'
 
 ResourceConnection = require 'koality-resource-connection'
 StaticServer = require 'koality-static-server'
+ApiServer = require 'koality-api-server'
 
 SessionStore = require './stores/sessionStore'
 CreateAccountStore = require './stores/createAccountStore'
@@ -30,6 +31,7 @@ exports.create = (configurationParams, modelConnection, mailer, logger) ->
 	resourceConnection = ResourceConnection.create configurationParams.resources, modelConnection, stores, cookieName, transports, mailer, logger
 	
 	staticServer = StaticServer.create()
+	apiServer = ApiServer.create modelConnection, logger
 
 	httpsOptions =
 		key: fs.readFileSync configurationParams.https.security.key
@@ -43,11 +45,11 @@ exports.create = (configurationParams, modelConnection, mailer, logger) ->
 		unexpectedErrorHandler: UnexpectedErrorHandler.create configurationParams, stores, modelConnection.rpcConnection, filesSuffix, logger
 		invalidPermissionsHandler: InvalidPermissionsHandler.create configurationParams, stores, modelConnection.rpcConnection, filesSuffix, logger
 
-	return new Server configurationParams, httpsOptions, modelConnection, resourceConnection, stores, handlers, staticServer, logger
+	return new Server configurationParams, httpsOptions, modelConnection, resourceConnection, stores, handlers, staticServer, apiServer, logger
 
 
 class Server
-	constructor: (@configurationParams, @httpsOptions, @modelConnection, @resourceConnection, @stores, @handlers, @staticServer, @logger) ->
+	constructor: (@configurationParams, @httpsOptions, @modelConnection, @resourceConnection, @stores, @handlers, @staticServer, @apiServer, @logger) ->
 		assert.ok @configurationParams?
 		assert.ok @httpsOptions?
 		assert.ok @modelConnection?
@@ -55,6 +57,7 @@ class Server
 		assert.ok @stores?
 		assert.ok @handlers?
 		assert.ok @staticServer?
+		assert.ok @apiServer?
 		assert.ok @logger?
 
 
@@ -106,14 +109,10 @@ class Server
 			response.end 'ok'
 
 		removeInstallationWizardBindings = () =>
-			expressServer.routes.get = expressServer.routes.get.filter (route) ->
-				route.path isnt '/'
-			expressServer.routes.get = expressServer.routes.get.filter (route) ->
-				route.path isnt '/wizard'
-			expressServer.routes.post = expressServer.routes.post.filter (route) ->
-				route.path isnt '/turnOffInstallationWizard'
-			expressServer.routes.get = expressServer.routes.get.filter (route) ->
-				route.path isnt '*'
+			expressServer.routes.get = expressServer.routes.get.filter (route) -> route.path isnt '/'
+			expressServer.routes.get = expressServer.routes.get.filter (route) -> route.path isnt '/wizard'
+			expressServer.routes.post = expressServer.routes.post.filter (route) -> route.path isnt '/turnOffInstallationWizard'
+			expressServer.routes.get = expressServer.routes.get.filter (route) -> route.path isnt '*'
 
 		addProjectBindings = () =>
 			expressServer.get '/', @handlers.indexHandler.handleRequest
@@ -127,10 +126,14 @@ class Server
 			expressServer.get '/unexpectedError', @handlers.unexpectedErrorHandler.handleRequest
 			expressServer.get '/invalidPermissions', @handlers.invalidPermissionsHandler.handleRequest
 			expressServer.post '/extendCookieExpiration', @_handleExtendCookieExpiration
+			
+			@apiServer.addRoutes expressServer
 			expressServer.get '*', @staticServer.handleRequest
 
 		expressServer = express()
+		
 		@_configure expressServer
+		@apiServer.addMiddleware expressServer
 
 		@modelConnection.rpcConnection.systemSettings.read.is_deployment_initialized (error, initialized) =>
 			if error? then @logger.error error
@@ -152,6 +155,7 @@ class Server
 		expressServer.use express.favicon 'front/favicon.ico'
 		expressServer.use express.cookieParser()
 		expressServer.use express.query()
+		expressServer.use express.bodyParser()
 		expressServer.use express.session
 	    	secret: @configurationParams.session.secret
 	    	key: @configurationParams.session.cookie.name

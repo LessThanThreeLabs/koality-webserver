@@ -5,9 +5,9 @@ FilesCacher = require 'koality-files-cacher'
 RequestHandler = require './requestHandler'
 
 
-exports.create = (configurationParams, stores, modelRpcConnection, filesSuffix, logger) ->
-	filesCacher = FilesCacher.create 'invalid permissions', configurationParams.staticFiles.rootDirectory, 'front/roots/invalidPermissions.json', filesSuffix, logger
-	return new InvalidPermissionsHandler configurationParams, stores, modelRpcConnection, filesCacher, filesSuffix, logger
+exports.create = (configurationParams, stores, modelRpcConnection, fileSuffix, logger) ->
+	filesCacher = FilesCacher.create 'invalid permissions', configurationParams.staticFiles.rootDirectory, 'front/roots/invalidPermissions.json', fileSuffix, logger
+	return new InvalidPermissionsHandler configurationParams, stores, modelRpcConnection, filesCacher, fileSuffix, logger
 
 
 class InvalidPermissionsHandler extends RequestHandler

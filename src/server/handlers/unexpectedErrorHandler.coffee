@@ -5,9 +5,9 @@ FilesCacher = require 'koality-files-cacher'
 RequestHandler = require './requestHandler'
 
 
-exports.create = (configurationParams, stores, modelRpcConnection, filesSuffix, logger) ->
-	filesCacher = FilesCacher.create 'unexpected error', configurationParams.staticFiles.rootDirectory, 'front/roots/unexpectedError.json', filesSuffix, logger
-	return new UnexpectedErrorHandler configurationParams, stores, modelRpcConnection, filesCacher, filesSuffix, logger
+exports.create = (configurationParams, stores, modelRpcConnection, fileSuffix, logger) ->
+	filesCacher = FilesCacher.create 'unexpected error', configurationParams.staticFiles.rootDirectory, 'front/roots/unexpectedError.json', fileSuffix, logger
+	return new UnexpectedErrorHandler configurationParams, stores, modelRpcConnection, filesCacher, fileSuffix, logger
 
 
 class UnexpectedErrorHandler extends RequestHandler

@@ -11,8 +11,8 @@ module.exports = (grunt) ->
 		frontLessCompiledDirectory: 'front/css/src'
 		frontUglifiedDirectory: 'front/uglified'
 		tarredPackageName: '<%= package.name %>-<%= package.version %>.tgz'
-		s3Prefix: 'cd855575be99a357'
-		s3TarredPackageLocation: 's3://koality_code/libraries/<%= s3Prefix %>-<%= tarredPackageName %>'
+		s3Hash: 'cd855575be99a357'
+		s3TarredPackageLocation: 's3://koality_code/libraries/private-<%= s3Hash %>/<%= tarredPackageName %>'
 
 		shell:
 			options:
