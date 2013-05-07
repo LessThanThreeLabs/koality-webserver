@@ -224,7 +224,11 @@
 
 	<div id="adminAws" ng-show="currentView == 'aws'" ng-controller="AdminAws">
 		<content>
-			<content-header content-header-padding ng-class="{green: showSuccess, red: showError}">Manage AWS</content-header>
+			<content-header content-header-padding ng-class="{green: showSuccess, red: showError}">Manage AWS
+				<content-header-subtext>
+					<span ng-show="showError && showKeysError">Invalid AWS keys</span>
+				</content-header-subtext>
+			</content-header>
 			<content-body unselectable>
 				<div id="adminAwsContent">
 					<styled-form name="awsForm">

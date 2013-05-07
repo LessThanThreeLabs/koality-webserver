@@ -163,6 +163,10 @@ window.AdminRepositories = ['$scope', '$location', 'initialState', 'rpc', 'event
 
 
 window.AdminAws = ['$scope', 'rpc', ($scope, rpc) ->
+	clearStates = () ->
+		$scope.showSuccess = false
+		$scope.showError = false
+
 	getAwsKeys = () ->
 		rpc.makeRequest 'systemSettings', 'read', 'getAwsKeys', null, (error, awsKeys) ->
 			$scope.$apply () ->
@@ -183,12 +187,20 @@ window.AdminAws = ['$scope', 'rpc', ($scope, rpc) ->
 	getInstanceSettings()
 
 	$scope.submit = () ->
-		rpc.makeRequest 'systemSettings', 'update', 'setAwsKeys', $scope.awsKeys
-		rpc.makeRequest 'systemSettings', 'update', 'setInstanceSettings', $scope.instanceSettings
-		$scope.showSuccess = true
+		await
+			rpc.makeRequest 'systemSettings', 'update', 'setAwsKeys', $scope.awsKeys, defer awsKeysError
+			rpc.makeRequest 'systemSettings', 'update', 'setInstanceSettings', $scope.instanceSettings, defer instanceSettingsError
 
-	$scope.$watch 'awsKeys', (() -> $scope.showSuccess = false), true
-	$scope.$watch 'instanceSettings', (() -> $scope.showSuccess = false), true
+		$scope.$apply () ->
+			clearStates()
+			if awsKeysError or instanceSettingsError
+				$scope.showError = true
+				$scope.showKeysError = true if awsKeysError
+			else
+				$scope.showSuccess = true
+
+	$scope.$watch 'awsKeys', clearStates, true
+	$scope.$watch 'instanceSettings', clearStates, true
 ]
 
 
