@@ -29,12 +29,6 @@
 				"url": "127.0.0.1",
 				"port": 6392
 			}
-		},
-
-		"resources": {
-			"initialAdmin": {
-				"token": "KMYFR8KX8RFQOLXR"
-			}
 		}
 	},
 

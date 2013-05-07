@@ -27,8 +27,7 @@ exports.create = (configurationParams, modelConnection, mailer, logger) ->
 		createRepositoryStore: CreateRepositoryStore.create configurationParams
 	
 	cookieName = 'koality.session.id'
-	transports = configurationParams.socket.transports
-	resourceConnection = ResourceConnection.create configurationParams.resources, modelConnection, stores, cookieName, transports, mailer, logger
+	resourceConnection = ResourceConnection.create modelConnection, stores, cookieName, mailer, logger
 	
 	staticServer = StaticServer.create()
 	apiServer = ApiServer.create modelConnection, logger
