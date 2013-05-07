@@ -26,7 +26,7 @@ exports.create = (configurationParams, modelConnection, mailer, logger) ->
 		createAccountStore: CreateAccountStore.create configurationParams
 		createRepositoryStore: CreateRepositoryStore.create configurationParams
 	
-	cookieName = configurationParams.session.cookie.name
+	cookieName = 'koality.session.id'
 	transports = configurationParams.socket.transports
 	resourceConnection = ResourceConnection.create configurationParams.resources, modelConnection, stores, cookieName, transports, mailer, logger
 	
@@ -40,12 +40,13 @@ exports.create = (configurationParams, modelConnection, mailer, logger) ->
 		unexpectedErrorHandler: UnexpectedErrorHandler.create configurationParams, stores, modelConnection.rpcConnection, filesSuffix, logger
 		invalidPermissionsHandler: InvalidPermissionsHandler.create configurationParams, stores, modelConnection.rpcConnection, filesSuffix, logger
 
-	return new Server configurationParams, modelConnection, resourceConnection, stores, handlers, staticServer, apiServer, logger
+	return new Server configurationParams, cookieName, modelConnection, resourceConnection, stores, handlers, staticServer, apiServer, logger
 
 
 class Server
-	constructor: (@configurationParams, @modelConnection, @resourceConnection, @stores, @handlers, @staticServer, @apiServer, @logger) ->
+	constructor: (@configurationParams, @cookieName, @modelConnection, @resourceConnection, @stores, @handlers, @staticServer, @apiServer, @logger) ->
 		assert.ok @configurationParams?
+		assert.ok @cookieName?
 		assert.ok @modelConnection?
 		assert.ok @resourceConnection?
 		assert.ok @stores?
@@ -155,7 +156,7 @@ class Server
 		expressServer.use express.bodyParser()
 		expressServer.use express.session
 	    	secret: 'e0140cbb6dee1e7ceea9ca2219081c95b8e14a14'
-	    	key: 'koality.session.id'
+	    	key: @cookieName
 	    	cookie:
 	    		path: '/'
 	    		httpOnly: true
