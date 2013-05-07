@@ -10,16 +10,6 @@
 			"rootDirectory": "front"
 		},
 
-		"session": {
-			"secret": "e0140cbb6dee1e7ceea9ca2219081c95b8e14a14",
-
-			"cookie": {
-				"name": "koality.session.id"
-			},
-
-			"rememberMeDuration": 2592000000
-		},
-
 		"socket": {
 			"transports": ["websocket", "htmlfile", "xhr-polling", "jsonp-polling"]
 		},

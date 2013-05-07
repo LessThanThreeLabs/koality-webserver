@@ -154,13 +154,14 @@ class Server
 		expressServer.use express.query()
 		expressServer.use express.bodyParser()
 		expressServer.use express.session
-	    	secret: @configurationParams.session.secret
-	    	key: @configurationParams.session.cookie.name
+	    	secret: 'e0140cbb6dee1e7ceea9ca2219081c95b8e14a14'
+	    	key: 'koality.session.id'
 	    	cookie:
 	    		path: '/'
 	    		httpOnly: true
 	    		secure: true if process.env.NODE_ENV is 'production'
 	    	store: @stores.sessionStore
+	    	proxy: true if process.env.NODE_ENV is 'production'
 		expressServer.use csrf()
 		expressServer.use gzip()
 
@@ -175,7 +176,7 @@ class Server
 		if not request.session.userId?
 			response.end '403'
 		else
-			request.session.cookie.maxAge = @configurationParams.session.rememberMeDuration
+			request.session.cookie.maxAge = 2592000000 # one month
 			request.session.cookieExpirationIncreased ?= 0 
 			request.session.cookieExpirationIncreased++
 			response.end 'ok'
