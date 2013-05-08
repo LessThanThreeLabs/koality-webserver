@@ -300,6 +300,35 @@
 							}
 						}
 					}
+
+					@keyframes greenTextAnimation { 
+						from { color: @koalityGray; }
+						to { color: @koalityGreen; }
+					}
+					@-moz-keyframes greenTextAnimation {
+						from { color: @koalityGray; }
+						to { color: @koalityGreen; }
+					}
+					@-webkit-keyframes greenTextAnimation {
+						from { color: @koalityGray; }
+						to { color: @koalityGreen; }
+					}
+					@-o-keyframes greenTextAnimation {
+						from { color: @koalityGray; }
+						to { color: @koalityGreen; }
+					}
+
+					&.animate:not(.selected) {
+						&.green {
+							.prettyContentMenuOptionContents {
+								@greenTextAnimationTime: 0.5s;
+								animation: greenTextAnimation @greenTextAnimationTime ease-in-out 0 6 alternate;
+								-moz-animation: greenTextAnimation @greenTextAnimationTime ease-in-out 0 6 alternate;
+								-webkit-animation: greenTextAnimation @greenTextAnimationTime ease-in-out 0 6 alternate;
+								-o-animation: greenTextAnimation @greenTextAnimationTime ease-in-out 0 6 alternate;
+							}	
+						}
+					}
 				}
 			}
 		}
