@@ -92,6 +92,8 @@ class Server
 
 	start: () =>
 		addInstallationWizardBindings = () =>
+			console.log 'adding installation wizard bindings'.cyan
+
 			expressServer.get '/', @handlers.installationWizardHandler.handleRequest
 			expressServer.get '/wizard', @handlers.installationWizardHandler.handleRequest
 			expressServer.post '/turnOffInstallationWizard', turnOffInstallationWizard
@@ -109,6 +111,8 @@ class Server
 			expressServer.routes.get = expressServer.routes.get.filter (route) -> route.path isnt '*'
 
 		addProjectBindings = () =>
+			console.log 'adding project bindings'.cyan
+
 			expressServer.get '/', @handlers.indexHandler.handleRequest
 			expressServer.get '/welcome', @handlers.indexHandler.handleRequest
 			expressServer.get '/login', @handlers.indexHandler.handleRequest
@@ -124,24 +128,35 @@ class Server
 			@apiServer.addRoutes expressServer
 			expressServer.get '*', @staticServer.handleRequest
 
+		configureRoutes = () =>
+			@modelConnection.rpcConnection.systemSettings.read.is_deployment_initialized (error, initialized) =>
+				if error? then @logger.error error
+				else
+					clearTimeout configureRoutesFailedTimeoutId
+
+					if initialized then addProjectBindings()
+					else addInstallationWizardBindings()
+
+					server = http.createServer expressServer
+					server.listen @configurationParams.http.port
+
+					@resourceConnection.start server
+
+					@logger.info 'server started on ' + @configurationParams.http.port
+					console.log "SERVER STARTED on port #{@configurationParams.http.port}".bold.magenta
+
 		expressServer = express()
 		
 		@_configure expressServer
 		@apiServer.addMiddleware expressServer
 
-		@modelConnection.rpcConnection.systemSettings.read.is_deployment_initialized (error, initialized) =>
-			if error? then @logger.error error
-			else
-				if initialized then addProjectBindings()
-				else addInstallationWizardBindings()
-
-				server = http.createServer expressServer
-				server.listen @configurationParams.http.port
-
-				@resourceConnection.start server
-
-				@logger.info 'server started on ' + @configurationParams.http.port
-				console.log "SERVER STARTED on port #{@configurationParams.http.port}".bold.magenta
+		# If model server isn't running, the exchanges won't be initialized.
+		# If configureRoutes() doesn't return in a reasonable time, kill the webserver.
+		configureRoutes()
+		configureRoutesFailedTimeoutId = setTimeout (() =>
+			@logger.fatal 'Unable to determine if deployment is initialized'
+			process.exit 1
+		), 10000
 
 
 	_configure: (expressServer) =>
