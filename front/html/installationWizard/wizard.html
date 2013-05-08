@@ -25,7 +25,7 @@
 				</div>
 				<styled-form id="wizardStepOneForm" name="domainForm" styled-form-alignment="center">
 					<styled-form-field label="Domain name" label-padding="true">
-						<input type="text" ng-model="website.domainName" name="domain" placeholder="koality.companyname.com" ng-maxlength="256" required focused>
+						<input type="text" ng-model="website.domainName" name="domain" placeholder="koality.companyname.com" ng-pattern="/^[a-zA-Z0-9]+(-+[a-zA-Z0-9]+)*(.[a-zA-Z0-9]+(-+[a-zA-Z0-9]+)*)*$/" ng-maxlength="256" required focused>
 						<styled-form-field-error tooltip="Invalid domain name" error-visible="domainForm.domain.$dirty && domainForm.domain.$invalid"></styled-form-field-error>
 					</styled-form-field>
 					<styled-form-field label="">

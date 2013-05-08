@@ -51,7 +51,7 @@ window.Wizard = ['$scope', '$http', '$location', '$routeParams', 'rpc', 'integer
 		_setAwsKeys = () ->
 			rpc.makeRequest 'systemSettings', 'update', 'setAwsKeys', $scope.aws, (error) ->
 				$scope.$apply () ->
-					if error?
+					if error? and error isnt 'Bad keys'
 						$scope.errorText = 'fatal error:' + JSON.stringify error
 					else
 						_setDeploymentInitialized()
