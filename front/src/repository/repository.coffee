@@ -144,6 +144,9 @@ window.RepositoryChanges = ['$scope', '$routeParams', 'changesRpc', 'events', 'l
 	handleChangeFinished = (data) -> $scope.$apply () ->
 		change = (change for change in $scope.changes when change.id is data.id)[0]
 		change.status = data.status if change?
+		if change?.status is 'passed'
+			change.animate = true 
+			setTimeout (() -> $scope.$apply () -> change.animate = false), 3000
 
 		if $scope.currentChangeId is data.id
 			$scope.currentChangeInformation.status = data.status

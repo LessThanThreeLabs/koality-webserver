@@ -214,11 +214,11 @@ angular.module('koality.directive', []).
 			attributes.$observe 'menuOptionSpinning', (spinning) ->
 				scope.spinning = if typeof spinning is 'boolean' then spinning else spinning is 'true'
 
+			attributes.$observe 'menuOptionAnimate', (animate) ->
+				element.toggleClass 'animate', (typeof animate is 'boolean' and animate) or (animate is 'true')
+
 			scope.$watch 'spinning', (newValue, oldValue) ->
-				if scope.spinning
-					element.find('.prettyContentMenuOptionTextContainer').addClass 'spinnerTextPadding'
-				else
-					element.find('.prettyContentMenuOptionTextContainer').removeClass 'spinnerTextPadding'
+				element.find('.prettyContentMenuOptionTextContainer').toggleClass 'spinnerTextPadding', scope.spinning
 	).
 	directive('content', () ->
 		restrict: 'E'

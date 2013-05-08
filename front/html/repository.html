@@ -20,7 +20,7 @@
 				</div>
 			</content-menu-header>
 			<content-menu-options on-scroll-to-bottom="scrolledToBottom()">
-				<content-menu-option ng-repeat="change in changes | orderBy:'number':true" menu-option-identifier="{{change.number}}" menu-option-text="{{change.status}}" menu-option-spinning="{{change.status == 'running'}}" ng-click="selectChange(change)" ng-class="{selected: change.id == currentChangeId, green: change.status == 'passed', red: change.status == 'failed'}"></content-menu-option>
+				<content-menu-option ng-repeat="change in changes | orderBy:'number':true" menu-option-identifier="{{change.number}}" menu-option-text="{{change.status}}" menu-option-spinning="{{change.status == 'running'}}" menu-option-animate="{{change.animate}}" ng-click="selectChange(change)" ng-class="{selected: change.id == currentChangeId, green: change.status == 'passed', red: change.status == 'failed'}"></content-menu-option>
 			</content-menu-options>
 		</menu>
 	</div>
