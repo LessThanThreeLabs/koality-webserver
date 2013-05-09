@@ -17,7 +17,7 @@
     "koality-model-connection": "https://s3.amazonaws.com/koality_code/libraries/private-cd855575be99a357/koality-model-connection-0.1.0.tgz",
     "koality-resource-connection": "https://s3.amazonaws.com/koality_code/libraries/private-cd855575be99a357/koality-resource-connection-0.1.0.tgz",
     "koality-static-server": "https://s3.amazonaws.com/koality_code/libraries/private-cd855575be99a357/koality-static-server-0.0.1.tgz",
-    "mailgun": "0.4.2",
+    "nodemailer": "0.4.1",
     "msgpack": "0.1.8",
     "redis": "0.8.2"
   },

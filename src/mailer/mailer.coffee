@@ -1,5 +1,5 @@
 assert = require 'assert'
-Mailgun = require('mailgun').Mailgun
+nodemailer = require 'nodemailer'
 
 FeedbackEmailer = require './mailTypes/feedbackEmailer'
 InviteUserEmailer = require './mailTypes/inviteUserEmailer'
@@ -16,5 +16,20 @@ exports.create = (configurationParams, domainRetriever) ->
 		initialAdmin: InitialAdminEmailer.create configurationParams.initialAdmin, emailSender, domainRetriever
 		logger: LoggerEmailer.create configurationParams.logger, emailSender, domainRetriever
 		
-	emailSender = new Mailgun configurationParams.mailgun.key
+	smtpTransport = nodemailer.createTransport 'smtp',
+		service: 'Mailgun'
+		auth:
+			user: 'postmaster@koalitycode.com'
+			pass: '41acnysnz3s9'
+		name: 'koality-webserver'
+
+	emailSender =
+		sendText: (from, to, subject, body, callback) ->
+			payload =
+				from: from
+				to: to
+				subject: subject
+				text: body
+			smtpTransport.sendMail payload, callback
+
 	return createEmailers()
