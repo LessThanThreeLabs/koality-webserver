@@ -154,8 +154,7 @@ class Server
 		# If configureRoutes() doesn't return in a reasonable time, kill the webserver.
 		configureRoutes()
 		configureRoutesFailedTimeoutId = setTimeout (() =>
-			@logger.fatal 'Unable to determine if deployment is initialized'
-			process.exit 1
+			throw 'Unable to determine if deployment is initialized'
 		), 10000
 
 

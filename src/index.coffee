@@ -31,19 +31,19 @@ startEverything = () ->
 		configurationParams.modelConnection.events,
 		logger
 
-	if process.env.NODE_ENV is 'production'
-		process.on 'uncaughtException', (error) -> logger.error error
+	process.on 'uncaughtException', (error) ->
+		logger.error error, true
+		process.exit 1
 
 	modelConnection.connect (error) ->
-		if error?
-			logger.fatal error
+		if error? then throw error
 		else
 			domainRetriever.getDomain = (callback) ->
 				modelConnection.rpcConnection.systemSettings.read.get_website_domain_name 1, callback
 
 			server = Server.create configurationParams.server, modelConnection, mailer, logger
 			server.initialize (error) =>
-				if error? then logger.fatal error
+				if error? then throw error
 				else server.start()
 
 
