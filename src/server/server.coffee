@@ -57,10 +57,8 @@ class Server
 
 	initialize: (callback) =>
 		@_initializeHandlers (error) =>
-			if error?
-				callback error
-			else
-				@_initializeStaticServer callback
+			if error? then callback error
+			else @_initializeStaticServer callback
 
 
 	_initializeHandlers: (callback) =>

@@ -12,6 +12,7 @@ class LoggerEmailer extends Emailer
 		@getDomain (error, domain) =>
 			if error? then callback error
 			else
+				console.log 'here 2'
 				fromEmail = "#{@configurationParams.from.name} <#{@configurationParams.from.email}@#{domain}>"
 				toEmail = @configurationParams.to.email
 				subject = 'Logs'

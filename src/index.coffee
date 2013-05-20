@@ -6,6 +6,7 @@ ModelConnection = require 'koality-model-connection'
 environment = require './environment'
 
 CommandLineParser = require './commandLineParser'
+DomainRetriever = require './domainRetriever'
 Mailer = require './mailer/mailer'
 Server = require './server/server'
 
@@ -20,7 +21,7 @@ startEverything = () ->
 
 	environment.setEnvironmentMode configurationParams.mode
 
-	domainRetriever = getDomain: (callback) -> callback 'not connected to model server'
+	domainRetriever = DomainRetriever.create()
 
 	mailer = Mailer.create configurationParams.mailer, domainRetriever
 
@@ -33,13 +34,13 @@ startEverything = () ->
 
 	process.on 'uncaughtException', (error) ->
 		logger.error error, true
-		process.exit 1
+		setTimeout (() -> process.exit 1), 10000
 
 	modelConnection.connect (error) ->
 		if error? then throw error
 		else
-			domainRetriever.getDomain = (callback) ->
-				modelConnection.rpcConnection.systemSettings.read.get_website_domain_name 1, callback
+			domainRetriever.setModelConnection modelConnection
+			domainRetriever.setModelConnection modelConnection
 
 			server = Server.create configurationParams.server, modelConnection, mailer, logger
 			server.initialize (error) =>
