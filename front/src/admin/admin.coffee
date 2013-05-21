@@ -118,7 +118,10 @@ window.AdminRepositories = ['$scope', '$location', 'initialState', 'rpc', 'event
 		rpc.makeRequest 'repositories', 'delete', 'deleteRepository', 
 			id: $scope.removeRepository.id
 			password: $scope.removeRepository.password
+
 		$scope.removeRepository.modalVisible = false
+		$scope.removeRepository.token = ''
+		$scope.removeRepository.password = ''
 
 	$scope.getSshKey = () ->
 		rpc.makeRequest 'repositories', 'create', 'getSshPublicKey', $scope.addRepository, (error, sshPublicKey) ->
