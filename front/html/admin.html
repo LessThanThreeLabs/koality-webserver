@@ -148,7 +148,8 @@
 						<div id="adminAddRepositoryContentSecond" ng-show="addRepository.stage == 'second'">
 							<div id="addRepositoryPublicKeyInformation">
 								To finish setting up your repository, Koality needs permission to connect!<br>
-								Add this ssh key to the list of allowed keys for {{addRepository.name}}.
+								Add this ssh key to the list of allowed keys for {{addRepository.name}}.<br>
+								If you've already added a ssh key in the past, you can skip this step.
 							</div>
 
 							<textarea ng-model="addRepository.publicKey" highlight-on-first-click readonly></textarea>

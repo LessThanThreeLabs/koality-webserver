@@ -141,6 +141,7 @@ window.AdminRepositories = ['$scope', '$location', 'initialState', 'rpc', 'event
 
 	$scope.showPublicKey = (repository) ->
 		rpc.makeRequest 'repositories', 'read', 'getPublicKey', id: repository.id, (error, publicKey) ->
+			console.log publicKey
 			$scope.$apply () ->
 				$scope.publicKey.key = publicKey
 				$scope.publicKey.modalVisible = true

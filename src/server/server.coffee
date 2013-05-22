@@ -12,7 +12,6 @@ ApiServer = require 'koality-api-server'
 
 SessionStore = require './stores/sessionStore'
 CreateAccountStore = require './stores/createAccountStore'
-CreateRepositoryStore = require './stores/createRepositoryStore'
 
 IndexHandler = require './handlers/indexHandler'
 InstallationWizardHandler = require './handlers/installationWizardHandler'
@@ -24,7 +23,6 @@ exports.create = (configurationParams, modelConnection, mailer, logger) ->
 	stores =
 		sessionStore: SessionStore.create configurationParams
 		createAccountStore: CreateAccountStore.create configurationParams
-		createRepositoryStore: CreateRepositoryStore.create configurationParams
 	
 	cookieName = 'koality.session.id'
 	resourceConnection = ResourceConnection.create modelConnection, stores, cookieName, mailer, logger

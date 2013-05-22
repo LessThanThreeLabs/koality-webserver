@@ -30,7 +30,6 @@ module.exports = (grunt) ->
 				command: [
 					'(redis-server redis/conf/sessionStoreRedis.conf &)',
 					'(redis-server redis/conf/createAccountRedis.conf &)',
-					'(redis-server redis/conf/createRepositoryRedis.conf &)',
 					'node --harmony <%= backCompiledDirectory %>/index.js --httpPort 1080 --mode development',
 				].join ' && '
 
@@ -38,7 +37,6 @@ module.exports = (grunt) ->
 				command: [
 					'(redis-server redis/conf/sessionStoreRedis.conf &)',
 					'(redis-server redis/conf/createAccountRedis.conf &)',
-					'(redis-server redis/conf/createRepositoryRedis.conf &)',
 					'node --harmony <%= backCompiledDirectory %>/index.js --httpPort 1080 --mode production',
 				].join ' && '
 
