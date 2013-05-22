@@ -67,7 +67,10 @@ window.AccountSshKeys = ['$scope', 'rpc', 'events', 'initialState', ($scope, rpc
 				else
 					$scope.addKey.showError = false
 					$scope.addKey.modalVisible = false
-					$scope.addKey = {}
+
+	resetKeyData = () ->
+		$scope.addKey.alias = null
+		$scope.addKey.key = null
 		
 	handleAddedKeyUpdated = (data) -> $scope.$apply () ->
 		$scope.keys.push data
@@ -88,4 +91,7 @@ window.AccountSshKeys = ['$scope', 'rpc', 'events', 'initialState', ($scope, rpc
 
 	$scope.submitKey = () ->
 		addKey()
+
+	$scope.$watch 'addKey.modalVisible', (newValue, oldValue) ->
+		resetKeyData() if not newValue
 ]
