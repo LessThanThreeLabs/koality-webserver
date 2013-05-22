@@ -115,13 +115,15 @@ window.AdminRepositories = ['$scope', '$location', 'initialState', 'rpc', 'event
 	$scope.submitRemoveRepository = () ->
 		return if $scope.removeRepository.token isnt $scope.removeRepository.tokenToMatch
 
-		rpc.makeRequest 'repositories', 'delete', 'deleteRepository', 
+		requestParams =
 			id: $scope.removeRepository.id
 			password: $scope.removeRepository.password
-
-		$scope.removeRepository.modalVisible = false
-		$scope.removeRepository.token = ''
-		$scope.removeRepository.password = ''
+		rpc.makeRequest 'repositories', 'delete', 'deleteRepository', requestParams, (error) ->
+			$scope.$apply () ->
+				if error?
+					$scope.removeRepository.showError = true
+				else
+					$scope.removeRepository.modalVisible = false
 
 	$scope.getSshKey = () ->
 		rpc.makeRequest 'repositories', 'create', 'getSshPublicKey', $scope.addRepository, (error, sshPublicKey) ->
@@ -138,6 +140,11 @@ window.AdminRepositories = ['$scope', '$location', 'initialState', 'rpc', 'event
 		$scope.addRepository.name = null
 		$scope.addRepository.forwardUrl = null
 		$scope.addRepository.publicKey = null
+
+	resetRemoveRepositoryValues = () ->
+		$scope.removeRepository.showError = false
+		$scope.removeRepository.token = ''
+		$scope.removeRepository.password = ''
 
 	$scope.showPublicKey = (repository) ->
 		rpc.makeRequest 'repositories', 'read', 'getPublicKey', id: repository.id, (error, publicKey) ->
@@ -162,6 +169,9 @@ window.AdminRepositories = ['$scope', '$location', 'initialState', 'rpc', 'event
 
 	$scope.$watch 'addRepository.modalVisible', (newValue, oldValue) ->
 		resetAddRepositoryValues() if not newValue
+
+	$scope.$watch 'removeRepository.modalVisible', (newValue, oldValue) ->
+		resetRemoveRepositoryValues() if not newValue
 ]
 
 

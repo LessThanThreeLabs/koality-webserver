@@ -166,7 +166,11 @@
 		<modal modal-visible="removeRepository.modalVisible">
 			<div id="adminRemoveRepository">
 				<content>
-					<content-header content-header-padding>Remove Repository</content-header>
+					<content-header content-header-padding ng-class="{green: removeRepository.showSuccess, red: removeRepository.showError}">Remove Repository
+						<content-header-subtext>
+							<span ng-show="removeRepository.showError">Invalid password</span>
+						</content-header-subtext>
+					</content-header>
 					<content-body unselectable>
 						<div id="adminRemoveRepositoryWarning">
 							To remove {{removeRepository.name}}, you must first enter your password with the following token:
