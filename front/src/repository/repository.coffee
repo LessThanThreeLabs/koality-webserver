@@ -48,6 +48,7 @@ window.Repository = ['$scope', '$location', '$routeParams', 'rpc', 'events', 'in
 	syncToRouteParams = () ->
 		$scope.currentChangeId = integerConverter.toInteger $routeParams.change
 		$scope.currentStageId = integerConverter.toInteger $routeParams.stage
+		$scope.showSkipped = $routeParams.skipped?
 		$scope.showMerge = $routeParams.merge?
 		$scope.showDebug = $routeParams.debug?
 	$scope.$on '$routeUpdate', syncToRouteParams
@@ -56,21 +57,31 @@ window.Repository = ['$scope', '$location', '$routeParams', 'rpc', 'events', 'in
 	$scope.selectChange = (change) ->
 		$scope.currentChangeId = change?.id
 		$scope.currentStageId = null
+		$scope.showSkipped = false
 		$scope.showMerge = false
 		$scope.showDebug = false
 
 	$scope.selectStage = (stage) ->
 		$scope.currentStageId = stage?.id
+		$scope.showSkipped = false
+		$scope.showMerge = false
+		$scope.showDebug = false
+
+	$scope.selectSkipped = () ->
+		$scope.currentStageId = null
+		$scope.showSkipped = true
 		$scope.showMerge = false
 		$scope.showDebug = false
 
 	$scope.selectMerge = () ->
 		$scope.currentStageId = null
+		$scope.showSkipped = false
 		$scope.showMerge = true
 		$scope.showDebug = false
 
 	$scope.selectDebug = () ->
 		$scope.currentStageId = null
+		$scope.showSkipped = false
 		$scope.showMerge = false
 		$scope.showDebug = true
 
@@ -82,6 +93,9 @@ window.Repository = ['$scope', '$location', '$routeParams', 'rpc', 'events', 'in
 	$scope.$watch 'currentStageId', (newValue, oldValue) ->
 		retrieveCurrentStageInformation()
 		$location.search 'stage', newValue ? null
+
+	$scope.$watch 'showSkipped', (newValue, oldValue) ->
+		$location.search 'skipped', if newValue then true else null
 
 	$scope.$watch 'showMerge', (newValue, oldValue) ->
 		$location.search 'merge', if newValue then true else null
@@ -145,7 +159,7 @@ window.RepositoryChanges = ['$scope', '$routeParams', 'changesRpc', 'events', 'l
 		change = (change for change in $scope.changes when change.id is data.id)[0]
 		change.status = data.status if change?
 		if change?.status is 'passed'
-			change.animate = true 
+			change.animate = true
 			setTimeout (() -> $scope.$apply () -> change.animate = false), 3000
 
 		if $scope.currentChangeId is data.id
