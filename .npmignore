@@ -1,5 +1,6 @@
 koality.yml
 Gruntfile.coffee
+koality-webserver-*.tgz
 node_modules/
 src/
 test/
