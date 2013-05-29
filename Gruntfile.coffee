@@ -62,7 +62,7 @@ module.exports = (grunt) ->
 					].join ' && '
 
 			pack:
-				command: 'npm pack'
+				command: '([ ! -f <%= tarredPackageName %> ] || rm <%= tarredPackageName %>) && npm pack'
 
 			publish:
 				command: 's3cmd put --acl-public --guess-mime-type <%= tarredPackageName %> <%= s3TarredPackageLocation %>'
