@@ -293,7 +293,7 @@
 					<div id="adminApiMessage" ng-show="domainName != null" text-selectable>
 						You can access the Admin REST Api from <span id="adminApiUri">https://{{domainName}}/api/v/0/...</span>, using the following api key:
 					</div>
-					
+
 					<div id="adminApiKey" text-selectable>{{apiKey}}</div>
 				</div>
 			</content-body>
@@ -306,11 +306,10 @@
 			<content-body unselectable>
 				<div id="adminUpgradeContent">
 					<div id="adminUpgradeMessage">
-						This feature has not been implemented yet.<br>
-						In the future, information about available upgrades will be displayed here.
+						{{upgrade.message}}
 					</div>
 
-					<button id="adminUpgradeButton" ng-click="performUpgrade()" ng-disabled="true">Upgrade</button>
+					<button id="adminUpgradeButton" ng-click="performUpgrade()" ng-disabled="!upgrade.upgradeAllowed">Upgrade</button>
 				</div>
 			</content-body>
 		</content>

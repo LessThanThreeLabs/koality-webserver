@@ -251,5 +251,17 @@ window.AdminApi = ['$scope', 'rpc', ($scope, rpc) ->
 
 window.AdminUpgrade = ['$scope', 'rpc', ($scope, rpc) ->
 	$scope.performUpgrade = () ->
-		console.log 'need to perform upgrade here'
+		$scope.upgrade.upgradeAllowed = false
+		rpc.makeRequest 'systemSettings', 'update', 'upgradeDeployment', null, (error) ->
+			$scope.$apply () ->
+				if error?
+					$scope.upgrade.message = 'Failed to begin upgrade.'
+					$scope.upgrade.upgradeAllowed = true
+				else
+					$scope.upgrade.message = 'Upgrade started. You should expect the system to restart in a few minutes.'
+					$scope.upgrade.upgradeAllowed = false
+
+	$scope.upgrade = {}
+	$scope.upgrade.message = 'Here there be dragons.'
+	$scope.upgrade.upgradeAllowed = true
 ]
