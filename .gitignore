@@ -1,2 +1,4 @@
 node_modules/
 /libs/
+.DS_Store
+koality-webserver-*.tgz
