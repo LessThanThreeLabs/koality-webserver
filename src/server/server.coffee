@@ -116,6 +116,7 @@ class Server
 			expressServer.get '/create/account', @handlers.indexHandler.handleRequest
 			expressServer.get '/resetPassword', @handlers.indexHandler.handleRequest
 			expressServer.get '/repository/:repositoryId', @handlers.indexHandler.handleRequest
+			expressServer.get '/analytics', @handlers.indexHandler.handleRequest
 			expressServer.get '/admin', @handlers.indexHandler.handleRequest
 			expressServer.get '/unexpectedError', @handlers.unexpectedErrorHandler.handleRequest
 			expressServer.get '/invalidPermissions', @handlers.invalidPermissionsHandler.handleRequest

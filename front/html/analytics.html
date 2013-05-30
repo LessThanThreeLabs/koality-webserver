@@ -1,0 +1,42 @@
+<content id="analytics">
+	<content-header content-header-padding>Analytics Dashboard</content-header>
+	<content-body unselectable>
+		<div id="analyticsOptions">
+			<div class="analyticsOptionTitle">Graph</div>
+			<select ng-model="graph" ng-change="graphSelected(graph)">
+				<option value="passedAndFailed" ng-selected="graph == 'passedAndFailed'">Passed / Failed Changes</option>
+				<option value="passed" ng-selected="graph == 'passed'">Passed Changes</option>
+				<option value="failed" ng-selected="graph == 'failed'">Failed Changes</option>
+			</select>
+
+			<div class="analyticsOptionTitle">Repository</div>
+			<select ng-model="repository" ng-options="repository as repository.name for repository in repositories" ng-change="repositorySelected(repository)"></select>
+
+			<div class="analyticsOptionTitle">Duration</div>
+			<select ng-model="duration" ng-change="durationSelected(duration)">
+				<option value=7 ng-selected="duration == 7">Past 7 days</option>
+				<option value=14 ng-selected="duration == 14">Past 14 days</option>
+				<option value=30 ng-selected="duration == 30">Past month</option>
+				<option value=91 ng-selected="duration == 91">Past 3 motnhs</option>
+				<option value=183 ng-selected="duration == 183">Past 6 months</option>
+				<option value=365 ng-selected="duration == 365">Past year</option>
+			</select>
+
+			<div class="analyticsOptionTitle">Interval</div>
+			<select ng-model="interval" ng-change="intervalSelected(interval)">
+				<option value="hours" ng-selected="duration == 'hours'">Hours</option>
+				<option value="days" ng-selected="duration == 'days'">Days</option>
+				<option value="weeks" ng-selected="duration == 'weeks'">Weeks</option>
+				<option value="months" ng-selected="duration == 'months'">Months</option>
+			</select>
+
+			<div class="analyticsOptionTitle">Viewing Mode</div>
+			<select ng-model="viewingMode" ng-change="viewingModeSelected(viewingMode)">
+				<option value="line" ng-selected="viewingMode == 'line'">Line Graph</option>
+				<option value="bar" ng-selected="viewingMode == 'bar'">Bar Graph</option>
+			</select>
+		</div>
+
+		<!-- <change-analytics id="analyticsVisual" changes="changes" duration="duration" interval="interval"></change-analytics> -->
+	</content-body>
+</content>

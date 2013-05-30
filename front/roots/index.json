@@ -20,6 +20,7 @@
 			"/css/src/createAccount/createAccount.css",
 			"/css/src/resetPassword/resetPassword.css",
 			"/css/src/repository/repository.css",
+			"/css/src/analytics/analytics.css",
 			"/css/src/admin/admin.css"
 		]
 	},
@@ -49,6 +50,7 @@
 			"/js/src/createAccount/createAccount.js",
 			"/js/src/resetPassword/resetPassword.js",
 			"/js/src/repository/repository.js",
+			"/js/src/analytics/analytics.js",
 			"/js/src/admin/admin.js"
 		]
 	},
@@ -69,6 +71,7 @@
 			"/html/createAccount.html",
 			"/html/resetPassword.html",
 			"/html/repository.html",
+			"/html/analytics.html",
 			"/html/admin.html"
 		]
 	},

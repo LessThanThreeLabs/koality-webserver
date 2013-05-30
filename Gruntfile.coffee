@@ -6,6 +6,8 @@ module.exports = (grunt) ->
 		backCompiledDirectory: 'libs'
 		backUglifiedDirectory: 'uglified'
 		frontSourceDirectory: 'front/src'
+		frontRootsDirectory: 'front/roots'
+		frontHtmlDirectory: 'front/html'
 		frontTestDirectory: 'front/test'
 		frontCoffeeCompiledDirectory: 'front/js/src'
 		frontLessCompiledDirectory: 'front/css/src'
@@ -39,6 +41,9 @@ module.exports = (grunt) ->
 					'(redis-server redis/conf/createAccountRedis.conf &)',
 					'node --harmony <%= backCompiledDirectory %>/index.js --httpPort 1080 --mode production',
 				].join ' && '
+
+			killServer:
+				command: "pgrep -f '^node --harmony libs/index.js' | xargs kill"
 
 			removeCompile:
 				command: [
@@ -121,6 +126,12 @@ module.exports = (grunt) ->
 			test:
 				files: ['<%= backSourceDirectory %>/**/*.coffee', '<%= frontSourceDirectory %>/**/*.coffee', '<%= frontSourceDirectory %>/**/*.less', '<%= frontTestDirectory %>/**/*.coffee']
 				tasks: ['compile', 'test']
+
+			run:
+				files: ['<%= backSourceDirectory %>/**/*.coffee', '<%= frontSourceDirectory %>/**/*.coffee', '<%= frontSourceDirectory %>/**/*.less', '<%= frontRootsDirectory %>/**/*.ejs', '<%= frontRootsDirectory %>/**/*.json', '<%= frontHtmlDirectory %>/**/*.html']
+				tasks: ['shell:killServer', 'compile', 'run']
+				options:
+					interrupt: true
 
 	grunt.loadNpmTasks 'grunt-contrib-uglify'
 	grunt.loadNpmTasks 'grunt-contrib-less'
