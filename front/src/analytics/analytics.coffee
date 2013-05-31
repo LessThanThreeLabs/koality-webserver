@@ -1,57 +1,102 @@
 'use strict'
 
 window.Analytics = ['$scope', 'rpc', 'events', ($scope, rpc, events) ->
-	$scope.changes = []
-
-	$scope.graph = 'passedAndFailed'
-	$scope.graphSelected = (newValue) -> $scope.graph = newValue
-
 	allRepository = {id: -1, name: 'All'}
-	$scope.repository = allRepository
-	$scope.repositories = [allRepository]
-	$scope.repositorySelected = (newValue) -> $scope.repository = newValue
 
-	$scope.duration = 7
-	$scope.durationSelected = (newValue) -> $scope.duration = newValue
+	allowedIntervals =
+		hour: {value: 'hour', title: 'Hours'}
+		day: {value: 'day', title: 'Days'}
+		week: {value: 'week', title: 'Weeks'}
+		month: {value: 'month', title: 'Months'}
 
-	$scope.interval = 'hours'
-	$scope.intervalSelected = (newValue) -> $scope.interval = newValue
+	$scope.options = 
+		graph: 'passedAndFailed'
+		repository: allRepository.id
+		repositories: [allRepository]
+		duration: 'last30'
+		interval: 'day'
+		mode: 'line'
 
-	$scope.viewingMode = 'line'
-	$scope.viewingModeSelected = (newValue) -> $scope.viewingMode = newValue
+	$scope.graphOptions =
+		changes: []
+		start: new Date()
+		end: new Date()
+		interval: 'day'
+
+	setGraphBounds = () ->
+		getMidnightOfDateDelta = (dateDelta) ->
+			midnightToday = new Date((new Date()).setHours(0, 0, 0, 0))
+			return new Date(midnightToday.setDate(midnightToday.getDate() + dateDelta))
+
+		if $scope.options.duration is 'today'
+			$scope.graphOptions.start = getMidnightOfDateDelta 0
+			$scope.graphOptions.end = getMidnightOfDateDelta 1
+
+		if $scope.options.duration is 'yesterday'
+			$scope.graphOptions.start = getMidnightOfDateDelta -1
+			$scope.graphOptions.end = getMidnightOfDateDelta 0
+
+		if $scope.options.duration is 'last7'
+			$scope.graphOptions.start = getMidnightOfDateDelta -7
+			$scope.graphOptions.end = getMidnightOfDateDelta 0
+
+		if $scope.options.duration is 'last30'
+			$scope.graphOptions.start = getMidnightOfDateDelta -30
+			$scope.graphOptions.end = getMidnightOfDateDelta 0
+
+		if $scope.options.duration is 'last365'
+			$scope.graphOptions.start = getMidnightOfDateDelta -365
+			$scope.graphOptions.end = getMidnightOfDateDelta 0
+
+	updateAllowedIntervals = () ->
+		if $scope.options.duration is 'today' then $scope.options.intervals = [allowedIntervals.hour]
+		if $scope.options.duration is 'yesterday' then $scope.options.intervals = [allowedIntervals.hour]
+		if $scope.options.duration is 'last7' then $scope.options.intervals = [allowedIntervals.hour, allowedIntervals.day]
+		if $scope.options.duration is 'last30' then $scope.options.intervals = [allowedIntervals.hour, allowedIntervals.day, allowedIntervals.week]
+		if $scope.options.duration is 'last365' then $scope.options.intervals = [allowedIntervals.day, allowedIntervals.week, allowedIntervals.month]
+
+		matchingInterval = $scope.options.intervals.some (interval) -> return interval.value is $scope.options.interval
+		$scope.options.interval = $scope.options.intervals[0].value if not matchingInterval
 
 	getRepositories = () ->
 		rpc.makeRequest 'repositories', 'read', 'getRepositories', null, (error, repositories) ->
 			$scope.$apply () ->
-				$scope.repositories = [allRepository].concat repositories
+				$scope.options.repositories = [allRepository].concat repositories
 				getChanges()
 
 	getChanges = () ->
-		return if $scope.repositories.every (repository) -> return repository.id < 0
+		return if $scope.options.repositories.every (repository) -> return repository.id < 0
 
 		getRepositoriesToRequest = () ->
-			if $scope.repository.id >= 0 then return [$scope.repository.id]
+			if $scope.options.repository >= 0 then return [$scope.options.repository]
 			else
-				return $scope.repositories
+				return $scope.options.repositories
 					.map((repository) -> return repository.id)
 					.filter((repositoryId) -> repositoryId >= 0)
 
-		timeInDay = 24 * 60 * 60 * 1000
-		currentTime = (new Date()).getTime()
+		$scope.graphOptions.changes = []
 
-		$scope.changes = []
-
+		console.log 'requesting changes...'
 		requestParams =
 			repositories: getRepositoriesToRequest()
-			timestamp: currentTime - $scope.duration * timeInDay
+			timestamp: $scope.graphOptions.start.getTime()  # to remove
+			beginTime: $scope.graphOptions.start.getTime()
+			endTime: $scope.graphOptions.end.getTime()
 		rpc.makeRequest 'changes', 'read', 'getChangesFromTimestamp', requestParams, (error, changes) ->
 			$scope.$apply () ->
-				$scope.changes = changes.filter (change) -> return change.endTime?
+				$scope.graphOptions.changes = changes.filter (change) -> return change.endTime?
 
 	getRepositories()
 
-	$scope.$watch 'repository', () -> getChanges()
-	$scope.$watch 'duration', () -> getChanges()
+	$scope.$watch 'options.repository', () -> 
+		getChanges()
 
-	$scope.$watch 'changes', () -> console.log $scope.changes
+	$scope.$watch 'options.duration', () ->
+		updateAllowedIntervals()
+		setGraphBounds()
+		getChanges()
+
+	$scope.$watch 'options.interval', () ->
+		$scope.graphOptions.interval = $scope.options.interval
+
 ]

@@ -3,37 +3,31 @@
 	<content-body unselectable>
 		<div id="analyticsOptions">
 			<div class="analyticsOptionTitle">Graph</div>
-			<select ng-model="graph" ng-change="graphSelected(graph)">
-				<option value="passedAndFailed" ng-selected="graph == 'passedAndFailed'">Passed / Failed Changes</option>
-				<option value="passed" ng-selected="graph == 'passed'">Passed Changes</option>
-				<option value="failed" ng-selected="graph == 'failed'">Failed Changes</option>
+			<select ng-model="options.graph">
+				<option value="passedAndFailed" ng-selected="options.graph == 'passedAndFailed'">Passed / Failed Changes</option>
+				<option value="passed" ng-selected="options.graph == 'passed'">Passed Changes</option>
+				<option value="failed" ng-selected="options.graph == 'failed'">Failed Changes</option>
 			</select>
 
 			<div class="analyticsOptionTitle">Repository</div>
-			<select ng-model="repository" ng-options="repository as repository.name for repository in repositories" ng-change="repositorySelected(repository)"></select>
+			<select ng-model="options.repository" ng-options="repository.id as repository.name for repository in options.repositories"></select>
 
 			<div class="analyticsOptionTitle">Duration</div>
-			<select ng-model="duration" ng-change="durationSelected(duration)">
-				<option value=7 ng-selected="duration == 7">Past 7 days</option>
-				<option value=14 ng-selected="duration == 14">Past 14 days</option>
-				<option value=30 ng-selected="duration == 30">Past month</option>
-				<option value=91 ng-selected="duration == 91">Past 3 motnhs</option>
-				<option value=183 ng-selected="duration == 183">Past 6 months</option>
-				<option value=365 ng-selected="duration == 365">Past year</option>
+			<select ng-model="options.duration">
+				<option value="today" ng-selected="options.duration == 'today'">Today</option>
+				<option value="yesterday" ng-selected="options.duration == 'yesterday'">Yesterday</option>
+				<option value="last7" ng-selected="options.duration == 'last7'">Last 7 Days</option>
+				<option value="last30" ng-selected="options.duration == 'last30'">Last 30 Days</option>
+				<option value="last365" ng-selected="options.duration == 'last365'">Lats 12 Months</option>
 			</select>
 
 			<div class="analyticsOptionTitle">Interval</div>
-			<select ng-model="interval" ng-change="intervalSelected(interval)">
-				<option value="hours" ng-selected="duration == 'hours'">Hours</option>
-				<option value="days" ng-selected="duration == 'days'">Days</option>
-				<option value="weeks" ng-selected="duration == 'weeks'">Weeks</option>
-				<option value="months" ng-selected="duration == 'months'">Months</option>
-			</select>
+			<select ng-model="options.interval" ng-options="interval.value as interval.title for interval in options.intervals"></select>
 
 			<div class="analyticsOptionTitle">Viewing Mode</div>
-			<select ng-model="viewingMode" ng-change="viewingModeSelected(viewingMode)">
-				<option value="line" ng-selected="viewingMode == 'line'">Line Graph</option>
-				<option value="bar" ng-selected="viewingMode == 'bar'">Bar Graph</option>
+			<select ng-model="options.mode">
+				<option value="line" ng-selected="options.mode == 'line'">Line Graph</option>
+				<option value="bar" ng-selected="options.mode == 'bar'">Bar Graph</option>
 			</select>
 		</div>
 

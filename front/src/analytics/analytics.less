@@ -30,5 +30,24 @@
 		width: 750px;
 		height: 350px;
 		border: 1px solid #808080;
+
+		.allLine, .passedLine, .failedLine {
+			fill: none;
+			stroke-width: 3px;
+		}
+
+		.allLine { stroke: @koalityWhite; }
+		.passedLine { stroke: @koalityGreen; }
+		.failedLine { stroke: @koalityRed; }
+
+		.xAxis, .yAxis {
+			fill: @koalityGray;
+
+			path, line {
+				fill: none;
+				stroke: @koalityGray;
+				shape-rendering: crispEdges;
+			}
+		}
 	}
 }
