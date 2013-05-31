@@ -38,6 +38,7 @@
 			"/js/src/util/ansiparse.js",
 
 			"/js/src/util/d3/d3Binner.js",
+			"/js/src/util/d3/d3ChangesLineGraph.js",
 
 			"/js/src/services.js",
 			"/js/src/directives.js",
