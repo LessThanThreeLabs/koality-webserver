@@ -7,7 +7,7 @@
 	#analyticsOptions {
 		float: left;
 		margin: 40px 0 0 40px;
-		width: 200px;
+		width: 180px;
 
 		.analyticsOptionTitle {
 			display: block;
@@ -27,7 +27,7 @@
 	#analyticsVisual {
 		float: right;
 		margin: 40px 40px 0 0;
-		width: 750px;
+		width: 800px;
 		height: 350px;
 		border: 1px solid #808080;
 
@@ -47,6 +47,16 @@
 				fill: none;
 				stroke: @koalityGray;
 				shape-rendering: crispEdges;
+			}
+
+			text {
+				font-size: 11px;
+			}
+
+			.tick {
+				&.minor {
+					stroke: darken(@koalityGray, 18%);
+				}
 			}
 		}
 	}

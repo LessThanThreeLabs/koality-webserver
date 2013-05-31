@@ -22,5 +22,6 @@ angular.module('koality.d3.directive', []).
 					d3ChangesLineGraph.drawGraph d3Binner, true
 
 			scope.$watch 'changes', handleUpdate, true
+			scope.$watch 'startTime + endTime', handleUpdate
 			scope.$watch 'interval', handleUpdate
 	])

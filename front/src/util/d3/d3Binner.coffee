@@ -53,3 +53,6 @@ window.D3Binner.clazz = class D3Binner
 
 	getAllIntervals: () =>
 		return @allIntervals
+
+	getIntervalName: () =>
+		return @intervalName

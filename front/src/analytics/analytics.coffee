@@ -13,15 +13,15 @@ window.Analytics = ['$scope', 'rpc', 'events', ($scope, rpc, events) ->
 		graph: 'passedAndFailed'
 		repository: allRepository.id
 		repositories: [allRepository]
-		duration: 'last30'
-		interval: 'day'
+		duration: 'last7'
+		interval: 'hour'
 		mode: 'line'
 
 	$scope.graphOptions =
 		changes: []
 		start: new Date()
 		end: new Date()
-		interval: 'day'
+		interval: 'hour'
 
 	setGraphBounds = () ->
 		getMidnightOfDateDelta = (dateDelta) ->
@@ -52,7 +52,7 @@ window.Analytics = ['$scope', 'rpc', 'events', ($scope, rpc, events) ->
 		if $scope.options.duration is 'today' then $scope.options.intervals = [allowedIntervals.hour]
 		if $scope.options.duration is 'yesterday' then $scope.options.intervals = [allowedIntervals.hour]
 		if $scope.options.duration is 'last7' then $scope.options.intervals = [allowedIntervals.hour, allowedIntervals.day]
-		if $scope.options.duration is 'last30' then $scope.options.intervals = [allowedIntervals.hour, allowedIntervals.day, allowedIntervals.week]
+		if $scope.options.duration is 'last30' then $scope.options.intervals = [allowedIntervals.day, allowedIntervals.week]
 		if $scope.options.duration is 'last365' then $scope.options.intervals = [allowedIntervals.day, allowedIntervals.week, allowedIntervals.month]
 
 		matchingInterval = $scope.options.intervals.some (interval) -> return interval.value is $scope.options.interval

@@ -42,17 +42,30 @@ window.D3ChangesLineGraph.clazz = class D3ChangesLineGraph
 			startTime = d3Binner.getTimeInterval().start
 			endTime = d3Binner.getTimeInterval().end
 
-			if endTime - startTime < 2 * timeInDay
-				return {format: d3.time.format('%I%p'), ticks: 9}
-			else if endTime - startTime < 10 * timeInDay
-				return {format: d3.time.format('%a'), ticks: 7}
-			else if endTime - startTime < 50 * timeInDay
-				return {format: d3.time.format('%m/%d'), ticks: 15}
+			hourFormatter = (date) ->
+				am = date.getHours() < 12
+				hour = date.getHours() % 12
+				hour = 12 if hour is 0
+				return hour + if am then 'a' else 'p'
+
+			if endTime - startTime <= timeInDay
+				return {format: hourFormatter, ticks: 24, subdivide: 0}
+			else if endTime - startTime <= 7 * timeInDay
+				subdivide = if d3Binner.getIntervalName() is 'hour' then 3 else 0
+				return {format: d3.time.format('%a'), ticks: 7, subdivide:  subdivide}
+			else if endTime - startTime <= 30 * timeInDay
+				ticks = if d3Binner.getIntervalName() is 'day' then 15 else 4
+				subdivide = if d3Binner.getIntervalName() is 'day' then 1 else 0
+				return {format: d3.time.format('%m/%d'), ticks: ticks, subdivide: subdivide}
 			else
-				return {format: d3.time.format('%b'), ticks: 12}
+				return {format: d3.time.format('%b'), ticks: 12, subdivide: 0}
 
 		timeFormat = getTimeFormat()
-		xAxis = d3.svg.axis().scale(x).ticks(timeFormat.ticks).tickFormat(timeFormat.format).orient 'bottom'
+		xAxis = d3.svg.axis().scale(x)
+			.ticks(timeFormat.ticks)
+			.tickSubdivide(timeFormat.subdivide)
+			.tickFormat(timeFormat.format)
+			.orient 'bottom'
 		yAxis = d3.svg.axis().scale(y).ticks(10).orient 'left'
 
 		@xAxisLabel.call xAxis
