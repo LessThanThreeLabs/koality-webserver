@@ -22,21 +22,21 @@ window.D3ChangesLineGraph.clazz = class D3ChangesLineGraph
 		@xAxisLabel = @svg.append('g').attr('class', 'xAxis').attr 'transform', "translate(0, #{@element.height()-@PADDING.bottom})"
 		@yAxisLabel = @svg.append('g').attr('class', 'yAxis').attr 'transform', "translate(#{@PADDING.left}, 0)"
 
-	_updatePath: (path, data, x, y, allIntervals, transitionTime) =>
+	_updatePath: (path, data, x, y, allIntervals, startFromZero, transitionTime) =>
 		computeChangeLine = (x, y) ->
 			return d3.svg.line()
 				.x((d, index) -> return x allIntervals[index])
 				.y((d) -> return y d)
 
-		animateFromZero = not path.datum()?
+		previouslyNoData = not path.datum()?
 
 		path = path.datum(data)
-		if animateFromZero
+		if previouslyNoData or startFromZero
 			path = path.attr 'd', computeChangeLine x, (value) -> return y 0
 		path = path.transition().duration(transitionTime)
 		path = path.attr('d', computeChangeLine x, y)
 
-	drawGraph: (d3Binner) ->
+	drawGraph: (d3Binner, startFromZero) ->
 		console.log 'drawing graph...'
 
 		allIntervals = d3Binner.getAllIntervals()
@@ -49,22 +49,12 @@ window.D3ChangesLineGraph.clazz = class D3ChangesLineGraph
 			.domain([0, 100])
 			.range([@element.height()-@PADDING.bottom-@AXIS_BUFFER, @PADDING.top])
 
-		@_updatePath @allLine, histograms.all, x, y, allIntervals, 500
-		@_updatePath @passedLine, histograms.passed, x, y, allIntervals, 750
-		@_updatePath @failedLine, histograms.failed, x, y, allIntervals, 1000
+		@_updatePath @allLine, histograms.all, x, y, allIntervals, startFromZero, 500
+		@_updatePath @passedLine, histograms.passed, x, y, allIntervals, startFromZero, 750
+		@_updatePath @failedLine, histograms.failed, x, y, allIntervals, startFromZero, 1000
 
 		xAxis = d3.svg.axis().scale(x).ticks(20).tickFormat(d3.time.format '%m/%d').orient 'bottom'
 		yAxis = d3.svg.axis().scale(y).ticks(10).orient 'left'
 
 		@xAxisLabel.call xAxis
 		@yAxisLabel.call yAxis
-
-	# clearGraph: () ->
-	# 	emptyLine = d3.svg.line()
-	# 		.x((d) -> return 0)
-	# 		.y((d) -> return 0)
-
-	# 	allLine.attr('d', emptyLine).datum(null) if allLine.datum()?
-	# 	passedLine.attr('d', emptyLine).datum(null) if passedLine.datum()?
-	# 	failedLine.attr('d', emptyLine).datum(null) if failedLine.datum()?
-

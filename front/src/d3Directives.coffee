@@ -14,13 +14,13 @@ angular.module('koality.d3.directive', []).
 			d3ChangesLineGraph = D3ChangesLineGraph.create element
 
 			handleUpdate = (newValue, oldValue) ->
-				if not scope.changes? or scope.changes.length is 0 or not scope.startTime? or not scope.endTime? or not scope.interval?
-					# clearGraph()
-					console.log 'need to clear graph...'
+				if not scope.startTime? or not scope.endTime? or not scope.interval?
+					console.log 'gotta figure out what to do here...'
 				else
-					d3Binner = D3Binner.create scope.changes, scope.startTime, scope.endTime, scope.interval
-					d3ChangesLineGraph.drawGraph d3Binner
+					changes = scope.changes ? []
+					d3Binner = D3Binner.create changes, scope.startTime, scope.endTime, scope.interval
+					d3ChangesLineGraph.drawGraph d3Binner, true
 
 			scope.$watch 'changes', handleUpdate, true
-			scope.$watch 'interval', handleUpdate, true
+			scope.$watch 'interval', handleUpdate
 	])
