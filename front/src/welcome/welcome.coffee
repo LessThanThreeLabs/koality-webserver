@@ -14,7 +14,7 @@ window.Welcome = ['$scope', 'rpc', 'events', ($scope, rpc, events) ->
 
 	getRepositories = () ->
 		rpc.makeRequest 'repositories', 'read', 'getRepositories', null, (error, repositories) ->
-			$scope.$apply () -> 
+			$scope.$apply () ->
 				allRepositories = {id: -1, name: 'All'}
 				$scope.repositories = [allRepositories].concat repositories
 				$scope.currentRepositoryOptionId = $scope.repositories[0].id
@@ -49,7 +49,7 @@ window.Welcome = ['$scope', 'rpc', 'events', ($scope, rpc, events) ->
 			start: getStartTimeFromFilterOption()
 			end: (new Date()).getTime()
 
-		$scope.numChanges = 
+		$scope.numChanges =
 			passed: 0
 			failed: 0
 
@@ -65,8 +65,9 @@ window.Welcome = ['$scope', 'rpc', 'events', ($scope, rpc, events) ->
 
 		requestParams =
 			repositories: getRepositoryIdsToDisplay()
-			timestamp: getStartTimeFromFilterOption()
-		rpc.makeRequest 'changes', 'read', 'getChangesFromTimestamp', requestParams, (error, changes) ->
+			startTimestamp: getStartTimeFromFilterOption()
+			endTimestamp: null  # TODO: fill this in (null functions like "now")
+		rpc.makeRequest 'changes', 'read', 'getChangesBetweenTimestamps', requestParams, (error, changes) ->
 			$scope.$apply () ->
 				$scope.changes = changes.filter (change) -> return change.endTime?
 				updateChangesSummary()
