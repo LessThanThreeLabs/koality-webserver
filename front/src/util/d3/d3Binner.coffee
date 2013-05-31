@@ -48,5 +48,8 @@ window.D3Binner.clazz = class D3Binner
 			failed: failedHistogram
 		return histograms
 
+	getTimeInterval: () =>
+		return {start: @startTime, end: @endTime}
+
 	getAllIntervals: () =>
 		return @allIntervals

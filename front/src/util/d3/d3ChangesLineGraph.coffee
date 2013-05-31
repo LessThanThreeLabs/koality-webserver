@@ -36,6 +36,28 @@ window.D3ChangesLineGraph.clazz = class D3ChangesLineGraph
 		path = path.transition().duration(transitionTime)
 		path = path.attr('d', computeChangeLine x, y)
 
+	_updateAxisLabels: (d3Binner, x, y) ->
+		getTimeFormat = () ->
+			timeInDay = 60 * 60 * 24 * 1000
+			startTime = d3Binner.getTimeInterval().start
+			endTime = d3Binner.getTimeInterval().end
+
+			if endTime - startTime < 2 * timeInDay
+				return {format: d3.time.format('%I%p'), ticks: 9}
+			else if endTime - startTime < 10 * timeInDay
+				return {format: d3.time.format('%a'), ticks: 7}
+			else if endTime - startTime < 50 * timeInDay
+				return {format: d3.time.format('%m/%d'), ticks: 15}
+			else
+				return {format: d3.time.format('%b'), ticks: 12}
+
+		timeFormat = getTimeFormat()
+		xAxis = d3.svg.axis().scale(x).ticks(timeFormat.ticks).tickFormat(timeFormat.format).orient 'bottom'
+		yAxis = d3.svg.axis().scale(y).ticks(10).orient 'left'
+
+		@xAxisLabel.call xAxis
+		@yAxisLabel.call yAxis
+
 	drawGraph: (d3Binner, startFromZero) ->
 		console.log 'drawing graph...'
 
@@ -53,8 +75,4 @@ window.D3ChangesLineGraph.clazz = class D3ChangesLineGraph
 		@_updatePath @passedLine, histograms.passed, x, y, allIntervals, startFromZero, 750
 		@_updatePath @failedLine, histograms.failed, x, y, allIntervals, startFromZero, 1000
 
-		xAxis = d3.svg.axis().scale(x).ticks(20).tickFormat(d3.time.format '%m/%d').orient 'bottom'
-		yAxis = d3.svg.axis().scale(y).ticks(10).orient 'left'
-
-		@xAxisLabel.call xAxis
-		@yAxisLabel.call yAxis
+		@_updateAxisLabels d3Binner, x, y
