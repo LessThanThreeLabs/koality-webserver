@@ -3,23 +3,13 @@
 	<content-body unselectable>
 		<div id="analyticsOptions">
 			<div class="analyticsOptionTitle">Graph</div>
-			<select ng-model="options.graph">
-				<option value="passedAndFailed" ng-selected="options.graph == 'passedAndFailed'">Passed / Failed Changes</option>
-				<option value="passed" ng-selected="options.graph == 'passed'">Passed Changes</option>
-				<option value="failed" ng-selected="options.graph == 'failed'">Failed Changes</option>
-			</select>
+			<select ng-model="options.graph" ng-options="graph as graph.title for graph in allowedGraphs"></select>
 
 			<div class="analyticsOptionTitle">Repository</div>
 			<select ng-model="options.repository" ng-options="repository as repository.name for repository in options.repositories"></select>
 
 			<div class="analyticsOptionTitle">Duration</div>
-			<select ng-model="options.duration">
-				<option value="today" ng-selected="options.duration == 'today'">Today</option>
-				<option value="yesterday" ng-selected="options.duration == 'yesterday'">Yesterday</option>
-				<option value="last7" ng-selected="options.duration == 'last7'">Last 7 Days</option>
-				<option value="last30" ng-selected="options.duration == 'last30'">Last 30 Days</option>
-				<option value="last365" ng-selected="options.duration == 'last365'">Lats 12 Months</option>
-			</select>
+			<select ng-model="options.duration" ng-options="duration as duration.title for duration in allowedDurations"></select>
 
 			<div class="analyticsOptionTitle">Interval</div>
 			<select ng-model="options.interval" ng-options="interval as interval.title for interval in options.intervals"></select>
@@ -34,10 +24,10 @@
 		<div id="analyticsVisual">
 			<div id="analyticsVisualHeader">
 				<div id="headerGraphAndRepository">
-					<strong>{{options.graph}}</strong> of <strong>{{options.repository.name}}</strong>
+					<strong>{{options.graph.title}}</strong> of <strong>{{options.repository.name}}</strong>
 				</div>
 				<div id="headerDuration">
-					Duration: <strong>{{options.duration}}</strong>
+					Duration: <strong>{{options.duration.title}}</strong>
 				</div>
 				<div id="headerInterval">
 					Interval: <strong>{{options.interval.title}}</strong>

@@ -9,7 +9,7 @@
 		position: absolute;
 		top: 40px;
 		left: 40px;
-		width: 180px;
+		width: 200px;
 
 		.analyticsOptionTitle {
 			display: block;
@@ -29,14 +29,14 @@
 	#analyticsVisual {
 		position: absolute;
 		top: 40px;
-		left: 260px;
+		left: 280px;
 		right: 40px;
 		bottom: 40px;
 		background-color: darken(@panelBackground, 3%);
 		border-radius: @borderRadius;
 
 		#analyticsVisualHeader {
-			padding: 20px;
+			position: relative;
 			height: 50px;
 			box-sizing: border-box;
 			color: @koalityGray;
@@ -52,15 +52,21 @@
 			}
 
 			#headerGraphAndRepository {
-
+				position: absolute;
+				top: 20px;
+				left: 30px;
 			}
 
 			#headerDuration {
-				margin-left: 150px;
+				position: absolute;
+				top: 20px;
+				left: 400px;
 			}
 
 			#headerInterval {
-				float: right;
+				position: absolute;
+				top: 20px;
+				right: 30px;
 			}
 		}
 

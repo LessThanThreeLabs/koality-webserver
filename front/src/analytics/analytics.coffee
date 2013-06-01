@@ -3,6 +3,20 @@
 window.Analytics = ['$scope', 'rpc', 'events', ($scope, rpc, events) ->
 	allRepository = {id: -1, name: 'All Repositories'}
 
+	$scope.allowedGraphs = [
+		{value: 'passedAndFailed', title: 'Passed / Failed Changes'}
+		{value: 'passed', title: 'Passed Changes'}
+		{value: 'failed', title: 'Failed Changes'}
+	]
+
+	$scope.allowedDurations = [
+		{value: 'today', title: 'Today'}
+		{value: 'yesterday', title: 'Yesterday'}
+		{value: 'last7', title: 'Last 7 Days'}
+		{value: 'last30', title: 'Last 30 Days'}
+		{value: 'last365', title: 'Last 12 Months'}
+	]
+
 	allowedIntervals =
 		hour: {value: 'hour', title: 'Hours'}
 		day: {value: 'day', title: 'Days'}
@@ -10,10 +24,10 @@ window.Analytics = ['$scope', 'rpc', 'events', ($scope, rpc, events) ->
 		month: {value: 'month', title: 'Months'}
 
 	$scope.options = 
-		graph: 'passedAndFailed'
+		graph: $scope.allowedGraphs[0]
 		repository: allRepository
 		repositories: [allRepository]
-		duration: 'last7'
+		duration: $scope.allowedDurations[0]
 		interval: allowedIntervals.hour
 		mode: 'line'
 
@@ -28,32 +42,32 @@ window.Analytics = ['$scope', 'rpc', 'events', ($scope, rpc, events) ->
 			midnightToday = new Date((new Date()).setHours(0, 0, 0, 0))
 			return new Date(midnightToday.setDate(midnightToday.getDate() + dateDelta))
 
-		if $scope.options.duration is 'today'
+		if $scope.options.duration.value is 'today'
 			$scope.graphOptions.start = getMidnightOfDateDelta 0
 			$scope.graphOptions.end = getMidnightOfDateDelta 1
 
-		if $scope.options.duration is 'yesterday'
+		if $scope.options.duration.value is 'yesterday'
 			$scope.graphOptions.start = getMidnightOfDateDelta -1
 			$scope.graphOptions.end = getMidnightOfDateDelta 0
 
-		if $scope.options.duration is 'last7'
+		if $scope.options.duration.value is 'last7'
 			$scope.graphOptions.start = getMidnightOfDateDelta -7
 			$scope.graphOptions.end = getMidnightOfDateDelta 0
 
-		if $scope.options.duration is 'last30'
+		if $scope.options.duration.value is 'last30'
 			$scope.graphOptions.start = getMidnightOfDateDelta -30
 			$scope.graphOptions.end = getMidnightOfDateDelta 0
 
-		if $scope.options.duration is 'last365'
+		if $scope.options.duration.value is 'last365'
 			$scope.graphOptions.start = getMidnightOfDateDelta -365
 			$scope.graphOptions.end = getMidnightOfDateDelta 0
 
 	updateAllowedIntervals = () ->
-		if $scope.options.duration is 'today' then $scope.options.intervals = [allowedIntervals.hour]
-		if $scope.options.duration is 'yesterday' then $scope.options.intervals = [allowedIntervals.hour]
-		if $scope.options.duration is 'last7' then $scope.options.intervals = [allowedIntervals.hour, allowedIntervals.day]
-		if $scope.options.duration is 'last30' then $scope.options.intervals = [allowedIntervals.day, allowedIntervals.week]
-		if $scope.options.duration is 'last365' then $scope.options.intervals = [allowedIntervals.day, allowedIntervals.week, allowedIntervals.month]
+		if $scope.options.duration.value is 'today' then $scope.options.intervals = [allowedIntervals.hour]
+		if $scope.options.duration.value is 'yesterday' then $scope.options.intervals = [allowedIntervals.hour]
+		if $scope.options.duration.value is 'last7' then $scope.options.intervals = [allowedIntervals.hour, allowedIntervals.day]
+		if $scope.options.duration.value is 'last30' then $scope.options.intervals = [allowedIntervals.day, allowedIntervals.week]
+		if $scope.options.duration.value is 'last365' then $scope.options.intervals = [allowedIntervals.day, allowedIntervals.week, allowedIntervals.month]
 
 		matchingInterval = $scope.options.intervals.some (interval) -> return interval.value is $scope.options.interval.value
 		$scope.options.interval = $scope.options.intervals[0] if not matchingInterval
