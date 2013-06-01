@@ -1,12 +1,14 @@
 @import '../constants';
 
 #analytics {
-	margin-top: 100px;
+	margin: 100px auto 0 auto;
+	width: @contentMinWidth;
 	height: 520px;
 
 	#analyticsOptions {
-		float: left;
-		margin: 40px 0 0 40px;
+		position: absolute;
+		top: 40px;
+		left: 40px;
 		width: 180px;
 
 		.analyticsOptionTitle {
@@ -25,19 +27,48 @@
 	}
 
 	#analyticsVisual {
-		float: right;
-		margin: 40px 40px 0 0;
-		width: 800px;
-		height: 400px;
-		background-color: darken(@panelBackground, 5%);
+		position: absolute;
+		top: 40px;
+		left: 260px;
+		right: 40px;
+		bottom: 40px;
+		background-color: darken(@panelBackground, 3%);
 		border-radius: @borderRadius;
 
 		#analyticsVisualHeader {
+			padding: 20px;
 			height: 50px;
+			box-sizing: border-box;
+			color: @koalityGray;
+			font-weight: 200;
+
+			strong {
+				color: @koalityWhite;
+				font-weight: 400;
+			}
+
+			#headerGraphAndRepository, #headerDuration, #headerInterval {
+				display: inline-block;
+			}
+
+			#headerGraphAndRepository {
+
+			}
+
+			#headerDuration {
+				margin-left: 150px;
+			}
+
+			#headerInterval {
+				float: right;
+			}
 		}
 
 		#analyticsVisualGraph {
+			padding: 20px;
+			width: 100%;
 			height: 350px;
+			box-sizing: border-box;
 
 			.allLine, .passedLine, .failedLine {
 				fill: none;

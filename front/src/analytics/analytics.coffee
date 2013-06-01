@@ -1,7 +1,7 @@
 'use strict'
 
 window.Analytics = ['$scope', 'rpc', 'events', ($scope, rpc, events) ->
-	allRepository = {id: -1, name: 'All'}
+	allRepository = {id: -1, name: 'All Repositories'}
 
 	allowedIntervals =
 		hour: {value: 'hour', title: 'Hours'}
@@ -11,10 +11,10 @@ window.Analytics = ['$scope', 'rpc', 'events', ($scope, rpc, events) ->
 
 	$scope.options = 
 		graph: 'passedAndFailed'
-		repository: allRepository.id
+		repository: allRepository
 		repositories: [allRepository]
 		duration: 'last7'
-		interval: 'hour'
+		interval: allowedIntervals.hour
 		mode: 'line'
 
 	$scope.graphOptions =
@@ -55,8 +55,8 @@ window.Analytics = ['$scope', 'rpc', 'events', ($scope, rpc, events) ->
 		if $scope.options.duration is 'last30' then $scope.options.intervals = [allowedIntervals.day, allowedIntervals.week]
 		if $scope.options.duration is 'last365' then $scope.options.intervals = [allowedIntervals.day, allowedIntervals.week, allowedIntervals.month]
 
-		matchingInterval = $scope.options.intervals.some (interval) -> return interval.value is $scope.options.interval
-		$scope.options.interval = $scope.options.intervals[0].value if not matchingInterval
+		matchingInterval = $scope.options.intervals.some (interval) -> return interval.value is $scope.options.interval.value
+		$scope.options.interval = $scope.options.intervals[0] if not matchingInterval
 
 	getRepositories = () ->
 		rpc.makeRequest 'repositories', 'read', 'getRepositories', null, (error, repositories) ->
@@ -68,7 +68,7 @@ window.Analytics = ['$scope', 'rpc', 'events', ($scope, rpc, events) ->
 		return if $scope.options.repositories.every (repository) -> return repository.id < 0
 
 		getRepositoriesToRequest = () ->
-			if $scope.options.repository >= 0 then return [$scope.options.repository]
+			if $scope.options.repository.id >= 0 then return [$scope.options.repository.id]
 			else
 				return $scope.options.repositories
 					.map((repository) -> return repository.id)
@@ -101,6 +101,6 @@ window.Analytics = ['$scope', 'rpc', 'events', ($scope, rpc, events) ->
 		getChanges()
 
 	$scope.$watch 'options.interval', () ->
-		$scope.graphOptions.interval = $scope.options.interval
+		$scope.graphOptions.interval = $scope.options.interval.value
 
 ]

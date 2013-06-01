@@ -10,7 +10,7 @@
 			</select>
 
 			<div class="analyticsOptionTitle">Repository</div>
-			<select ng-model="options.repository" ng-options="repository.id as repository.name for repository in options.repositories"></select>
+			<select ng-model="options.repository" ng-options="repository as repository.name for repository in options.repositories"></select>
 
 			<div class="analyticsOptionTitle">Duration</div>
 			<select ng-model="options.duration">
@@ -22,7 +22,7 @@
 			</select>
 
 			<div class="analyticsOptionTitle">Interval</div>
-			<select ng-model="options.interval" ng-options="interval.value as interval.title for interval in options.intervals"></select>
+			<select ng-model="options.interval" ng-options="interval as interval.title for interval in options.intervals"></select>
 
 			<div class="analyticsOptionTitle">Viewing Mode</div>
 			<select ng-model="options.mode">
@@ -32,7 +32,17 @@
 		</div>
 
 		<div id="analyticsVisual">
-			<div id="analyticsVisualHeader"></div>
+			<div id="analyticsVisualHeader">
+				<div id="headerGraphAndRepository">
+					<strong>{{options.graph}}</strong> of <strong>{{options.repository.name}}</strong>
+				</div>
+				<div id="headerDuration">
+					Duration: <strong>{{options.duration}}</strong>
+				</div>
+				<div id="headerInterval">
+					Interval: <strong>{{options.interval.title}}</strong>
+				</div>
+			</div>
 
 			<change-analytics id="analyticsVisualGraph" changes="graphOptions.changes" start-time="graphOptions.start" end-time="graphOptions.end" interval="graphOptions.interval"></change-analytics>
 		</div>
