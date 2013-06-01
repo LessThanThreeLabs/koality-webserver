@@ -6,7 +6,7 @@ window.D3ChangesLineGraph.create = (element) ->
 	return d3ChangesLineGraph
 
 window.D3ChangesLineGraph.clazz = class D3ChangesLineGraph
-	PADDING: {top: 10, left: 50, right: 20, bottom: 50}
+	PADDING: {top: 10, left: 35, right: 10, bottom: 25}
 	AXIS_BUFFER: 10
 
 	constructor: (@element) ->
@@ -26,7 +26,7 @@ window.D3ChangesLineGraph.clazz = class D3ChangesLineGraph
 		computeChangeLine = (x, y) ->
 			return d3.svg.line()
 				.x((d, index) -> return x allIntervals[index])
-				.y((d) -> return y d)
+				.y((d) -> return y d * 100)
 
 		previouslyNoData = not path.datum()?
 
@@ -75,7 +75,7 @@ window.D3ChangesLineGraph.clazz = class D3ChangesLineGraph
 		console.log 'drawing graph...'
 
 		allIntervals = d3Binner.getAllIntervals()
-		histograms = d3Binner.getHistograms()
+		histograms = d3Binner.getPercentageHistograms()
 
 		x = d3.time.scale()
 			.domain([allIntervals[0], allIntervals[allIntervals.length-1]])

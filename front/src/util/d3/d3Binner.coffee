@@ -37,7 +37,9 @@ window.D3Binner.clazz = class D3Binner
 		failedHistogram = (0 for index in [0...@allIntervals.length])
 
 		for change in @changes
+			assert change.endTime?
 			index = @binner @interval.floor new Date(change.endTime)
+
 			allHistogram[index]++
 			if change.status is 'passed' then passedHistogram[index]++
 			if change.status is 'failed' then failedHistogram[index]++
@@ -46,6 +48,17 @@ window.D3Binner.clazz = class D3Binner
 			all: allHistogram
 			passed: passedHistogram
 			failed: failedHistogram
+		return histograms
+
+	getPercentageHistograms: () =>
+		histograms = @getHistograms()
+		maxValue = d3.max [d3.max(histograms.all), d3.max(histograms.passed), d3.max(histograms.failed)]
+		return histograms if maxValue is 0
+
+		histograms.all = histograms.all.map (histogramValue) -> return histogramValue / maxValue
+		histograms.passed = histograms.passed.map (histogramValue) -> return histogramValue / maxValue
+		histograms.failed = histograms.failed.map (histogramValue) -> return histogramValue / maxValue
+
 		return histograms
 
 	getTimeInterval: () =>

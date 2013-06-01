@@ -2,7 +2,7 @@
 
 #analytics {
 	margin-top: 100px;
-	height: 500px;
+	height: 520px;
 
 	#analyticsOptions {
 		float: left;
@@ -28,34 +28,43 @@
 		float: right;
 		margin: 40px 40px 0 0;
 		width: 800px;
-		height: 350px;
-		border: 1px solid #808080;
+		height: 400px;
+		background-color: darken(@panelBackground, 5%);
+		border-radius: @borderRadius;
 
-		.allLine, .passedLine, .failedLine {
-			fill: none;
-			stroke-width: 3px;
+		#analyticsVisualHeader {
+			height: 50px;
 		}
 
-		.allLine { stroke: @koalityWhite; }
-		.passedLine { stroke: @koalityGreen; }
-		.failedLine { stroke: @koalityRed; }
+		#analyticsVisualGraph {
+			height: 350px;
 
-		.xAxis, .yAxis {
-			fill: @koalityGray;
-
-			path, line {
+			.allLine, .passedLine, .failedLine {
 				fill: none;
-				stroke: @koalityGray;
-				shape-rendering: crispEdges;
+				stroke-width: 1px;
 			}
 
-			text {
-				font-size: 11px;
-			}
+			.allLine { stroke: @koalityWhite; }
+			.passedLine { stroke: @koalityGreen; }
+			.failedLine { stroke: @koalityRed; }
 
-			.tick {
-				&.minor {
-					stroke: darken(@koalityGray, 18%);
+			.xAxis, .yAxis {
+				fill: @koalityGray;
+
+				path, line {
+					fill: none;
+					stroke: @koalityGray;
+					shape-rendering: crispEdges;
+				}
+
+				text {
+					font-size: 11px;
+				}
+
+				.tick {
+					&.minor {
+						stroke: darken(@koalityGray, 18%);
+					}
 				}
 			}
 		}
