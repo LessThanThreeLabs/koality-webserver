@@ -249,7 +249,7 @@ window.AdminApi = ['$scope', 'rpc', ($scope, rpc) ->
 ]
 
 
-window.AdminUpgrade = ['$scope', 'rpc', ($scope, rpc) ->
+window.AdminUpgrade = ['$scope', 'initialState', 'rpc', 'events', ($scope, initialState, rpc, events) ->
 	$scope.performUpgrade = () ->
 		$scope.upgrade.upgradeAllowed = false
 		rpc.makeRequest 'systemSettings', 'update', 'upgradeDeployment', null, (error) ->
@@ -257,11 +257,42 @@ window.AdminUpgrade = ['$scope', 'rpc', ($scope, rpc) ->
 				if error?
 					$scope.upgrade.message = 'Failed to begin upgrade.'
 					$scope.upgrade.upgradeAllowed = true
-				else
-					$scope.upgrade.message = 'Upgrade started. You should expect the system to restart in a few minutes.'
+
+	handleUpgradeStatus = (upgradeStatus) ->
+		if upgradeStatus is 'running'
+			$scope.upgrade.message = 'An upgrade is currently in progress. ' +
+				'You should expect the system to restart in a few minutes.'
+			$scope.upgrade.upgradeAllowed = false
+		else if upgradeStatus is 'failed'
+			$scope.upgrade.message = 'The last upgrade failed. Contact support if this happens again.'
+			$scope.upgrade.upgradeAllowed = true
+		else if upgradeStatus is 'passed'
+			$scope.upgrade.message = 'Upgrade succeeded.'
+			$scope.upgrade.upgradeAllowed = false
+		else if upgradeStatus is 'ready'
+			$scope.upgrade.message = 'An upgrade to Koality is available. ' +
+				'Upgrading will shut down the server and may take several minutes before restarting.'
+			$scope.upgrade.upgradeAllowed = true
+		else
+			$scope.upgrade.message = 'There are no upgrades available at this time.'
+			$scope.upgrade.upgradeAllowed = false
+
+	getUpgradeStatus = () ->
+		rpc.makeRequest 'systemSettings', 'read', 'getUpgradeStatus', null, (error, upgradeStatus) ->
+			$scope.$apply () ->
+				if error?
+					$scope.upgrade.message = 'Unable to upgrade at this time.'
 					$scope.upgrade.upgradeAllowed = false
+				else
+					handleUpgradeStatus upgradeStatus
+
+	handleSystemSettingsUpdate = (data) -> $scope.$apply () ->
+		if data.resource is 'deployment' and data.key is 'upgrade_status'
+			handleUpgradeStatus data.value
+
+	changedSystemSetting = events.listen('systemSettings', 'system setting updated', initialState.user.id).setCallback(handleSystemSettingsUpdate).subscribe()
+	$scope.$on '$destroy', changedSystemSetting.unsubscribe
 
 	$scope.upgrade = {}
-	$scope.upgrade.message = 'Here there be dragons.'
-	$scope.upgrade.upgradeAllowed = true
+	getUpgradeStatus()
 ]
