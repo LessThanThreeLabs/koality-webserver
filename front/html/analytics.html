@@ -13,12 +13,6 @@
 
 			<div class="analyticsOptionTitle">Interval</div>
 			<select ng-model="options.interval" ng-options="interval as interval.title for interval in options.intervals"></select>
-
-			<div class="analyticsOptionTitle">Viewing Mode</div>
-			<select ng-model="options.mode">
-				<option value="line" ng-selected="options.mode == 'line'">Line Graph</option>
-				<option value="bar" ng-selected="options.mode == 'bar'">Bar Graph</option>
-			</select>
 		</div>
 
 		<div id="analyticsVisual">
