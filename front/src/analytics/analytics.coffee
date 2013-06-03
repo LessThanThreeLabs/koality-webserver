@@ -4,7 +4,7 @@ window.Analytics = ['$scope', 'rpc', 'events', ($scope, rpc, events) ->
 	allRepository = {id: -1, name: 'All Repositories'}
 
 	$scope.allowedGraphs = [
-		{value: 'passedAndFailed', title: 'Passed / Failed Changes'}
+		{value: 'all', title: 'Passed / Failed Changes'}
 		{value: 'passed', title: 'Passed Changes'}
 		{value: 'failed', title: 'Failed Changes'}
 	]
@@ -27,15 +27,16 @@ window.Analytics = ['$scope', 'rpc', 'events', ($scope, rpc, events) ->
 		graph: $scope.allowedGraphs[0]
 		repository: allRepository
 		repositories: [allRepository]
-		duration: $scope.allowedDurations[0]
+		duration: $scope.allowedDurations[1]
 		interval: allowedIntervals.hour
 		mode: 'line'
 
 	$scope.graphOptions =
+		changesToShow: $scope.allowedGraphs[0].value
 		changes: []
 		start: new Date()
 		end: new Date()
-		interval: 'hour'
+		interval: allowedIntervals.hour.value
 
 	setGraphBounds = () ->
 		getMidnightOfDateDelta = (dateDelta) ->
@@ -105,6 +106,9 @@ window.Analytics = ['$scope', 'rpc', 'events', ($scope, rpc, events) ->
 			endTime: Math.random() * (endTimestamp - startTimestamp) + startTimestamp
 
 	getRepositories()
+
+	$scope.$watch 'options.graph', () ->
+		$scope.graphOptions.changesToShow = $scope.options.graph.value
 
 	$scope.$watch 'options.repository', () -> 
 		getChanges()

@@ -73,6 +73,7 @@ window.D3ChangesLineGraph.clazz = class D3ChangesLineGraph
 
 	drawGraph: (d3Binner, startFromZero) ->
 		console.log 'drawing graph...'
+		console.log d3Binner.changes
 
 		allIntervals = d3Binner.getAllIntervals()
 		histograms = d3Binner.getPercentageHistograms()
@@ -84,8 +85,12 @@ window.D3ChangesLineGraph.clazz = class D3ChangesLineGraph
 			.domain([0, 100])
 			.range([@element.height()-@PADDING.bottom-@AXIS_BUFFER, @PADDING.top])
 
-		@_updatePath @allLine, histograms.all, x, y, allIntervals, startFromZero, 500
-		@_updatePath @passedLine, histograms.passed, x, y, allIntervals, startFromZero, 750
-		@_updatePath @failedLine, histograms.failed, x, y, allIntervals, startFromZero, 1000
+		@allLine.attr 'display', if histograms.all? then 'inline' else 'none'
+		@passedLine.attr 'display', if histograms.passed? then 'inline' else 'none'
+		@failedLine.attr 'display', if histograms.failed? then 'inline' else 'none'
+
+		@_updatePath @allLine, histograms.all, x, y, allIntervals, startFromZero, 500 if histograms.all?
+		@_updatePath @passedLine, histograms.passed, x, y, allIntervals, startFromZero, 750  if histograms.passed?
+		@_updatePath @failedLine, histograms.failed, x, y, allIntervals, startFromZero, 1000  if histograms.failed?
 
 		@_updateAxisLabels d3Binner, x, y

@@ -1,13 +1,15 @@
 window.D3Binner = {}
 
-window.D3Binner.create = (changes, startTime, endTime, intervalName) ->
-	d3Binner = new @clazz changes, startTime, endTime, intervalName
+window.D3Binner.create = (changes, changesToTrack, startTime, endTime, intervalName) ->
+	d3Binner = new @clazz changes, changesToTrack, startTime, endTime, intervalName
 	d3Binner.initialize()
 	return d3Binner
 
 window.D3Binner.clazz = class D3Binner
-	constructor: (@changes, @startTime, @endTime, @intervalName) ->
+	constructor: (@changes, @changesToTrack, @startTime, @endTime, @intervalName) ->
 		assert.ok @changes? and typeof @changes is 'object'
+		assert.ok @changesToTrack? and typeof @changesToTrack is 'string'
+		assert.ok @changesToTrack is 'all' or @changesToTrack is 'passed' or @changesToTrack is 'failed'
 		assert.ok @startTime? and typeof @startTime is 'object'
 		assert.ok @endTime? and typeof @endTime is 'object'
 		assert.ok @intervalName? and typeof @intervalName is 'string'
@@ -45,19 +47,20 @@ window.D3Binner.clazz = class D3Binner
 			if change.status is 'failed' then failedHistogram[index]++
 
 		histograms =
-			all: allHistogram
-			passed: passedHistogram
-			failed: failedHistogram
+			all: allHistogram if @changesToTrack is 'all'
+			passed: passedHistogram if @changesToTrack is 'all' or @changesToTrack is 'passed'
+			failed: failedHistogram if @changesToTrack is 'all' or @changesToTrack is 'failed'
 		return histograms
 
 	getPercentageHistograms: () =>
 		histograms = @getHistograms()
-		maxValue = d3.max [d3.max(histograms.all), d3.max(histograms.passed), d3.max(histograms.failed)]
+
+		maxValue = d3.max [d3.max(histograms.all ? []), d3.max(histograms.passed ? []), d3.max(histograms.failed ? [])]
 		return histograms if maxValue is 0
 
-		histograms.all = histograms.all.map (histogramValue) -> return histogramValue / maxValue
-		histograms.passed = histograms.passed.map (histogramValue) -> return histogramValue / maxValue
-		histograms.failed = histograms.failed.map (histogramValue) -> return histogramValue / maxValue
+		if histograms.all? then histograms.all = histograms.all.map (histogramValue) -> return histogramValue / maxValue
+		if histograms.passed? then histograms.passed = histograms.passed.map (histogramValue) -> return histogramValue / maxValue
+		if histograms.failed? then histograms.failed = histograms.failed.map (histogramValue) -> return histogramValue / maxValue
 
 		return histograms
 
