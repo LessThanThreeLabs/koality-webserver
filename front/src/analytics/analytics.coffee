@@ -5,8 +5,8 @@ window.Analytics = ['$scope', 'rpc', 'events', ($scope, rpc, events) ->
 
 	$scope.allowedGraphs = [
 		{value: 'all', title: 'Passed / Failed Changes'}
-		{value: 'passed', title: 'Passed Changes'}
-		{value: 'failed', title: 'Failed Changes'}
+		{value: 'passed', title: 'Passed Rate'}
+		{value: 'failed', title: 'Failed Rate'}
 	]
 
 	$scope.allowedDurations = [
@@ -29,10 +29,9 @@ window.Analytics = ['$scope', 'rpc', 'events', ($scope, rpc, events) ->
 		repositories: [allRepository]
 		duration: $scope.allowedDurations[1]
 		interval: allowedIntervals.hour
-		mode: 'line'
 
 	$scope.graphOptions =
-		changesToShow: $scope.allowedGraphs[0].value
+		graphType: $scope.allowedGraphs[0].value
 		changes: []
 		start: new Date()
 		end: new Date()
@@ -108,7 +107,7 @@ window.Analytics = ['$scope', 'rpc', 'events', ($scope, rpc, events) ->
 	getRepositories()
 
 	$scope.$watch 'options.graph', () ->
-		$scope.graphOptions.changesToShow = $scope.options.graph.value
+		$scope.graphOptions.graphType = $scope.options.graph.value
 
 	$scope.$watch 'options.repository', () -> 
 		getChanges()
