@@ -19,7 +19,7 @@ window.D3ChangesLineGraph.clazz = class D3ChangesLineGraph
 			right: @element.width() - @PADDING.right
 			bottom: @element.height() - @PADDING.bottom - @AXIS_BUFFER
 
-		@svg = d3.select(@element[0]).append 'g'
+		@svg = d3.select(@element[0]).append('g').attr 'class', 'd3ChangesLineGraph'
 
 		@xAxisLabel = @svg.append('g').attr('class', 'xAxis').attr 'transform', "translate(0, #{@element.height()-@PADDING.bottom})"
 		@yAxisLabel = @svg.append('g').attr('class', 'yAxis').attr 'transform', "translate(#{@PADDING.left}, 0)"
@@ -31,20 +31,46 @@ window.D3ChangesLineGraph.clazz = class D3ChangesLineGraph
 		@passedLine = @svg.append('path').attr 'class', 'passedLine'
 		@failedLine = @svg.append('path').attr 'class', 'failedLine'
 
-	_updatePath: (path, data, x, y, allIntervals, startFromZero, transitionTime) =>
+		@allLineDots = @svg.append('g').attr 'class', 'allLineDots'
+		@passedLineDots = @svg.append('g').attr 'class', 'passedLineDots'
+		@failedLineDots = @svg.append('g').attr 'class', 'failedLineDots'
+
+	_updatePath: (path, dots, data, x, y, allIntervals, startFromZero, transitionTime) =>
 		computeChangeLine = (x, y) ->
 			return d3.svg.line()
 				.defined((d) -> return not isNaN d)
 				.x((d, index) -> return x allIntervals[index])
 				.y((d) -> return y d)
 
-		previouslyNoData = not path.datum()?
+		path.attr 'display', 'inline'
 
+		previouslyNoData = not path.datum()?
 		path = path.datum(data)
 		if previouslyNoData or startFromZero
 			path = path.attr 'd', computeChangeLine x, ((d) -> return y 0)
 		path = path.transition().duration(transitionTime)
 		path = path.attr('d', computeChangeLine x, y)
+
+		dots.selectAll('circle').remove()
+		newDots = dots.selectAll('circle').data(data)
+		newDots.enter()
+			.append('circle')
+			.attr('class', 'smallDot')
+			.attr('cx', (d, index) -> return x allIntervals[index])
+			.attr('cy', (d) -> return if isNaN d then 0 else y d)
+			.attr('r', (d) -> return if isNaN d then 0 else 1.5)
+		newDots.enter()
+			.append('circle')
+			.attr('class', 'largeDot')
+			.attr('cx', (d, index) -> return x allIntervals[index])
+			.attr('cy', (d) -> return if isNaN d then 0 else y d)
+			.attr('r', (d) -> return if isNaN d then 0 else 5.0)
+		newDots.exit()
+			.remove()
+
+	_hidePath: (path, dots) =>
+		path.attr 'display', 'none'
+		dots.selectAll('circle').remove()
 
 	_updateAxisLabels: (d3Binner, x, y, showYAsPercent=false) =>
 		getTimeFormat = () ->
@@ -129,13 +155,9 @@ window.D3ChangesLineGraph.clazz = class D3ChangesLineGraph
 			.domain([0, d3.max histograms.all])
 			.range([@bounds.bottom, @bounds.top])
 
-		@allLine.attr 'display', 'inline'
-		@passedLine.attr 'display', 'inline'
-		@failedLine.attr 'display', 'inline'
-
-		@_updatePath @allLine, histograms.all, x, y, allIntervals, startFromZero, 500
-		@_updatePath @passedLine, histograms.passed, x, y, allIntervals, startFromZero, 750
-		@_updatePath @failedLine, histograms.failed, x, y, allIntervals, startFromZero, 1000
+		@_updatePath @allLine, @allLineDots, histograms.all, x, y, allIntervals, startFromZero, 500
+		@_updatePath @passedLine, @passedLineDots, histograms.passed, x, y, allIntervals, startFromZero, 750
+		@_updatePath @failedLine, @failedLineDots, histograms.failed, x, y, allIntervals, startFromZero, 1000
 
 		@_updateAxisLabels d3Binner, x, y
 
@@ -171,16 +193,14 @@ window.D3ChangesLineGraph.clazz = class D3ChangesLineGraph
 			.domain([0, 1])
 			.range([@bounds.bottom, @bounds.top])
 
-		@allLine.attr 'display', 'none'
+		@_hidePath @allLine, @allLineDots
 
 		if changeType is 'passed'
-			@passedLine.attr 'display', 'inline'
-			@failedLine.attr 'display', 'none'
-			@_updatePath @passedLine, percentageHistograms.passed, x, y, allIntervals, startFromZero, 750
+			@_hidePath @failedLine, @failedLineDots
+			@_updatePath @passedLine, @passedLineDots, percentageHistograms.passed, x, y, allIntervals, startFromZero, 750
 
 		if changeType is 'failed'
-			@passedLine.attr 'display', 'none'
-			@failedLine.attr 'display', 'inline'
-			@_updatePath @failedLine, percentageHistograms.failed, x, y, allIntervals, startFromZero, 750
+			@_hidePath @passedLine, @passedLineDots
+			@_updatePath @failedLine, @failedLineDots, percentageHistograms.failed, x, y, allIntervals, startFromZero, 750
 
 		@_updateAxisLabels d3Binner, x, y, true

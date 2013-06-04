@@ -76,23 +76,24 @@ window.Analytics = ['$scope', 'rpc', 'events', ($scope, rpc, events) ->
 		rpc.makeRequest 'repositories', 'read', 'getRepositories', null, (error, repositories) ->
 			$scope.$apply () ->
 				$scope.options.repositories = [allRepository].concat repositories
+				updateChangeFinishedListeners()
 				getChanges()
+
+	getRepositoryIdsToDisplay = () ->
+		if $scope.options.repository.id >= 0 then return [$scope.options.repository.id]
+		else
+			return $scope.options.repositories
+				.map((repository) -> return repository.id)
+				.filter((repositoryId) -> repositoryId >= 0)
 
 	getChanges = () ->
 		return if $scope.options.repositories.every (repository) -> return repository.id < 0
-
-		getRepositoriesToRequest = () ->
-			if $scope.options.repository.id >= 0 then return [$scope.options.repository.id]
-			else
-				return $scope.options.repositories
-					.map((repository) -> return repository.id)
-					.filter((repositoryId) -> repositoryId >= 0)
 
 		$scope.graphOptions.changes = []
 
 		console.log 'requesting changes...'
 		requestParams =
-			repositories: getRepositoriesToRequest()
+			repositories: getRepositoryIdsToDisplay()
 			startTimestamp: $scope.graphOptions.start.getTime()
 			endTimestamp: $scope.graphOptions.end.getTime()
 		rpc.makeRequest 'changes', 'read', 'getChangesBetweenTimestamps', requestParams, (error, changes) ->
@@ -104,17 +105,34 @@ window.Analytics = ['$scope', 'rpc', 'events', ($scope, rpc, events) ->
 			status: if Math.random() < .75 then 'passed' else 'failed'
 			endTime: Math.random() * (endTimestamp - startTimestamp) + startTimestamp
 
+	handleChangeFinished = (data) -> $scope.$apply () ->
+		$scope.graphOptions.changes.push data
+
+	changeFinishedListeners = []
+	updateChangeFinishedListeners = () ->
+		changeFinishedListener.unsubscribe() for changeFinishedListener in changeFinishedListeners
+		changeFinishedListeners = []
+
+		return if $scope.options.duration.value isnt 'today'
+
+		for repositoryId in getRepositoryIdsToDisplay()
+			changeFinishedListener = events.listen('repositories', 'change finished', repositoryId).setCallback(handleChangeFinished).subscribe()
+			changeFinishedListeners.push changeFinishedListener
+	$scope.$on '$destroy', () -> changeFinishedListener.unsubscribe() for changeFinishedListener in changeFinishedListeners
+
 	getRepositories()
 
 	$scope.$watch 'options.graph', () ->
 		$scope.graphOptions.graphType = $scope.options.graph.value
 
 	$scope.$watch 'options.repository', () -> 
+		updateChangeFinishedListeners()
 		getChanges()
 
 	$scope.$watch 'options.duration', () ->
 		updateAllowedIntervals()
 		setGraphBounds()
+		updateChangeFinishedListeners()
 		getChanges()
 
 	$scope.$watch 'options.interval', () ->

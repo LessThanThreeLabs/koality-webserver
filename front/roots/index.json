@@ -2,6 +2,7 @@
 	"css": {
 		"text/css": [
 			"/css/src/util/ansi.css",
+			"/css/src/util/d3/lineGraph/d3ChangesLineGraph.css",
 
 			"/css/src/setup.css",
 			"/css/src/prettyElements/prettyCenteredPanel.css",
@@ -37,8 +38,8 @@
 
 			"/js/src/util/ansiparse.js",
 
-			"/js/src/util/d3/d3Binner.js",
-			"/js/src/util/d3/d3ChangesLineGraph.js",
+			"/js/src/util/d3/binner/d3Binner.js",
+			"/js/src/util/d3/lineGraph/d3ChangesLineGraph.js",
 
 			"/js/src/services.js",
 			"/js/src/directives.js",

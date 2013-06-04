@@ -75,43 +75,6 @@
 			width: 100%;
 			height: 350px;
 			box-sizing: border-box;
-
-			.allLine, .passedLine, .failedLine {
-				fill: none;
-				stroke-width: 1px;
-			}
-
-			.allLine { stroke: @koalityWhite; }
-			.passedLine { stroke: @koalityGreen; }
-			.failedLine { stroke: @koalityRed; }
-
-			.xAxis, .yAxis {
-				fill: @koalityGray;
-
-				path, line {
-					fill: none;
-					stroke: @koalityGray;
-					shape-rendering: crispEdges;
-				}
-
-				text {
-					font-size: 11px;
-				}
-
-				.tick {
-					&.minor {
-						stroke: darken(@koalityGray, 18%);
-					}
-				}
-			}
-
-			.xReferenceLines, .yReferenceLines {
-				stroke: darken(@koalityGray, 22%);
-			}
-
-			.xReferenceLines {
-				stroke-dasharray: 4, 4;
-			}
 		}
 	}
 }
