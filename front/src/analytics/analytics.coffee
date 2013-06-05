@@ -99,8 +99,11 @@ window.Analytics = ['$scope', 'rpc', 'events', ($scope, rpc, events) ->
 			$scope.$apply () ->
 				$scope.graphOptions.changes = changes
 
+	getChangeWithId = (id) ->
+		return (change for change in $scope.graphOptions.changes when change.id is id)[0]
+
 	handleChangeFinished = (data) -> $scope.$apply () ->
-		$scope.graphOptions.changes.push data
+		$scope.graphOptions.changes.push data if not getChangeWithId(data.id)?
 
 	changeFinishedListeners = []
 	updateChangeFinishedListeners = () ->
