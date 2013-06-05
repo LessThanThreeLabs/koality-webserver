@@ -15,14 +15,17 @@ angular.module('koality.d3.directive', []).
 			</div>'
 		link: (scope, element, attributes) ->
 			d3ChangesLineGraph = D3ChangesLineGraph.create element
+			changesListWasEmpty = true
 
 			handleUpdate = (newValue, oldValue) ->
 				if scope.startTime? and scope.endTime? and scope.interval?
 					changes = scope.changes ? []
 					d3Binner = D3Binner.create changes, scope.startTime, scope.endTime, scope.interval
 
-					if scope.graphType is 'all' then d3ChangesLineGraph.drawGraph d3Binner, true
-					else d3ChangesLineGraph.drawPercentageGraph d3Binner, scope.graphType, true
+					if scope.graphType is 'all' then d3ChangesLineGraph.drawGraph d3Binner, changesListWasEmpty
+					else d3ChangesLineGraph.drawPercentageGraph d3Binner, scope.graphType, changesListWasEmpty
+
+					changesListWasEmpty = changes.length is 0
 
 			scope.$watch 'changes', handleUpdate, true
 			scope.$watch 'graphType',  handleUpdate

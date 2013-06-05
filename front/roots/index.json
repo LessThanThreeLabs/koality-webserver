@@ -39,6 +39,8 @@
 
 			"/js/src/util/d3/binner/d3Binner.js",
 			"/js/src/util/d3/lineGraph/d3ChangesLineGraph.js",
+			"/js/src/util/d3/lineGraph/d3ChangesLineGraphAxes.js",
+			"/js/src/util/d3/lineGraph/d3ChangesLineGraphLines.js",
 
 			"/js/src/services.js",
 			"/js/src/directives.js",
