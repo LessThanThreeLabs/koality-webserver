@@ -91,7 +91,9 @@
 	<div id="adminRepositories" ng-show="currentView == 'repositories'" ng-controller="AdminRepositories">
 		<content>
 			<content-header content-header-padding>Manage Repositories
-				<content-header-subtext><a ng-click="addRepository.modalVisible=true">+ Add Repository</a></content-header-subtext>
+				<content-header-subtext>
+					<a ng-click="addRepository.modalVisible=true" ng-class="{disabled: repositories.length >= maxRepositoryCount}" ng-show="repositories != null && maxRepositoryCount != null">+ Add Repository</a>
+				</content-header-subtext>
 			</content-header>
 			<content-body unselectable>
 				<div id="adminRepositoriesContent">

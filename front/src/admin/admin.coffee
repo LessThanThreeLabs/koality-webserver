@@ -90,7 +90,13 @@ window.AdminRepositories = ['$scope', '$location', 'initialState', 'rpc', 'event
 
 	getRepositories = () ->
 		rpc.makeRequest 'repositories', 'read', 'getRepositories', null, (error, repositories) ->
-			$scope.$apply () -> $scope.repositories = repositories
+			$scope.$apply () ->
+				$scope.repositories = repositories
+
+	getMaxRepositoryCount = () ->
+		rpc.makeRequest 'systemSettings', 'read', 'getMaxRepositoryCount', null, (error, maxRepositoryCount) ->
+			$scope.$apply () ->
+				$scope.maxRepositoryCount = maxRepositoryCount ? Number.POSITIVE_INFINITY
 
 	handleAddedRepositoryUpdate = (data) -> $scope.$apply () ->
 		$scope.repositories.push data
@@ -105,6 +111,7 @@ window.AdminRepositories = ['$scope', '$location', 'initialState', 'rpc', 'event
 	$scope.$on '$destroy', removeRepositoryEvents.unsubscribe
 
 	getRepositories()
+	getMaxRepositoryCount()
 
 	$scope.openRemoveRepository = (repository) ->
 		$scope.removeRepository.id = repository.id
