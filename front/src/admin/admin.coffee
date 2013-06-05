@@ -217,20 +217,20 @@ window.AdminAws = ['$scope', 'rpc', ($scope, rpc) ->
 ]
 
 
-window.AdminS3 = ['$scope', 'rpc', ($scope, rpc) ->
+window.AdminExporter = ['$scope', 'rpc', ($scope, rpc) ->
 	getS3BucketName = () ->
 		rpc.makeRequest 'systemSettings', 'read', 'getS3BucketName', null, (error, bucketName) ->
-			$scope.$apply () -> $scope.s3.bucketName = bucketName
+			$scope.$apply () -> $scope.exporter.s3bucketName = bucketName
 
-	$scope.s3 = {}
+	$scope.exporter = {}
 	getS3BucketName()
 
 	$scope.submit = () ->
-		rpc.makeRequest 'systemSettings', 'update', 'setS3BucketName', bucketName: $scope.s3.bucketName, (error) ->
+		rpc.makeRequest 'systemSettings', 'update', 'setS3BucketName', bucketName: $scope.exporter.s3bucketName, (error) ->
 			$scope.$apply () ->
 				$scope.showSuccess = true if not error?
 
-	$scope.$watch 's3', (() -> $scope.showSuccess = false), true
+	$scope.$watch 'exporter', (() -> $scope.showSuccess = false), true
 ]
 
 window.AdminApi = ['$scope', 'rpc', ($scope, rpc) ->
