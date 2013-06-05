@@ -17,8 +17,6 @@ angular.module('koality.d3.directive', []).
 			d3ChangesLineGraph = D3ChangesLineGraph.create element
 
 			handleUpdate = (newValue, oldValue) ->
-				return if newValue is oldValue  # this will avoid calls not instigated by an update
-
 				if scope.startTime? and scope.endTime? and scope.interval?
 					changes = scope.changes ? []
 					d3Binner = D3Binner.create changes, scope.startTime, scope.endTime, scope.interval

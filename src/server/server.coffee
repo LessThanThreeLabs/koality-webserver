@@ -110,7 +110,6 @@ class Server
 			console.log 'adding project bindings'.cyan
 
 			expressServer.get '/', @handlers.indexHandler.handleRequest
-			expressServer.get '/welcome', @handlers.indexHandler.handleRequest
 			expressServer.get '/login', @handlers.indexHandler.handleRequest
 			expressServer.get '/account', @handlers.indexHandler.handleRequest
 			expressServer.get '/create/account', @handlers.indexHandler.handleRequest

@@ -91,19 +91,13 @@ window.Analytics = ['$scope', 'rpc', 'events', ($scope, rpc, events) ->
 
 		$scope.graphOptions.changes = []
 
-		console.log 'requesting changes...'
 		requestParams =
 			repositories: getRepositoryIdsToDisplay()
 			startTimestamp: $scope.graphOptions.start.getTime()
 			endTimestamp: $scope.graphOptions.end.getTime()
 		rpc.makeRequest 'changes', 'read', 'getChangesBetweenTimestamps', requestParams, (error, changes) ->
 			$scope.$apply () ->
-				# $scope.graphOptions.changes = changes
-				$scope.graphOptions.changes = (generateRandomChange requestParams.startTimestamp, requestParams.endTimestamp for index in [0..10000])
-
-		generateRandomChange = (startTimestamp, endTimestamp) ->
-			status: if Math.random() < .75 then 'passed' else 'failed'
-			endTime: Math.random() * (endTimestamp - startTimestamp) + startTimestamp
+				$scope.graphOptions.changes = changes
 
 	handleChangeFinished = (data) -> $scope.$apply () ->
 		$scope.graphOptions.changes.push data

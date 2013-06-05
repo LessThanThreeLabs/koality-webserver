@@ -3,11 +3,6 @@
 angular.module('koality', ['ngSanitize', 'koality.service', 'koality.directive', 'koality.d3.directive', 'koality.filter']).
 	config(['$routeProvider', ($routeProvider) ->
 		$routeProvider.
-			when('/welcome',
-				templateUrl: "/html/welcome#{fileSuffix}.html"
-				controller: Welcome
-				redirectTo: if window.accountInformation.id is '' then '/login' else null
-			).
 			when('/login',
 				templateUrl: "/html/login#{fileSuffix}.html"
 				controller: Login
@@ -49,7 +44,7 @@ angular.module('koality', ['ngSanitize', 'koality.service', 'koality.directive',
 				redirectTo: if window.accountInformation.isAdmin then null else '/'
 			).
 			otherwise(
-				redirectTo: '/welcome'
+				redirectTo: '/analytics'
 			)
 	]).
 	config(['$locationProvider', ($locationProvider) ->
