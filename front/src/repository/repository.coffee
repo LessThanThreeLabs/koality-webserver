@@ -147,16 +147,19 @@ window.RepositoryChanges = ['$scope', '$routeParams', 'changesRpc', 'events', 'l
 		return (change.submitter.firstName.toLowerCase() in getNamesFromNamesQuery()) or
 			(change.submitter.lastName.toLowerCase() in getNamesFromNamesQuery())
 
+	getChangeWithId = (id) ->
+		return (change for change in $scope.changes when change.id is id)[0]
+
 	handeChangeAdded = (data) -> $scope.$apply () ->
-		if doesChangeMatchQuery data
+		if doesChangeMatchQuery(data) and not getChangeWithId(data.id)?
 			$scope.changes.unshift data
 
 	handleChangeStarted = (data) -> $scope.$apply () ->
-		change = (change for change in $scope.changes when change.id is data.id)[0]
+		change = getChangeWithId data.id
 		change.status = data.status if change?
 
 	handleChangeFinished = (data) -> $scope.$apply () ->
-		change = (change for change in $scope.changes when change.id is data.id)[0]
+		change = getChangeWithId data.id
 		change.status = data.status if change?
 		if change?.status is 'passed'
 			change.animate = true
@@ -231,11 +234,14 @@ window.RepositoryStages = ['$scope', 'rpc', 'events', ($scope, rpc, events) ->
 				if $scope.currentStageId? and not isStageIdInStages $scope.currentStageId
 					$scope.selectStage null
 
+	getStageWithId = (id) ->
+		return (stage for stage in $scope.stages when stage.id is id)[0]
+
 	handleBuildConsoleAdded = (data) -> $scope.$apply () ->
-		$scope.stages.push data
+		$scope.stages.push data if not getStageWithId(data.id)?
 
 	handleBuildConsoleStatusUpdate = (data) -> $scope.$apply () ->
-		stage = (stage for stage in $scope.stages when stage.id is data.id)[0]
+		stage = getStageWithId data.id
 		stage.status = data.status if stage?
 
 		if stage.status is 'failed' and isMirrorStage stage, $scope.currentStageInformation
