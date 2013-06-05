@@ -19,7 +19,7 @@ window.D3ChangesLineGraph.clazz = class D3ChangesLineGraph
 			right: @element.width() - @PADDING.right
 			bottom: @element.height() - @PADDING.bottom - @AXIS_BUFFER
 
-		@svg = d3.select(@element[0]).append('g').attr 'class', 'd3ChangesLineGraph'
+		@svg = d3.select(@element[0]).select('svg').append 'g'
 
 		@xAxisLabel = @svg.append('g').attr('class', 'xAxis').attr 'transform', "translate(0, #{@element.height()-@PADDING.bottom})"
 		@yAxisLabel = @svg.append('g').attr('class', 'yAxis').attr 'transform', "translate(#{@PADDING.left}, 0)"
@@ -35,7 +35,17 @@ window.D3ChangesLineGraph.clazz = class D3ChangesLineGraph
 		@passedLineDots = @svg.append('g').attr 'class', 'passedLineDots'
 		@failedLineDots = @svg.append('g').attr 'class', 'failedLineDots'
 
-	_updatePath: (path, dots, data, x, y, allIntervals, startFromZero, transitionTime) =>
+		@allTooltip = d3.select(@element[0]).append('xhtml:div')
+			.html('<span class="prettyTooltip">hello</span>')
+			.attr 'class', 'allTooltip'
+		@passedTooltip = d3.select(@element[0]).append('xhtml:div')
+			.html('<span class="prettyTooltip">hello</span>')
+			.attr 'class', 'passedTooltip'
+		@failedTooltip = d3.select(@element[0]).append('xhtml:div')
+			.html('<span class="prettyTooltip">hello</span>')
+			.attr 'class', 'failedTooltip'
+
+	_updatePath: (path, data, x, y, allIntervals, startFromZero, transitionTime) =>
 		computeChangeLine = (x, y) ->
 			return d3.svg.line()
 				.defined((d) -> return not isNaN d)
@@ -51,6 +61,10 @@ window.D3ChangesLineGraph.clazz = class D3ChangesLineGraph
 		path = path.transition().duration(transitionTime)
 		path = path.attr('d', computeChangeLine x, y)
 
+	_hidePath: (path, dots) =>
+		path.attr 'display', 'none'
+
+	_updateDots: (dots, tooltip, tooltipTextGenerator, data, x, y, allIntervals) =>
 		dots.selectAll('circle').remove()
 		newDots = dots.selectAll('circle').data(data)
 		newDots.enter()
@@ -65,12 +79,37 @@ window.D3ChangesLineGraph.clazz = class D3ChangesLineGraph
 			.attr('cx', (d, index) -> return x allIntervals[index])
 			.attr('cy', (d) -> return if isNaN d then 0 else y d)
 			.attr('r', (d) -> return if isNaN d then 0 else 5.0)
+			.on('mouseover', (d, index) =>
+				tooltip
+					.style('left', (x(allIntervals[index]) - 130) + 'px')
+					.style('top', if isNaN d then '0' else (y(d) - 50) + 'px')
+					.classed('visible', true)
+				tooltip.select('.prettyTooltip').html tooltipTextGenerator allIntervals[index], allIntervals[index+1], d
+			)
+			.on('mouseout', (d, index) =>
+				tooltip.classed('visible', false)
+			)
 		newDots.exit()
 			.remove()
 
-	_hidePath: (path, dots) =>
-		path.attr 'display', 'none'
+	_hideDots: (dots) =>
 		dots.selectAll('circle').remove()
+
+	_getTooltipTextGenerator: (d3Binner, changeType, isPercentage) =>
+		return (firstDate, secondDate, value) ->
+			getFirstLine = () ->
+				secondDate ?= d3Binner.getTimeInterval().end
+				if d3Binner.getIntervalName() is 'hour'
+					return d3.time.format('%a %m/%d, %I:%M')(firstDate) + ' to ' + d3.time.format('%I:%M %p')(secondDate)
+				else
+					return d3.time.format('%a %m/%d')(firstDate) + ' to ' + d3.time.format('%a %m/%d')(secondDate)
+
+			getSecondLine = () ->
+				changeTag = if changeType is 'all' then 'total' else changeType
+				if isPercentage then return d3.format('.0%')(value) + ' of changes ' + changeTag
+				else return value + ' changes ' + changeTag
+
+			return getFirstLine() + '<br>' + getSecondLine()
 
 	_updateAxisLabels: (d3Binner, x, y, showYAsPercent=false) =>
 		getTimeFormat = () ->
@@ -155,9 +194,14 @@ window.D3ChangesLineGraph.clazz = class D3ChangesLineGraph
 			.domain([0, d3.max histograms.all])
 			.range([@bounds.bottom, @bounds.top])
 
-		@_updatePath @allLine, @allLineDots, histograms.all, x, y, allIntervals, startFromZero, 500
-		@_updatePath @passedLine, @passedLineDots, histograms.passed, x, y, allIntervals, startFromZero, 750
-		@_updatePath @failedLine, @failedLineDots, histograms.failed, x, y, allIntervals, startFromZero, 1000
+		@_updatePath @allLine, histograms.all, x, y, allIntervals, startFromZero, 500
+		@_updateDots @allLineDots, @allTooltip, @_getTooltipTextGenerator(d3Binner, 'all', false), histograms.all, x, y, allIntervals
+
+		@_updatePath @passedLine, histograms.passed, x, y, allIntervals, startFromZero, 750
+		@_updateDots @passedLineDots, @passedTooltip, @_getTooltipTextGenerator(d3Binner, 'passed', false), histograms.passed, x, y, allIntervals
+
+		@_updatePath @failedLine, histograms.failed, x, y, allIntervals, startFromZero, 1000
+		@_updateDots @failedLineDots, @failedTooltip, @_getTooltipTextGenerator(d3Binner, 'failed', false), histograms.failed, x, y, allIntervals
 
 		@_updateAxisLabels d3Binner, x, y
 
@@ -193,14 +237,21 @@ window.D3ChangesLineGraph.clazz = class D3ChangesLineGraph
 			.domain([0, 1])
 			.range([@bounds.bottom, @bounds.top])
 
-		@_hidePath @allLine, @allLineDots
+		@_hidePath @allLine
+		@_hideDots @allLineDots
 
 		if changeType is 'passed'
-			@_hidePath @failedLine, @failedLineDots
-			@_updatePath @passedLine, @passedLineDots, percentageHistograms.passed, x, y, allIntervals, startFromZero, 750
+			@_hidePath @failedLine
+			@_hideDots @failedLineDots
+
+			@_updatePath @passedLine, percentageHistograms.passed, x, y, allIntervals, startFromZero, 750
+			@_updateDots @passedLineDots, @passedTooltip, @_getTooltipTextGenerator(d3Binner, 'passed', true), percentageHistograms.passed, x, y, allIntervals
 
 		if changeType is 'failed'
-			@_hidePath @passedLine, @passedLineDots
-			@_updatePath @failedLine, @failedLineDots, percentageHistograms.failed, x, y, allIntervals, startFromZero, 750
+			@_hidePath @passedLine
+			@_hideDots @passedLineDots
+
+			@_updatePath @failedLine, percentageHistograms.failed, x, y, allIntervals, startFromZero, 750
+			@_updateDots @failedLineDots, @failedTooltip, @_getTooltipTextGenerator(d3Binner, 'failed', true), percentageHistograms.failed, x, y, allIntervals
 
 		@_updateAxisLabels d3Binner, x, y, true

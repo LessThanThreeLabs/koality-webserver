@@ -1,6 +1,7 @@
 @import '../../../constants';
 
 .d3ChangesLineGraph {
+	position: relative;
 
 	.allLine, .passedLine, .failedLine {
 		fill: none;
@@ -96,4 +97,21 @@
 	.xReferenceLines {
 		stroke-dasharray: 4, 4;
 	}
+
+	.allTooltip, .passedTooltip, .failedTooltip {
+		display: none;
+		position: absolute;
+		z-index: 1000000;
+		width: 300px;
+		text-align: center;
+		font-size: 11px;
+
+		&.visible {
+			display: block;
+		}
+	}
+
+	.allTooltip { color: @koalityWhite; }
+	.passedTooltip { color: @koalityGreen; }
+	.failedTooltip { color: @koalityRed; }
 }
