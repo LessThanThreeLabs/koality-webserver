@@ -1,5 +1,17 @@
 'use strict'
 
+copyDataIntoChange = (change, data) ->
+	assert.ok change? and typeof change is 'object'
+	assert.ok data? and typeof data is 'object'
+
+	change.aggregateStatus = data.aggregateStatus
+	change.verificationStatus = data.verificationStatus
+	change.mergeStatus = data.mergeStatus
+	change.createTime = data.createTime
+	change.startTime = data.startTime
+	change.endTime = data.endTime
+
+
 window.Repository = ['$scope', '$location', '$routeParams', 'rpc', 'events', 'integerConverter', ($scope, $location, $routeParams, rpc, events, integerConverter) ->
 	retrieveRepositoryInformation = () ->
 		rpc.makeRequest 'repositories', 'read', 'getMetadata', id: $routeParams.repositoryId, (error, repositoryInformation) ->
@@ -17,8 +29,9 @@ window.Repository = ['$scope', '$location', '$routeParams', 'rpc', 'events', 'in
 		rpc.makeRequest 'changes', 'read', 'getMetadata', requestData, (error, changeInformation) ->
 			$scope.$apply () ->
 				$scope.currentChangeInformation = changeInformation
+				$scope.showSkipped = false if $scope.currentChangeInformation.aggregateStatus isnt 'skipped'
 				$scope.showMerge = false if not $scope.currentChangeInformation.mergeStatus?
-				$scope.showDebug = false if $scope.currentChangeInformation.status isnt 'failed'
+				$scope.showDebug = false if $scope.currentChangeInformation.aggregateStatus isnt 'failed'
 
 	retrieveCurrentStageInformation = () ->
 		$scope.currentStageInformation = null
@@ -31,19 +44,6 @@ window.Repository = ['$scope', '$location', '$routeParams', 'rpc', 'events', 'in
 		rpc.makeRequest 'buildConsoles', 'read', 'getBuildConsole', requestData, (error, stageInformation) ->
 			$scope.$apply () ->
 				$scope.currentStageInformation = stageInformation
-
-	handleMergeStatusUpdate = (data) -> $scope.$apply () ->
-		$scope.currentChangeInformation.mergeStatus = data.mergeStatus
-
-	changeMergeStatusUpdateEvents = null
-	updateMergeStatusListener = () ->
-		if changeMergeStatusUpdateEvents?
-			changeMergeStatusUpdateEvents.unsubscribe()
-			changeMergeStatusUpdateEvents = null
-
-		if $scope.currentChangeId?
-			changeMergeStatusUpdateEvents = events.listen('changes', 'merge completed', $scope.currentChangeId).setCallback(handleMergeStatusUpdate).subscribe()
-	$scope.$on '$destroy', () -> changeMergeStatusUpdateEvents.unsubscribe() if changeMergeStatusUpdateEvents?
 
 	syncToRouteParams = () ->
 		$scope.currentChangeId = integerConverter.toInteger $routeParams.change
@@ -86,7 +86,7 @@ window.Repository = ['$scope', '$location', '$routeParams', 'rpc', 'events', 'in
 		$scope.showDebug = true
 
 	$scope.$watch 'currentChangeId', (newValue, oldValue) ->
-		updateMergeStatusListener()
+		# updateMergeStatusListener()
 		retrieveCurrentChangeInformation()
 		$location.search 'change', newValue ? null
 
@@ -156,17 +156,18 @@ window.RepositoryChanges = ['$scope', '$routeParams', 'changesRpc', 'events', 'l
 
 	handleChangeStarted = (data) -> $scope.$apply () ->
 		change = getChangeWithId data.id
-		change.status = data.status if change?
+		copyDataIntoChange change, data if change?
 
 	handleChangeFinished = (data) -> $scope.$apply () ->
 		change = getChangeWithId data.id
-		change.status = data.status if change?
-		if change?.status is 'passed'
+		copyDataIntoChange change, data if change?
+
+		if change?.aggregateStatus is 'passed'
 			change.animate = true
 			setTimeout (() -> $scope.$apply () -> change.animate = false), 3000
 
 		if $scope.currentChangeId is data.id
-			$scope.currentChangeInformation.status = data.status
+			copyDataIntoChange $scope.currentChangeInformation, data
 
 	changeAddedEvents = events.listen('repositories', 'change added', $routeParams.repositoryId).setCallback(handeChangeAdded).subscribe()
 	changeStartedEvents = events.listen('repositories', 'change started', $routeParams.repositoryId).setCallback(handleChangeStarted).subscribe()
