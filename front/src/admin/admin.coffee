@@ -257,13 +257,12 @@ window.AdminApi = ['$scope', 'rpc', ($scope, rpc) ->
 
 
 window.AdminUpgrade = ['$scope', 'initialState', 'rpc', 'events', ($scope, initialState, rpc, events) ->
-	$scope.performUpgrade = () ->
-		$scope.upgrade.upgradeAllowed = false
-		rpc.makeRequest 'systemSettings', 'update', 'upgradeDeployment', null, (error) ->
+	$scope.upgrade = {}
+
+	getUpgradeStatus = () ->
+		rpc.makeRequest 'systemSettings', 'read', 'getUpgradeStatus', null, (error, upgradeStatus) ->
 			$scope.$apply () ->
-				if error?
-					$scope.upgrade.message = 'Failed to begin upgrade.'
-					$scope.upgrade.upgradeAllowed = true
+				handleUpgradeStatus upgradeStatus
 
 	handleUpgradeStatus = (upgradeStatus) ->
 		if upgradeStatus is 'running'
@@ -284,15 +283,6 @@ window.AdminUpgrade = ['$scope', 'initialState', 'rpc', 'events', ($scope, initi
 			$scope.upgrade.message = 'There are no upgrades available at this time.'
 			$scope.upgrade.upgradeAllowed = false
 
-	getUpgradeStatus = () ->
-		rpc.makeRequest 'systemSettings', 'read', 'getUpgradeStatus', null, (error, upgradeStatus) ->
-			$scope.$apply () ->
-				if error?
-					$scope.upgrade.message = 'Unable to upgrade at this time.'
-					$scope.upgrade.upgradeAllowed = false
-				else
-					handleUpgradeStatus upgradeStatus
-
 	handleSystemSettingsUpdate = (data) -> $scope.$apply () ->
 		if data.resource is 'deployment' and data.key is 'upgrade_status'
 			handleUpgradeStatus data.value
@@ -300,6 +290,9 @@ window.AdminUpgrade = ['$scope', 'initialState', 'rpc', 'events', ($scope, initi
 	changedSystemSetting = events.listen('systemSettings', 'system setting updated', initialState.user.id).setCallback(handleSystemSettingsUpdate).subscribe()
 	$scope.$on '$destroy', changedSystemSetting.unsubscribe
 
-	$scope.upgrade = {}
 	getUpgradeStatus()
+
+	$scope.performUpgrade = () ->
+		$scope.upgrade.upgradeAllowed = false
+		rpc.makeRequest 'systemSettings', 'update', 'upgradeDeployment', null
 ]
