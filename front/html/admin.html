@@ -250,7 +250,7 @@
 						<styled-form-field label="Instance size" label-padding="true">
 							<select ng-model="instanceSettings.instanceSize" ng-options="instanceSize as instanceSize for instanceSize in allowedInstanceSizes"></select>
 						</styled-form-field>
-						<styled-form-field label="Num waiting instances" label-padding="true">
+						<styled-form-field label="Ready instances" label-padding="true">
 							<input type="number" ng-model="instanceSettings.numWaiting" name="numWaiting" min="0" max="1000" required>
 							<styled-form-field-error tooltip="Invalid number of waiting instances (0-1000)" error-visible="awsForm.numWaiting.$dirty && awsForm.numWaiting.$invalid"></styled-form-field-error>
 							<styled-form-field-error tooltip="Must be less than max running instances" error-visible="awsForm.numWaiting.$valid && awsForm.maxRunning.$valid && instanceSettings.numWaiting > instanceSettings.maxRunning"></styled-form-field-error>
