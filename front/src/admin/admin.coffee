@@ -265,17 +265,16 @@ window.AdminUpgrade = ['$scope', 'initialState', 'rpc', 'events', ($scope, initi
 				handleUpgradeStatus upgradeStatus
 
 	handleUpgradeStatus = (upgradeStatus) ->
-		if upgradeStatus is 'running'
+		lastUpgradeStatus = upgradeStatus.lastUpgradeStatus
+		upgradeAvailable = upgradeStatus.upgradeAvailable ? false
+		if lastUpgradeStatus is 'running'
 			$scope.upgrade.message = 'An upgrade is currently in progress. ' +
 				'You should expect the system to restart in a few minutes.'
 			$scope.upgrade.upgradeAllowed = false
-		else if upgradeStatus is 'failed'
+		else if lastUpgradeStatus is 'failed'
 			$scope.upgrade.message = 'The last upgrade failed. Contact support if this happens again.'
-			$scope.upgrade.upgradeAllowed = true
-		else if upgradeStatus is 'passed'
-			$scope.upgrade.message = 'Upgrade succeeded.'
-			$scope.upgrade.upgradeAllowed = false
-		else if upgradeStatus is 'ready'
+			$scope.upgrade.upgradeAllowed = upgradeAvailable
+		else if upgradeAvailable
 			$scope.upgrade.message = 'An upgrade to Koality is available. ' +
 				'Upgrading will shut down the server and may take several minutes before restarting.'
 			$scope.upgrade.upgradeAllowed = true
@@ -285,7 +284,7 @@ window.AdminUpgrade = ['$scope', 'initialState', 'rpc', 'events', ($scope, initi
 
 	handleSystemSettingsUpdate = (data) -> $scope.$apply () ->
 		if data.resource is 'deployment' and data.key is 'upgrade_status'
-			handleUpgradeStatus data.value
+			handleUpgradeStatus { lastUpgradeStatus: data.value }
 
 	changedSystemSetting = events.listen('systemSettings', 'system setting updated', initialState.user.id).setCallback(handleSystemSettingsUpdate).subscribe()
 	$scope.$on '$destroy', changedSystemSetting.unsubscribe
