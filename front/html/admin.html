@@ -275,7 +275,7 @@
 				<div id="adminExporterContent">
 					<styled-form name="exporterForm">
 						<styled-form-field label="S3 bucket name" label-padding="true">
-							<input type="text" ng-model="exporter.s3bucketName" name="bucketName" placeholder="bucket-name" ng-pattern="/^[-_a-zA-Z0-9]+$/" ng-minlength="3" ng-maxlength="64" required focused>
+							<input type="text" ng-model="exporter.s3bucketName" name="bucketName" placeholder="bucket-name" ng-pattern="/^$|^[-_a-zA-Z0-9]{3,}$/" ng-maxlength="64" focused>
 							<styled-form-field-error tooltip="Invalid bucket name" error-visible="exporterForm.bucketName.$dirty && exporterForm.bucketName.$invalid"></styled-form-field-error>
 						</styled-form-field>
 						<styled-form-field label="">
