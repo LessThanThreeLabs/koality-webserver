@@ -80,7 +80,7 @@
 	},
 
 	"font": {
-		"application/x-font-woff": [
+		"application/font-woff": [
 			"/font/din/bold.woff",
 			"/font/din/light.woff",
 			"/font/din/medium.woff",
