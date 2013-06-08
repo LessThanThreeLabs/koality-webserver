@@ -310,6 +310,7 @@
 					<div id="adminUpgradeMessage">
 						{{upgrade.message}}
 					</div>
+					<spinner id="adminUpgradeCheckSpinner" spinner-running="upgrade.spinnerOn"></spinner>
 
 					<button id="adminUpgradeButton" ng-click="performUpgrade()" ng-disabled="!upgrade.upgradeAllowed">Upgrade</button>
 				</div>

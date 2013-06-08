@@ -258,10 +258,12 @@ window.AdminApi = ['$scope', 'rpc', ($scope, rpc) ->
 
 window.AdminUpgrade = ['$scope', 'initialState', 'rpc', 'events', ($scope, initialState, rpc, events) ->
 	$scope.upgrade = {}
+	$scope.upgrade.spinnerOn = true
 
 	getUpgradeStatus = () ->
 		rpc.makeRequest 'systemSettings', 'read', 'getUpgradeStatus', null, (error, upgradeStatus) ->
 			$scope.$apply () ->
+				$scope.upgrade.spinnerOn = false
 				handleUpgradeStatus upgradeStatus
 
 	handleUpgradeStatus = (upgradeStatus) ->
