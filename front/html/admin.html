@@ -16,7 +16,7 @@
 
 	<div id="adminWebsite" ng-show="currentView == 'website'" ng-controller="AdminWebsite">
 		<content>
-			<content-header content-header-padding ng-class="{green: showSuccess, red: showError}">Manage Website</content-header>
+			<content-header content-header-padding>Manage Website</content-header>
 			<content-body unselectable>
 				<div id="adminWebsiteContent">
 					<styled-form name="websiteForm">
@@ -168,11 +168,7 @@
 		<modal modal-visible="removeRepository.modalVisible">
 			<div id="adminRemoveRepository">
 				<content>
-					<content-header content-header-padding ng-class="{green: removeRepository.showSuccess, red: removeRepository.showError}">Remove Repository
-						<content-header-subtext>
-							<span ng-show="removeRepository.showError">Invalid password</span>
-						</content-header-subtext>
-					</content-header>
+					<content-header content-header-padding>Remove Repository</content-header>
 					<content-body unselectable>
 						<div id="adminRemoveRepositoryWarning">
 							To remove {{removeRepository.name}}, you must first enter your password with the following token:
@@ -231,11 +227,7 @@
 
 	<div id="adminAws" ng-show="currentView == 'aws'" ng-controller="AdminAws">
 		<content>
-			<content-header content-header-padding ng-class="{green: showSuccess, red: showError}">Manage AWS
-				<content-header-subtext>
-					<span ng-show="showError && showKeysError">Invalid AWS keys</span>
-				</content-header-subtext>
-			</content-header>
+			<content-header content-header-padding>Manage AWS</content-header>
 			<content-body unselectable>
 				<div id="adminAwsContent">
 					<styled-form name="awsForm">
@@ -270,7 +262,7 @@
 
 	<div id="adminExporter" ng-show="currentView == 'exporter'" ng-controller="AdminExporter">
 		<content>
-			<content-header content-header-padding ng-class="{green: showSuccess, red: showError}">Manage Exporter</content-header>
+			<content-header content-header-padding>Manage Exporter</content-header>
 			<content-body unselectable>
 				<div id="adminExporterContent">
 					<styled-form name="exporterForm">

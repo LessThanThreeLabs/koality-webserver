@@ -2,16 +2,15 @@
 
 
 #repository {
-	@topSpacing: 85px;
+	@contentTopSpacing: 55px;
 	@bottomPadding: 25px;
 
 	width: 100%;
 	height: 100%;
 
-
 	#repositoryHeaderPanel {
 		position: absolute;
-		top: 40px;
+		top: 10px;
 		left: 0px;
 		right: 0px;
 
@@ -33,7 +32,7 @@
 
 	#repositoryChanges {
 		position: absolute;
-		top: @topSpacing;
+		top: @contentTopSpacing;
 		left: 8px;
 		bottom: @bottomPadding;
 		width: @menuWidth;
@@ -151,7 +150,7 @@
 
 	#repositoryStages {
 		position: absolute;
-		top: @topSpacing;
+		top: @contentTopSpacing;
 		left: 8px + @menuWidth + @panelSpacing;
 		bottom: @bottomPadding;
 		width: @menuWidth;
@@ -159,7 +158,7 @@
 
 	#repositoryStageDetails {
 		position: absolute;
-		top: @topSpacing;
+		top: @contentTopSpacing;
 		left: 8px + (@menuWidth + @panelSpacing) * 2;
 		right: 8px;
 		bottom: @bottomPadding;

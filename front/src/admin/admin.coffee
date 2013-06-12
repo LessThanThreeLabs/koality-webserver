@@ -12,7 +12,7 @@ window.Admin = ['$scope', '$location', '$routeParams', 'initialState', ($scope, 
 ]
 
 
-window.AdminWebsite = ['$scope', 'rpc', 'events', ($scope, rpc, events) ->
+window.AdminWebsite = ['$scope', 'rpc', 'events', 'notification', ($scope, rpc, events, notification) ->
 	getWebsiteSettings = () ->
 		rpc.makeRequest 'systemSettings', 'read', 'getWebsiteSettings', null, (error, websiteSettings) ->
 			$scope.$apply () -> $scope.website = websiteSettings
@@ -22,14 +22,12 @@ window.AdminWebsite = ['$scope', 'rpc', 'events', ($scope, rpc, events) ->
 
 	$scope.submit = () ->
 		rpc.makeRequest 'systemSettings', 'update', 'setWebsiteSettings', $scope.website, (error) ->
-			$scope.$apply () ->
-				$scope.showSuccess = true if not error?
-
-	$scope.$watch 'website', (() -> $scope.showSuccess = false), true
+			if error? then notification.error 'Unable to update website domain'
+			else notification.success 'Updated website domain'
 ]
 
 
-window.AdminUsers = ['$scope', 'initialState', 'rpc', 'events', ($scope, initialState, rpc, events) ->
+window.AdminUsers = ['$scope', 'initialState', 'rpc', 'events', 'notification', ($scope, initialState, rpc, events, notification) ->
 	$scope.orderByPredicate = 'lastName'
 	$scope.orderByReverse = false
 
@@ -45,6 +43,7 @@ window.AdminUsers = ['$scope', 'initialState', 'rpc', 'events', ($scope, initial
 			$scope.$apply () ->
 				if error? then $scope.addUsers.showError = true
 				else
+					notification.success 'Invited new users'
 					$scope.addUsers.modalVisible = false
 					$scope.addUsers.showError = false
 					$scope.addUsers.emails = ''
@@ -64,7 +63,8 @@ window.AdminUsers = ['$scope', 'initialState', 'rpc', 'events', ($scope, initial
 	getUsers()
 
 	$scope.removeUser = (user) ->
-		rpc.makeRequest 'users', 'delete', 'deleteUser', id: user.id
+		rpc.makeRequest 'users', 'delete', 'deleteUser', id: user.id, (error) ->
+			if error? then notification.error 'Unable to delete user ' + user.email
 
 	$scope.submitEmails = () ->
 		inviteUsers()
@@ -133,10 +133,9 @@ window.AdminRepositories = ['$scope', '$location', '$routeParams', 'initialState
 			id: $scope.removeRepository.id
 			password: $scope.removeRepository.password
 		rpc.makeRequest 'repositories', 'delete', 'deleteRepository', requestParams, (error) ->
-			$scope.$apply () ->
-				if error?
-					$scope.removeRepository.showError = true
-				else
+			if error? then notification.error 'Unable to remove repository'
+			else
+				$scope.$apply () ->
 					$scope.removeRepository.modalVisible = false
 
 	$scope.getSshKey = () ->
@@ -147,7 +146,11 @@ window.AdminRepositories = ['$scope', '$location', '$routeParams', 'initialState
 
 	$scope.createRepository = () ->
 		rpc.makeRequest 'repositories', 'create', 'createRepository', $scope.addRepository, (error, repositoryId) ->
-			$scope.$apply () -> $scope.addRepository.modalVisible = false
+			if error? then notification.error 'Unable to create repository'
+			else
+				notification.success 'Create repository ' + $scope.addRepository.name
+				$scope.$apply () ->
+					$scope.addRepository.modalVisible = false
 
 	resetAddRepositoryValues = () ->
 		$scope.addRepository.stage = 'first'
@@ -178,8 +181,11 @@ window.AdminRepositories = ['$scope', '$location', '$routeParams', 'initialState
 			id: $scope.forwardUrl.id
 			forwardUrl: $scope.forwardUrl.url
 		rpc.makeRequest 'repositories', 'update', 'setForwardUrl', requestParams, (error, forwardUrl) ->
-			$scope.$apply () ->
-				$scope.forwardUrl.modalVisible = false
+			if error? then notification.error 'Unable to update forward url'
+			else 
+				notification.success 'Updated forward url'
+				$scope.$apply () ->
+					$scope.forwardUrl.modalVisible = false
 
 	$scope.$watch 'addRepository.modalVisible', (newValue, oldValue) ->
 		resetAddRepositoryValues() if not newValue
@@ -189,11 +195,7 @@ window.AdminRepositories = ['$scope', '$location', '$routeParams', 'initialState
 ]
 
 
-window.AdminAws = ['$scope', 'rpc', ($scope, rpc) ->
-	clearStates = () ->
-		$scope.showSuccess = false
-		$scope.showError = false
-
+window.AdminAws = ['$scope', 'rpc', 'notification', ($scope, rpc, notification) ->
 	getAwsKeys = () ->
 		rpc.makeRequest 'systemSettings', 'read', 'getAwsKeys', null, (error, awsKeys) ->
 			$scope.$apply () ->
@@ -218,20 +220,13 @@ window.AdminAws = ['$scope', 'rpc', ($scope, rpc) ->
 			rpc.makeRequest 'systemSettings', 'update', 'setAwsKeys', $scope.awsKeys, defer awsKeysError
 			rpc.makeRequest 'systemSettings', 'update', 'setInstanceSettings', $scope.instanceSettings, defer instanceSettingsError
 
-		$scope.$apply () ->
-			clearStates()
-			if awsKeysError or instanceSettingsError
-				$scope.showError = true
-				$scope.showKeysError = true if awsKeysError
-			else
-				$scope.showSuccess = true
-
-	$scope.$watch 'awsKeys', clearStates, true
-	$scope.$watch 'instanceSettings', clearStates, true
+		if awsKeysError then notification.error 'Unable to update aws keys'
+		else if instanceSettingsError then notification.error 'Unable to update aws instance information'
+		else notification.success 'Updated aws information'
 ]
 
 
-window.AdminExporter = ['$scope', 'rpc', ($scope, rpc) ->
+window.AdminExporter = ['$scope', 'rpc', 'notification', ($scope, rpc, notification) ->
 	getS3BucketName = () ->
 		rpc.makeRequest 'systemSettings', 'read', 'getS3BucketName', null, (error, bucketName) ->
 			$scope.$apply () -> $scope.exporter.s3bucketName = bucketName
@@ -241,10 +236,8 @@ window.AdminExporter = ['$scope', 'rpc', ($scope, rpc) ->
 
 	$scope.submit = () ->
 		rpc.makeRequest 'systemSettings', 'update', 'setS3BucketName', bucketName: $scope.exporter.s3bucketName, (error) ->
-			$scope.$apply () ->
-				$scope.showSuccess = true if not error?
-
-	$scope.$watch 'exporter', (() -> $scope.showSuccess = false), true
+			if error? then notification.error 'Unable to update exporter settings'
+			else notification.success 'Updated exporter settings'
 ]
 
 window.AdminApi = ['$scope', 'rpc', ($scope, rpc) ->
