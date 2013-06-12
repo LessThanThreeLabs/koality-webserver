@@ -115,7 +115,9 @@ angular.module('koality.directive', []).
 			text: '@'
 			durationInSeconds: '@'
 		template: '<div class="prettyNotification" ng-class="{green: type == \'success\', orange: type == \'warning\', red: type == \'error\'}">
-					<div class="prettyNotificationContent growingCentered">{{text}}</div>
+					<div class="prettyNotificationContent growingCentered">{{text}}
+						<span class="prettyNotificationClose" ng-click="hide()">X</span>
+					</div>
 				</div>'
 		link: (scope, element, attributes) ->
 			getZIndex = (type, transient) ->
@@ -127,12 +129,12 @@ angular.module('koality.directive', []).
 					else throw 'unexpected notification type ' + type
 				return if transient then minorIndex + 1000 else minorIndex
 
-			hide = () ->
+			scope.hide = () ->
 				element.addClass 'hiding'
 				setTimeout (() -> element.remove()), 5000
 
 			element.css 'z-index', getZIndex attributes.type, attributes.durationInSeconds > 0
-			setTimeout hide, attributes.durationInSeconds * 1000 if attributes.durationInSeconds > 0
+			setTimeout scope.hide, attributes.durationInSeconds * 1000 if attributes.durationInSeconds > 0
 	).
 	directive('styledForm', () ->
 		restrict: 'E'
