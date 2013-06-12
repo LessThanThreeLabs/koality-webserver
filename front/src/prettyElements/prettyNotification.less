@@ -1,0 +1,87 @@
+@import '../constants';
+
+.prettyNotification {
+	@initialTop: -@notificationHeight;
+	@finalTop: 0;
+	
+	@keyframes slideIn { 
+		from { top: @initialTop; }
+		to { top: @finalTop; }
+	}
+	@-moz-keyframes slideIn {
+		from { top: @initialTop; }
+		to { top: @finalTop; }
+	}
+	@-webkit-keyframes slideIn {
+		from { top: @initialTop; }
+		to { top: @finalTop; }
+	}
+	@-o-keyframes slideIn {
+		from { top: @initialTop; }
+		to { top: @finalTop; }
+	}
+
+	@keyframes slideOut { 
+		from { top: @finalTop }
+		to { top: @initialTop; }
+	}
+	@-moz-keyframes slideOut {
+		from { top: @finalTop }
+		to { top: @initialTop; }
+	}
+	@-webkit-keyframes slideOut {
+		from { top: @finalTop }
+		to { top: @initialTop; }
+	}
+	@-o-keyframes slideOut {
+		from { top: @finalTop }
+		to { top: @initialTop; }
+	}
+
+	position: absolute;
+	top: @finalTop;
+	left: 0;
+	right: 0;
+	height: @notificationHeight;
+	box-sizing: border-box;
+
+	@slideInTransitionTime: 0.5s;
+	animation: slideIn @slideInTransitionTime ease-in-out;
+	-moz-animation: slideIn @slideInTransitionTime ease-in-out;
+	-webkit-animation: slideIn @slideInTransitionTime ease-in-out;
+	-o-animation: slideIn @slideInTransitionTime ease-in-out;
+
+	&.hiding {
+		top: @initialTop;
+
+		@slideOutTransitionTime: 0.5s;
+		animation: slideOut @slideOutTransitionTime ease-in-out;
+		-moz-animation: slideOut @slideOutTransitionTime ease-in-out;
+		-webkit-animation: slideOut @slideOutTransitionTime ease-in-out;
+		-o-animation: slideOut @slideOutTransitionTime ease-in-out;
+	}
+
+	&.green {
+		background-color: @koalityGreen;
+		border-top: 1px solid @koalityDarkGreen;
+		border-bottom: 1px solid @koalityDarkGreen;
+	}
+
+	&.orange {
+		background-color: @koalityOrange;
+		border-top: 1px solid @koalityDarkOrange;
+		border-bottom: 1px solid @koalityDarkOrange;
+	}
+
+	&.red {
+		background-color: @koalityRed;
+		border-top: 1px solid @koalityDarkRed;
+		border-bottom: 1px solid @koalityDarkRed;
+	}
+
+	.prettyNotificationContent {
+		font-size: 16px;
+		font-weight: 500;
+		line-height: @notificationHeight;
+	}
+}

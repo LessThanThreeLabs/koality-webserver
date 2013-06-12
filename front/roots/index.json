@@ -11,6 +11,7 @@
 			"/css/src/prettyElements/prettyDropdown.css",
 			"/css/src/prettyElements/prettyForm.css",
 			"/css/src/prettyElements/prettyModal.css",
+			"/css/src/prettyElements/prettyNotification.css",
 			"/css/src/prettyElements/prettyTable.css",
 			"/css/src/prettyElements/prettyTooltip.css",
 			"/css/src/main.css",
@@ -69,6 +70,7 @@
 
 	"html": {
 		"text/html": [
+			"/html/header.html",
 			"/html/login.html",
 			"/html/account.html",
 			"/html/createAccount.html",

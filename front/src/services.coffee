@@ -49,6 +49,21 @@ angular.module('koality.service', []).
 
 			$http.post('/extendCookieExpiration').success(successHandler).error(errorHandler)
 	]).
+	factory('notification', ['$compile', '$rootScope', '$document', ($compile, $rootScope, $document) ->
+		container = $document.find '#notificationsContainer'
+		
+		add = (type, text, durationInSeconds) ->
+			assert.ok typeof durationInSeconds is 'number' and durationInSeconds >= 0
+			notification = "<notification type='#{type}' text='#{text}' duration-in-seconds=#{durationInSeconds} />"
+			notification = $compile(notification)($rootScope.$new(true))
+			container.append notification
+
+		toReturn =
+			success: (text, durationInSeconds=5) -> add 'success', text, durationInSeconds
+			warning: (text, durationInSeconds=5) -> add 'warning', text, durationInSeconds
+			error: (text, durationInSeconds=5) -> add 'error', text, durationInSeconds
+		return toReturn
+	]).
 	factory('socket', ['$window', '$location', 'initialState', ($window, $location, initialState) ->
 		socket = io.connect "//#{$location.host()}?csrfToken=#{initialState.csrfToken}", resource: 'socket'
 		previousEventToCallbacks = {}
