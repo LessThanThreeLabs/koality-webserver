@@ -71,7 +71,7 @@ window.AdminUsers = ['$scope', 'initialState', 'rpc', 'events', ($scope, initial
 ]
 
 
-window.AdminRepositories = ['$scope', '$location', 'initialState', 'rpc', 'events', ($scope, $location, initialState, rpc, events) ->
+window.AdminRepositories = ['$scope', '$location', '$routeParams', 'initialState', 'rpc', 'events', 'notification', ($scope, $location, $routeParams, initialState, rpc, events, notification) ->
 	$scope.orderByPredicate = 'name'
 	$scope.orderByReverse = false
 
@@ -88,6 +88,8 @@ window.AdminRepositories = ['$scope', '$location', 'initialState', 'rpc', 'event
 	$scope.forwardUrl = {}
 	$scope.forwardUrl.modalVisible = false
 
+	$scope.$on '$routeUpdate', () -> showRepositoriesLimitWarningIfNecessary()
+
 	getRepositories = () ->
 		rpc.makeRequest 'repositories', 'read', 'getRepositories', null, (error, repositories) ->
 			$scope.$apply () ->
@@ -97,6 +99,11 @@ window.AdminRepositories = ['$scope', '$location', 'initialState', 'rpc', 'event
 		rpc.makeRequest 'systemSettings', 'read', 'getMaxRepositoryCount', null, (error, maxRepositoryCount) ->
 			$scope.$apply () ->
 				$scope.maxRepositoryCount = maxRepositoryCount ? Number.POSITIVE_INFINITY
+				showRepositoriesLimitWarningIfNecessary()
+
+	showRepositoriesLimitWarningIfNecessary = () ->
+		if $routeParams.view is 'repositories' and $scope.repositories.length >= $scope.maxRepositoryCount
+			notification.warning 'Max number of repositories reached. Upgrade to increase this limit.'
 
 	handleAddedRepositoryUpdate = (data) -> $scope.$apply () ->
 		$scope.repositories.push data

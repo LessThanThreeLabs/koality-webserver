@@ -26,9 +26,6 @@ window.AccountBasic = ['$scope', 'initialState', 'rpc', ($scope, initialState, r
 
 
 window.AccountPassword = ['$scope', 'rpc', 'notification', ($scope, rpc, notification) ->
-	notification.success 'hello there how are you', 3
-	notification.error 'error, error!!', 0
-
 	$scope.account = {}
 
 	$scope.submit = () ->

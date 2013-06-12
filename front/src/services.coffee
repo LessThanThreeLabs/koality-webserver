@@ -59,9 +59,9 @@ angular.module('koality.service', []).
 			container.append notification
 
 		toReturn =
-			success: (text, durationInSeconds=5) -> add 'success', text, durationInSeconds
-			warning: (text, durationInSeconds=5) -> add 'warning', text, durationInSeconds
-			error: (text, durationInSeconds=5) -> add 'error', text, durationInSeconds
+			success: (text, durationInSeconds=8) -> add 'success', text, durationInSeconds
+			warning: (text, durationInSeconds=8) -> add 'warning', text, durationInSeconds
+			error: (text, durationInSeconds=8) -> add 'error', text, durationInSeconds
 		return toReturn
 	]).
 	factory('socket', ['$window', '$location', 'initialState', ($window, $location, initialState) ->
