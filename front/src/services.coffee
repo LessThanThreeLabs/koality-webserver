@@ -72,7 +72,14 @@ angular.module('koality.service', []).
 		makeRequest: (resource, requestType, methodName, data, callback) ->
 			assert.ok typeof resource is 'string' and typeof requestType is 'string' and typeof methodName is 'string'
 			assert.ok resource.indexOf('.') is -1 and requestType.indexOf('.') is -1
-			socket.emit "#{resource}.#{requestType}", {method: methodName, args: data}, (error, response) ->
+
+			requestHandled = false
+			handleResponse = (error, response) ->
+				clearTimeout timeoutId
+
+				return if requestHandled
+				requestHandled = true
+
 				if error?
 					console.error "#{resource}.#{requestType} - #{methodName}"
 					console.error error
@@ -80,6 +87,9 @@ angular.module('koality.service', []).
 					when 400, 404, 500 then window.location.href = '/unexpectedError'
 					when 403 then window.location.href = '/invalidPermissions'
 					else callback error, response if callback?
+
+			timeoutId = setTimeout (() -> handleResponse 'Timed out'), 10000
+			socket.emit "#{resource}.#{requestType}", {method: methodName, args: data}, handleResponse
 
 		respondTo: (eventName, callback) ->
 			if not previousEventToCallbacks[eventName]?
