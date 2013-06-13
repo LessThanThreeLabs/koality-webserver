@@ -49,6 +49,7 @@
 			"/js/src/filters.js",
 
 			"/js/src/setup.js",
+			"/js/src/main.js",
 			"/js/src/header/header.js",
 			"/js/src/login/login.js",
 			"/js/src/account/account.js",

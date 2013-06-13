@@ -57,7 +57,7 @@ angular.module('koality.service', []).
 			notification = "<notification type='#{type}' text='#{text}' duration-in-seconds=#{durationInSeconds} unselectable />"
 			scope = $rootScope.$new(true)
 			notification = $compile(notification)(scope)
-			scope.$apply () -> container.append notification
+			setTimeout (() -> scope.$apply () -> container.append notification), 0
 
 		toReturn =
 			success: (text, durationInSeconds=8) -> add 'success', text, durationInSeconds
