@@ -148,7 +148,7 @@ window.AdminRepositories = ['$scope', '$location', '$routeParams', 'initialState
 		rpc.makeRequest 'repositories', 'create', 'createRepository', $scope.addRepository, (error, repositoryId) ->
 			if error? then notification.error 'Unable to create repository'
 			else
-				notification.success 'Create repository ' + $scope.addRepository.name
+				notification.success 'Created repository ' + $scope.addRepository.name
 				$scope.$apply () ->
 					$scope.addRepository.modalVisible = false
 

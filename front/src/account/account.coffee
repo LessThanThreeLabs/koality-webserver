@@ -12,16 +12,15 @@ window.Account = ['$scope', '$location', '$routeParams', 'initialState', ($scope
 ]
 
 
-window.AccountBasic = ['$scope', 'initialState', 'rpc', ($scope, initialState, rpc) ->
+window.AccountBasic = ['$scope', 'initialState', 'rpc', 'notification', ($scope, initialState, rpc, notification) ->
 	$scope.account =
 		firstName: initialState.user.firstName
 		lastName: initialState.user.lastName
 
 	$scope.submit = () ->
 		rpc.makeRequest 'users', 'update', 'changeBasicInformation', $scope.account, (error) ->
-			$scope.$apply () -> $scope.showSuccess = true if not error?
-
-	$scope.$watch 'account', (() -> $scope.showSuccess = false), true
+			if error? then notification.error 'Unable to update account information'
+			else notification.success 'Updated account information'
 ]
 
 
@@ -30,22 +29,12 @@ window.AccountPassword = ['$scope', 'rpc', 'notification', ($scope, rpc, notific
 
 	$scope.submit = () ->
 		rpc.makeRequest 'users', 'update', 'changePassword', $scope.account, (error) ->
-			$scope.$apply () ->
-				if error?
-					$scope.showSuccess = false
-					$scope.showError = true
-				else
-					$scope.showSuccess = true
-					$scope.showError = false
-
-	$scope.$watch 'account', (() -> 
-		$scope.showSuccess = false
-		$scope.showError = false
-	), true
+			if error? then notification.error error
+			else notification.success 'Updated account password'
 ]
 
 
-window.AccountSshKeys = ['$scope', 'rpc', 'events', 'initialState', ($scope, rpc, events, initialState) ->
+window.AccountSshKeys = ['$scope', 'rpc', 'events', 'initialState', 'notification', ($scope, rpc, events, initialState, notification) ->
 	$scope.orderByPredicate = 'alias'
 	$scope.orderByReverse = false
 
@@ -61,10 +50,12 @@ window.AccountSshKeys = ['$scope', 'rpc', 'events', 'initialState', ($scope, rpc
 			alias: $scope.addKey.alias
 			key: $scope.addKey.key
 		rpc.makeRequest 'users', 'update', 'addSshKey', requestParams, (error) ->
-			$scope.$apply () ->
-				if error?
+			if error?
+				$scope.$apply () ->
 					$scope.addKey.showError = true
-				else
+			else 
+				notification.success 'Added ssh key ' + $scope.addKey.alias
+				$scope.$apply () ->
 					$scope.addKey.showError = false
 					$scope.addKey.modalVisible = false
 
