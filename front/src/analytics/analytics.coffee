@@ -113,6 +113,7 @@ window.Analytics = ['$scope', 'rpc', 'events', ($scope, rpc, events) ->
 		return if $scope.options.duration.value isnt 'today'
 
 		for repositoryId in getRepositoryIdsToDisplay()
+			console.log repositoryId
 			changeFinishedListener = events.listen('repositories', 'change finished', repositoryId).setCallback(handleChangeFinished).subscribe()
 			changeFinishedListeners.push changeFinishedListener
 	$scope.$on '$destroy', () -> changeFinishedListener.unsubscribe() for changeFinishedListener in changeFinishedListeners

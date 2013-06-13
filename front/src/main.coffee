@@ -11,14 +11,11 @@ window.Main = ['$scope', 'rpc', 'events', 'initialState', 'notification', ($scop
 
 	createChangeFinishedHandler = (repository) ->
 		return (data) -> 
-			console.log 'change finished'
-			console.log data
-
-			if data.user.id is initialState.user.id
-				if data.aggregateStatus is 'failed'
-					notification.error "Change #{data.number} failed in repository #{repositories.name}"
-				else if data.aggregateStatus is 'skipped'
-					notification.error "Change #{data.number} skipped in repository #{repositories.name}"
+			if data.submitter.id is initialState.user.id
+				message = "<a href='/repository/#{repository.id}?change=#{data.id}'>Change #{data.number}</a> #{data.aggregateStatus}"
+				if data.aggregateStatus is 'passed' then notification.success message
+				else if data.aggregateStatus is 'failed' then notification.error message
+				else if data.aggregateStatus is 'skipped' then notification.warning message
 
 	changeFinishedListeners = []
 	updateChangeFinishedListeners = () ->

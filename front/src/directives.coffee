@@ -110,12 +110,14 @@ angular.module('koality.directive', []).
 	directive('notification', () ->
 		restrict: 'E'
 		replace: true
+		transclude: true
 		scope:
 			type: '@'
-			text: '@'
+			# text: '@'
 			durationInSeconds: '@'
 		template: '<div class="prettyNotification" ng-class="{green: type == \'success\', orange: type == \'warning\', red: type == \'error\'}">
-					<div class="prettyNotificationContent growingCentered">{{text}}
+					<div class="prettyNotificationContent growingCentered">
+						<span ng-transclude></span>
 						<span class="prettyNotificationClose" ng-click="hide()">X</span>
 					</div>
 				</div>'

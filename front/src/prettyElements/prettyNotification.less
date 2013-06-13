@@ -80,9 +80,19 @@
 	}
 
 	.prettyNotificationContent {
+		color: @koalityWhite;
 		font-size: 16px;
 		font-weight: 500;
 		line-height: @notificationHeight;
+
+		a {
+			color: @koalityWhite;
+
+			&:link { text-decoration: underline; }
+			&:visited { text-decoration: underline; }
+			&:hover { text-decoration: underline; }
+			&:active { text-decoration: underline; }
+		}
 
 		.prettyNotificationClose {
 			cursor: hand; cursor: pointer;
