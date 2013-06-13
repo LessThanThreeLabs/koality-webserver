@@ -59,7 +59,8 @@ window.AccountSshKeys = ['$scope', 'rpc', 'events', 'initialState', 'notificatio
 					$scope.addKey.showError = false
 					$scope.addKey.modalVisible = false
 
-	resetKeyData = () ->
+	resetModalValues = () ->
+		$scope.addKey.showError = false
 		$scope.addKey.alias = null
 		$scope.addKey.key = null
 		
@@ -84,5 +85,5 @@ window.AccountSshKeys = ['$scope', 'rpc', 'events', 'initialState', 'notificatio
 		addKey()
 
 	$scope.$watch 'addKey.modalVisible', (newValue, oldValue) ->
-		resetKeyData() if not newValue
+		resetModalValues() if not newValue
 ]
