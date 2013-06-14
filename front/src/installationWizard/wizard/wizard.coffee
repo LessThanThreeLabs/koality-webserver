@@ -2,7 +2,12 @@
 
 window.Wizard = ['$scope', '$http', '$location', '$routeParams', 'rpc', 'integerConverter', ($scope, $http, $location, $routeParams, rpc, integerConverter) ->
 	# $scope.stage = 'licenseKey'
-	$scope.stage = 'admin'
+	# $scope.stage = 'admin'
+	$scope.stage = 'verifyAdmin'
+
+	$scope.setup = {}
+	$scope.admin = {}
+	$scope.admin.email = 'jpotter@koalitycode.com'
 
 	$scope.completeLicenseKey = () ->
 		console.log 'complete license key'
@@ -10,6 +15,10 @@ window.Wizard = ['$scope', '$http', '$location', '$routeParams', 'rpc', 'integer
 
 	$scope.completeAdminInformation = () ->
 		console.log 'complete admin information'
+		$scope.stage = 'verifyAdmin'
+
+	$scope.completeVerifyAdmin = () ->
+		console.log 'complete verify admin'
 
 	# $scope.website = {}
 	# $scope.admin = {}

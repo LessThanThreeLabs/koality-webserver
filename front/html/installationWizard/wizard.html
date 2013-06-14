@@ -4,7 +4,7 @@
 	<div id="wizardSubtitle">This wizard helps you quickly set up your account</div>
 
 	<div id="wizardBreadcrumbs">
-		<div class="wizardBreadcrumb green">Enter License Key</div><!-- Don't remove this space --><div class="wizardBreadcrumb">Create your account</div><!-- Don't remove this space --><div class="wizardBreadcrumb">Confirm email</div><!-- Don't remove this space --><div class="wizardBreadcrumb">Configure website</div><!-- Don't remove this space --><div class="wizardBreadcrumb">Connect EC2</div><!-- Don't remove this space --><div class="wizardBreadcrumb">Invite teammates</div>
+		<div class="wizardBreadcrumb" ng-class="{green: stage == 'licenseKey'}">Enter License Key</div><!-- Don't remove this space --><div class="wizardBreadcrumb" ng-class="{green: stage == 'admin'}">Create your account</div><!-- Don't remove this space --><div class="wizardBreadcrumb" ng-class="{green: stage == 'verifyAdmin'}">Confirm email</div><!-- Don't remove this space --><div class="wizardBreadcrumb" ng-class="{green: stage == 'website'}">Configure website</div><!-- Don't remove this space --><div class="wizardBreadcrumb" ng-class="{green: stage == 'aws'}">Connect EC2</div><!-- Don't remove this space --><div class="wizardBreadcrumb" ng-class="{green: stage == 'invite'}">Invite teammates</div>
 	</div>
 
 	<div id="wizardContent">
@@ -47,18 +47,23 @@
 
 				<button class="centered" ng-click="completeAdminInformation()" ng-disabled="adminForm.$invalid">Confirm Email</button>
 			</form>
+		</div>
 
-			<div class="stageFooter">
-				<divider />
-				Don't have a license key? <a href="https://koalitycode.com/pricing" target="_blank">Get one here</a>
-			</div>
+		<div class="wizardStage" ng-show="stage == 'verifyAdmin'">
+			<div class="stageInstructions">Check your email</div>
+			<div class="stageSubInstructions">A token has been sent to <a>{{admin.email}}</a>. Enter the token below to continue.</div>
+			<divider />
+
+			<form name="verifyAdminForm" novalidate>
+				<label>Token</label>
+				<input type="text" ng-model="admin.verifyToken" name="verifyToken" ng-pattern="/^[a-zA-Z0-9]+$/" ng-maxlength="32" required>
+				<button class="centered" ng-click="completeVerifyAdmin()" ng-disabled="verifyAdminForm.$invalid">Continue</button>
+			</form>
 		</div>
 	</div>
 
 	<div id="wizardFooter">
-		<div ng-show="stage == 'licenseKey'">
-			Questions? Email <a href="mailto:support@koalitycode.com?subject=Koality%20Support" target="_blank">support@koalitycode.com</a>
-		</div>
+		Questions? Email <a href="mailto:support@koalitycode.com?subject=Koality%20Support" target="_blank">support@koalitycode.com</a>
 	</div>
 </div>
 
