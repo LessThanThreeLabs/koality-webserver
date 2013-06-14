@@ -72,6 +72,22 @@
 				<button class="centered" ng-click="completeWebsiteInformation()" ng-disabled="websiteForm.$invalid">Continue</button>
 			</form>
 		</div>
+
+		<div class="wizardStage" ng-show="stage == 'aws'">
+			<div class="stageInstructions">Add your AWS credentials</div>
+
+			<form name="awsForm" novalidate>
+				<label>AWS Access Key Id</label>
+				<input type="text" ng-model="aws.accessKey" name="accessKey" ng-pattern="/^[\w]+$/" ng-minlength="16" ng-maxlength="32" required>
+				<form-field-error tooltip="Invalid AWS Access Key" error-visible="awsForm.accessKey.$dirty && awsForm.accessKey.$invalid"></form-field-error>
+
+				<label>AWS Secret Access Key</label>
+				<input type="text" ng-model="aws.secretKey" name="secretKey" ng-maxlength="128" required>
+				<form-field-error tooltip="Invalid AWS Secret Access Key" error-visible="awsForm.secretKey.$dirty && awsForm.secretKey.$invalid"></form-field-error>
+
+				<button class="centered" ng-click="completeAwsInformation()" ng-disabled="awsForm.$invalid">Continue</button>
+			</form>
+		</div>
 	</div>
 
 	<div id="wizardFooter">

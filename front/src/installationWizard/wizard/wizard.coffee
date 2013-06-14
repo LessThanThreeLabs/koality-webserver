@@ -4,7 +4,8 @@ window.Wizard = ['$scope', '$http', '$location', '$routeParams', 'rpc', 'integer
 	# $scope.stage = 'licenseKey'
 	# $scope.stage = 'admin'
 	# $scope.stage = 'verifyAdmin'
-	$scope.stage = 'website'
+	# $scope.stage = 'website'
+	$scope.stage = 'aws'
 
 	$scope.setup = {}
 	$scope.admin = {}
@@ -23,6 +24,9 @@ window.Wizard = ['$scope', '$http', '$location', '$routeParams', 'rpc', 'integer
 
 	$scope.completeWebsiteInformation = () ->
 		console.log 'complete website information'
+
+	$scope.completeAwsInformation = () ->
+		console.log 'complete aws information'
 
 	# $scope.website = {}
 	# $scope.admin = {}
