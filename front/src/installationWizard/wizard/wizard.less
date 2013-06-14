@@ -1,121 +1,221 @@
 @import '../../constants';
 
+
 #wizard {
-	width: 800px;
-	min-height: 600px;
+	@paddingTop: @notificationHeight + 10px;
+	padding: @paddingTop 0 80px 0;
+	height: 100%;
+	box-sizing: border-box;
+	overflow-y: auto;
 
-	#wizardStepZero {
+	#wizardTitle {
+		font-size: 2.0em;
 		text-align: center;
-
-		#wizardStepZeroWelcome {
-			margin-top: 150px;
-			font-size: 1.2em;
-		}
-
-		button {
-			margin-top: 25px;
-		}
 	}
 
-	#wizardStepOne {
+	#wizardSubtitle {
+		margin-top: 15px;
+		color: @koalityGray;
+		font-size: 1.2em;
+		text-align: center;
+	}
 
-		#wizardStepOneIntroduction {
-			margin-top: 80px;
-			text-align: center;
-			font-size: 1.2em;
-		}
+	#wizardBreadcrumbs {
+		margin-top: 30px;
+		text-align: center;
 
-		#wizardStepOneInstructions {
-			margin-top: 5px;
-			text-align: center;
-		}
+		.wizardBreadcrumb {
+			@height: 60px;
 
-		#wizardStepOneForm {
-			margin-top: 30px;
+			display: inline-block;
+			margin: 0;
+			box-sizing: border-box;
+			width: 180px;
+			height: @height;
+			line-height: @height;
+			vertical-align: top;
+			background-color: @panelBackground;
+			border: 2px solid darken(@panelBackground, 3%);
 
-			button {
-				float: right;
+			&.green {
+				color: @koalityWhite;
+				background-color: @koalityGreen;
+			}
+
+			&:first-child {
+				border-top-left-radius: @borderRadius;
+				border-bottom-left-radius: @borderRadius;
+			}
+
+			&:last-child {
+				border-top-right-radius: @borderRadius;
+				border-bottom-right-radius: @borderRadius;
 			}
 		}
 	}
 
-	#wizardStepTwo {
+	#wizardContent {
+		margin: 40px auto 0 auto;
+		padding: 80px;
+		width: @contentMinWidth;
+		box-sizing: border-box;
+		text-align: center;
+		background-color: @panelBackground;
+		border: 2px solid darken(@panelBackground, 3%);
+		border-radius: @borderRadius;
 
-		#wizardStepTwoIntroduction {
-			margin-top: 80px;
-			text-align: center;
-			font-size: 1.2em;
-		}
+		.wizardStage {
+			display: inline-block;
+			text-align: left;
 
-		#wizardStepTwoInstructions {
-			margin-top: 5px;
-			text-align: center;
-		}
+			.stageInstructions {
+				margin-bottom: 20px;
+				font-size: 1.2em;
+				font-weight: 500;
+			}
 
-		#wizardStepTwoForm {
-			margin-top: 30px;
+			.stageFooter {
+				margin-top: 120px;
+				text-align: center;
+			}
+
+			label {
+				width: 300px;
+			}
+
+			input {
+				margin-bottom: 20px;
+				width: 300px;
+			}
 
 			button {
-				float: right;
-				margin-right: 30px;
+
 			}
 		}
 	}
 
-	#wizardStepThree {
-
-		#wizardStepThreeIntroduction {
-			text-align: center;
-			margin-top: 80px;
-			font-size: 1.2em;
-		}
-
-		#wizardStepThreeInstructions {
-			margin-top: 5px;
-			text-align: center;
-		}
-
-		#wizardStepThreeForm {
-			margin-top: 30px;
-
-			button {
-				float: right;
-			}	
-		}
-	}
-
-	#wizardStepFour {
-
-		#wizardStepFourIntroduction {
-			text-align: center;
-			margin-top: 80px;
-			font-size: 1.2em;
-		}
-
-		#wizardStepFourInstructions {
-			margin-top: 5px;
-			text-align: center;
-		}
-
-		#wizardStepFourForm {
-			margin-top: 30px;
-
-			button {
-				float: right;
-			}	
-		}
-	}
-
-	#wizardStepFive {
+	#wizardFooter {
+		margin-top: 30px;
 		text-align: center;
-
-		#wizardStepFiveMessage {
-			margin-top: 150px;
-			font-size: 1.2em;
-		}
-
-		button {
-			margin-top: 25px;
-		}
 	}
 }
+
+// #wizard {
+// 	width: 800px;
+// 	min-height: 600px;
+
+// 	#wizardStepZero {
+// 		text-align: center;
+
+// 		#wizardStepZeroWelcome {
+// 			margin-top: 150px;
+// 			font-size: 1.2em;
+// 		}
+
+// 		button {
+// 			margin-top: 25px;
+// 		}
+// 	}
+
+// 	#wizardStepOne {
+
+// 		#wizardStepOneIntroduction {
+// 			margin-top: 80px;
+// 			text-align: center;
+// 			font-size: 1.2em;
+// 		}
+
+// 		#wizardStepOneInstructions {
+// 			margin-top: 5px;
+// 			text-align: center;
+// 		}
+
+// 		#wizardStepOneForm {
+// 			margin-top: 30px;
+
+// 			button {
+// 				float: right;
+// 			}
+// 		}
+// 	}
+
+// 	#wizardStepTwo {
+
+// 		#wizardStepTwoIntroduction {
+// 			margin-top: 80px;
+// 			text-align: center;
+// 			font-size: 1.2em;
+// 		}
+
+// 		#wizardStepTwoInstructions {
+// 			margin-top: 5px;
+// 			text-align: center;
+// 		}
+
+// 		#wizardStepTwoForm {
+// 			margin-top: 30px;
+
+// 			button {
+// 				float: right;
+// 				margin-right: 30px;
+// 			}
+// 		}
+// 	}
+
+// 	#wizardStepThree {
+
+// 		#wizardStepThreeIntroduction {
+// 			text-align: center;
+// 			margin-top: 80px;
+// 			font-size: 1.2em;
+// 		}
+
+// 		#wizardStepThreeInstructions {
+// 			margin-top: 5px;
+// 			text-align: center;
+// 		}
+
+// 		#wizardStepThreeForm {
+// 			margin-top: 30px;
+
+// 			button {
+// 				float: right;
+// 			}	
+// 		}
+// 	}
+
+// 	#wizardStepFour {
+
+// 		#wizardStepFourIntroduction {
+// 			text-align: center;
+// 			margin-top: 80px;
+// 			font-size: 1.2em;
+// 		}
+
+// 		#wizardStepFourInstructions {
+// 			margin-top: 5px;
+// 			text-align: center;
+// 		}
+
+// 		#wizardStepFourForm {
+// 			margin-top: 30px;
+
+// 			button {
+// 				float: right;
+// 			}	
+// 		}
+// 	}
+
+// 	#wizardStepFive {
+// 		text-align: center;
+
+// 		#wizardStepFiveMessage {
+// 			margin-top: 150px;
+// 			font-size: 1.2em;
+// 		}
+
+// 		button {
+// 			margin-top: 25px;
+// 		}
+// 	}
+// }

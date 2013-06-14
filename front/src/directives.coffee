@@ -32,6 +32,11 @@ angular.module('koality.directive', []).
 		transclude: true
 		template: '<div class="prettyCenteredPanel" ng-transclude></div>'
 	).
+	directive('divider', () ->
+		restrict: 'E'
+		replace: true
+		template: '<div class="prettyDivider"></div>'
+	).
 	directive('dropdownContainer', ['$timeout', ($timeout) ->
 		restrict: 'A'
 		link: (scope, element, attributes) ->
@@ -163,6 +168,18 @@ angular.module('koality.directive', []).
 			</div>'
 	).
 	directive('styledFormFieldError', () ->
+		restrict: 'E'
+		replace: true
+		scope: visible: '=errorVisible'
+		template: '<div class="prettyFormError">
+				<img ng-src="{{\'/img/icons/error.png\' | fileSuffix}}">
+			</div>'
+		link: (scope, element, attributes) ->
+			scope.$watch 'visible', (newValue, oldValue) ->
+				if newValue then element.addClass 'visible'
+				else element.removeClass 'visible'
+	).
+	directive('formFieldError', () ->
 		restrict: 'E'
 		replace: true
 		scope: visible: '=errorVisible'

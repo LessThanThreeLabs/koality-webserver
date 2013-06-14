@@ -30,6 +30,25 @@ body {
 		}
 	}
 
+	strong {
+		font-weight: 500;
+	}
+
+	label {
+		display: block;
+		padding-bottom: 8px;
+		font-size: 12px;
+		font-weight: 500;
+		color: #929497;
+		text-transform: uppercase;
+
+		.sublabel {
+			display: inline-block;
+			float: right;
+			text-transform: none;
+		}
+	}
+
 	input {
 		margin: 0px;
 		padding: 6px;
@@ -85,6 +104,15 @@ body {
 			&:active {
 				top: 0px;
 			}
+		}
+
+		&.centered {
+			display: block;
+			margin: 0 auto;
+		}
+
+		&.fullWidth {
+			width: 100%;
 		}
 	}
 
