@@ -3,7 +3,8 @@
 window.Wizard = ['$scope', '$http', '$location', '$routeParams', 'rpc', 'integerConverter', ($scope, $http, $location, $routeParams, rpc, integerConverter) ->
 	# $scope.stage = 'licenseKey'
 	# $scope.stage = 'admin'
-	$scope.stage = 'verifyAdmin'
+	# $scope.stage = 'verifyAdmin'
+	$scope.stage = 'website'
 
 	$scope.setup = {}
 	$scope.admin = {}
@@ -19,6 +20,9 @@ window.Wizard = ['$scope', '$http', '$location', '$routeParams', 'rpc', 'integer
 
 	$scope.completeVerifyAdmin = () ->
 		console.log 'complete verify admin'
+
+	$scope.completeWebsiteInformation = () ->
+		console.log 'complete website information'
 
 	# $scope.website = {}
 	# $scope.admin = {}

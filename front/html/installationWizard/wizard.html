@@ -60,6 +60,18 @@
 				<button class="centered" ng-click="completeVerifyAdmin()" ng-disabled="verifyAdminForm.$invalid">Continue</button>
 			</form>
 		</div>
+
+		<div class="wizardStage" ng-show="stage == 'website'">
+			<div class="stageInstructions">Where will Koality be deployed?</div>
+
+			<form name="websiteForm" novalidate>
+				<label>Domain Name</label>
+				<input type="text" ng-model="website.domainName" name="domainName" placeholder="koality.companyname.com" ng-pattern="/^[a-zA-Z0-9]+(-+[a-zA-Z0-9]+)*(.[a-zA-Z0-9]+(-+[a-zA-Z0-9]+)*)*$/" ng-maxlength="256" required>
+				<form-field-error tooltip="Invalid domain name" error-visible="websiteForm.domainName.$dirty && websiteForm.domainName.$invalid"></form-field-error>
+
+				<button class="centered" ng-click="completeWebsiteInformation()" ng-disabled="websiteForm.$invalid">Continue</button>
+			</form>
+		</div>
 	</div>
 
 	<div id="wizardFooter">
