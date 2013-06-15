@@ -1,15 +1,18 @@
 'use strict'
 
 window.Wizard = ['$scope', '$http', '$location', '$routeParams', 'rpc', 'integerConverter', ($scope, $http, $location, $routeParams, rpc, integerConverter) ->
-	# $scope.stage = 'licenseKey'
+	$scope.stage = 'licenseKey'
 	# $scope.stage = 'admin'
 	# $scope.stage = 'verifyAdmin'
 	# $scope.stage = 'website'
-	$scope.stage = 'aws'
+	# $scope.stage = 'aws'
+	# $scope.stage = 'invite'
 
 	$scope.setup = {}
 	$scope.admin = {}
-	$scope.admin.email = 'jpotter@koalitycode.com'
+	$scope.website = {}
+	$scope.aws = {}
+	$scope.addUsers = {}
 
 	$scope.completeLicenseKey = () ->
 		console.log 'complete license key'
@@ -21,12 +24,22 @@ window.Wizard = ['$scope', '$http', '$location', '$routeParams', 'rpc', 'integer
 
 	$scope.completeVerifyAdmin = () ->
 		console.log 'complete verify admin'
+		$scope.stage = 'website'
 
 	$scope.completeWebsiteInformation = () ->
 		console.log 'complete website information'
+		$scope.stage = 'aws'
 
 	$scope.completeAwsInformation = () ->
 		console.log 'complete aws information'
+		$scope.stage ='invite'
+
+	$scope.inviteTeammates = () ->
+		console.log 'invite teammates'
+
+	$scope.goToKoality = () ->
+		console.log 'we cannot use href here?'
+		window.location.href = '/'
 
 	# $scope.website = {}
 	# $scope.admin = {}
