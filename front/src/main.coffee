@@ -30,33 +30,33 @@ window.Main = ['$scope', 'rpc', 'events', 'initialState', 'notification', ($scop
 	$scope.$on '$destroy', () -> changeFinishedListener.unsubscribe() for changeFinishedListener in changeFinishedListeners
 
 	checkLicenseStatus = () ->
+		billingUpdateUrl = 'https://koalitycode.com/account/payment'
+
+		getDaysRemaining = (futureTime) ->
+			timeInDay = 1000 * 60 * 60 * 24
+			return Math.floor (futureTime - Date.now()) / timeInDay
+
+		handleTrialExpiration = (trialDaysRemaining) ->
+			if trialDaysRemaining <= 0
+				notification.error "There are 0 days left on your free trial. <a href='#{billingUpdateUrl}'>Upgrade now to continue using Koality.</a>", 0
+			else
+				message = "There are #{trialDaysRemaining} days left on your free trial. <a href='#{billingUpdateUrl}'>Upgrade now</a> to continue using Koality uninterrupted."
+				if trialDaysRemaining <= 7 then notification.warning message
+				else notification.success message
+
+		handleUnpaidExpiration = (unpaidDaysRemaining) ->
+			if unpaidDaysRemaining <= 0
+				notification.error "Your payment method has expired. <a href='#{billingUpdateUrl}'>Update your billing information.</a>", 0
+			else if unpaidDaysRemaining <= 15
+				notification.warning "Your payment method is about to expire. <a href='#{billingUpdateUrl}'>Update your billing information.</a>"
+
 		rpc.makeRequest 'systemSettings', 'read', 'getLicenseInformation', null, (error, licenseInformation) ->
-			billingUpdateUrl = 'https://koalitycode.com/account/payment'
-
-			console.log licenseInformation
-
 			if licenseInformation.licenseTrialExpirationTime?
-				trialDaysRemaining = Math.floor ((licenseInformation.licenseTrialExpirationTime * 1000) - Date.now()) / (1000 * 60 * 60 * 24)
-
-			if licenseInformation.licenseUnpaidExpirationTime?
-				unpaidDaysRemaining = Math.floor ((licenseInformation.licenseUnpaidExpirationTime * 1000) - Date.now()) / (1000 * 60 * 60 * 24)
-
-			if trialDaysRemaining?
-				if trialDaysRemaining <= 0
-					notification.error "There are 0 days left on your free trial. <a href=\"#{billingUpdateUrl}\">Upgrade now to continue using Koality.</a>", 0
-				else
-					message = "There are #{trialDaysRemaining} days left on your free trial. <a href=\"#{billingUpdateUrl}\">Upgrade now</a> to continue using Koality uninterrupted."
-					if trialDaysRemaining <= 7
-						notification.warning message
-					else
-						notification.success message
-			else if unpaidDaysRemaining?
-				if unpaidDaysRemaining <= 0
-					notification.error "Your payment method has expired. <a href=\"#{billingUpdateUrl}\">Update your billing information.</a>", 0
-				else if unpaidDaysRemaining <= 15
-					notification.warning "Your payment method is about to expire. <a href=\"#{billingUpdateUrl}\">Update your billing information.</a>"
+				handleTrialExpiration getDaysRemaining licenseInformation.licenseTrialExpirationTime
+			else if licenseInformation.licenseUnpaidExpirationTime?
+				handleUnpaidExpiration getDaysRemaining licenseInformation.licenseUnpaidExpirationTime				
 			else if not licenseInformation.active
-				notification.error "Your license has been deactivated. <a href=\"http://heyyeyaaeyaaaeyaeyaa.com\">Generate a new license key.</a>", 0
+				notification.error "Your license has been deactivated. <a href='#{billingUpdateUrl}'>Update your billing information.</a>", 0
 
 	if initialState.loggedIn
 		getRepositories()
