@@ -251,6 +251,9 @@ window.AdminApi = ['$scope', 'rpc', ($scope, rpc) ->
 			$scope.$apply () ->
 				$scope.domainName = websiteSettings.domainName
 
+	$scope.regenerateKey = () ->
+		console.log 'need to do stuff here!'
+
 	getApiKey()
 	getDomainName()
 ]
