@@ -4,12 +4,12 @@ copyDataIntoChange = (change, data) ->
 	assert.ok change? and typeof change is 'object'
 	assert.ok data? and typeof data is 'object'
 
-	change.aggregateStatus = data.aggregateStatus
-	change.verificationStatus = data.verificationStatus
-	change.mergeStatus = data.mergeStatus
-	change.createTime = data.createTime
-	change.startTime = data.startTime
-	change.endTime = data.endTime
+	if data.aggregateStatus? then change.aggregateStatus = data.aggregateStatus
+	if data.verificationStatus? then change.verificationStatus = data.verificationStatus
+	if data.mergeStatus? then change.mergeStatus = data.mergeStatus
+	if data.createTime? then change.createTime = data.createTime
+	if data.startTime? then change.startTime = data.startTime
+	if data.endTime? then change.endTime = data.endTime
 
 
 window.Repository = ['$scope', '$location', '$routeParams', 'rpc', 'events', 'integerConverter', ($scope, $location, $routeParams, rpc, events, integerConverter) ->
