@@ -39,12 +39,13 @@
 			position: relative;
 			height: 50px;
 			box-sizing: border-box;
-			color: @koalityGray;
-			font-weight: 200;
+			color: @koalityWhite;
+			font-weight: 400;
 
-			strong {
-				color: @koalityWhite;
-				font-weight: 400;
+			.weakHeaderText {
+				padding: 0 2px 0 2px;
+				color: @koalityGray;
+				font-weight: 200;
 			}
 
 			#headerGraphAndRepository, #headerDuration, #headerInterval {
@@ -55,6 +56,10 @@
 				position: absolute;
 				top: 20px;
 				left: 30px;
+				width: 335px;
+				overflow: hidden;
+				text-overflow: ellipsis;
+				white-space: nowrap;
 			}
 
 			#headerDuration {

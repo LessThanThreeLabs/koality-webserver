@@ -18,18 +18,19 @@
 		<div id="analyticsVisual">
 			<div id="analyticsVisualHeader">
 				<div id="headerGraphAndRepository">
-					<strong>{{options.graph.title}}</strong> of <strong>{{options.repository.name}}</strong>
+					{{options.graph.title}}<span class="weakHeaderText"> of </span>{{options.repository.name}}
 				</div>
 				<div id="headerDuration">
 					<span ng-show="options.duration.value == 'last365'">
-						Duration: <strong>{{graphOptions.start | date:'MM/dd/yyyy'}}</strong> <span ng-show="options.duration.value != 'today'">to <strong>{{graphOptions.end | date:'MM/dd/yyyy'}}</strong></span>
+						<span class="weakHeaderText">Duration: </span>{{graphOptions.start | date:'MM/dd/yyyy'}}<span class="weakHeaderText"> to </span>{{graphOptions.end | date:'MM/dd/yyyy'}}</span>
 					</span>
 					<span ng-show="options.duration.value != 'last365'">
-						Duration: <strong>{{graphOptions.start | date:'EEE MM/dd'}}</strong> <span ng-show="options.duration.value != 'today'">to <strong>{{graphOptions.end | date:'EEE MM/dd'}}</strong></span>
+						<span class="weakHeaderText">Duration: </span>{{graphOptions.start | date:'EEE MM/dd'}}
+						<span ng-show="options.duration.value != 'today'"><span class="weakHeaderText"> to </span>{{graphOptions.end | date:'EEE MM/dd'}}</span>
 					</span>
 				</div>
 				<div id="headerInterval">
-					Interval: <strong>{{options.interval.title}}</strong>
+					<span class="weakHeaderText">Interval: </span>{{options.interval.title}}
 				</div>
 			</div>
 
