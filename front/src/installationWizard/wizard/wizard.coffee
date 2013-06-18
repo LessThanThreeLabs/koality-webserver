@@ -1,8 +1,7 @@
 'use strict'
 
 window.Wizard = ['$scope', '$http', 'rpc', 'notification', ($scope, $http, rpc, notification) ->
-	# $scope.stage = 'licenseKey'
-	$scope.stage = 'complete'
+	$scope.stage = 'licenseKey'
 
 	$scope.license = {}
 	$scope.admin = {}
