@@ -4,7 +4,25 @@
 	<div id="wizardSubtitle">This wizard helps you quickly set up your account</div>
 
 	<div id="wizardBreadcrumbs">
-		<div class="wizardBreadcrumb" ng-class="{green: stage == 'licenseKey'}">Enter License Key</div><!-- Don't remove this space --><div class="wizardBreadcrumb" ng-class="{green: stage == 'admin'}">Create your account</div><!-- Don't remove this space --><div class="wizardBreadcrumb" ng-class="{green: stage == 'verifyAdmin'}">Confirm email</div><!-- Don't remove this space --><div class="wizardBreadcrumb" ng-class="{green: stage == 'website'}">Configure website</div><!-- Don't remove this space --><div class="wizardBreadcrumb" ng-class="{green: stage == 'aws'}">Connect EC2</div><!-- Don't remove this space --><div class="wizardBreadcrumb" ng-class="{green: stage == 'invite'}">Invite teammates</div>
+		<div class="wizardBreadcrumb" ng-class="{green: stage == 'licenseKey'}">
+			Enter License Key
+			<spinner class="wizardBreadcrumbSpinner" spinner-running="stage == 'licenseKey' && waitingOnRequest" />
+		</div><!-- Don't remove this space --><div class="wizardBreadcrumb" ng-class="{green: stage == 'admin'}">
+			Create your account
+			<spinner class="wizardBreadcrumbSpinner" spinner-running="stage == 'admin' && waitingOnRequest" />
+		</div><!-- Don't remove this space --><div class="wizardBreadcrumb" ng-class="{green: stage == 'verifyAdmin'}">
+			Confirm email
+			<spinner class="wizardBreadcrumbSpinner" spinner-running="stage == 'verifyAdmin' && waitingOnRequest" />
+		</div><!-- Don't remove this space --><div class="wizardBreadcrumb" ng-class="{green: stage == 'website'}">
+			Configure website
+			<spinner class="wizardBreadcrumbSpinner" spinner-running="stage == 'website' && waitingOnRequest" />
+		</div><!-- Don't remove this space --><div class="wizardBreadcrumb" ng-class="{green: stage == 'aws'}">
+			Connect EC2
+			<spinner class="wizardBreadcrumbSpinner" spinner-running="stage == 'aws' && waitingOnRequest" />
+		</div><!-- Don't remove this space --><div class="wizardBreadcrumb" ng-class="{green: stage == 'invite'}">
+			Complete
+			<spinner class="wizardBreadcrumbSpinner" spinner-running="stage == 'complete' && waitingOnRequest" />
+		</div>
 	</div>
 
 	<div id="wizardContent">
@@ -12,7 +30,7 @@
 			<div class="stageInstructions">Enter your License Key to continue</div>
 
 			<form name="licenseKeyForm" novalidate>
-				<input type="text" ng-model="setup.licenseKey" name="licenseKey" placeholder="1111-2222-3333-4444" ng-pattern="/^[-a-zA-Z0-9]+$/" ng-maxlength="256" required focused>
+				<input type="text" ng-model="license.licenseKey" name="licenseKey" placeholder="1111-2222-3333-4444" ng-pattern="/^[-a-zA-Z0-9]+$/" ng-maxlength="256" required focused>
 				<button class="centered" ng-click="completeLicenseKey()" ng-disabled="licenseKeyForm.$invalid">Continue</button>
 			</form>
 
@@ -51,7 +69,7 @@
 
 		<div class="wizardStage" ng-show="stage == 'verifyAdmin'">
 			<div class="stageInstructions">Check your email</div>
-			<div class="stageSubInstructions">A token has been sent to <a>{{admin.email}}</a>. Enter the token below to continue.</div>
+			<div class="stageSubInstructions">A token has been sent to <a>{{admin.email}}</a>. Enter the token below to continue. The email may take a few minutes to appear.</div>
 			<divider />
 
 			<form name="verifyAdminForm" novalidate>
@@ -89,23 +107,15 @@
 			</form>
 		</div>
 
-		<div class="wizardStage" ng-show="stage == 'invite'">
+		<div class="wizardStage" ng-show="stage == 'complete'">
 			<div class="stageInstructions">All done!</div>
-			<div class="stageSubInstructions">Invite your teammates to use Koality now, or later through the <a>Admin Manage Users</a> panel.</div>
+			<div class="stageSubInstructions">Continue to the admin panel to create your first repository.</div>
+
+			<button class="centered" ng-click="goToCreateRepository()">Continue</button>
+
 			<divider />
-
-			<form name="inviteForm" novalidate>
-				<label>Teammate Email Addresses</label>
-				<textarea type="text" ng-model="addUsers.emails" name="emails" placeholder="first@email.com, second@email.com, ..." required></textarea>
-				<!-- <form-field-error tooltip="Invalid AWS Access Key" error-visible="inviteForm.accessKey.$dirty && inviteForm.accessKey.$invalid"></form-field-error> -->
-
-				<button class="centered" ng-click="inviteTeammates()" ng-disabled="inviteForm.$invalid">Invite Teammates</button>
-			</form>
+			<a ng-click="goToKoality()">Continue to Koality, I'll set up my repository later</a>
 		</div>
-
-		<divider />
-
-		<a ng-click="goToKoality()">Continue to Koality, I'll invite teammates later</a>
 	</div>
 
 	<div id="wizardFooter">

@@ -22,11 +22,13 @@
 
 	#wizardBreadcrumbs {
 		margin-top: 30px;
+		width: @contentMinWidth;
 		text-align: center;
 
 		.wizardBreadcrumb {
 			@height: 60px;
 
+			position: relative;
 			display: inline-block;
 			margin: 0;
 			box-sizing: border-box;
@@ -50,6 +52,15 @@
 			&:last-child {
 				border-top-right-radius: @borderRadius;
 				border-bottom-right-radius: @borderRadius;
+			}
+
+			.wizardBreadcrumbSpinner {
+				position: absolute;
+				z-index: 1;
+				top: 0px;
+				left: 0px;
+				right: 0px;
+				bottom: 0px;
 			}
 		}
 	}

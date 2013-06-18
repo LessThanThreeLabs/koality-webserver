@@ -54,7 +54,12 @@ angular.module('koality.service', []).
 		
 		add = (type, text, durationInSeconds) ->
 			assert.ok typeof durationInSeconds is 'number' and durationInSeconds >= 0
+
+			if typeof text is 'object'
+				text = (value for key, value of value).join ', '
+
 			notification = "<notification type='#{type}' duration-in-seconds=#{durationInSeconds} unselectable>#{text}</notification>"
+
 			scope = $rootScope.$new(true)
 			notification = $compile(notification)(scope)
 			setTimeout (() -> scope.$apply () -> container.append notification), 0

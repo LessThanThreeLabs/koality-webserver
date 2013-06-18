@@ -28,16 +28,12 @@
 <body>
 
 	<div id="main">
-		<div id="headerBackground"></div>
+		<div id="headerContainer" ng-controller="Header" ng-include="'/html/header.html' | fileSuffix"></div>
 
-		<div id="centerContainer">
-			<div id="headerContainer">
-				<div id="header" unselectable>
-					<span id="headerTitle" ng-click="visitHome()">Koality</span>
-				</div>
-			</div>
+		<div id="notificationsContainer"></div>
 
-			<div id="contentContainer" ng-view></div>
+		<div id="contentContainer">
+			<div id="contentCenterContainer" class="growingCentered" ng-view></div>
 		</div>
 	</div>
 

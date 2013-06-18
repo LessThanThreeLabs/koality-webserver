@@ -1,123 +1,78 @@
 'use strict'
 
-window.Wizard = ['$scope', '$http', '$location', '$routeParams', 'rpc', 'integerConverter', ($scope, $http, $location, $routeParams, rpc, integerConverter) ->
-	$scope.stage = 'licenseKey'
-	# $scope.stage = 'admin'
-	# $scope.stage = 'verifyAdmin'
-	# $scope.stage = 'website'
-	# $scope.stage = 'aws'
-	# $scope.stage = 'invite'
+window.Wizard = ['$scope', '$http', 'rpc', 'notification', ($scope, $http, rpc, notification) ->
+	# $scope.stage = 'licenseKey'
+	$scope.stage = 'complete'
 
-	$scope.setup = {}
+	$scope.license = {}
 	$scope.admin = {}
 	$scope.website = {}
 	$scope.aws = {}
-	$scope.addUsers = {}
+
+	$scope.waitingOnRequest = false
 
 	$scope.completeLicenseKey = () ->
-		console.log 'complete license key'
-		$scope.stage = 'admin'
+		return if $scope.waitingOnRequest
+		$scope.waitingOnRequest = true
+
+		rpc.makeRequest 'systemSettings', 'update', 'validateLicenseKey', $scope.license, (error) ->
+			$scope.$apply () ->
+				$scope.waitingOnRequest = false
+				if error? notification.error error
+				else $scope.stage = 'admin'
 
 	$scope.completeAdminInformation = () ->
-		console.log 'complete admin information'
-		$scope.stage = 'verifyAdmin'
+		return if $scope.waitingOnRequest
+		$scope.waitingOnRequest = true
+
+		rpc.makeRequest 'users', 'create', 'validateInitialAdminUser', $scope.admin, (error) ->
+			$scope.$apply () ->
+				$scope.waitingOnRequest = false
+				if error? notification.error error
+				else $scope.stage = 'verifyAdmin'
 
 	$scope.completeVerifyAdmin = () ->
-		console.log 'complete verify admin'
-		$scope.stage = 'website'
+		return if $scope.waitingOnRequest
+		$scope.waitingOnRequest = true
+
+		rpc.makeRequest 'users', 'create', 'validateInitialAdminToken', $scope.admin, (error) ->
+			$scope.$apply () ->
+				$scope.waitingOnRequest = false
+				if error? then notification.error error
+				else $scope.stage = 'website'
 
 	$scope.completeWebsiteInformation = () ->
-		console.log 'complete website information'
-		$scope.stage = 'aws'
+		return if $scope.waitingOnRequest
+		$scope.waitingOnRequest = true
+
+		rpc.makeRequest 'systemSettings', 'update', 'validateInitialWebsiteSettings', $scope.website, (error) ->
+			$scope.$apply () ->
+				$scope.waitingOnRequest = false
+				if error? then notification.error error
+				else $scope.stage = 'aws'
 
 	$scope.completeAwsInformation = () ->
-		console.log 'complete aws information'
-		$scope.stage ='invite'
+		return if $scope.waitingOnRequest
+		$scope.waitingOnRequest = true
 
-	$scope.inviteTeammates = () ->
-		console.log 'invite teammates'
+		requestParams =
+			license: $scope.license
+			admin: $scope.admin
+			website: $scope.website
+			aws: $scope.aws
+
+		rpc.makeRequest 'systemSettings', 'update', 'setDeploymentInitialized', requestParams, (error) ->
+			$scope.$apply () ->
+				$scope.waitingOnRequest = false
+				if error? then notification.error error
+				else
+					$http.post('/turnOffInstallationWizard').error (data, status, headers, config) ->
+						notification.error 'Fatal: unable to start Koality service!'
+					$scope.stage = 'invite'
+
+	$scope.goToCreateRepository = () ->
+		window.location.href = '/admin?view=repositories'
 
 	$scope.goToKoality = () ->
-		console.log 'we cannot use href here?'
 		window.location.href = '/'
-
-	# $scope.website = {}
-	# $scope.admin = {}
-	# $scope.aws = {}
-
-	# $scope.$on '$routeUpdate', () ->
-	# 	$scope.stepNumber = integerConverter.toInteger $routeParams.step ? 0
-	# $scope.stepNumber = 0
-
-	# $scope.goToStepOne = () ->
-	# 	$scope.stepNumber = 1
-
-	# $scope.goToStepTwo = () ->
-	# 	$scope.stepNumber = 2
-
-	# $scope.goToStepThree = () ->
-	# 	rpc.makeRequest 'users', 'create', 'validateInitialAdminUser', $scope.admin, (error) ->
-	# 		$scope.$apply () ->
-	# 			if error?
-	# 				$scope.errorText = error
-	# 			else
-	# 				$scope.stepNumber = 3
-
-	# $scope.goToStepFour = () ->
-	# 	rpc.makeRequest 'users', 'create', 'validateInitialAdminToken', $scope.admin, (error) ->
-	# 		$scope.$apply () ->
-	# 			if error?
-	# 				$scope.errorText = error
-	# 			else
-	# 				$scope.stepNumber = 4
-
-	# $scope.goToStepFive = () ->
-	# 	_createInitialAdmin = () ->
-	# 		rpc.makeRequest 'users', 'create', 'createInitialAdmin', $scope.admin, (error) ->
-	# 			$scope.$apply () ->
-	# 				if error?
-	# 					$scope.errorText = error
-	# 				else
-	# 					_setDomainName()
-
-	# 	_setDomainName = () ->
-	# 		rpc.makeRequest 'systemSettings', 'update', 'setWebsiteSettings', $scope.website, (error) ->
-	# 			$scope.$apply () ->
-	# 				if error?
-	# 					$scope.errorText = error
-	# 				else
-	# 					_setAwsKeys()
-
-	# 	_setAwsKeys = () ->
-	# 		rpc.makeRequest 'systemSettings', 'update', 'setAwsKeys', $scope.aws, (error) ->
-	# 			$scope.$apply () ->
-	# 				if error? and error isnt 'Bad keys'
-	# 					$scope.errorText = 'fatal error:' + JSON.stringify error
-	# 				else
-	# 					_setDeploymentInitialized()
-
-	# 	_setDeploymentInitialized = () ->
-	# 		rpc.makeRequest 'systemSettings', 'update', 'setDeploymentInitialized', null, (error) ->
-	# 			$scope.$apply () ->
-	# 				if error?
-	# 					$scope.errorText = 'fatal error:' + JSON.stringify error
-	# 				else
-	# 					_turnOffInstallationWizard()
-
-	# 	_turnOffInstallationWizard = () ->
-	# 		successHandler = (data, status, headers, config) ->
-	# 			$scope.stepNumber = 5
-	# 		errorHandler = (data, status, headers, config) ->
-	# 			$scope.errorText = 'fatal error while turning off installation wizard'
-
-	# 		$http.post('/turnOffInstallationWizard').success(successHandler).error(errorHandler)	
-
-	# 	_createInitialAdmin()
-
-	# $scope.goToKoality = () ->
-	# 	window.location.href = '/'
-
-	# $scope.$watch 'stepNumber', (newValue, oldValue) ->
-	# 	$location.search 'step', newValue ? null
 ]
-
