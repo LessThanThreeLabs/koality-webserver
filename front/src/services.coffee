@@ -137,7 +137,7 @@ angular.module('koality.service', []).
 					console.error if error?
 				return @
 
-		listen: (resource, eventName, id) ->
+		return (resource, eventName, id) ->
 			return new EventListener resource, eventName, id
 	]).
 	factory('changesRpc', ['rpc', 'integerConverter', (rpc, integerConverter) ->

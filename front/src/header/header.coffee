@@ -36,7 +36,7 @@ window.HeaderProfile = ['$scope', '$location', 'initialState', 'rpc', 'events', 
 		$scope.user.lastName = data.lastName
 
 	if $scope.loggedIn
-		userEvents = events.listen('users', 'user name updated', initialState.user.id).setCallback(handleUpdate).subscribe()
+		userEvents = events('users', 'user name updated', initialState.user.id).setCallback(handleUpdate).subscribe()
 		$scope.$on '$destroy', userEvents.unsubscribe
 
 	$scope.profileDropdownOptions = [{title: 'Account', name: 'account'}, {title: 'Logout', name: 'logout'}]
@@ -71,8 +71,8 @@ window.HeaderRepositories = ['$scope', '$location', 'initialState', 'rpc', 'even
 		$scope.repositoryDropdownOptions.splice repositoryToRemoveIndex, 1 if repositoryToRemoveIndex?
 
 	if $scope.loggedIn
-		addRepositoryEvents = events.listen('users', 'repository added', initialState.user.id).setCallback(handleRepositoryAdded).subscribe()
-		removeRepositoryEvents = events.listen('users', 'repository removed', initialState.user.id).setCallback(handleRepositoryRemoved).subscribe()
+		addRepositoryEvents = events('users', 'repository added', initialState.user.id).setCallback(handleRepositoryAdded).subscribe()
+		removeRepositoryEvents = events('users', 'repository removed', initialState.user.id).setCallback(handleRepositoryRemoved).subscribe()
 		$scope.$on '$destroy', addRepositoryEvents.unsubscribe
 		$scope.$on '$destroy', removeRepositoryEvents.unsubscribe
 	

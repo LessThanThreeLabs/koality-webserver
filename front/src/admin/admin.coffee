@@ -54,8 +54,8 @@ window.AdminUsers = ['$scope', 'initialState', 'rpc', 'events', 'notification', 
 		userToRemoveIndex = (index for user, index in $scope.users when user.id is data.id)[0]
 		$scope.users.splice userToRemoveIndex, 1 if userToRemoveIndex?
 
-	addUserEvents = events.listen('users', 'user created', initialState.user.id).setCallback(handleUserAdded).subscribe()
-	removeUserEvents = events.listen('users', 'user removed', initialState.user.id).setCallback(handleUserRemoved).subscribe()
+	addUserEvents = events('users', 'user created', initialState.user.id).setCallback(handleUserAdded).subscribe()
+	removeUserEvents = events('users', 'user removed', initialState.user.id).setCallback(handleUserRemoved).subscribe()
 	$scope.$on '$destroy', addUserEvents.unsubscribe
 	$scope.$on '$destroy', removeUserEvents.unsubscribe
 
@@ -109,8 +109,8 @@ window.AdminRepositories = ['$scope', '$location', '$routeParams', 'initialState
 		repositoryToRemoveIndex = (index for repository, index in $scope.repositories when repository.id is data.id)[0]
 		$scope.repositories.splice repositoryToRemoveIndex, 1 if repositoryToRemoveIndex?
 
-	addRepositoryEvents = events.listen('users', 'repository added', initialState.user.id).setCallback(handleAddedRepositoryUpdate).subscribe()
-	removeRepositoryEvents = events.listen('users', 'repository removed', initialState.user.id).setCallback(handleRemovedRepositoryUpdate).subscribe()
+	addRepositoryEvents = events('users', 'repository added', initialState.user.id).setCallback(handleAddedRepositoryUpdate).subscribe()
+	removeRepositoryEvents = events('users', 'repository removed', initialState.user.id).setCallback(handleRemovedRepositoryUpdate).subscribe()
 	$scope.$on '$destroy', addRepositoryEvents.unsubscribe
 	$scope.$on '$destroy', removeRepositoryEvents.unsubscribe
 
@@ -277,7 +277,7 @@ window.AdminUpgrade = ['$scope', 'initialState', 'rpc', 'events', ($scope, initi
 		if data.resource is 'deployment' and data.key is 'upgrade_status'
 			handleUpgradeStatus { lastUpgradeStatus: data.value }
 
-	changedSystemSetting = events.listen('systemSettings', 'system setting updated', initialState.user.id).setCallback(handleSystemSettingsUpdate).subscribe()
+	changedSystemSetting = events('systemSettings', 'system setting updated', initialState.user.id).setCallback(handleSystemSettingsUpdate).subscribe()
 	$scope.$on '$destroy', changedSystemSetting.unsubscribe
 
 	getUpgradeStatus()

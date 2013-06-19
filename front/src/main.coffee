@@ -25,7 +25,7 @@ window.Main = ['$scope', 'rpc', 'events', 'initialState', 'notification', ($scop
 		return if not initialState.loggedIn
 
 		for repository in repositories
-			changeFinishedListener = events.listen('repositories', 'change finished', repository.id).setCallback(createChangeFinishedHandler(repository)).subscribe()
+			changeFinishedListener = events('repositories', 'change finished', repository.id).setCallback(createChangeFinishedHandler(repository)).subscribe()
 			changeFinishedListeners.push changeFinishedListener
 	$scope.$on '$destroy', () -> changeFinishedListener.unsubscribe() for changeFinishedListener in changeFinishedListeners
 

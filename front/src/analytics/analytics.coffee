@@ -112,7 +112,7 @@ window.Analytics = ['$scope', 'rpc', 'events', ($scope, rpc, events) ->
 
 		for repositoryId in getRepositoryIdsToDisplay()
 			console.log repositoryId
-			changeFinishedListener = events.listen('repositories', 'change finished', repositoryId).setCallback(handleChangeFinished).subscribe()
+			changeFinishedListener = events('repositories', 'change finished', repositoryId).setCallback(handleChangeFinished).subscribe()
 			changeFinishedListeners.push changeFinishedListener
 	$scope.$on '$destroy', () -> changeFinishedListener.unsubscribe() for changeFinishedListener in changeFinishedListeners
 

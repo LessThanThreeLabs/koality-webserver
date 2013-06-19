@@ -162,9 +162,9 @@ window.RepositoryChanges = ['$scope', '$routeParams', 'changesRpc', 'events', 'l
 		if $scope.currentChangeId is data.id
 			copyDataIntoChange $scope.currentChangeInformation, data
 
-	changeAddedEvents = events.listen('repositories', 'change added', $routeParams.repositoryId).setCallback(handeChangeAdded).subscribe()
-	changeStartedEvents = events.listen('repositories', 'change started', $routeParams.repositoryId).setCallback(handleChangeStarted).subscribe()
-	changeFinishedEvents = events.listen('repositories', 'change finished', $routeParams.repositoryId).setCallback(handleChangeFinished).subscribe()
+	changeAddedEvents = events('repositories', 'change added', $routeParams.repositoryId).setCallback(handeChangeAdded).subscribe()
+	changeStartedEvents = events('repositories', 'change started', $routeParams.repositoryId).setCallback(handleChangeStarted).subscribe()
+	changeFinishedEvents = events('repositories', 'change finished', $routeParams.repositoryId).setCallback(handleChangeFinished).subscribe()
 	$scope.$on '$destroy', changeAddedEvents.unsubscribe
 	$scope.$on '$destroy', changeStartedEvents.unsubscribe
 	$scope.$on '$destroy', changeFinishedEvents.unsubscribe
@@ -247,7 +247,7 @@ window.RepositoryStages = ['$scope', 'rpc', 'events', ($scope, rpc, events) ->
 			buildConsoleAddedEvents = null
 
 		if $scope.currentChangeId?
-			buildConsoleAddedEvents = events.listen('changes', 'new build console', $scope.currentChangeId).setCallback(handleBuildConsoleAdded).subscribe()
+			buildConsoleAddedEvents = events('changes', 'new build console', $scope.currentChangeId).setCallback(handleBuildConsoleAdded).subscribe()
 	$scope.$on '$destroy', () -> buildConsoleAddedEvents.unsubscribe() if buildConsoleAddedEvents?
 
 	buildConsoleStatusUpdateEvents = null
@@ -257,7 +257,7 @@ window.RepositoryStages = ['$scope', 'rpc', 'events', ($scope, rpc, events) ->
 			buildConsoleStatusUpdateEvents = null
 
 		if $scope.currentChangeId?
-			buildConsoleStatusUpdateEvents = events.listen('changes', 'return code added', $scope.currentChangeId).setCallback(handleBuildConsoleStatusUpdate).subscribe()
+			buildConsoleStatusUpdateEvents = events('changes', 'return code added', $scope.currentChangeId).setCallback(handleBuildConsoleStatusUpdate).subscribe()
 	$scope.$on '$destroy', () -> buildConsoleStatusUpdateEvents.unsubscribe() if buildConsoleStatusUpdateEvents?
 
 	$scope.stageSort = (stage) ->
@@ -328,7 +328,7 @@ window.RepositoryStageDetails = ['$scope', '$location', 'rpc', 'events', ($scope
 			addedExportUrisEvents = null
 
 		if $scope.currentChangeId?
-			addedExportUrisEvents = events.listen('changes', 'export uris added', $scope.currentChangeId).setCallback(handleExportUrisAdded).subscribe()
+			addedExportUrisEvents = events('changes', 'export uris added', $scope.currentChangeId).setCallback(handleExportUrisAdded).subscribe()
 	$scope.$on '$destroy', () -> addedExportUrisEvents.unsubscribe() if addedExportUrisEvents?
 
 	addedLineEvents = null
@@ -338,7 +338,7 @@ window.RepositoryStageDetails = ['$scope', '$location', 'rpc', 'events', ($scope
 			addedLineEvents = null
 
 		if $scope.currentStageId?
-			addedLineEvents = events.listen('buildConsoles', 'new output', $scope.currentStageId).setCallback(handleLinesAdded).subscribe()
+			addedLineEvents = events('buildConsoles', 'new output', $scope.currentStageId).setCallback(handleLinesAdded).subscribe()
 	$scope.$on '$destroy', () -> addedLineEvents.unsubscribe() if addedLineEvents?
 
 	$scope.$watch 'currentChangeId', (newValue, oldValue) ->

@@ -69,8 +69,8 @@ window.AccountSshKeys = ['$scope', 'rpc', 'events', 'initialState', 'notificatio
 		keyToRemoveIndex = (index for key, index in $scope.keys when key.id is data.id)[0]
 		$scope.keys.splice keyToRemoveIndex, 1 if keyToRemoveIndex?
 
-	addKeyEvents = events.listen('users', 'ssh pubkey added', initialState.user.id).setCallback(handleAddedKeyUpdated).subscribe()
-	removeKeyEvents = events.listen('users', 'ssh pubkey removed', initialState.user.id).setCallback(handleRemovedKeyUpdate).subscribe()
+	addKeyEvents = events('users', 'ssh pubkey added', initialState.user.id).setCallback(handleAddedKeyUpdated).subscribe()
+	removeKeyEvents = events('users', 'ssh pubkey removed', initialState.user.id).setCallback(handleRemovedKeyUpdate).subscribe()
 	$scope.$on '$destroy', addKeyEvents.unsubscribe
 	$scope.$on '$destroy', removeKeyEvents.unsubscribe
 
