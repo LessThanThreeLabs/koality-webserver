@@ -14,9 +14,8 @@ copyDataIntoChange = (change, data) ->
 
 window.Repository = ['$scope', '$location', '$routeParams', 'rpc', 'events', 'integerConverter', ($scope, $location, $routeParams, rpc, events, integerConverter) ->
 	retrieveRepositoryInformation = () ->
-		rpc.makeRequest 'repositories', 'read', 'getMetadata', id: $routeParams.repositoryId, (error, repositoryInformation) ->
-			$scope.$apply () ->
-				$scope.repository = repositoryInformation
+		rpc 'repositories', 'read', 'getMetadata', id: $routeParams.repositoryId, (error, repositoryInformation) ->
+			$scope.repository = repositoryInformation
 
 	retrieveCurrentChangeInformation = () ->
 		$scope.currentChangeInformation = null
@@ -26,12 +25,11 @@ window.Repository = ['$scope', '$location', '$routeParams', 'rpc', 'events', 'in
 			repositoryId: integerConverter.toInteger $routeParams.repositoryId
 			id: $scope.currentChangeId
 
-		rpc.makeRequest 'changes', 'read', 'getMetadata', requestData, (error, changeInformation) ->
-			$scope.$apply () ->
-				$scope.currentChangeInformation = changeInformation
-				$scope.showSkipped = false if $scope.currentChangeInformation.aggregateStatus isnt 'skipped'
-				$scope.showMerge = false if not $scope.currentChangeInformation.mergeStatus?
-				$scope.showDebug = false if $scope.currentChangeInformation.aggregateStatus isnt 'failed'
+		rpc 'changes', 'read', 'getMetadata', requestData, (error, changeInformation) ->
+			$scope.currentChangeInformation = changeInformation
+			$scope.showSkipped = false if $scope.currentChangeInformation.aggregateStatus isnt 'skipped'
+			$scope.showMerge = false if not $scope.currentChangeInformation.mergeStatus?
+			$scope.showDebug = false if $scope.currentChangeInformation.aggregateStatus isnt 'failed'
 
 	retrieveCurrentStageInformation = () ->
 		$scope.currentStageInformation = null
@@ -41,9 +39,8 @@ window.Repository = ['$scope', '$location', '$routeParams', 'rpc', 'events', 'in
 			repositoryId: integerConverter.toInteger $routeParams.repositoryId
 			id: $scope.currentStageId
 
-		rpc.makeRequest 'buildConsoles', 'read', 'getBuildConsole', requestData, (error, stageInformation) ->
-			$scope.$apply () ->
-				$scope.currentStageInformation = stageInformation
+		rpc 'buildConsoles', 'read', 'getBuildConsole', requestData, (error, stageInformation) ->
+			$scope.currentStageInformation = stageInformation
 
 	syncToRouteParams = () ->
 		$scope.currentChangeId = integerConverter.toInteger $routeParams.change
@@ -125,14 +122,14 @@ window.RepositoryChanges = ['$scope', '$routeParams', 'changesRpc', 'events', 'l
 		names = names.filter (name) -> name.length > 0
 		return if names.length > 0 then names else null
 
-	handleInitialChanges = (error, changes) -> $scope.$apply () ->
+	handleInitialChanges = (error, changes) ->
 		$scope.changes = changes
 		if $scope.changes.length is 0
 			$scope.selectChange null
 		else if $scope.changes[0]?
 			$scope.selectChange changes[0] if not $scope.currentChangeId?
 
-	handleMoreChanges = (error, changes) -> $scope.$apply () ->
+	handleMoreChanges = (error, changes) ->
 		$scope.changes = $scope.changes.concat changes
 
 	getInitialChanges = () ->
@@ -150,15 +147,15 @@ window.RepositoryChanges = ['$scope', '$routeParams', 'changesRpc', 'events', 'l
 	getChangeWithId = (id) ->
 		return (change for change in $scope.changes when change.id is id)[0]
 
-	handeChangeAdded = (data) -> $scope.$apply () ->
+	handeChangeAdded = (data) ->
 		if doesChangeMatchQuery(data) and not getChangeWithId(data.id)?
 			$scope.changes.unshift data
 
-	handleChangeStarted = (data) -> $scope.$apply () ->
+	handleChangeStarted = (data) ->
 		change = getChangeWithId data.id
 		copyDataIntoChange change, data if change?
 
-	handleChangeFinished = (data) -> $scope.$apply () ->
+	handleChangeFinished = (data) ->
 		change = getChangeWithId data.id
 		copyDataIntoChange change, data if change?
 
@@ -224,24 +221,23 @@ window.RepositoryStages = ['$scope', 'rpc', 'events', ($scope, rpc, events) ->
 		return if not $scope.currentChangeId?
 
 		$scope.retrievingStages = true
-		rpc.makeRequest 'buildConsoles', 'read', 'getBuildConsoles', changeId: $scope.currentChangeId, (error, buildConsoles) ->
-			$scope.$apply () ->
-				$scope.retrievingStages = false
-				$scope.stages = buildConsoles
+		rpc 'buildConsoles', 'read', 'getBuildConsoles', changeId: $scope.currentChangeId, (error, buildConsoles) ->
+			$scope.retrievingStages = false
+			$scope.stages = buildConsoles
 
-				if $scope.stages.length is 0
-					$scope.selectStage null
+			if $scope.stages.length is 0
+				$scope.selectStage null
 
-				if $scope.currentStageId? and not isStageIdInStages $scope.currentStageId
-					$scope.selectStage null
+			if $scope.currentStageId? and not isStageIdInStages $scope.currentStageId
+				$scope.selectStage null
 
 	getStageWithId = (id) ->
 		return (stage for stage in $scope.stages when stage.id is id)[0]
 
-	handleBuildConsoleAdded = (data) -> $scope.$apply () ->
+	handleBuildConsoleAdded = (data) ->
 		$scope.stages.push data if not getStageWithId(data.id)?
 
-	handleBuildConsoleStatusUpdate = (data) -> $scope.$apply () ->
+	handleBuildConsoleStatusUpdate = (data) ->
 		stage = getStageWithId data.id
 		stage.status = data.status if stage?
 
@@ -304,29 +300,27 @@ window.RepositoryStageDetails = ['$scope', '$location', 'rpc', 'events', ($scope
 		$scope.exportUris = []
 		return if not $scope.currentChangeId?
 
-		rpc.makeRequest 'changes', 'read', 'getChangeExportUris', id: $scope.currentChangeId, (error, uris) ->
-			$scope.$apply () ->
-				$scope.exportUris = uris
+		rpc 'changes', 'read', 'getChangeExportUris', id: $scope.currentChangeId, (error, uris) ->
+			$scope.exportUris = uris
 
 	retrieveLines = () ->
 		$scope.lines = []
 		return if not $scope.currentStageId?
 		$scope.spinnerOn = true
 
-		rpc.makeRequest 'buildConsoles', 'read', 'getLines', id: $scope.currentStageId, (error, lines) ->
-			$scope.$apply () ->
-				$scope.spinnerOn = false
-				for lineNumber, lineText of lines
-					addLine lineNumber, lineText
+		rpc 'buildConsoles', 'read', 'getLines', id: $scope.currentStageId, (error, lines) ->
+			$scope.spinnerOn = false
+			for lineNumber, lineText of lines
+				addLine lineNumber, lineText
 
-	handleExportUrisAdded = (data) -> $scope.$apply () ->
+	handleExportUrisAdded = (data) ->
 		$scope.exportUris ?= []
 		$scope.exportUris = $scope.exportUris.concat data.uris
 
 	addLine = (lineNumber, lineText) ->
 		$scope.lines[lineNumber-1] = lineText
 
-	handleLinesAdded = (data) -> $scope.$apply () ->
+	handleLinesAdded = (data) ->
 		$scope.lines ?= []
 		for lineNumber, lineText of data
 			addLine lineNumber, lineText

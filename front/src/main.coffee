@@ -5,7 +5,7 @@ window.Main = ['$scope', 'rpc', 'events', 'initialState', 'notification', ($scop
 	repositories = []
 
 	getRepositories = () ->
-		rpc.makeRequest 'repositories', 'read', 'getRepositories', null, (error, repos) ->
+		rpc 'repositories', 'read', 'getRepositories', null, (error, repos) ->
 			repositories = repos
 			updateChangeFinishedListeners()
 
@@ -50,7 +50,7 @@ window.Main = ['$scope', 'rpc', 'events', 'initialState', 'notification', ($scop
 			else if unpaidDaysRemaining <= 15
 				notification.warning "Your payment method is about to expire. <a href='#{billingUpdateUrl}'>Update your billing information.</a>"
 
-		rpc.makeRequest 'systemSettings', 'read', 'getLicenseInformation', null, (error, licenseInformation) ->
+		rpc 'systemSettings', 'read', 'getLicenseInformation', null, (error, licenseInformation) ->
 			if licenseInformation.licenseTrialExpirationTime?
 				handleTrialExpiration getDaysRemaining licenseInformation.licenseTrialExpirationTime
 			else if licenseInformation.licenseUnpaidExpirationTime?

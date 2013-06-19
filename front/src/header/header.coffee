@@ -15,7 +15,7 @@ window.Header = ['$scope', '$location', 'initialState', 'rpc', ($scope, $locatio
 			feedback: $scope.feedback.text
 			userAgent: navigator.userAgent
 			screen: window.screen
-		rpc.makeRequest 'users', 'update', 'submitFeedback', requestParams
+		rpc 'users', 'update', 'submitFeedback', requestParams
 
 		$scope.feedback.showSuccess = true
 
@@ -31,7 +31,7 @@ window.HeaderProfile = ['$scope', '$location', 'initialState', 'rpc', 'events', 
 		firstName: initialState.user.firstName
 		lastName: initialState.user.lastName
 
-	handleUpdate = (data) -> $scope.$apply () ->
+	handleUpdate = (data) ->
 		$scope.user.firstName = data.firstName
 		$scope.user.lastName = data.lastName
 
@@ -48,7 +48,7 @@ window.HeaderProfile = ['$scope', '$location', 'initialState', 'rpc', 'events', 
 			performLogout()
 
 	performLogout = () ->
-		rpc.makeRequest 'users', 'update', 'logout', null, (error) ->
+		rpc 'users', 'update', 'logout', null, (error) ->
 			# this will force a refresh, rather than do html5 pushstate
 			window.location.href = '/'
 ]
@@ -56,18 +56,17 @@ window.HeaderProfile = ['$scope', '$location', 'initialState', 'rpc', 'events', 
 
 window.HeaderRepositories = ['$scope', '$location', 'initialState', 'rpc', 'events', ($scope, $location, initialState, rpc, events) ->
 	getRepositories = () ->
-		rpc.makeRequest 'repositories', 'read', 'getRepositories', null, (error, repositories) ->
-			$scope.$apply () -> 
-				$scope.repositoryDropdownOptions = $scope.repositoryDropdownOptions.concat (createDropdownOptionFromRepository repository for repository in repositories)
+		rpc 'repositories', 'read', 'getRepositories', null, (error, repositories) ->
+			$scope.repositoryDropdownOptions = $scope.repositoryDropdownOptions.concat (createDropdownOptionFromRepository repository for repository in repositories)
 
 	createDropdownOptionFromRepository = (repository) ->
 		title: repository.name
 		name: repository.id
 
-	handleRepositoryAdded = (data) -> $scope.$apply () ->
+	handleRepositoryAdded = (data) ->
 		$scope.repositoryDropdownOptions.push createDropdownOptionFromRepository data
 
-	handleRepositoryRemoved = (data) -> $scope.$apply () ->
+	handleRepositoryRemoved = (data) ->
 		repositoryToRemoveIndex = (index for dropdownOption, index in $scope.repositoryDropdownOptions when dropdownOption.name is data.id)[0]
 		$scope.repositoryDropdownOptions.splice repositoryToRemoveIndex, 1 if repositoryToRemoveIndex?
 

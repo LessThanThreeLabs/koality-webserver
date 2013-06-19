@@ -73,11 +73,10 @@ window.Analytics = ['$scope', 'rpc', 'events', ($scope, rpc, events) ->
 		$scope.options.interval = $scope.options.intervals[0] if not matchingInterval
 
 	getRepositories = () ->
-		rpc.makeRequest 'repositories', 'read', 'getRepositories', null, (error, repositories) ->
-			$scope.$apply () ->
-				$scope.options.repositories = [allRepository].concat repositories
-				updateChangeFinishedListeners()
-				getChanges()
+		rpc 'repositories', 'read', 'getRepositories', null, (error, repositories) ->
+			$scope.options.repositories = [allRepository].concat repositories
+			updateChangeFinishedListeners()
+			getChanges()
 
 	getRepositoryIdsToDisplay = () ->
 		if $scope.options.repository.id >= 0 then return [$scope.options.repository.id]
@@ -95,14 +94,13 @@ window.Analytics = ['$scope', 'rpc', 'events', ($scope, rpc, events) ->
 			repositories: getRepositoryIdsToDisplay()
 			startTimestamp: $scope.graphOptions.start.getTime()
 			endTimestamp: $scope.graphOptions.end.getTime()
-		rpc.makeRequest 'changes', 'read', 'getChangesBetweenTimestamps', requestParams, (error, changes) ->
-			$scope.$apply () ->
-				$scope.graphOptions.changes = changes
+		rpc 'changes', 'read', 'getChangesBetweenTimestamps', requestParams, (error, changes) ->
+			$scope.graphOptions.changes = changes
 
 	getChangeWithId = (id) ->
 		return (change for change in $scope.graphOptions.changes when change.id is id)[0]
 
-	handleChangeFinished = (data) -> $scope.$apply () ->
+	handleChangeFinished = (data) ->
 		$scope.graphOptions.changes.push data if not getChangeWithId(data.id)?
 
 	changeFinishedListeners = []

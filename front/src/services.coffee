@@ -107,10 +107,12 @@ angular.module('koality.service', []).
 				socket.on eventName, callback
 				previousEventToCallbacks[eventName].push callback
 	]).
-	factory('rpc', ['socket', (socket) ->
-		makeRequest: socket.makeRequest
+	factory('rpc', ['$rootScope', 'socket', ($rootScope, socket) ->
+		return (resource, requestType, methodName, data, callback) ->
+			socket.makeRequest resource, requestType, methodName, data, (error, result) ->
+				if callback? then $rootScope.$apply () -> callback error, result
 	]).
-	factory('events', ['socket', 'integerConverter', (socket, integerConverter) ->
+	factory('events', ['$rootScope', 'socket', 'integerConverter', ($rootScope, socket, integerConverter) ->
 		class EventListener
 			constructor: (@resource, @eventName, id) ->
 				@_callback = null
@@ -126,7 +128,7 @@ angular.module('koality.service', []).
 				socket.makeRequest @resource, 'subscribe', @eventName, id: @id, (error, eventToListenFor) =>
 					if error? then console.error error
 					else socket.respondTo eventToListenFor, (data) =>
-						@_callback data if @_callback?
+						if @_callback? then $rootScope.$apply () => @_callback data 
 				return @
 
 			unsubscribe: () =>
@@ -175,7 +177,7 @@ angular.module('koality.service', []).
 			if noMoreChangesToRequest
 				shiftChangesRequest()
 			else
-				rpc.makeRequest 'changes', 'read', 'getChanges', currentNameQuery, (error, changes) ->
+				rpc 'changes', 'read', 'getChanges', currentNameQuery, (error, changes) ->
 					noMoreChangesToRequest = changes.length < NUM_CHANGES_TO_REQUEST
 					currentCallback error, changes
 					shiftChangesRequest()
