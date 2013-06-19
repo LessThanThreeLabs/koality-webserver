@@ -175,11 +175,11 @@ describe 'Koality services', () ->
 			
 		it 'should properly call socket when making rpc requests', () ->
 			inject (rpc) ->
-				rpc.makeRequest 'users', 'update', 'login', id: 9001
+				rpc 'users', 'update', 'login', id: 9001
 				expect(mockedSocket.makeRequest).toHaveBeenCalled()
 				expect(mockedSocket.makeRequest.callCount).toBe 1
 
-				rpc.makeRequest 'users', 'update', 'logout', id: 9001
+				rpc 'users', 'update', 'logout', id: 9001
 				expect(mockedSocket.makeRequest).toHaveBeenCalled()
 				expect(mockedSocket.makeRequest.callCount).toBe 2
 
@@ -187,7 +187,7 @@ describe 'Koality services', () ->
 			inject (rpc) ->
 				fakeCallback = jasmine.createSpy 'fakeCallback'
 
-				rpc.makeRequest 'users', 'update', 'login', id: 9001, fakeCallback
+				rpc 'users', 'update', 'login', id: 9001, fakeCallback
 				expect(mockedSocket.makeRequest).toHaveBeenCalled()
 				expect(mockedSocket.makeRequest.callCount).toBe 1
 				expect(fakeCallback).not.toHaveBeenCalled()
@@ -208,7 +208,7 @@ describe 'Koality services', () ->
 
 			inject (events) ->
 				fakeCallback = () ->
-				events.listen('users', 'basic information', 9001).setCallback(fakeCallback).subscribe()
+				events('users', 'basic information', 9001).setCallback(fakeCallback).subscribe()
 
 				expect(mockedSocket.respondTo.mostRecentCall.args[0]).toBe eventToFireOn
 				expect(mockedSocket.makeRequest.callCount).toBe 1
@@ -233,7 +233,7 @@ describe 'Koality services', () ->
 
 			inject (events) ->
 				fakeCallback = jasmine.createSpy 'fakeCallback'
-				fakeEvents = events.listen('users', 'basic information', 9001).setCallback(fakeCallback).subscribe()
+				fakeEvents = events('users', 'basic information', 9001).setCallback(fakeCallback).subscribe()
 
 				expect(fakeCallback.callCount).toBe 0
 				jasmine.Clock.tick 101
@@ -248,8 +248,7 @@ describe 'Koality services', () ->
 	describe 'changes rpc', () ->
 		beforeEach () ->
 			numChanges = 107
-			mockedRpc =
-				makeRequest: (resource, requestType, methodName, data, callback) ->
+			mockedRpc = (resource, requestType, methodName, data, callback) ->
 					endIndex = Math.min numChanges, data.startIndex + 100
 					callback null, (num for num in [data.startIndex...endIndex])
 
