@@ -16,4 +16,7 @@ class LoggerEmailer extends Emailer
 				toEmail = @configurationParams.to.email
 				subject = 'Logs'
 
-				@emailSender.sendText fromEmail, toEmail, subject, body, callback
+				if process.env.NODE_ENV is 'production'
+					@emailSender.sendText fromEmail, toEmail, subject, body, callback
+				else
+					console.log 'Not sending logger email while in development mode'
