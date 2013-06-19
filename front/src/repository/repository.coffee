@@ -159,10 +159,6 @@ window.RepositoryChanges = ['$scope', '$routeParams', 'changesRpc', 'events', 'l
 		change = getChangeWithId data.id
 		copyDataIntoChange change, data if change?
 
-		if change?.aggregateStatus is 'passed'
-			change.animate = true
-			setTimeout (() -> $scope.$apply () -> change.animate = false), 3000
-
 		if $scope.currentChangeId is data.id
 			copyDataIntoChange $scope.currentChangeInformation, data
 
