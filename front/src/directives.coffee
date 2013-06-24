@@ -349,7 +349,8 @@ angular.module('koality.directive', []).
 				else
 					for line, index in newValue
 						if newValue[index] isnt oldValue[index] or index >= oldValue.length
-							addLine index+1, line, oldValue[index]?
+							replacePrevious = oldValue[index]? or oldValue.length > index
+							addLine index+1, line, replacePrevious
 
 			scope.$watch 'lines', handleLinesUpdate, true
 	])
