@@ -22,7 +22,7 @@
 			<content-menu-options on-scroll-to-bottom="scrolledToBottom()">
 				<content-menu-option ng-repeat="change in changes | orderBy:'number':true" menu-option-identifier="{{change.number}}" menu-option-text="{{change.aggregateStatus}}" menu-option-spinning="{{change.verificationStatus == 'running'}}" ng-click="selectChange(change)" ng-class="{selected: change.id == currentChangeId, green: change.aggregateStatus == 'passed', red: change.aggregateStatus == 'failed' || change.aggregateStatus == 'skipped'}"></content-menu-option>
 			</content-menu-options>
-		</menu>
+		</content-menu>
 	</div>
 
 	<div id="repositoryStages" ng-controller="RepositoryStages">
@@ -41,7 +41,7 @@
 
 				<content-menu-option menu-option-text="debug" ng-show="currentChangeInformation.aggregateStatus == 'failed' && !retrievingStages && stages.length == 0" ng-click="selectDebug()" ng-class="{selected: currentStageId == null && showDebug, red: true}"></content-menu-option>
 			</content-menu-options>
-		</menu>
+		</content-menu>
 	</div>
 
 	<div id="repositoryStageDetails" ng-controller="RepositoryStageDetails">
