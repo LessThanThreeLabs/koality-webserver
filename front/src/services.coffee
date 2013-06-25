@@ -179,7 +179,7 @@ angular.module('koality.service', []).
 			else
 				rpc 'changes', 'read', 'getChanges', currentNameQuery, (error, changes) ->
 					noMoreChangesToRequest = changes.length < NUM_CHANGES_TO_REQUEST
-					currentCallback error, changes
+					currentCallback error, changes  # there is already a $apply() in progress
 					shiftChangesRequest()
 
 		return queueRequest: (repositoryId, group, names, startIndex, callback) ->
