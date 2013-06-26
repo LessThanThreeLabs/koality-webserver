@@ -307,7 +307,6 @@ window.RepositoryStageDetails = ['$scope', '$location', 'rpc', 'events', ($scope
 		rpc 'buildConsoles', 'read', 'getLines', id: $scope.currentStageId, (error, lines) ->
 			$scope.spinnerOn = false
 
-			$scope.lines = []
 			for lineNumber, lineText of lines
 				addLine lineNumber, lineText
 
