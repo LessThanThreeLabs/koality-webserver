@@ -118,7 +118,6 @@ angular.module('koality.directive', []).
 		transclude: true
 		scope:
 			type: '@'
-			# text: '@'
 			durationInSeconds: '@'
 		template: '<div class="prettyNotification" ng-class="{green: type == \'success\', orange: type == \'warning\', red: type == \'error\'}">
 					<div class="prettyNotificationContent growingCentered">
@@ -349,6 +348,10 @@ angular.module('koality.directive', []).
 				else
 					for line, index in newValue
 						if newValue[index] isnt oldValue[index] or index >= oldValue.length
+							# It's possible that we get an event for line X although
+							# lines [0, x) haven't loaded. When lines [0, x) come in,
+							# we want those lines to replace the old lines [0, x),
+							# which are null
 							replacePrevious = oldValue[index]? or oldValue.length > index
 							addLine index+1, line, replacePrevious
 
