@@ -24,8 +24,8 @@ module.exports = (grunt) ->
 
 			compileCoffee:
 				command: [
-					'iced --compile --lint --output <%= backCompiledDirectory %>/ <%= backSourceDirectory %>/',
-					'iced --compile --lint --runtime window --output <%= frontCoffeeCompiledDirectory %>/ <%= frontSourceDirectory %>/'
+					'iced --compile --output <%= backCompiledDirectory %>/ <%= backSourceDirectory %>/',
+					'iced --compile --runtime window --output <%= frontCoffeeCompiledDirectory %>/ <%= frontSourceDirectory %>/'
 				].join ' && '
 
 			runServer:
