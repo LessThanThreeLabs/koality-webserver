@@ -62,7 +62,7 @@ window.Wizard = ['$scope', '$http', 'rpc', 'notification', ($scope, $http, rpc, 
 			else
 				$http.post('/turnOffInstallationWizard').error (data, status, headers, config) ->
 					notification.error 'Fatal: unable to start Koality service!'
-				$scope.stage = 'invite'
+				$scope.stage = 'complete'
 
 	$scope.goToCreateRepository = () ->
 		window.location.href = '/admin?view=repositories'
