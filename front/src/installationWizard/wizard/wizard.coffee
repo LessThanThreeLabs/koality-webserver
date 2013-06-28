@@ -14,9 +14,10 @@ window.Wizard = ['$scope', '$http', 'rpc', 'notification', ($scope, $http, rpc, 
 		return if $scope.waitingOnRequest
 		$scope.waitingOnRequest = true
 
-		rpc 'systemSettings', 'update', 'validateLicenseKey', $scope.license, (error) ->
+		rpc 'systemSettings', 'update', 'validateLicenseKey', $scope.license, (error, isValid) ->
 			$scope.waitingOnRequest = false
-			if error? notification.error error
+			if error? then notification.error 'Error while trying to validate license key'
+			else if not isValid then notification.error 'Invalid license key. Either the key does not exist or is already in use'
 			else $scope.stage = 'admin'
 
 	$scope.completeAdminInformation = () ->
@@ -25,7 +26,7 @@ window.Wizard = ['$scope', '$http', 'rpc', 'notification', ($scope, $http, rpc, 
 
 		rpc 'users', 'create', 'validateInitialAdminUser', $scope.admin, (error) ->
 			$scope.waitingOnRequest = false
-			if error? notification.error error
+			if error? then notification.error error
 			else $scope.stage = 'verifyAdmin'
 
 	$scope.completeVerifyAdmin = () ->
