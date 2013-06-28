@@ -8,7 +8,8 @@ window.Header = ['$scope', '$location', 'initialState', 'rpc', ($scope, $locatio
 	$scope.feedback.modalVisible = false
 	$scope.feedback.showSuccess = false
 
-	$scope.visitHome = () -> $location.path('/').search({})
+	$scope.visitHome = () ->
+		window.location.href = '/'
 
 	$scope.submitFeedback = () ->
 		requestParams =
