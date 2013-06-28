@@ -228,7 +228,7 @@ window.AdminExporter = ['$scope', 'rpc', 'notification', ($scope, rpc, notificat
 			else notification.success 'Updated exporter settings'
 ]
 
-window.AdminApi = ['$scope', 'rpc', ($scope, rpc) ->
+window.AdminApi = ['$scope', 'rpc', 'notification', ($scope, rpc, notification) ->
 	getApiKey = () ->
 		rpc 'systemSettings', 'read', 'getAdminApiKey', null, (error, apiKey) ->
 			$scope.apiKey = apiKey
@@ -238,8 +238,15 @@ window.AdminApi = ['$scope', 'rpc', ($scope, rpc) ->
 			$scope.domainName = websiteSettings.domainName
 
 	$scope.regenerateKey = () ->
+		$scope.mustConfirmRegenerateKey = true
+
+	$scope.confirmRegenerateKey = () ->
 		rpc 'systemSettings', 'update', 'regenerateApiKey', null, (error, apiKey) ->
 			$scope.apiKey = apiKey
+			$scope.mustConfirmRegenerateKey = false
+
+	$scope.cancelRegenerateKey = () ->
+		$scope.mustConfirmRegenerateKey = false
 
 	getApiKey()
 	getDomainName()

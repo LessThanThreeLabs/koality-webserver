@@ -290,7 +290,12 @@
 
 					<div id="adminApiKey" text-selectable>{{apiKey}}</div>
 
-					<button class="centered" ng-click="regenerateKey()">Regenerate Key</button>
+					<button class="centered" ng-click="regenerateKey()" ng-show="!mustConfirmRegenerateKey">Regenerate Key</button>
+
+					<div id="adminApiConfirmRegenerate" ng-show="mustConfirmRegenerateKey">
+						<p>Are you sure you would like to do this?  This <strong>cannot</strong> be reversed.</p>
+						<button ng-click="confirmRegenerateKey()">Continue</button><button ng-click="cancelRegenerateKey()">Cancel</button>
+					</div>
 				</div>
 			</content-body>
 		</content>
