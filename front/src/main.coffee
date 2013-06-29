@@ -36,13 +36,17 @@ window.Main = ['$scope', 'rpc', 'events', 'initialState', 'notification', ($scop
 			timeInDay = 1000 * 60 * 60 * 24
 			return Math.floor (futureTime - Date.now()) / timeInDay
 
-		handleTrialExpiration = (trialDaysRemaining) ->
+		handleTrialExpirationWithoutPaymentInfo = (trialDaysRemaining) ->
 			if trialDaysRemaining <= 0
 				notification.error "There are 0 days left on your free trial. <a href='#{billingUpdateUrl}'>Upgrade now to continue using Koality.</a>", 0
 			else
 				message = "There are #{trialDaysRemaining} days left on your free trial. <a href='#{billingUpdateUrl}'>Upgrade now</a> to continue using Koality uninterrupted."
 				if trialDaysRemaining <= 7 then notification.warning message
 				else notification.success message
+
+		handleTrialExpirationWithPaymentInfo = (trialDaysRemaining) ->
+			if trialDaysRemaining <= 0
+				notification.success "There are 0 days left on your free trial. Your subscription will begin tomorrow."
 
 		handleUnpaidExpiration = (unpaidDaysRemaining) ->
 			if unpaidDaysRemaining <= 0
@@ -52,9 +56,12 @@ window.Main = ['$scope', 'rpc', 'events', 'initialState', 'notification', ($scop
 
 		rpc 'systemSettings', 'read', 'getLicenseInformation', null, (error, licenseInformation) ->
 			if licenseInformation.licenseTrialExpirationTime?
-				handleTrialExpiration getDaysRemaining licenseInformation.licenseTrialExpirationTime
+				if licenseInformation.licenseUnpaidExpirationTime?
+					handleTrialExpirationWithoutPaymentInfo getDaysRemaining licenseInformation.licenseTrialExpirationTime
+				else
+					handleTrialExpirationWithPaymentInfo getDaysRemaining licenseInformation.licenseTrialExpirationTime
 			else if licenseInformation.licenseUnpaidExpirationTime?
-				handleUnpaidExpiration getDaysRemaining licenseInformation.licenseUnpaidExpirationTime				
+				handleUnpaidExpiration getDaysRemaining licenseInformation.licenseUnpaidExpirationTime
 			else if not licenseInformation.active
 				notification.error "Your license has been deactivated. <a href='#{billingUpdateUrl}'>Update your billing information.</a>", 0
 
