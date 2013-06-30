@@ -331,16 +331,16 @@ angular.module('koality.directive', []).
 		restrict: 'E'
 		replace: true
 		scope: lines: '=consoleTextLines'
-		template: '<div class="prettyConsoleText"></div>'
+		template: '<ol class="prettyConsoleText"></ol>'
 		link: (scope, element, attributes) ->
 			addLine = (number, line="", linePreviouslyExisted) ->
 				ansiParsedLine = ansiparse.parse line
-				html = "<span class='prettyConsoleTextLineNumber'>#{number}</span><span class='prettyConsoleTextLineText textSelectable'>#{ansiParsedLine}</span>"
+				html = "<span class='prettyConsoleTextLineText textSelectable'>#{ansiParsedLine}</span>"
 
 				if linePreviouslyExisted
-					element.find(".prettyConsoleTextLine:nth-child(#{number})").html html
+					element.find("li:nth-child(#{number})").html html
 				else
-					element.append '<span class="prettyConsoleTextLine">' + html + '</span>'
+					element.append '<li>' + html + '</li>'
 
 			handleLinesUpdate = (newValue, oldValue) ->
 				if not newValue? or newValue.length is 0
