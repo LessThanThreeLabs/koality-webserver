@@ -26,6 +26,18 @@ angular.module('koality.directive', []).
 			element.bind 'click', (event) ->
 				element.find('input').focus()
 	).
+	directive('licenseKey', () ->
+		restrict: 'A'
+		require: 'ngModel'
+		link: (scope, element, attributes, control) ->
+			control.$parsers.unshift (viewValue) ->
+				return viewValue if not viewValue?
+
+				cleanedValue = viewValue.replace /[^a-zA-Z0-9]/g, ''
+				control.$setValidity 'licenseKey', cleanedValue.length is 16
+
+				return if cleanedValue.length is 16 then cleanedValue else undefined
+	).
 	directive('centeredPanel', () ->
 		restrict: 'E'
 		replace: true

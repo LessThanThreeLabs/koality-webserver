@@ -30,7 +30,7 @@
 			<div class="stageInstructions">Enter your License Key to continue</div>
 
 			<form name="licenseKeyForm" novalidate>
-				<input type="text" ng-model="license.licenseKey" name="licenseKey" placeholder="1111-2222-3333-4444" ng-pattern="/^[-a-zA-Z0-9]+$/" ng-maxlength="256" required focused>
+				<input type="text" ng-model="license.licenseKey" name="licenseKey" placeholder="1111-2222-3333-4444" ng-pattern="/^[-a-zA-Z0-9]+$/" license-key required focused>
 				<button class="centered" ng-click="completeLicenseKey()" ng-disabled="licenseKeyForm.$invalid">Continue</button>
 			</form>
 
