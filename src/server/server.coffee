@@ -107,7 +107,7 @@ class Server
 			expressServer.routes.get = expressServer.routes.get.filter (route) -> route.path isnt '*'
 
 		addProjectBindings = () =>
-			console.log 'adding project bindings'.cyan
+			@logger.info 'adding project bindings'
 
 			expressServer.get '/', @handlers.indexHandler.handleRequest
 			expressServer.get '/index', @handlers.indexHandler.handleRequest
