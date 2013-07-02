@@ -204,6 +204,16 @@
 						border-bottom: @optionHeight/2 solid transparent;
 					}
 
+					&.orange {
+						.prettyContentMenuOptionContents {
+							color: @koalityOrange;
+
+							.prettyContentMenuOptionArrow {
+								border-color: @koalityOrange;
+							}			
+						}
+					}
+
 					&.red {
 						.prettyContentMenuOptionContents {
 							color: @koalityRed;
@@ -236,6 +246,16 @@
 
 								.prettyContentMenuOptionArrow {
 									border-color: @koalityGreen;
+								}
+							}
+						}
+
+						&.orange {
+							.prettyContentMenuOptionContents {
+								color: @koalityOrange;
+
+								.prettyContentMenuOptionArrow {
+									border-color: @koalityOrange;
 								}
 							}
 						}
@@ -281,6 +301,22 @@
 
 							.prettyContentMenuOptionTooth {
 								border-left-color: @koalityGreen;
+							}
+						}
+
+						&.orange {
+
+							.prettyContentMenuOptionContents {
+								color: @koalityWhite;
+								background-color: @koalityOrange;
+
+								.prettyContentMenuOptionArrow {
+									border-color: @koalityWhite;
+								}
+							}
+
+							.prettyContentMenuOptionTooth {
+								border-left-color: @koalityOrange;
 							}
 						}
 
