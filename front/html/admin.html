@@ -3,6 +3,7 @@
 		<content-menu>
 			<content-menu-header menu-header-padding>Admin</content-menu-header>
 			<content-menu-options>
+				<content-menu-option menu-option-text="License Key" ng-click="menuOptionClick('license')" ng-class="{selected: currentView == 'license', green: currentView == 'license'}"></content-menu-option>
 				<content-menu-option menu-option-text="Manage Website" ng-click="menuOptionClick('website')" ng-class="{selected: currentView == 'website', green: currentView == 'website'}"></content-menu-option>
 				<content-menu-option menu-option-text="Manage User Accounts" ng-click="menuOptionClick('users')" ng-class="{selected: currentView == 'users', green: currentView == 'users'}"></content-menu-option>
 				<content-menu-option menu-option-text="Manage Repositories" ng-click="menuOptionClick('repositories')" ng-class="{selected: currentView == 'repositories', green: currentView == 'repositories'}"></content-menu-option>
@@ -12,6 +13,21 @@
 				<content-menu-option menu-option-text="Upgrade" ng-click="menuOptionClick('upgrade')" ng-class="{selected: currentView == 'upgrade', green: currentView == 'upgrade'}"></content-menu-option>
 			</content-menu-options>
 		</menu>
+	</div>
+
+	<div id="adminLicense" ng-show="currentView == 'license'" ng-controller="AdminLicense">
+		<content>
+			<content-header content-header-padding>License Key</content-header>
+			<content-body unselectable>
+				<div id="adminLicenseContent">
+					<div id="adminLicenseMessage" text-selectable>
+						Your Koality License Key is:
+					</div>
+
+					<div id="adminLicenseKey" text-selectable>{{licenseKey}}</div>
+				</div>
+			</content-body>
+		</content>
 	</div>
 
 	<div id="adminWebsite" ng-show="currentView == 'website'" ng-controller="AdminWebsite">

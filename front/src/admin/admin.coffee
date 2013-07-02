@@ -2,13 +2,22 @@
 
 window.Admin = ['$scope', '$location', '$routeParams', 'initialState', ($scope, $location, $routeParams, initialState) ->
 	$scope.userId = initialState.user.id
-	$scope.currentView = $routeParams.view ? 'website'
+	$scope.currentView = $routeParams.view ? 'license'
 
 	$scope.menuOptionClick = (viewName) ->
 		$scope.currentView = viewName
 
 	$scope.$watch 'currentView', (newValue, oldValue) ->
 		$location.search 'view', newValue
+]
+
+
+window.AdminLicense = ['$scope', 'rpc', ($scope, rpc) ->
+	getLicenseKey = () ->
+		rpc 'systemSettings', 'read', 'getLicenseKey', null, (error, licenseKey) ->
+			$scope.licenseKey = licenseKey
+
+	getLicenseKey()
 ]
 
 

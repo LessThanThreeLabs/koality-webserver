@@ -2,7 +2,7 @@
 
 #admin {
 	width: 800px;
-	height: 380px;
+	height: 420px;
 
 	#adminOptions {
 		position: absolute;
@@ -12,12 +12,32 @@
 		width: @menuWidth;
 	}
 
-	#adminWebsite, #adminUsers, #adminRepositories, #adminAws, #adminApi, #adminExporter, #adminUpgrade {
+	#adminLicense, #adminWebsite, #adminUsers, #adminRepositories, #adminAws, #adminApi, #adminExporter, #adminUpgrade {
 		position: absolute;
 		top: 0px;
 		left: @menuWidth + @panelSpacing;
 		right: 0px;
 		bottom: 0px;
+	}
+
+	#adminLicense {
+
+		#adminLicenseContent {
+			margin-top: 30px;
+			margin-left: 30px;
+			text-align: center;
+
+			#adminLicenseMessage {
+				margin-top: 100px;
+			}
+
+			#adminLicenseKey {
+				margin-top: 30px;
+				color: @koalityGreen;
+				font-size: 1.2em;
+				font-weight: 500;
+			}
+		}
 	}
 
 	#adminWebsite {
