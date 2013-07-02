@@ -24,15 +24,21 @@ window.AdminLicense = ['$scope', 'rpc', ($scope, rpc) ->
 window.AdminWebsite = ['$scope', 'rpc', 'events', 'notification', ($scope, rpc, events, notification) ->
 	getWebsiteSettings = () ->
 		rpc 'systemSettings', 'read', 'getWebsiteSettings', null, (error, websiteSettings) ->
-			$scope.website = websiteSettings
+			$scope.domain = websiteSettings
 
-	$scope.website = {}
+	$scope.domain = {}
+	$scope.ssl = {}
 	getWebsiteSettings()
 
-	$scope.submit = () ->
-		rpc 'systemSettings', 'update', 'setWebsiteSettings', $scope.website, (error) ->
+	$scope.submitDomainName = () ->
+		rpc 'systemSettings', 'update', 'setWebsiteSettings', $scope.domain, (error) ->
 			if error? then notification.error 'Unable to update website domain'
 			else notification.success 'Updated website domain'
+
+	$scope.submitSslCertificate = () ->
+		rpc 'systemSettings', 'update', 'setSslCertificate', $scope.ssl, (error) ->
+			if error? then notification.error 'Unable to update ssl certificates'
+			else notification.success 'Updated website ssl certificates'
 ]
 
 

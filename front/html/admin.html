@@ -35,13 +35,27 @@
 			<content-header content-header-padding>Manage Website</content-header>
 			<content-body unselectable>
 				<div id="adminWebsiteContent">
-					<styled-form name="websiteForm">
+					<styled-form name="websiteDomainForm" id="adminWebsiteDomainForm">
 						<styled-form-field label="Domain" label-padding="true">
-							<input type="text" ng-model="website.domainName" name="domainName" placeholder="koality.company.com" ng-pattern="/^[a-zA-Z0-9]+(-+[a-zA-Z0-9]+)*(.[a-zA-Z0-9]+(-+[a-zA-Z0-9]+)*)*$/" ng-maxlength="256" required focused>
-							<styled-form-field-error tooltip="Invalid domain name. Do not include any modifiers, such as https:// or /path" error-visible="websiteForm.domainName.$dirty && websiteForm.domainName.$invalid"></styled-form-field-error>
+							<input type="text" ng-model="domain.domainName" name="domainName" placeholder="koality.company.com" ng-pattern="/^[a-zA-Z0-9]+(-+[a-zA-Z0-9]+)*(.[a-zA-Z0-9]+(-+[a-zA-Z0-9]+)*)*$/" ng-maxlength="256" required focused>
+							<styled-form-field-error tooltip="Invalid domain name. Do not include any modifiers, such as https:// or /path" error-visible="websiteDomainForm.domainName.$dirty && websiteDomainForm.domainName.$invalid"></styled-form-field-error>
 						</styled-form-field>
 						<styled-form-field label="">
-							<button id="adminWebsiteSubmitButton" ng-click="submit()" ng-disabled="websiteForm.$invalid">Save Changes</button>
+							<button id="adminWebsiteDomainSubmitButton" ng-click="submitDomainName()" ng-disabled="websiteDomainForm.$invalid">Save Changes</button>
+						</styled-form-field>
+					</styled-form>
+
+					<styled-form name="websiteSslForm" id="adminWebsiteSslForm">
+						<styled-form-field label="Certificate" label-padding="true">
+							<textarea type="text" ng-model="ssl.certificate" name="certificate" placeholder="certificate" required></textarea>
+							<styled-form-field-error tooltip="Invalid Certificate" error-visible="websiteSslForm.certificate.$dirty && websiteSslForm.certificate.$invalid"></styled-form-field-error>
+						</styled-form-field>
+						<styled-form-field label="RSA Private Key" label-padding="true">
+							<textarea type="text" ng-model="ssl.privateKey" name="privateKey" placeholder="rsa private key" required></textarea>
+							<styled-form-field-error tooltip="Invalid RSA Private Key" error-visible="websiteSslForm.certificate.$dirty && websiteSslForm.certificate.$invalid"></styled-form-field-error>
+						</styled-form-field>
+						<styled-form-field label="">
+							<button id="adminWebsiteSslSubmitButton" ng-click="submitSslCertificate()" ng-disabled="websiteSslForm.$invalid">Save Changes</button>
 						</styled-form-field>
 					</styled-form>
 				</div>
