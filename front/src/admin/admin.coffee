@@ -36,8 +36,9 @@ window.AdminWebsite = ['$scope', 'rpc', 'events', 'notification', ($scope, rpc, 
 			else notification.success 'Updated website domain'
 
 	$scope.submitSslCertificate = () ->
-		rpc 'systemSettings', 'update', 'setSslCertificate', $scope.ssl, (error) ->
-			if error? then notification.error 'Unable to update ssl certificates'
+		rpc 'systemSettings', 'update', 'setSslCertificate', $scope.ssl, (error, isValid) ->
+			if error? then notification.error 'Invalid ssl certificates provided'
+			else if not isValid then notification.error 'Invalid ssl certificates provided'
 			else notification.success 'Updated website ssl certificates'
 ]
 
