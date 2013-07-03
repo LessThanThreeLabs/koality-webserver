@@ -53,7 +53,7 @@ window.AccountSshKeys = ['$scope', 'rpc', 'events', 'initialState', 'notificatio
 			if error?
 				$scope.addKey.showError = true
 			else 
-				notification.success 'Added ssh key ' + $scope.addKey.alias
+				notification.success 'Added SSH key ' + $scope.addKey.alias
 				$scope.addKey.showError = false
 				$scope.addKey.modalVisible = false
 
