@@ -93,7 +93,7 @@ angular.module('koality.service', []).
 					when 403 then window.location.href = '/invalidPermissions'
 					else callback error, response if callback?
 
-			timeoutId = setTimeout (() -> handleResponse 'Timed out'), 10000
+			timeoutId = setTimeout (() -> handleResponse 'Timed out'), 30000
 			socket.emit "#{resource}.#{requestType}", {method: methodName, args: data}, handleResponse
 
 		respondTo: (eventName, callback) ->
