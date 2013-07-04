@@ -7,7 +7,7 @@ RequestHandler = require './requestHandler'
 
 exports.create = (configurationParams, stores, modelRpcConnection, fileSuffix, logger) ->
 	filesCacher = FilesCacher.create 'index', configurationParams.staticFiles.rootDirectory,
-		configurationParams.staticFiles.rootDirectory + '/roots/index.json', fileSuffix, logger
+		configurationParams.staticFiles.rootDirectory + '/roots/index.json', logger
 	return new IndexHandler configurationParams, stores, modelRpcConnection, filesCacher, fileSuffix, logger
 
 

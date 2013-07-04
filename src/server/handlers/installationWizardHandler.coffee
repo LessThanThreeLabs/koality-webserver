@@ -7,7 +7,7 @@ RequestHandler = require './requestHandler'
 
 exports.create = (configurationParams, stores, modelRpcConnection, fileSuffix, logger) ->
 	filesCacher = FilesCacher.create 'installation wizard', configurationParams.staticFiles.rootDirectory, 
-		configurationParams.staticFiles.rootDirectory + '/roots/installationWizard.json', fileSuffix, logger
+		configurationParams.staticFiles.rootDirectory + '/roots/installationWizard.json', logger
 	return new InstallationWizardHandler configurationParams, stores, modelRpcConnection, filesCacher, fileSuffix, logger
 
 

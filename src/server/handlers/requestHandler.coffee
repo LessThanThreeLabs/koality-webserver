@@ -34,14 +34,21 @@ module.exports = class Resource
 		@_createJsString()
 
 
+	_getFilenameWithSuffix: (filename, fileType) =>
+		lastPeriodIndex = filename.lastIndexOf '.'
+		if lastPeriodIndex is -1 then return filename 
+		else return filename.substr(0, lastPeriodIndex) + @fileSuffix + filename.substr(lastPeriodIndex)
+
+
 	_createCssString: () =>
 		cssFiles = @getFiles().css
 		if not cssFiles?
 			@cssFilesString = ''
 		else
-			cssFileNames = Object.keys cssFiles
-			formatedCssFiles = cssFileNames.map (cssFileName) =>
-				return "<link rel='stylesheet' type='text/css' href='#{cssFileName}' />"
+			cssFilenames = Object.keys cssFiles
+			formatedCssFiles = cssFilenames.map (cssFilename) =>
+				filenameWithSuffix = @_getFilenameWithSuffix cssFilename
+				return "<link rel='stylesheet' type='text/css' href='#{filenameWithSuffix}' />"
 			@cssFilesString = formatedCssFiles.join '\n'
 
 
@@ -50,7 +57,8 @@ module.exports = class Resource
 		if not jsFiles?
 			@jsFilesString = ''
 		else
-			jsFileNames = Object.keys jsFiles
-			formattedJsFiles = jsFileNames.map (jsFileName) =>
-				return "<script src='#{jsFileName}'></script>"
+			jsFilenames = Object.keys jsFiles
+			formattedJsFiles = jsFilenames.map (jsFilename) =>
+				filenameWithSuffix = @_getFilenameWithSuffix jsFilename
+				return "<script src='#{filenameWithSuffix}'></script>"
 			@jsFilesString = formattedJsFiles.join '\n'
