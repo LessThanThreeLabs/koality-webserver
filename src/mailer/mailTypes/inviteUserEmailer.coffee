@@ -14,10 +14,11 @@ class InviteUserEmailer extends Emailer
 		@getDomain (error, domain) =>
 			if error? then callback error
 			else
-				fromEmail = "#{@configurationParams.from.name} <#{@configurationParams.from.email}@#{domain}>"
-				subject = 'Welcome to Koality!'
 				uri = 'https://' + domain + '/create/account?token=' + userToken
-				body = "Click here to create your account: #{uri}"
-
-				@emailSender.sendText fromEmail, toEmail, subject, body, (error) ->
-					callback error
+				payload =
+					from: "#{@configurationParams.from.name} <#{@configurationParams.from.email}@#{domain}>"
+					to: toEmail
+					subject: 'Welcome to Koality!'
+					text: "Click here to create your account: #{uri}"
+				
+				@emailSender.sendMail payload, callback

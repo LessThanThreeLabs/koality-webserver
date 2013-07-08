@@ -16,20 +16,11 @@ exports.create = (configurationParams, domainRetriever) ->
 		initialAdmin: InitialAdminEmailer.create configurationParams.initialAdmin, emailSender, domainRetriever
 		logger: LoggerEmailer.create configurationParams.logger, emailSender, domainRetriever
 		
-	smtpTransport = nodemailer.createTransport 'smtp',
+	emailSender = nodemailer.createTransport 'smtp',
 		service: 'Mailgun'
 		auth:
-			user: 'postmaster@koalitycode.com'
-			pass: '41acnysnz3s9'
-		name: 'koality-webserver'
-
-	emailSender =
-		sendText: (from, to, subject, body, callback) ->
-			payload =
-				from: from
-				to: to
-				subject: subject
-				text: body
-			smtpTransport.sendMail payload, callback
+			user: configurationParams.mailgun.user
+			pass: configurationParams.mailgun.password
+		name: configurationParams.mailgun.name
 
 	return createEmailers()

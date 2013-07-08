@@ -14,9 +14,10 @@ class ResetPasswordEmailer extends Emailer
 		@getDomain (error, domain) =>
 			if error? then callback error
 			else
-				fromEmail = "#{@configurationParams.from.name} <#{@configurationParams.from.email}@#{domain}>"
-				subject = 'Your new Koality password!'
-				body = "Your new password is: #{newPassword}"
-
-				@emailSender.sendText fromEmail, toEmail, subject, body, (error) ->
-					callback error
+				payload =
+					from: "#{@configurationParams.from.name} <#{@configurationParams.from.email}@#{domain}>"
+					to: toEmail
+					subject: 'Your new Koality password!'
+					text: "Your new password is: #{newPassword}"
+				
+				@emailSender.sendMail payload, callback

@@ -14,10 +14,10 @@ class InitialAdminEmailer extends Emailer
 		@getDomain (error, domain) =>
 			if error? then callback error
 			else
-				fromEmail = "#{@configurationParams.from.name} <#{@configurationParams.from.email}@#{domain}>"
-				toEmail = "#{firstName} #{lastName} <#{email}>"
-				subject = 'Koality admin token'
-				body = "Hello #{firstName} #{lastName}, your admin token is: #{token}"
-
-				@emailSender.sendText fromEmail, toEmail, subject, body, (error) ->
-					callback error
+				payload =
+					from: "#{@configurationParams.from.name} <#{@configurationParams.from.email}@#{domain}>"
+					to: "#{firstName} #{lastName} <#{email}>"
+					subject: 'Koality admin token'
+					text: "Hello #{firstName} #{lastName}, your admin token is: #{token}"
+				
+				@emailSender.sendMail payload, callback

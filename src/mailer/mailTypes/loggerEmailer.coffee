@@ -12,11 +12,14 @@ class LoggerEmailer extends Emailer
 		@getDomain (error, domain) =>
 			if error? then callback error
 			else
-				fromEmail = "#{@configurationParams.from.name} <#{@configurationParams.from.email}@#{domain}>"
-				toEmail = @configurationParams.to.email
-				subject = 'Logs'
-
+				payload =
+					from: "#{@configurationParams.from.name} <#{@configurationParams.from.email}@#{domain}>"
+					to: @configurationParams.to.email
+					subject: 'Logs'
+					text: body
+				
 				if process.env.NODE_ENV is 'production'
-					@emailSender.sendText fromEmail, toEmail, subject, body, callback
+					@emailSender.sendMail payload, callback
 				else
 					console.log 'Not sending logger email while in development mode'
+					callback()
