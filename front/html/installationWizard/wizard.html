@@ -4,25 +4,12 @@
 	<div id="wizardSubtitle">This wizard helps you quickly set up your account</div>
 
 	<div id="wizardBreadcrumbs">
-		<div class="wizardBreadcrumb" ng-class="{green: stage == 'licenseKey'}">
-			Enter License Key
-			<spinner class="wizardBreadcrumbSpinner" spinner-running="stage == 'licenseKey' && waitingOnRequest" />
-		</div><!-- Don't remove this space --><div class="wizardBreadcrumb" ng-class="{green: stage == 'admin'}">
-			Create your account
-			<spinner class="wizardBreadcrumbSpinner" spinner-running="stage == 'admin' && waitingOnRequest" />
-		</div><!-- Don't remove this space --><div class="wizardBreadcrumb" ng-class="{green: stage == 'verifyAdmin'}">
-			Confirm email
-			<spinner class="wizardBreadcrumbSpinner" spinner-running="stage == 'verifyAdmin' && waitingOnRequest" />
-		</div><!-- Don't remove this space --><div class="wizardBreadcrumb" ng-class="{green: stage == 'website'}">
-			Configure website
-			<spinner class="wizardBreadcrumbSpinner" spinner-running="stage == 'website' && waitingOnRequest" />
-		</div><!-- Don't remove this space --><div class="wizardBreadcrumb" ng-class="{green: stage == 'aws'}">
-			Connect EC2
-			<spinner class="wizardBreadcrumbSpinner" spinner-running="stage == 'aws' && waitingOnRequest" />
-		</div><!-- Don't remove this space --><div class="wizardBreadcrumb" ng-class="{green: stage == 'complete'}">
-			Complete
-			<spinner class="wizardBreadcrumbSpinner" spinner-running="stage == 'complete' && waitingOnRequest" />
-		</div>
+		<div class="wizardBreadcrumb" ng-class="{green: stage == 'licenseKey'}">Enter License Key
+		</div><!-- Don't remove this space --><div class="wizardBreadcrumb" ng-class="{green: stage == 'admin'}">Create your account
+		</div><!-- Don't remove this space --><div class="wizardBreadcrumb" ng-class="{green: stage == 'verifyAdmin'}">Confirm email
+		</div><!-- Don't remove this space --><div class="wizardBreadcrumb" ng-class="{green: stage == 'website'}">Configure website
+		</div><!-- Don't remove this space --><div class="wizardBreadcrumb" ng-class="{green: stage == 'aws'}">Connect EC2
+		</div><!-- Don't remove this space --><div class="wizardBreadcrumb" ng-class="{green: stage == 'complete'}">Complete</div>
 	</div>
 
 	<div id="wizardContent">
@@ -31,7 +18,7 @@
 
 			<form name="licenseKeyForm" novalidate>
 				<input type="text" ng-model="license.licenseKey" name="licenseKey" placeholder="1111-2222-3333-4444" ng-pattern="/^[-a-zA-Z0-9]+$/" license-key required focused>
-				<button class="centered" ng-click="completeLicenseKey()" ng-disabled="licenseKeyForm.$invalid">Continue</button>
+				<busy-button centered busy="waitingOnRequest" click="completeLicenseKey()" disabled="licenseKeyForm.$invalid">Continue</busy-button>
 			</form>
 
 			<div class="stageFooter">
@@ -63,7 +50,7 @@
 				<input type="email" ng-model="admin.email" name="email" ng-maxlength=256 required>
 				<form-field-error tooltip="Invalid email address" error-visible="adminForm.email.$dirty && adminForm.email.$invalid"></form-field-error>
 
-				<button class="centered" ng-click="completeAdminInformation()" ng-disabled="adminForm.$invalid">Confirm Email</button>
+				<busy-button centered busy="waitingOnRequest" click="completeAdminInformation()" disabled="adminForm.$invalid">Confirm Email</busy-button>
 			</form>
 		</div>
 
@@ -75,7 +62,8 @@
 			<form name="verifyAdminForm" novalidate>
 				<label>Token</label>
 				<input type="text" ng-model="admin.verifyToken" name="verifyToken" ng-pattern="/^[a-zA-Z0-9]+$/" ng-maxlength="32" required>
-				<button class="centered" ng-click="completeVerifyAdmin()" ng-disabled="verifyAdminForm.$invalid">Continue</button>
+
+				<busy-button centered busy="waitingOnRequest" click="completeVerifyAdmin()" disabled="verifyAdminForm.$invalid">Continue</busy-button>
 			</form>
 		</div>
 
@@ -87,7 +75,7 @@
 				<input type="text" ng-model="website.domainName" name="domainName" placeholder="koality.companyname.com" ng-pattern="/^[a-zA-Z0-9]+(-+[a-zA-Z0-9]+)*(.[a-zA-Z0-9]+(-+[a-zA-Z0-9]+)*)*$/" ng-maxlength="256" required>
 				<form-field-error tooltip="Invalid domain name. Do not include any modifiers, such as https:// or /path" error-visible="websiteForm.domainName.$dirty && websiteForm.domainName.$invalid"></form-field-error>
 
-				<button class="centered" ng-click="completeWebsiteInformation()" ng-disabled="websiteForm.$invalid">Continue</button>
+				<busy-button centered busy="waitingOnRequest" click="completeWebsiteInformation()" disabled="websiteForm.$invalid">Continue</busy-button>
 			</form>
 		</div>
 
@@ -103,11 +91,12 @@
 				<input type="text" ng-model="aws.secretKey" name="secretKey" ng-maxlength="128" required>
 				<form-field-error tooltip="Invalid AWS Secret Access Key" error-visible="awsForm.secretKey.$dirty && awsForm.secretKey.$invalid"></form-field-error>
 
-				<button class="centered" ng-click="completeAwsInformation()" ng-disabled="awsForm.$invalid">Continue</button>
-
-				<divider />
-				<a href="https://koalitycode.com/documentation?view=adminAws" target="_blank">Help me find my Aws Credentials</a>
+				<busy-button centered busy="waitingOnRequest" click="completeAwsInformation()" disabled="awsForm.$invalid">Continue</busy-button>
 			</form>
+
+			<divider />
+
+			<a href="https://koalitycode.com/documentation?view=adminAws" target="_blank">Help me find my Aws Credentials</a>
 		</div>
 
 		<div class="wizardStage" ng-show="stage == 'complete'">

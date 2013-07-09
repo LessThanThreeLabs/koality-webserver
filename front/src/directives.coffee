@@ -88,6 +88,40 @@ angular.module('koality.directive', []).
 				setTimeout scrollToBottom, 0 if isScrolledToBottomIsh
 			), true
 	]).
+	directive('busyButton', () ->
+		restrict: 'E'
+		replace: true
+		transclude: true
+		scope:
+			show: '=show'
+			busy: '=busy'
+			disabled: '=disabled'
+			click: '&click'
+		template: '<div ng-show="(show != null && show) || (show == null)">
+				<button ng-show="!busy" ng-click="click()" ng-disabled="disabled" ng-transclude></button>
+				<spinner white spinner-running="busy" class="busyButtonSpinner"></spinner>
+			</div>'
+		link: (scope, element, attributes) ->
+			element.css
+				position: 'relative'
+				'z-index': 1
+
+			button = element.find 'button'
+			button.addClass 'centered' if attributes.centered?
+			button.addClass 'fullWidth' if attributes.fullWidth?
+
+			spinner = element.find '.busyButtonSpinner'
+			spinner.css
+				position: 'absolute'
+				top: 0
+				left: 0
+				right: 0
+				bottom: 0
+				'z-index': -1
+
+			element.width Math.max button.outerWidth(), 25 if not attributes.centered?
+			element.height Math.max button.outerHeight(), 25
+	).
 	directive('modal', ['$document', ($document) ->
 		restrict: 'E'
 		replace: true
