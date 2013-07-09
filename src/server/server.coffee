@@ -3,6 +3,7 @@ assert = require 'assert'
 colors = require 'colors'
 http = require 'http'
 express = require 'express'
+expressResource = require 'express-resource'  # required for koality-api-server
 csrf = require './csrf'
 gzip = require './gzip'
 
