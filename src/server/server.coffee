@@ -93,6 +93,8 @@ class Server
 
 			expressServer.get '/', @handlers.installationWizardHandler.handleRequest
 			expressServer.get '/wizard', @handlers.installationWizardHandler.handleRequest
+			expressServer.get '/unexpectedError', @handlers.unexpectedErrorHandler.handleRequest
+			expressServer.get '/invalidPermissions', @handlers.invalidPermissionsHandler.handleRequest
 			expressServer.post '/turnOffInstallationWizard', turnOffInstallationWizard
 			expressServer.get '*', @staticServer.handleRequest
 
@@ -104,6 +106,8 @@ class Server
 		removeInstallationWizardBindings = () =>
 			expressServer.routes.get = expressServer.routes.get.filter (route) -> route.path isnt '/'
 			expressServer.routes.get = expressServer.routes.get.filter (route) -> route.path isnt '/wizard'
+			expressServer.routes.get = expressServer.routes.get.filter (route) -> route.path isnt '/unexpectedError'
+			expressServer.routes.get = expressServer.routes.get.filter (route) -> route.path isnt '/invalidPermissions'
 			expressServer.routes.post = expressServer.routes.post.filter (route) -> route.path isnt '/turnOffInstallationWizard'
 			expressServer.routes.get = expressServer.routes.get.filter (route) -> route.path isnt '*'
 
