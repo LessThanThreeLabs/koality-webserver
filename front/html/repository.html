@@ -1,60 +1,61 @@
 <div id="repository">
-	<div id="repositoryHeaderPanel" unselectable>
-		<span id="repositoryHeaderTitle">{{repository.name}}</span>
-		<span id="repositoryHeaderUri" text-selectable>{{repository.uri}}</span>
+	<div id="repositoryHeader" unselectable>
+		<span id="title">{{repository.name}}</span>
+		<span id="uri" class="textSelectable">{{repository.uri}}</span>
 	</div>
 
-	<div id="repositoryChanges" ng-controller="RepositoryChanges">
-		<content-menu>
-			<content-menu-header>
-				<div id="repositoryChangesSearchContainer">
-					<div id="repositoryChangesSearch" ng-class="{searchOn: search.mode == 'search'}">
-						<div id="repositoryChangesSearchAll" ng-class="{selected: search.mode == 'all'}" ng-click="searchModeClicked('all')">All</div>
-						<div id="repositoryChangesSearchMe" ng-class="{selected: search.mode == 'me'}" ng-click="searchModeClicked('me')">Me</div>
-						<div id="repositoryChangesSearchNames" ng-class="{selected: search.mode == 'search'}" ng-click="searchModeClicked('search')" input-focus-on-click>
+	<div id="changes" ng-controller="RepositoryChanges">
+		<changes-menu>
+			<changes-menu-header>
+				<div id="changesSearchContainer">
+					<div id="changesSearch" ng-class="{searchOn: search.mode == 'search'}">
+						<div id="changesSearchAll" ng-class="{selected: search.mode == 'all'}" ng-click="searchModeClicked('all')">All</div>
+						<div id="changesSearchMe" ng-class="{selected: search.mode == 'me'}" ng-click="searchModeClicked('me')">Me</div>
+						<div id="changesSearchNames" ng-class="{selected: search.mode == 'search'}" ng-click="searchModeClicked('search')" input-focus-on-click>
 							<div id="repositorySearchImageAndInputContainer">
 								<img ng-src="{{'/img/icons/search.png' | fileSuffix}}"><input type="text" ng-model="search.namesQuery" placeholder="User">
 							</div>
 						</div>
 					</div>
 				</div>
-			</content-menu-header>
-			<content-menu-options on-scroll-to-bottom="scrolledToBottom()">
-				<content-menu-option ng-repeat="change in changes | orderBy:'number':true" menu-option-identifier="{{change.number}}" menu-option-text="{{change.aggregateStatus}}" menu-option-spinning="{{change.verificationStatus == 'running'}}" ng-click="selectChange(change)" ng-class="{selected: change.id == currentChangeId, green: change.aggregateStatus == 'passed', orange: change.aggregateStatus == 'skipped', red: change.aggregateStatus == 'failed'}"></content-menu-option>
-			</content-menu-options>
-		</content-menu>
+			</changes-menu-header>
+			<changes-menu-options on-scroll-to-bottom="scrolledToBottom()">
+				<changes-menu-option ng-repeat="change in changes | orderBy:'number':true" menu-option-identifier="{{change.number}}" menu-option-text="{{change.aggregateStatus}}" menu-option-spinning="{{change.verificationStatus == 'running'}}" ng-click="selectChange(change)" ng-class="{selected: change.id == currentChangeId, green: change.aggregateStatus == 'passed', orange: change.aggregateStatus == 'skipped', red: change.aggregateStatus == 'failed'}"></changes-menu-option>
+			</changes-menu-options>
+		</changes-menu>
 	</div>
 
-	<div id="repositoryStages" ng-controller="RepositoryStages">
-		<content-menu>
-			<content-menu-header menu-header-padding>
+	<div id="stages" ng-controller="RepositoryStages">
+		<changes-menu>
+			<changes-menu-header>
 				<span ng-show="currentChangeInformation != null">Change {{currentChangeInformation.number}}</span>
-			</content-menu-header>
-			<content-menu-options>
-				<content-menu-option menu-option-text="summary" ng-show="currentChangeInformation != null" ng-click="selectStage(null)" ng-class="{selected: currentStageId == null && !showSkipped && !showMerge && !showDebug, green: currentChangeInformation.aggregateStatus == 'passed', red: currentChangeInformation.aggregateStatus == 'failed' || currentChangeInformation.aggregateStatus == 'skipped'}"></content-menu-option>
+			</changes-menu-header>
+			<changes-menu-options>
+				<changes-menu-option menu-option-text="summary" ng-show="currentChangeInformation != null" ng-click="selectStage(null)" ng-class="{selected: currentStageId == null && !showSkipped && !showMerge && !showDebug, green: currentChangeInformation.aggregateStatus == 'passed', red: currentChangeInformation.aggregateStatus == 'failed' || currentChangeInformation.aggregateStatus == 'skipped'}"></changes-menu-option>
 
-				<content-menu-option ng-repeat="stage in stages | filter:shouldStageBeVisible | orderBy:[stageSort, 'name']" menu-option-text="{{stage.name}}" menu-option-spinning="{{stage.status == 'running'}}" ng-click="selectStage(stage)" ng-class="{selected: stage.id == currentStageId, green: stage.status == 'passed', red: stage.status == 'failed'}"></content-menu-option>
+				<changes-menu-option ng-repeat="stage in stages | filter:shouldStageBeVisible | orderBy:[stageSort, 'name']" menu-option-text="{{stage.name}}" menu-option-spinning="{{stage.status == 'running'}}" ng-click="selectStage(stage)" ng-class="{selected: stage.id == currentStageId, green: stage.status == 'passed', red: stage.status == 'failed'}"></changes-menu-option>
 
-				<content-menu-option menu-option-text="skipped" ng-show="currentChangeInformation.aggregateStatus == 'skipped'" ng-click="selectSkipped()" ng-class="{selected: currentStageId == null && showSkipped, red: true}"></content-menu-option>
+				<changes-menu-option menu-option-text="skipped" ng-show="currentChangeInformation.aggregateStatus == 'skipped'" ng-click="selectSkipped()" ng-class="{selected: currentStageId == null && showSkipped, red: true}"></changes-menu-option>
 
-				<content-menu-option menu-option-text="merge" ng-show="currentChangeInformation.mergeStatus != null" ng-click="selectMerge()" ng-class="{selected: currentStageId == null && showMerge, green: currentChangeInformation.mergeStatus == 'passed', red: currentChangeInformation.mergeStatus == 'failed'}"></content-menu-option>
+				<changes-menu-option menu-option-text="merge" ng-show="currentChangeInformation.mergeStatus != null" ng-click="selectMerge()" ng-class="{selected: currentStageId == null && showMerge, green: currentChangeInformation.mergeStatus == 'passed', red: currentChangeInformation.mergeStatus == 'failed'}"></changes-menu-option>
 
-				<content-menu-option menu-option-text="debug" ng-show="currentChangeInformation.aggregateStatus == 'failed' && !retrievingStages && stages.length == 0" ng-click="selectDebug()" ng-class="{selected: currentStageId == null && showDebug, red: true}"></content-menu-option>
-			</content-menu-options>
-		</content-menu>
+				<changes-menu-option menu-option-text="debug" ng-show="currentChangeInformation.aggregateStatus == 'failed' && !retrievingStages && stages.length == 0" ng-click="selectDebug()" ng-class="{selected: currentStageId == null && showDebug, red: true}"></changes-menu-option>
+			</changes-menu-options>
+		</changes-menu>
 	</div>
 
-	<div id="repositoryStageDetails" ng-controller="RepositoryStageDetails">
-		<content>
-			<content-header content-header-padding>
+	<div id="details" ng-controller="RepositoryStageDetails">
+		<panel>
+			<panel-header>
 				<span ng-show="currentChangeId != null && currentStageId == null && !showMerge">summary</span>
 				<span ng-show="currentChangeId != null && currentStageInformation != null">{{currentStageInformation.name}}</span>
 				<span ng-show="currentChangeId != null && currentStageId == null && showMerge">merge</span>
-			</content-header>
-			<content-body unselectable>
-				<spinner id="repositoryStageDetailsLoadingSpinner" spinner-running="spinnerOn"></spinner>
+			</panel-header>
 
-				<div id="repositoryStageDetailsSummary" ng-show="currentChangeId != null && currentChangeInformation != null && currentStageId == null && !showSkipped && !showMerge && !showDebug">
+			<panel-body>
+				<spinner id="detailsLoadingSpinner" spinner-running="spinnerOn"></spinner>
+
+				<div id="detailsSummary" ng-show="currentChangeId != null && currentChangeInformation != null && currentStageId == null && !showSkipped && !showMerge && !showDebug">
 					<styled-form text-selectable>
 						<styled-form-field label="Name">{{currentChangeInformation.submitter.firstName}} {{currentChangeInformation.submitter.lastName}}</styled-form-field>
 						<styled-form-field label="Email"><a href="mailto:{{currentChangeInformation.submitter.email}}?subject=Koality%3A%20{{repository.name}}%20-%20change%20%23{{currentChangeInformation.number}}&body=Link%20to%20change%3A%20{{currentUrl}}" target="_blank">{{currentChangeInformation.submitter.email}}</a></styled-form-field>
@@ -68,7 +69,7 @@
 					</styled-form>
 				</div>
 
-				<div id="repositoryStageDetailsOutput" ng-show="currentChangeId != null && currentStageId != null">
+				<div id="detailsOutput" ng-show="currentChangeId != null && currentStageId != null">
 					<div class="consoleTextTopBuffer"></div>
 					<div class="consoleTextContainer" auto-scroll-to-bottom="lines" auto-scroll-to-bottom-buffer="40" start-at-bottom>
 						<console-text class="consoleText" console-text-lines="lines"></console-text>
@@ -76,16 +77,16 @@
 					<div class="consoleTextBottomBuffer"></div>
 				</div>
 
-				<div id="repositoryStageDetailsSkipped" ng-show="currentChangeId != null && currentChangeInformation != null && currentStageId == null && showSkipped && !showMerge && !showDebug">
-					<div id="repositoryStageDetailsSkippedMessage">
+				<div id="detailsSkipped" ng-show="currentChangeId != null && currentChangeInformation != null && currentStageId == null && showSkipped && !showMerge && !showDebug">
+					<div id="detailsSkippedMessage">
 						This change was not verified because Koality is deactivated.
 					</div>
-					<div id="repositoryStageDetailsSkippedInstructions">
+					<div id="detailsSkippedInstructions">
 						Contact your administrator to fix your license.
 					</div>
 				</div>
 
-				<div id="repositoryStageDetailsMerge" ng-show="currentChangeId != null && currentChangeInformation != null && currentStageId == null && !showSkipped && showMerge && !showDebug">
+				<div id="detailsMerge" ng-show="currentChangeId != null && currentChangeInformation != null && currentStageId == null && !showSkipped && showMerge && !showDebug">
 					<div ng-show="currentChangeInformation.mergeStatus == 'passed'">
 						Change merged successfully.
 					</div>
@@ -94,15 +95,15 @@
 					</div>
 				</div>
 
-				<div id="repositoryStageDetailsDebug" ng-show="currentChangeId != null && currentChangeInformation != null && currentStageId == null && !showSkipped && !showMerge && showDebug">
-					<div id="repositoryStageDetailsDebugMessage">
+				<div id="detailsDebug" ng-show="currentChangeId != null && currentChangeInformation != null && currentStageId == null && !showSkipped && !showMerge && showDebug">
+					<div id="detailsDebugMessage">
 						This change failed to create any output. This could be caused by invalid AWS credentials.
 					</div>
-					<div id="repositoryStageDetailsDebugInstructions">
+					<div id="detailsDebugInstructions">
 						Contact your administrator to correct the issue.
 					</div>
 				</div>
-			</content-body>
-		</content>
+			</panel-body>
+		</panel>
 	</div>
 </div>

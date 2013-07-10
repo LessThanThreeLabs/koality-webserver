@@ -1,0 +1,54 @@
+@import '../constants';
+
+
+.panel {
+	@headerHeight: 40px;
+	@footerHeight: 8px;
+	
+	position: absolute;
+	top: 0px;
+	left: 0px;
+	right: 0px;
+	bottom: 0px;
+
+	.panelHeader {
+		position: absolute;
+		top: 0px;
+		left: 0px; 
+		right: 0px;
+		padding-left: 12px;
+		padding-right: 12px;
+		height: @headerHeight;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+		color: @koalityWhite;
+		font-size: 18px;
+		line-height: @headerHeight;
+		background-color: @panelHeaderBackground;
+		border-bottom: 1px solid @platformBackground;
+		z-index: 1;
+		border-top-left-radius: @borderRadius;
+		border-top-right-radius: @borderRadius;
+	}
+
+	.panelBody {
+		position: absolute;
+		top: @headerHeight;
+		left: 0px;
+		right: 0px;
+		bottom: @footerHeight;
+		background-color: @panelBackground;
+	}
+
+	.panelFooter {
+		position: absolute;
+		left: 0px;
+		right: 0px;
+		bottom: 0px;
+		height: @footerHeight;
+		background-color: @panelFooterBackground;
+		border-bottom-left-radius: @borderRadius;
+		border-bottom-right-radius: @borderRadius;
+	}
+}
