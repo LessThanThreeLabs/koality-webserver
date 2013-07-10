@@ -2,8 +2,11 @@
 	"css": {
 		"text/css": [
 			"/css/src/setup.css",
+
+			"/css/src/elements/panel.css",
+			"/css/src/elements/changesMenu.css",
+			
 			"/css/src/prettyElements/prettyCenteredPanel.css",
-			"/css/src/prettyElements/prettyContent.css",
 			"/css/src/prettyElements/prettyDivider.css",
 			"/css/src/prettyElements/prettyForm.css",
 			"/css/src/prettyElements/prettyNotification.css",

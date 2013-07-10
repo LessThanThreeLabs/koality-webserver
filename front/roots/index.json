@@ -5,9 +5,12 @@
 			"/css/src/util/d3/lineGraph/d3ChangesLineGraph.css",
 
 			"/css/src/setup.css",
+
+			"/css/src/elements/panel.css",
+			"/css/src/elements/changesMenu.css",
+
 			"/css/src/prettyElements/prettyCenteredPanel.css",
 			"/css/src/prettyElements/prettyConsoleText.css",
-			"/css/src/prettyElements/prettyContent.css",
 			"/css/src/prettyElements/prettyDivider.css",
 			"/css/src/prettyElements/prettyDropdown.css",
 			"/css/src/prettyElements/prettyForm.css",
@@ -46,6 +49,8 @@
 
 			"/js/src/services.js",
 			"/js/src/directives.js",
+			"/js/src/directives/panel.js",
+			"/js/src/directives/changes.js",
 			"/js/src/d3Directives.js",
 			"/js/src/filters.js",
 

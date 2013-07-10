@@ -1,14 +1,6 @@
 'use strict'
 
 angular.module('koality.directive', []).
-	directive('unselectable', () ->
-		return (scope, element, attributes) ->
-			element.addClass 'unselectable'
-	).
-	directive('textSelectable', () ->
-		return (scope, element, attributes) ->
-			element.addClass 'textSelectable'
-	).
 	directive('highlightOnFirstClick', () ->
 		return (scope, element, attributes) ->
 			highlightText = () ->
@@ -37,12 +29,6 @@ angular.module('koality.directive', []).
 				control.$setValidity 'licenseKey', cleanedValue.length is 16
 
 				return if cleanedValue.length is 16 then cleanedValue else undefined
-	).
-	directive('centeredPanel', () ->
-		restrict: 'E'
-		replace: true
-		transclude: true
-		template: '<div class="prettyCenteredPanel" ng-transclude></div>'
 	).
 	directive('divider', () ->
 		restrict: 'E'
@@ -189,157 +175,6 @@ angular.module('koality.directive', []).
 
 			element.css 'z-index', getZIndex attributes.type, attributes.durationInSeconds > 0
 			setTimeout scope.hide, attributes.durationInSeconds * 1000 if attributes.durationInSeconds > 0
-	).
-	directive('styledForm', () ->
-		restrict: 'E'
-		replace: true
-		transclude: true
-		template: '<form class="prettyForm" novalidate ng-transclude>
-			</form>'
-		link: (scope, element, attributes) ->
-			if attributes.styledFormAlignment is 'center'
-				element.addClass 'center'
-	).
-	directive('styledFormField', () ->
-		restrict: 'E'
-		replace: true
-		transclude: true
-		scope:
-			label: '@label'
-			padding: '@labelPadding'
-			hide: '@hide'
-		template: '<div class="prettyFormRow" ng-hide="hide">
-				<div class="prettyFormLabel" ng-class="{labelPadding: padding}">{{label}}</div>
-				<div class="prettyFormValue" ng-transclude>
-				</div>
-			</div>'
-	).
-	directive('styledFormFieldError', () ->
-		restrict: 'E'
-		replace: true
-		scope: visible: '=errorVisible'
-		template: '<div class="prettyFormError">
-				<img ng-src="{{\'/img/icons/error.png\' | fileSuffix}}">
-			</div>'
-		link: (scope, element, attributes) ->
-			scope.$watch 'visible', (newValue, oldValue) ->
-				if newValue then element.addClass 'visible'
-				else element.removeClass 'visible'
-	).
-	directive('formFieldError', () ->
-		restrict: 'E'
-		replace: true
-		scope: visible: '=errorVisible'
-		template: '<div class="prettyFormError">
-				<img ng-src="{{\'/img/icons/error.png\' | fileSuffix}}">
-			</div>'
-		link: (scope, element, attributes) ->
-			scope.$watch 'visible', (newValue, oldValue) ->
-				if newValue then element.addClass 'visible'
-				else element.removeClass 'visible'
-	).
-	directive('contentMenu', () ->
-		restrict: 'E'
-		require: 'ngModel'
-		replace: true
-		transclude: true
-		template: '<div class="prettyContentMenu" unselectable ng-transclude>
-				<div class="prettyContentMenuBackgroundPanel"></div>
-				<div class="prettyContentMenuFooter"></div>
-			</div>'
-	).
-	directive('contentMenuHeader', () ->
-		restrict: 'E'
-		replace: true
-		transclude: true
-		template: '<div class="prettyContentMenuHeader">
-				<div class="prettyContentMenuHeaderContent" ng-transclude></div>
-				<div class="prettyContentMenuHeaderBuffer"></div>
-			</div>'
-		link: (scope, element, attributes) ->
-			if attributes.menuHeaderPadding?
-				element.addClass 'prettyContentMenuHeaderPadding'
-	).
-	directive('contentMenuOptions', () ->
-		restrict: 'E'
-		replace: true
-		transclude: true
-		template: '<div class="prettyContentMenuOptions">
-				<div class="prettyContentMenuOptionsScrollOuterWrapper">
-					<div class="prettyContentMenuOptionsScrollInnerWrapper" ng-transclude></div>
-				</div>
-			</div>'
-		link: (scope, element, attributes) ->
-			addScrollListener = () ->
-				outerElement = element.find('.prettyContentMenuOptionsScrollOuterWrapper')
-				outerElement.bind 'scroll', (event) ->
-					scrolledToBottom = outerElement[0].scrollTop + outerElement[0].offsetHeight >= outerElement[0].scrollHeight
-					scope.$apply attributes.onScrollToBottom if scrolledToBottom
-
-			addScrollListener() if attributes.onScrollToBottom?
-	).
-	directive('contentMenuOption', () ->
-		restrict: 'E'
-		replace: true
-		scope: true
-		template: '<div class="prettyContentMenuOption">
-				<div class="prettyContentMenuOptionContents">
-					<div class="prettyContentMenuOptionTextContainer">
-						<span class="prettyContentMenuOptionIdentifier">{{identifier}}</span>
-						<span class="prettyContentMenuOptionText">{{text}}</span>
-					</div>
-					<div class="prettyContentMenuOptionArrow"></div>
-					<spinner class="prettyContentMenuOptionSpinner" spinner-running="spinning"></spinner>
-				</div>
-				<div class="prettyContentMenuOptionTooth"></div>
-			</div>'
-		link: (scope, element, attributes) ->
-			checkOffsetTextClass = () ->
-				if scope.identifier? and scope.text? then element.find('.prettyContentMenuOptionContents').addClass 'offsetText'
-				else element.find('.prettyContentMenuOptionContents').removeClass 'offsetText'
-
-			attributes.$observe 'menuOptionIdentifier', (identifier) ->
-				scope.identifier = identifier
-				checkOffsetTextClass()
-
-			attributes.$observe 'menuOptionText', (text) ->
-				scope.text = text
-				checkOffsetTextClass()
-
-			attributes.$observe 'menuOptionSpinning', (spinning) ->
-				scope.spinning = if typeof spinning is 'boolean' then spinning else spinning is 'true'
-
-			scope.$watch 'spinning', (newValue, oldValue) ->
-				element.find('.prettyContentMenuOptionTextContainer').toggleClass 'spinnerTextPadding', scope.spinning
-	).
-	directive('content', () ->
-		restrict: 'E'
-		replace: true
-		transclude: true
-		template: '<div class="prettyContent" ng-transclude>
-				<div class="prettyContentFooter"></div>
-			</div>'
-	).
-	directive('contentHeader', () ->
-		restrict: 'E'
-		replace: true
-		transclude: true
-		template: '<div class="prettyContentHeader" unselectable ng-transclude></div>'
-		link: (scope, element, attributes) ->
-			if attributes.contentHeaderPadding?
-				element.addClass 'prettyContentHeaderPadding'
-	).
-	directive('contentHeaderSubtext', () ->
-		restrict: 'E'
-		replace: true
-		transclude: true
-		template: '<div class="prettyContentHeaderSubtext" unselectable ng-transclude></div>'
-	).
-	directive('contentBody', () ->
-		restrict: 'E'
-		replace: true
-		transclude: true
-		template: '<div class="prettyContentBody" ng-transclude></div>'
 	).
 	directive('spinner', () ->
 		restrict: 'E'
