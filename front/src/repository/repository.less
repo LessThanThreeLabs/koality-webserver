@@ -8,13 +8,13 @@
 	width: 100%;
 	height: 100%;
 
-	#repositoryHeaderPanel {
+	#repositoryHeader {
 		position: absolute;
 		top: 10px;
 		left: 0px;
 		right: 0px;
 
-		#repositoryHeaderTitle {
+		#title {
 			display: inline-block;
 			padding-left: 13px;
 			font-size: 26px;
@@ -22,7 +22,7 @@
 			font-weight: 100;
 		}
 
-		#repositoryHeaderUri {
+		#uri {
 			float: right;
 			padding: 0px 13px 10px 13px;
 			color: @koalityGray;
@@ -30,21 +30,20 @@
 		}
 	}
 
-	#repositoryChanges {
+	#changes {
 		position: absolute;
 		top: @contentTopSpacing;
 		left: 8px;
 		bottom: @bottomPadding;
-		width: @menuWidth;
 
-		#repositoryChangesSearchContainer {
+		#changesSearchContainer {
 			position: absolute;
 			top: 8px;
 			left: 0px;
 			right: 0px;
 			bottom: 8px;
 
-			#repositoryChangesSearch {
+			#changesSearch {
 				@nonSearchWidth: 50px;
 				@nonSearchCollapsedWidth: 30px;
 
@@ -55,9 +54,9 @@
 				border-spacing: 8px 0px;
 
 
-				#repositoryChangesSearchAll,
-				#repositoryChangesSearchMe,
-				#repositoryChangesSearchNames {
+				#changesSearchAll,
+				#changesSearchMe,
+				#changesSearchNames {
 					@colorTransitionTime: 0.25s;
 					@backgroundColorTransitionTime: 0.25s;
 					@widthTransitionTime: 0.25s;
@@ -99,18 +98,18 @@
 				}
 
 				&.searchOn {
-					#repositoryChangesSearchAll, #repositoryChangesSearchMe { width: @nonSearchCollapsedWidth; }
+					#changesSearchAll, #changesSearchMe { width: @nonSearchCollapsedWidth; }
 				}
 
-				#repositoryChangesSearchAll {
+				#changesSearchAll {
 					width: @nonSearchWidth;
 				}
 
-				#repositoryChangesSearchMe {
+				#changesSearchMe {
 					width: @nonSearchWidth;
 				}
 
-				#repositoryChangesSearchNames {
+				#changesSearchNames {
 
 					#repositorySearchImageAndInputContainer {
 						@imageWidth: 12px;
@@ -148,26 +147,21 @@
 		}
 	}
 
-	#repositoryStages {
+	#stages {
 		position: absolute;
 		top: @contentTopSpacing;
 		left: 8px + @menuWidth + @panelSpacing;
 		bottom: @bottomPadding;
-		width: @menuWidth;
 	}
 
-	#repositoryStageDetails {
+	#details {
 		position: absolute;
 		top: @contentTopSpacing;
 		left: 8px + (@menuWidth + @panelSpacing) * 2;
 		right: 8px;
 		bottom: @bottomPadding;
 
-		#repositoryStageDetailsHeader {
-			padding-left: 8px;
-		}
-
-		#repositoryStageDetailsLoadingSpinner {
+		#detailsLoadingSpinner {
 			position: absolute;
 			z-index: 1;
 			top: 0px;
@@ -176,7 +170,7 @@
 			bottom: 0px;
 		}
 
-		#repositoryStageDetailsSummary {
+		#detailsSummary {
 			position: absolute;
 			z-index: 3;
 			top: 30px;
@@ -187,46 +181,46 @@
 			overflow-y: auto;
 		}
 
-		#repositoryStageDetailsSkipped {
+		#detailsSkipped {
 			position: absolute;
 			z-index: 3;
 			top: 30px;
 			left: 30px;
 			right: 30px;
 
-			#repositoryStageDetailsSkippedMessage {
+			#detailsSkippedMessage {
 
 			}
 
-			#repositoryStageDetailsSkippedInstructions {
+			#detailsSkippedInstructions {
 				margin-top: 10px;
 			}
 		}
 
-		#repositoryStageDetailsMerge {
+		#detailsMerge {
 			position: absolute;
 			z-index: 3;
 			top: 30px;
 			left: 30px;
 		}
 
-		#repositoryStageDetailsDebug {
+		#detailsDebug {
 			position: absolute;
 			z-index: 3;
 			top: 30px;
 			left: 30px;
 			right: 30px;
 
-			#repositoryStageDetailsDebugMessage {
+			#detailsDebugMessage {
 
 			}
 
-			#repositoryStageDetailsDebugInstructions {
+			#detailsDebugInstructions {
 				margin-top: 10px;
 			}
 		}
 
-		#repositoryStageDetailsOutput {
+		#detailsOutput {
 			@bufferHeight: 20px;
 			@consoleTextWidth: 100%;
 
