@@ -114,8 +114,9 @@ window.AdminRepositories = ['$scope', '$location', '$routeParams', 'initialState
 			showRepositoriesLimitWarningIfNecessary()
 
 	showRepositoriesLimitWarningIfNecessary = () ->
+		upgradeUrl = 'https://koalitycode.com/account/plan'
 		if $routeParams.view is 'repositories' and $scope.repositories.length >= $scope.maxRepositoryCount
-			notification.warning 'Max number of repositories reached. Upgrade to increase this limit.'
+			notification.warning "Max number of repositories reached. <a href='#{upgradeUrl}'>Upgrade to increase this limit</a>"
 
 	handleAddedRepositoryUpdate = (data) ->
 		$scope.repositories.push data
