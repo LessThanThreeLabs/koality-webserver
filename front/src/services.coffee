@@ -70,8 +70,20 @@ angular.module('koality.service', []).
 			error: (text, durationInSeconds=8) -> add 'error', text, durationInSeconds
 		return toReturn
 	]).
-	factory('socket', ['$window', '$location', 'initialState', ($window, $location, initialState) ->
-		socket = io.connect "//#{$location.host()}?csrfToken=#{initialState.csrfToken}", resource: 'socket'
+	factory('socket', ['$window', '$location', 'initialState', 'notification', ($window, $location, initialState, notification) ->
+		maxReconnectionAttempts = 10
+
+		socket = io.connect "//#{$location.host()}?csrfToken=#{initialState.csrfToken}",
+			'resource': 'socket'
+			'connection timeout': 5000
+			'reconnection delay': 200
+			'reconnection limit': 1000
+			'max reconnection attempts': maxReconnectionAttempts
+
+		socket.on 'reconnecting', (delay, attempt) ->
+			if attempt >= maxReconnectionAttempts
+				notification.warning 'Unable to connect to server. Refreshing may resolve this issue', 0
+
 		previousEventToCallbacks = {}
 
 		makeRequest: (resource, requestType, methodName, data, callback) ->
