@@ -4,6 +4,7 @@
 			"/css/src/util/ansi.css",
 			"/css/src/util/d3/lineGraph/d3ChangesLineGraph.css",
 
+			"/css/src/fonts.css",
 			"/css/src/setup.css",
 
 			"/css/src/elements/panel.css",
@@ -90,12 +91,39 @@
 
 	"font": {
 		"application/font-woff": [
-			"/font/din/bold.woff",
-			"/font/din/light.woff",
-			"/font/din/medium.woff",
-			"/font/din/regular.woff",
+			"/font/din/bold/bold.woff",
+			"/font/din/light/light.woff",
+			"/font/din/medium/medium.woff",
+			"/font/din/regular/regular.woff",
 
-			"/font/ptMono/regular.woff"
+			"/font/ptMono/regular/regular.woff"
+		],
+
+		"application/font-ttf": [
+			"/font/din/bold/bold.ttf",
+			"/font/din/light/light.ttf",
+			"/font/din/medium/medium.ttf",
+			"/font/din/regular/regular.ttf",
+
+			"/font/ptMono/regular/regular.ttf"
+		],
+
+		"image/svg+xml": [
+			"/font/din/bold/bold.svg",
+			"/font/din/light/light.svg",
+			"/font/din/medium/medium.svg",
+			"/font/din/regular/regular.svg",
+
+			"/font/ptMono/regular/regular.svg"
+		],
+
+		"application/vnd.ms-fontobject": [
+			"/font/din/bold/bold.eot",
+			"/font/din/light/light.eot",
+			"/font/din/medium/medium.eot",
+			"/font/din/regular/regular.eot",
+
+			"/font/ptMono/regular/regular.eot"
 		]
 	}
 }
