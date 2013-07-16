@@ -19,9 +19,12 @@ window.D3ChangesLineGraph.clazz = class D3ChangesLineGraph
 			right: @element.width() - @PADDING.right
 			bottom: @element.height() - @PADDING.bottom
 
-		@svg = d3.select(@element[0]).select('svg').append 'g'
-		@axes = D3ChangesLineGraphAxes.create @svg, @bounds, @AXIS_BUFFER
-		@lines = D3ChangesLineGraphLines.create @element, @svg
+		@svg = d3.select(@element[0]).select('svg')
+			.attr('width', '100%')
+			.attr('height', '100%')
+		@root = @svg.append 'g'
+		@axes = D3ChangesLineGraphAxes.create @root, @bounds, @AXIS_BUFFER
+		@lines = D3ChangesLineGraphLines.create @element, @root
 
 	_getTooltipTextGenerator: (d3Binner, changeType, isPercentage) =>
 		return (firstDate, secondDate, value) ->
