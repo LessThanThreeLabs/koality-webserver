@@ -78,14 +78,16 @@ angular.module('koality.directive', []).
 		restrict: 'A'
 		link: (scope, element, attributes) ->
 			scrollToBottom = () ->
-				element[0].scrollTop = element[0].scrollHeight
+				setTimeout (() -> element[0].scrollTop = element[0].scrollHeight), 0
 
 			scrollBottomBuffer = integerConverter.toInteger(attributes.autoScrollToBottomBuffer) ? 20
 
 			scope.$watch attributes.autoScrollToBottom, ((newValue, oldValue) ->
-				return if oldValue.length is 0
-				isScrolledToBottomIsh = element[0].scrollTop + element[0].offsetHeight + scrollBottomBuffer >= element[0].scrollHeight
-				setTimeout scrollToBottom, 0 if isScrolledToBottomIsh
+				if oldValue? and oldValue.length > 0
+					isScrolledToBottomIsh = element[0].scrollTop + element[0].offsetHeight + scrollBottomBuffer >= element[0].scrollHeight
+					scrollToBottom() if isScrolledToBottomIsh
+				else
+					scrollToBottom() if attributes.startAtBottom?
 			), true
 	]).
 	directive('busyButton', () ->
