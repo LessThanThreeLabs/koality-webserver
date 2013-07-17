@@ -171,6 +171,10 @@
 									<input type="text" ng-model="addRepository.forwardUrl" name="forwardUrl" placeholder="git@awesome.com:awesome/repository.git" ng-pattern="/@[-\\./a-zA-Z0-9]+:/" ng-maxlength="256" required>
 									<styled-form-field-error tooltip="Invalid forward url" error-visible="addRepositoryForm.forwardUrl.$dirty && addRepositoryForm.forwardUrl.$invalid"></styled-form-field-error>
 								</styled-form-field>
+								<styled-form-field label="Type">
+									<input type="radio" ng-model="addRepository.type" name="type" value="git">Git
+									<input type="radio" ng-model="addRepository.type" name="type" value="hg">Hg
+								</styled-form-field>
 								<styled-form-field label="">
 									<button id="adminAddRepositoryGetPublicKeyButton" ng-click="getSshKey()" ng-disabled="addRepositoryForm.$invalid">Add Repository</button>
 								</styled-form-field>

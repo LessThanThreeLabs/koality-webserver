@@ -193,8 +193,16 @@
 				margin-left: 30px;
 
 				#adminAddRepositoryForm {
-					input {
+					input[type="text"] {
 						width: 320px;
+					}
+
+					input[type="radio"] {
+						margin-right: 10px;
+
+						&:nth-child(3) {
+							margin-left: 50px;
+						}
 					}
 
 					#adminAddRepositoryGetPublicKeyButton {

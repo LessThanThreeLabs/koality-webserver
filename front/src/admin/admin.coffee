@@ -92,6 +92,7 @@ window.AdminRepositories = ['$scope', '$location', '$routeParams', 'initialState
 	$scope.addRepository = {}
 	$scope.addRepository.stage = 'first'
 	$scope.addRepository.modalVisible = false
+	$scope.addRepository.type = 'git'
 
 	$scope.removeRepository = {}
 	$scope.removeRepository.modalVisible = false
@@ -170,6 +171,7 @@ window.AdminRepositories = ['$scope', '$location', '$routeParams', 'initialState
 		$scope.addRepository.name = null
 		$scope.addRepository.forwardUrl = null
 		$scope.addRepository.publicKey = null
+		$scope.addRepository.type = 'git'
 
 	resetRemoveRepositoryValues = () ->
 		$scope.removeRepository.showError = false
