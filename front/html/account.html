@@ -6,6 +6,7 @@
 				<content-menu-option menu-option-text="My Account" ng-click="menuOptionClick('basic')" ng-class="{selected: currentView == 'basic', green: currentView == 'basic'}"></content-menu-option>
 				<content-menu-option menu-option-text="Password" ng-click="menuOptionClick('password')" ng-class="{selected: currentView == 'password', green: currentView == 'password'}"></content-menu-option>
 				<content-menu-option menu-option-text="SSH Keys" ng-click="menuOptionClick('sshKeys')" ng-class="{selected: currentView == 'sshKeys', green: currentView == 'sshKeys'}"></content-menu-option>
+				<content-menu-option menu-option-text="GitHub" ng-click="menuOptionClick('gitHub')" ng-class="{selected: currentView == 'gitHub', green: currentView == 'gitHub'}"></content-menu-option>
 			</content-menu-options>
 		</menu>
 	</div>
@@ -114,5 +115,18 @@
 				</content>
 			</div>
 		</modal>
+	</div>
+
+	<div id="accountGitHub" ng-show="currentView == 'gitHub'" ng-controller="AccountGitHub">
+		<content>
+			<content-header content-header-padding>GitHub</content-header>
+			<content-body unselectable>
+				<div id="accountGitHubContent">
+					<p>Connecting to GitHub will allow Koality to automatically import your account and repository settings.</p>
+
+					<button>Connect to GitHub</button>
+				</div>
+			</content-body>
+		</content>
 	</div>
 </centered-panel>
