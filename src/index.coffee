@@ -36,10 +36,15 @@ startEverything = () ->
 		logger.error error, true
 		setTimeout (() -> process.exit 1), 10000
 
+	modelConnectionFailedTimeoutId = setTimeout (() =>
+		throw 'Model Connection failed to connect'
+	), 10000
+
 	modelConnection.connect (error) ->
-		if error? then throw error
+		if error? then logger.error error
 		else
-			domainRetriever.setModelConnection modelConnection
+			clearTimeout modelConnectionFailedTimeoutId
+
 			domainRetriever.setModelConnection modelConnection
 
 			server = Server.create configurationParams.server, modelConnection, mailer, logger

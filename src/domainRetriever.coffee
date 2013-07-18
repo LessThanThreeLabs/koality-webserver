@@ -34,5 +34,5 @@ class DomainRetriever
 
 
 	getDomain: (callback) =>
-		if not @_domain? then callback 'domain unavailable'
+		if not @_domain? then callback null, 'DOMAIN-UNAVAILABLE'
 		else callback null, @_domain
