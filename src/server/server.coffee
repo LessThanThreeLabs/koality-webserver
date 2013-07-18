@@ -126,7 +126,9 @@ class Server
 			expressServer.get '/admin', @handlers.indexHandler.handleRequest
 			expressServer.get '/unexpectedError', @handlers.unexpectedErrorHandler.handleRequest
 			expressServer.get '/invalidPermissions', @handlers.invalidPermissionsHandler.handleRequest
+
 			expressServer.post '/extendCookieExpiration', @_handleExtendCookieExpiration
+			expressServer.get '/github/oauth', @_handleSetGitHubOAuthToken
 			
 			@apiServer.addRoutes expressServer
 			expressServer.get '*', @staticServer.handleRequest
@@ -147,6 +149,9 @@ class Server
 
 					@logger.info 'server started on ' + @configurationParams.http.port
 					console.log "SERVER STARTED on port #{@configurationParams.http.port}".bold.magenta
+
+		@logger.info 'starting server...'
+		console.log "starting server...".magenta
 
 		expressServer = express()
 		
@@ -197,3 +202,15 @@ class Server
 			request.session.cookieExpirationIncreased ?= 0 
 			request.session.cookieExpirationIncreased++
 			response.end 'ok'
+
+
+	_handleSetGitHubOAuthToken: (request, response) =>
+		userId = request.session.userId
+		oauthToken = request.query?.token
+
+		if not userId then response.send 500, 'Not logged in'
+		else if not oauthToken? then response.send 400, 'No OAuth Token provided'
+		else
+			@modelConnection.rpcConnection.users.update.set_github_oauth_token userId, oauthToken, (error) =>
+				if error? then response.send 500, 'Error while trying to update oauth token'
+				else response.redirect '/'
