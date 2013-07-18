@@ -85,3 +85,8 @@ window.AccountSshKeys = ['$scope', 'rpc', 'events', 'initialState', 'notificatio
 	$scope.$watch 'addKey.modalVisible', (newValue, oldValue) ->
 		resetModalValues() if not newValue
 ]
+
+
+window.AccountGitHub = ['$scope', 'rpc', 'notification', ($scope, rpc, notification) ->
+
+]
