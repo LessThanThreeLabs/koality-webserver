@@ -196,8 +196,10 @@ class Server
 
 	_handleExtendCookieExpiration: (request, response) =>
 		if not request.session.userId?
+			@logger.warn 'Tried to extend cookie expiration for user not logged in'
 			response.end '403'
 		else
+			@logger.info 'Extending cookie expiration for: ' + request.session.userId
 			request.session.cookie.maxAge = 2592000000 # one month
 			request.session.cookieExpirationIncreased ?= 0 
 			request.session.cookieExpirationIncreased++
@@ -212,5 +214,9 @@ class Server
 		else if not oauthToken? then response.send 400, 'No OAuth Token provided'
 		else
 			@modelConnection.rpcConnection.users.update.change_github_oauth_token userId, oauthToken, (error) =>
-				if error? then response.send 500, 'Error while trying to update oauth token'
-				else response.redirect '/account'
+				if error?
+					@logger.warn error
+					response.send 500, 'Error while trying to update oauth token'
+				else
+					@logger.info 'Successfully connected user to GitHub: ' + userId
+					response.redirect '/account?view=gitHub'
