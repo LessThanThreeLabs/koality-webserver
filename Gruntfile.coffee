@@ -4,6 +4,7 @@ module.exports = (grunt) ->
 		package: grunt.file.readJSON('package.json');
 		backSourceDirectory: 'src'
 		backCompiledDirectory: 'libs'
+		backTestDirectory: 'test'
 		backUglifiedDirectory: 'uglified'
 		frontSourceDirectory: 'front/src'
 		frontRootsDirectory: 'front/roots'
@@ -72,8 +73,11 @@ module.exports = (grunt) ->
 			publish:
 				command: 's3cmd put --acl-public --guess-mime-type <%= tarredPackageName %> <%= s3TarredPackageLocation %>'
 
-			test:
-				command: 'karma start front/test/karma.unit.conf.js --browsers PhantomJS --single-run'
+			testFront:
+				command: 'karma start <%= frontTestDirectory %>/karma.unit.conf.js --browsers PhantomJS --single-run'
+
+			testBack: 
+				command: 'jasmine-node --color --coffee --forceexit <%= backTestDirectory %>/'
 
 		uglify:
 			options:
@@ -145,7 +149,9 @@ module.exports = (grunt) ->
 	grunt.registerTask 'run', ['shell:runServer']
 	grunt.registerTask 'run-production', ['shell:runServerProduction']
 
-	grunt.registerTask 'test', ['shell:test']
+	grunt.registerTask 'test', ['shell:testFront', 'shell:testBack']
+	grunt.registerTask 'test-front', ['shell:testFront']
+	grunt.registerTask 'test-back', ['shell:testBack']
 
 	grunt.registerTask 'make-ugly', ['shell:removeUglify', 'uglify']
 	grunt.registerTask 'production', ['compile-production', 'make-ugly', 'shell:replaceCompiledWithUglified']
