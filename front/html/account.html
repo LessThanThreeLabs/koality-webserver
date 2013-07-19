@@ -122,15 +122,10 @@
 			<content-header content-header-padding>GitHub</content-header>
 			<content-body unselectable>
 				<div id="accountGitHubContent">
-					<div ng-show="connected != null && !connected">
-						<p>Connecting to GitHub will allow Koality to automatically import your account and repository settings.</p>
+					<p>Being connected to GitHub will allow Koality to automatically import your account and repository settings.</p>
 
-						<button ng-click="connect()">Connect to GitHub</button>
-					</div>
-
-					<div ng-show="connected != null && connected">
-						<p>You are already connected to GitHub</p>
-					</div>
+					<button ng-click="connect()" ng-show="connected != null && !connected">Connect to GitHub</button>
+					<button ng-click="disconnect()" ng-show="connected != null && connected">Disconnect from GitHub</button>
 				</div>
 			</content-body>
 		</content>
