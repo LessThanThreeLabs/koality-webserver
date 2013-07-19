@@ -211,6 +211,6 @@ class Server
 		if not userId then response.send 500, 'Not logged in'
 		else if not oauthToken? then response.send 400, 'No OAuth Token provided'
 		else
-			@modelConnection.rpcConnection.users.update.set_github_oauth_token userId, oauthToken, (error) =>
+			@modelConnection.rpcConnection.users.update.change_github_oauth_token userId, oauthToken, (error) =>
 				if error? then response.send 500, 'Error while trying to update oauth token'
-				else response.redirect '/'
+				else response.redirect '/account'

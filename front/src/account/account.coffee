@@ -88,9 +88,13 @@ window.AccountSshKeys = ['$scope', 'rpc', 'events', 'initialState', 'notificatio
 
 
 window.AccountGitHub = ['$scope', '$location', 'rpc', 'notification', ($scope, $location, rpc, notification) ->
-	console.log $location.protocol()
+	getIsConnected = () ->
+		rpc 'users', 'read', 'isConnectedToGitHub', null, (error, connected) ->
+			$scope.connected = connected
 
 	$scope.connect = () ->
 		# window.location.href = "http://127.0.0.1:1080/github/authenticate?url=#{$location.protocol()}://#{$location.host()}"
-		window.location.href = "http://127.0.0.1:1080/github/authenticate?url=#{$location.protocol()}://#{$location.host()}:1081"
+		window.location.href = "http://127.0.0.1:1081/github/authenticate?url=#{$location.protocol()}://#{$location.host()}:1080"
+
+	getIsConnected()
 ]
