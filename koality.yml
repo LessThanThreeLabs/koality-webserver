@@ -8,6 +8,7 @@ setup:
     - npm:
       - iced-coffee-script
       - grunt-cli
+      - jasmine-node
       - karma
       - npm install
   - scripts:
@@ -18,6 +19,9 @@ compile:
     - grunt compile
 test:
   scripts:
-    - unit tests:
+    - frontend tests:
         script:
-          - npm test
+          - grunt test-front
+    - backend tests:
+        script:
+          - grunt test-back
