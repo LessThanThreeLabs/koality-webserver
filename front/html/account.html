@@ -63,7 +63,10 @@
 	<div id="accountSshKeys" ng-show="currentView == 'sshKeys'" ng-controller="AccountSshKeys">
 		<content>
 			<content-header content-header-padding>SSH Keys
-				<content-header-subtext><a ng-click="addKey.modalVisible=true">+ Add a New SSH Key</a></content-header-subtext>
+				<content-header-subtext>
+					<a ng-click="addKeysFromGitHub()">Add SSH Keys from GitHub</a>
+					<a ng-click="addKey.modalVisible=true">+ Add a New SSH Key</a>
+				</content-header-subtext>
 			</content-header>
 			<content-body unselectable>
 				<div id="accountSshKeysContent">
