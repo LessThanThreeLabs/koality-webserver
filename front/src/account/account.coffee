@@ -82,6 +82,11 @@ window.AccountSshKeys = ['$scope', 'rpc', 'events', 'initialState', 'notificatio
 	$scope.submitKey = () ->
 		addKey()
 
+	$scope.addKeysFromGitHub = () ->
+		rpc 'users', 'update', 'addGitHubSshKeys', null, (error) ->
+			if error is 'NoSuchGitHubOAuthToken'
+				notification.warning 'You must be connected to GitHub. <a href="/account?view=gitHub">Connect to GitHub</a>'
+
 	$scope.$watch 'addKey.modalVisible', (newValue, oldValue) ->
 		resetModalValues() if not newValue
 ]
