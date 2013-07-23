@@ -5,8 +5,12 @@ angular.module('koality.filter', ['koality.service']).
 		(input) ->
 			return fileSuffixAdder.addFileSuffix input
 	]).
-	filter('newLine', [() ->
+	filter('ascii', [() ->
 		(input) ->
 			return null if not input? or typeof input isnt 'string'
-			return input.replace /\n/g, '<br>'
+
+			input = input.replace /\n/g, '<br>'
+			input = input.replace /\t/g, '    '
+			input = input.replace /\040/g, '&nbsp;'
+			return input
 	])
