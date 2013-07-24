@@ -25,29 +25,37 @@ describe 'Koality filters', () ->
 			expect(fileSuffix 'hello/therejpg').toBe 'hello/therejpg'
 			expect(fileSuffix '/hello/there/sirgif').toBe '/hello/there/sirgif'
 
-	describe 'newLine filter', () ->
+	describe 'ascii filter', () ->
 		beforeEach module 'koality.filter'
 
 		it 'should handle invalid values', () ->
-			inject (newLineFilter) ->
-				expect(newLineFilter null).toBe null
-				expect(newLineFilter 15).toBe null
-				expect(newLineFilter 15.1).toBe null
-				expect(newLineFilter {}).toBe null
+			inject (asciiFilter) ->
+				expect(asciiFilter null).toBe null
+				expect(asciiFilter 15).toBe null
+				expect(asciiFilter 15.1).toBe null
+				expect(asciiFilter {}).toBe null
 
-		it 'should not change strings without new lines', () ->
-			inject (newLineFilter) ->
-				expect(newLineFilter '').toBe ''
-				expect(newLineFilter 'hello').toBe 'hello'
-				expect(newLineFilter 'hello there').toBe 'hello there'
-				expect(newLineFilter ' hello').toBe ' hello'
-				expect(newLineFilter 'hello ').toBe 'hello '
+		it 'should change spaces to &nbsp;', () ->
+			inject (asciiFilter) ->
+				expect(asciiFilter '').toBe ''
+				expect(asciiFilter 'hello').toBe 'hello'
+				expect(asciiFilter 'hello there').toBe 'hello&nbsp;there'
+				expect(asciiFilter ' hello').toBe '&nbsp;hello'
+				expect(asciiFilter 'hello ').toBe 'hello&nbsp;'
+
+		it 'should change tabs to &nbsp;', () ->
+			inject (asciiFilter) ->
+				expect(asciiFilter '').toBe ''
+				expect(asciiFilter 'hello').toBe 'hello'
+				expect(asciiFilter 'hello\tthere').toBe 'hello&nbsp;&nbsp;&nbsp;&nbsp;there'
+				expect(asciiFilter '\thello').toBe '&nbsp;&nbsp;&nbsp;&nbsp;hello'
+				expect(asciiFilter 'hello\t').toBe 'hello&nbsp;&nbsp;&nbsp;&nbsp;'
 
 		it 'should add <br>\'s correctly', () ->
-			inject (newLineFilter) ->
-				expect(newLineFilter '\n').toBe '<br>'
-				expect(newLineFilter 'hello\n').toBe 'hello<br>'
-				expect(newLineFilter '\nhello').toBe '<br>hello'
-				expect(newLineFilter 'hello\nthere').toBe 'hello<br>there'
-				expect(newLineFilter '\nhello\nthere').toBe '<br>hello<br>there'
-				expect(newLineFilter '\nhello\nthere\n').toBe '<br>hello<br>there<br>'
+			inject (asciiFilter) ->
+				expect(asciiFilter '\n').toBe '<br>'
+				expect(asciiFilter 'hello\n').toBe 'hello<br>'
+				expect(asciiFilter '\nhello').toBe '<br>hello'
+				expect(asciiFilter 'hello\nthere').toBe 'hello<br>there'
+				expect(asciiFilter '\nhello\nthere').toBe '<br>hello<br>there'
+				expect(asciiFilter '\nhello\nthere\n').toBe '<br>hello<br>there<br>'
