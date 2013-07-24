@@ -12,8 +12,6 @@ Server = require './server/server'
 
 
 startEverything = () ->
-	process.title = 'webserver'
-
 	commandLineParser = CommandLineParser.create()
 
 	configurationParams = getConfiguration commandLineParser.getConfigFile(),
