@@ -17,6 +17,8 @@ angular.module('koality.directive.changes', []).
 				<div class="changesMenuHeaderContent" ng-transclude></div>
 				<div class="changesMenuHeaderBuffer"></div>
 			</div>'
+		link: (scope, element, attributes) ->
+			element.addClass 'noPadding' if attributes.noPadding?
 	).
 	directive('changesMenuOptions', () ->
 		restrict: 'E'
