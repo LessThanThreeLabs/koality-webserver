@@ -103,7 +103,7 @@ window.Repository = ['$scope', '$location', '$routeParams', 'rpc', 'events', 'in
 	retrieveRepositoryInformation()
 ]
 
-window.RepositoryChanges = ['$scope', '$routeParams', 'changesRpc', 'events', 'localStorage', ($scope, $routeParams, changesRpc, events, localStorage) ->
+window.RepositoryChanges = ['$scope', '$routeParams', 'changesRpc', 'events', 'localStorage', 'initialState', ($scope, $routeParams, changesRpc, events, localStorage, initialState) ->
 	$scope.changes = []
 
 	$scope.search = {}
@@ -140,9 +140,12 @@ window.RepositoryChanges = ['$scope', '$routeParams', 'changesRpc', 'events', 'l
 		changesRpc.queueRequest $routeParams.repositoryId, getGroupFromMode(), getNamesFromNamesQuery(), $scope.changes.length, handleMoreChanges
 
 	doesChangeMatchQuery = (change) ->
-		return true if not getNamesFromNamesQuery()?
-		return (change.submitter.firstName.toLowerCase() in getNamesFromNamesQuery()) or
-			(change.submitter.lastName.toLowerCase() in getNamesFromNamesQuery())
+		if $scope.search.mode is 'me'
+			return initialState.user.id is change.submitter?.id
+		else
+			return true if not getNamesFromNamesQuery()?
+			return (change.submitter.firstName.toLowerCase() in getNamesFromNamesQuery()) or
+				(change.submitter.lastName.toLowerCase() in getNamesFromNamesQuery())
 
 	getChangeWithId = (id) ->
 		return (change for change in $scope.changes when change.id is id)[0]
