@@ -78,14 +78,14 @@
 
 	"html": {
 		"text/html": [
-			"/html/header.html",
-			"/html/login.html",
-			"/html/account.html",
-			"/html/createAccount.html",
-			"/html/resetPassword.html",
-			"/html/repository.html",
-			"/html/analytics.html",
-			"/html/admin.html"
+			"/html/header/header.html",
+			"/html/login/login.html",
+			"/html/account/account.html",
+			"/html/createAccount/createAccount.html",
+			"/html/resetPassword/resetPassword.html",
+			"/html/repository/repository.html",
+			"/html/analytics/analytics.html",
+			"/html/admin/admin.html"
 		]
 	},
 

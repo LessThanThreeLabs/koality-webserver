@@ -47,7 +47,7 @@
 
 	"html": {
 		"text/html": [
-			"/html/installationWizard/wizard.html"
+			"/html/installationWizard/wizard/wizard.html"
 		]
 	},
 

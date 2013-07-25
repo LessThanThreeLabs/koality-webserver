@@ -27,7 +27,7 @@ angular.module('koality', ['ngSanitize', 'koality.service', 'koality.filter',
 				redirectTo: if window.accountInformation.id is '' then null else '/'
 			).
 			when('/repository/:repositoryId',
-				templateUrl: "/html/repository#{fileSuffix}.html"
+				templateUrl: "/html/repository/repository#{fileSuffix}.html"
 				controller: Repository
 				reloadOnSearch: false
 				redirectTo: if window.accountInformation.id is '' then '/login' else null
