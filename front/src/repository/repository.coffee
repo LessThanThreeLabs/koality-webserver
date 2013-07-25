@@ -83,7 +83,6 @@ window.Repository = ['$scope', '$location', '$routeParams', 'rpc', 'events', 'in
 		$scope.showDebug = true
 
 	$scope.$watch 'currentChangeId', (newValue, oldValue) ->
-		# updateMergeStatusListener()
 		retrieveCurrentChangeInformation()
 		$location.search 'change', newValue ? null
 

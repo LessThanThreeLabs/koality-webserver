@@ -29,6 +29,9 @@ module.exports = (grunt) ->
 					'iced --compile --runtime window --output <%= frontCoffeeCompiledDirectory %>/ <%= frontSourceDirectory %>/'
 				].join ' && '
 
+			copyHtml:
+				command: "find <%= frontSourceDirectory %> -name '*.html' -exec cp {} <%= frontHtmlDirectory %> \;"
+
 			runServer:
 				command: [
 					'(redis-server redis/conf/sessionStoreRedis.conf &)',
@@ -132,7 +135,7 @@ module.exports = (grunt) ->
 				tasks: ['compile', 'test']
 
 			run:
-				files: ['<%= backSourceDirectory %>/**/*.coffee', '<%= frontSourceDirectory %>/**/*.coffee', '<%= frontSourceDirectory %>/**/*.less', '<%= frontRootsDirectory %>/**/*.ejs', '<%= frontRootsDirectory %>/**/*.json', '<%= frontHtmlDirectory %>/**/*.html']
+				files: ['<%= backSourceDirectory %>/**/*.coffee', '<%= frontSourceDirectory %>/**/*.coffee', '<%= frontSourceDirectory %>/**/*.less', '<%= frontSourceDirectory %>/**/*.html', '<%= frontRootsDirectory %>/**/*.ejs', '<%= frontRootsDirectory %>/**/*.json']
 				tasks: ['shell:killServer', 'compile', 'run']
 				options:
 					interrupt: true
