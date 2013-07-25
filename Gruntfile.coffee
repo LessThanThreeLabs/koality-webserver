@@ -30,7 +30,10 @@ module.exports = (grunt) ->
 				].join ' && '
 
 			copyHtml:
-				command: "find <%= frontSourceDirectory %> -name '*.html' -exec cp {} <%= frontHtmlDirectory %> \;"
+				command: [
+					'cd <%= frontSourceDirectory %>',
+					'find . -name "*.html" | cpio -pdm ../html'
+				].join ' && '
 
 			runServer:
 				command: [
@@ -53,7 +56,8 @@ module.exports = (grunt) ->
 				command: [
 					'rm -rf <%= backCompiledDirectory %>',
 					'rm -rf <%= frontCoffeeCompiledDirectory %>',
-					'rm -rf <%= frontLessCompiledDirectory %>'
+					'rm -rf <%= frontLessCompiledDirectory %>',
+					'rm -rf <%= frontHtmlDirectory %>'
 				].join ' && '
 
 			removeUglify:
@@ -146,7 +150,7 @@ module.exports = (grunt) ->
 	grunt.loadNpmTasks 'grunt-shell'
 
 	grunt.registerTask 'default', ['compile']
-	grunt.registerTask 'compile', ['shell:removeCompile', 'shell:compileCoffee', 'less:development']
+	grunt.registerTask 'compile', ['shell:removeCompile', 'shell:compileCoffee', 'less:development', 'shell:copyHtml']
 	grunt.registerTask 'compile-production', ['shell:removeCompile', 'shell:compileCoffee', 'less:production']
 
 	grunt.registerTask 'run', ['shell:runServer']
