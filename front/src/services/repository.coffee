@@ -6,6 +6,8 @@ angular.module('koality.service.repository', []).
 		_information: null
 
 		setChange: (repositoryId, changeId) =>
+			console.log 'change:' + repositoryId + ' - ' + changeId
+
 			return if @_id is changeId
 
 			@_id = changeId
@@ -36,6 +38,8 @@ angular.module('koality.service.repository', []).
 		_debug: false
 
 		setStage: (repositoryId, stageId) =>
+			console.log 'stage: ' + repositoryId + ' - ' + stageId
+
 			return if @_id is stageId
 
 			@_id = stageId
@@ -51,8 +55,6 @@ angular.module('koality.service.repository', []).
 				repositoryId: integerConverter.toInteger repositoryId
 				id: integerConverter.toInteger stageId
 			rpc 'buildConsoles', 'read', 'getBuildConsole', requestData, (error, stageInformation) =>
-				console.log 'stage information:'
-				console.log stageInformation
 				@_information = stageInformation
 
 		getId: () =>
