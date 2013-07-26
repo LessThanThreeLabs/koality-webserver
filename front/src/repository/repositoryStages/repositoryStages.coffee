@@ -1,6 +1,8 @@
 'use strict'
 
-window.RepositoryStages = ['$scope', 'rpc', 'events', ($scope, rpc, events) ->
+window.RepositoryStages = ['$scope', '$routeParams', 'rpc', 'events', 'currentChange', 'currentStage', ($scope, $routeParams, rpc, events, currentChange, currentStage) ->
+	$scope.selectedChange = currentChange
+	$scope.selectedStage = currentStage
 	$scope.stages = []
 
 	isStageIdInStages = (stageId) ->
@@ -31,18 +33,18 @@ window.RepositoryStages = ['$scope', 'rpc', 'events', ($scope, rpc, events) ->
 
 	retrieveStages = () ->
 		$scope.stages = []
-		return if not $scope.currentChangeId?
+		return if not $scope.selectedChange.getId()?
 
 		$scope.retrievingStages = true
-		rpc 'buildConsoles', 'read', 'getBuildConsoles', changeId: $scope.currentChangeId, (error, buildConsoles) ->
+		rpc 'buildConsoles', 'read', 'getBuildConsoles', changeId: $scope.selectedChange.getId(), (error, buildConsoles) ->
 			$scope.retrievingStages = false
 			$scope.stages = buildConsoles
 
 			if $scope.stages.length is 0
-				$scope.selectStage null
+				$scope.selectedStage.setStage null, null
 
-			if $scope.currentStageId? and not isStageIdInStages $scope.currentStageId
-				$scope.selectStage null
+			if $scope.selectedStage.getId()? and not isStageIdInStages $scope.selectedStage.getId()
+				$scope.selectedStage.setStage null, null
 
 	getStageWithId = (id) ->
 		return (stage for stage in $scope.stages when stage.id is id)[0]
@@ -54,8 +56,8 @@ window.RepositoryStages = ['$scope', 'rpc', 'events', ($scope, rpc, events) ->
 		stage = getStageWithId data.id
 		stage.status = data.status if stage?
 
-		if stage.status is 'failed' and isMirrorStage stage, $scope.currentStageInformation
-			$scope.selectStage stage
+		if stage.status is 'failed' and isMirrorStage stage, $scope.selectedStage.getInformation()
+			$scope.selectedStage.setStage $routeParams.repositoryId, stage.id
 
 	buildConsoleAddedEvents = null
 	updateBuildConsoleAddedListener = () ->
@@ -91,12 +93,15 @@ window.RepositoryStages = ['$scope', 'rpc', 'events', ($scope, rpc, events) ->
 			return 50000
 
 	$scope.shouldStageBeVisible = (stage) ->
-		return true if stage.id is $scope.currentStageId
-		return false if isMirrorStage stage, $scope.currentStageInformation
+		return true if stage.id is $scope.selectedStage.getId()
+		return false if isMirrorStage stage, $scope.selectedStage.getInformation()
 		return true if stage.id is getMostImportantStageWithTypeAndName(stage.type, stage.name).id
 		return false
 
-	$scope.$watch 'currentChangeId', (newValue, oldValue) ->
+	$scope.selectStage = (stage) ->
+		$scope.selectedStage.setStage $routeParams.repositoryId, stage?.id
+
+	$scope.$watch 'selectedChange.getId()', (newValue, oldValue) ->
 		updateBuildConsoleAddedListener()
 		updateBuildConsoleStatusListener()
 		retrieveStages()

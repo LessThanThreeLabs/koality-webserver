@@ -1,28 +1,30 @@
 'use strict'
 
-angular.module('koality', ['ngSanitize', 'koality.service', 'koality.filter',
+angular.module('koality', ['ngSanitize', 
+		'koality.service', 'koality.service.repository',
+		'koality.filter',
 		'koality.directive', 'koality.directive.changes', 'koality.directive.panel', 'koality.d3.directive']).
 	config(['$routeProvider', ($routeProvider) ->
 		$routeProvider.
 			when('/login',
-				templateUrl: "/html/login#{fileSuffix}.html"
+				templateUrl: "/html/login/login#{fileSuffix}.html"
 				controller: Login
 				redirectTo: if window.accountInformation.id is '' then null else '/'
 			).
 			when('/account',
-				templateUrl: "/html/account#{fileSuffix}.html"
+				templateUrl: "/html/account/account#{fileSuffix}.html"
 				controller: Account
 				reloadOnSearch: false
 				redirectTo: if window.accountInformation.id is '' then '/login' else null
 			).
 			when('/create/account',
-				templateUrl: "/html/createAccount#{fileSuffix}.html"
+				templateUrl: "/html/createAccount/createAccount#{fileSuffix}.html"
 				controller: CreateAccount
 				reloadOnSearch: false
 				redirectTo: if window.accountInformation.id is '' then null else '/'
 			).
 			when('/resetPassword',
-				templateUrl: "/html/resetPassword#{fileSuffix}.html"
+				templateUrl: "/html/resetPassword/resetPassword#{fileSuffix}.html"
 				controller: ResetPassword
 				redirectTo: if window.accountInformation.id is '' then null else '/'
 			).
@@ -33,13 +35,13 @@ angular.module('koality', ['ngSanitize', 'koality.service', 'koality.filter',
 				redirectTo: if window.accountInformation.id is '' then '/login' else null
 			).
 			when('/',
-				templateUrl: "/html/analytics#{fileSuffix}.html"
+				templateUrl: "/html/analytics/analytics#{fileSuffix}.html"
 				controller: Analytics
 				reloadOnSearch: false
 				redirectTo: if window.accountInformation.id is '' then '/login' else null
 			).
 			when('/admin',
-				templateUrl: "/html/admin#{fileSuffix}.html"
+				templateUrl: "/html/admin/admin#{fileSuffix}.html"
 				controller: Admin
 				reloadOnSearch: false
 				redirectTo: if window.accountInformation.isAdmin then null else '/'
