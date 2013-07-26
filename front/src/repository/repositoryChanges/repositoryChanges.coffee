@@ -1,6 +1,7 @@
 'use strict'
 
-window.RepositoryChanges = ['$scope', '$routeParams', 'changesRpc', 'events', 'localStorage', 'initialState', ($scope, $routeParams, changesRpc, events, localStorage, initialState) ->
+window.RepositoryChanges = ['$scope', '$routeParams', 'changesRpc', 'events', 'currentChange', 'localStorage', 'initialState', ($scope, $routeParams, changesRpc, events, currentChange, localStorage, initialState) ->
+	$scope.selectedChange = currentChange
 	$scope.changes = []
 
 	$scope.search = {}
@@ -22,9 +23,10 @@ window.RepositoryChanges = ['$scope', '$routeParams', 'changesRpc', 'events', 'l
 	handleInitialChanges = (error, changes) ->
 		$scope.changes = changes
 		if $scope.changes.length is 0
-			$scope.selectChange null
+			$scope.selectedChange.setChange null, null
 		else if $scope.changes[0]?
-			$scope.selectChange changes[0] if not $scope.currentChangeId?
+			if not $scope.selectedChange.getId()?
+				$scope.selectedChange.setChange $routeParams.repositoryId, changes[0].id
 
 	handleMoreChanges = (error, changes) ->
 		$scope.changes = $scope.changes.concat changes
@@ -53,14 +55,17 @@ window.RepositoryChanges = ['$scope', '$routeParams', 'changesRpc', 'events', 'l
 
 	handleChangeStarted = (data) ->
 		change = getChangeWithId data.id
-		copyDataIntoChange change, data if change?
+		console.log 'NEED TO COPY DATA INTO CHANGE'
+		# copyDataIntoChange change, data if change?
 
 	handleChangeFinished = (data) ->
 		change = getChangeWithId data.id
-		copyDataIntoChange change, data if change?
+		console.log 'NEED TO COPY DATA INTO CHANGE'
+		# copyDataIntoChange change, data if change?
 
 		if $scope.currentChangeId is data.id
-			copyDataIntoChange $scope.currentChangeInformation, data
+			console.log 'NEED TO COPY DATA INTO CHANGE'
+			# copyDataIntoChange $scope.currentChangeInformation, data
 
 	changeAddedEvents = events('repositories', 'change added', $routeParams.repositoryId).setCallback(handeChangeAdded).subscribe()
 	changeStartedEvents = events('repositories', 'change started', $routeParams.repositoryId).setCallback(handleChangeStarted).subscribe()
@@ -73,10 +78,8 @@ window.RepositoryChanges = ['$scope', '$routeParams', 'changesRpc', 'events', 'l
 		$scope.search.mode = mode
 		$scope.search.namesQuery = '' if mode isnt 'search'
 
-
 	$scope.selectChange = (change) ->
-		console.log 'here!'
-		
+		$scope.selectedChange.setChange $routeParams.repositoryId, change.id
 
 	$scope.scrolledToBottom = () ->
 		getMoreChanges()
