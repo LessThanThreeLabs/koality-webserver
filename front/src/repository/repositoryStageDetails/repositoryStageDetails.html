@@ -1,15 +1,17 @@
 <div id="repositoryStageDetails" ng-controller="RepositoryStageDetails">
 	<panel>
 		<panel-header>
-			<span ng-show="currentChangeId != null && currentStageId == null && !showMerge">summary</span>
-			<span ng-show="currentChangeId != null && currentStageInformation != null">{{currentStageInformation.name}}</span>
-			<span ng-show="currentChangeId != null && currentStageId == null && showMerge">merge</span>
+			<span ng-show="selectedChange.getId() != null && selectedStage.isSummary()">summary</span>
+			<span ng-show="selectedChange.getId() != null && selectedStage.getInformation() != null">{{selectedStage.getInformation().name}}</span>
+			<span ng-show="selectedChange.getId() != null && selectedStage.isSkipped()">skipped</span>
+			<span ng-show="selectedChange.getId() != null && selectedStage.isMerge()">merge</span>
+			<span ng-show="selectedChange.getId() != null && selectedStage.isDebug()">debug</span>
 		</panel-header>
 
 		<panel-body>
-			<spinner id="detailsLoadingSpinner" spinner-running="spinnerOn"></spinner>
+			<spinner id="loadingSpinner" spinner-running="spinnerOn"></spinner>
 
-			<div id="detailsSummary" ng-show="currentChangeId != null && currentChangeInformation != null && currentStageId == null && !showSkipped && !showMerge && !showDebug">
+			<div id="summary" ng-show="selectedChange.getId() != null && currentChangeInformation != null && currentStageId == null && !showSkipped && !showMerge && !showDebug">
 				<styled-form text-selectable>
 					<styled-form-field label="Name">{{currentChangeInformation.user.firstName}} {{currentChangeInformation.user.lastName}}</styled-form-field>
 					<styled-form-field label="Email"><a href="mailto:{{currentChangeInformation.user.email}}?subject=Koality%3A%20{{repository.name}}%20-%20change%20%23{{currentChangeInformation.number}}&body=Link%20to%20change%3A%20{{currentUrl}}" target="_blank">{{currentChangeInformation.user.email}}</a></styled-form-field>
@@ -23,7 +25,12 @@
 				</styled-form>
 			</div>
 
-			<div id="detailsOutput" ng-show="currentChangeId != null && currentStageId != null">
+
+
+
+
+
+			<div id="output" ng-show="selectedChange.getId() != null && selectedStage.getId() != null">
 				<div class="consoleTextTopBuffer"></div>
 				<div class="consoleTextContainer" auto-scroll-to-bottom="lines" auto-scroll-to-bottom-buffer="40" start-at-bottom>
 					<console-text class="consoleText" console-text-lines="lines"></console-text>
@@ -31,29 +38,29 @@
 				<div class="consoleTextBottomBuffer"></div>
 			</div>
 
-			<div id="detailsSkipped" ng-show="currentChangeId != null && currentChangeInformation != null && currentStageId == null && showSkipped && !showMerge && !showDebug">
-				<div id="detailsSkippedMessage">
+			<div id="skipped" ng-show="selectedChange.getId() != null && selectedStage.isSkipped()">
+				<div id="skippedMessage">
 					This change was not verified because Koality is deactivated.
 				</div>
-				<div id="detailsSkippedInstructions">
+				<div id="skippedInstructions">
 					Contact your administrator to fix your license.
 				</div>
 			</div>
 
-			<div id="detailsMerge" ng-show="currentChangeId != null && currentChangeInformation != null && currentStageId == null && !showSkipped && showMerge && !showDebug">
-				<div ng-show="currentChangeInformation.mergeStatus == 'passed'">
+			<div id="merge" ng-show="selectedChange.getId() != null && selectedStage.isMerge()">
+				<div ng-show="selectedChange.getInformation().mergeStatus == 'passed'">
 					Change merged successfully.
 				</div>
-				<div ng-show="currentChangeInformation.mergeStatus == 'failed'">
+				<div ng-show="selectedChange.getInformation().mergeStatus == 'failed'">
 					Failed to merge. Try pulling before pushing again.
 				</div>
 			</div>
 
-			<div id="detailsDebug" ng-show="currentChangeId != null && currentChangeInformation != null && currentStageId == null && !showSkipped && !showMerge && showDebug">
-				<div id="detailsDebugMessage">
+			<div id="debug" ng-show="selectedChange.getId() != null && selectedStage.isDebug()">
+				<div id="debugMessage">
 					This change failed to create any output. This could be caused by invalid AWS credentials.
 				</div>
-				<div id="detailsDebugInstructions">
+				<div id="debugInstructions">
 					Contact your administrator to correct the issue.
 				</div>
 			</div>

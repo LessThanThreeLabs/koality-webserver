@@ -1,6 +1,9 @@
 'use strict'
 
-window.RepositoryStageDetails = ['$scope', '$location', 'rpc', 'events', ($scope, $location, rpc, events) ->
+window.RepositoryStageDetails = ['$scope', '$location', 'rpc', 'events', 'currentChange', 'currentStage', ($scope, $location, rpc, events, currentChange, currentStage) ->
+	$scope.selectedChange = currentChange
+	$scope.selectedStage = currentStage
+
 	updateUrl = () ->
 		$scope.currentUrl = $location.absUrl()
 	$scope.$on '$routeUpdate', updateUrl
@@ -8,17 +11,18 @@ window.RepositoryStageDetails = ['$scope', '$location', 'rpc', 'events', ($scope
 
 	retrieveCurrentChangeExportUris = () ->
 		$scope.exportUris = []
-		return if not $scope.currentChangeId?
+		return if not $scope.selectedChange.getId()?
 
-		rpc 'changes', 'read', 'getChangeExportUris', id: $scope.currentChangeId, (error, uris) ->
+		rpc 'changes', 'read', 'getChangeExportUris', id: $scope.selectedChange.getId(), (error, uris) ->
 			$scope.exportUris = uris
 
 	retrieveLines = () ->
 		$scope.lines = []
-		return if not $scope.currentStageId?
+		return if not $scope.selectedStage.getId()?
 		$scope.spinnerOn = true
 
-		rpc 'buildConsoles', 'read', 'getLines', id: $scope.currentStageId, (error, lines) ->
+		console.log 'retrieving lines...'
+		rpc 'buildConsoles', 'read', 'getLines', id: $scope.selectedStage.getId(), (error, lines) ->
 			$scope.spinnerOn = false
 
 			for lineNumber, lineText of lines
@@ -42,8 +46,8 @@ window.RepositoryStageDetails = ['$scope', '$location', 'rpc', 'events', ($scope
 			addedExportUrisEvents.unsubscribe()
 			addedExportUrisEvents = null
 
-		if $scope.currentChangeId?
-			addedExportUrisEvents = events('changes', 'export uris added', $scope.currentChangeId).setCallback(handleExportUrisAdded).subscribe()
+		if $scope.selectedChange.getId()?
+			addedExportUrisEvents = events('changes', 'export uris added', $scope.selectedChange.getId()).setCallback(handleExportUrisAdded).subscribe()
 	$scope.$on '$destroy', () -> addedExportUrisEvents.unsubscribe() if addedExportUrisEvents?
 
 	addedLineEvents = null
@@ -52,15 +56,15 @@ window.RepositoryStageDetails = ['$scope', '$location', 'rpc', 'events', ($scope
 			addedLineEvents.unsubscribe()
 			addedLineEvents = null
 
-		if $scope.currentStageId?
-			addedLineEvents = events('buildConsoles', 'new output', $scope.currentStageId).setCallback(handleLinesAdded).subscribe()
+		if $scope.selectedStage.getId()?
+			addedLineEvents = events('buildConsoles', 'new output', $scope.selectedStage.getId()).setCallback(handleLinesAdded).subscribe()
 	$scope.$on '$destroy', () -> addedLineEvents.unsubscribe() if addedLineEvents?
 
-	$scope.$watch 'currentChangeId', (newValue, oldValue) ->
+	$scope.$watch 'selectedChange.getId()', (newValue, oldValue) ->
 		updateExportUrisAddedListener()
 		retrieveCurrentChangeExportUris()
 
-	$scope.$watch 'currentStageId', (newValue, oldValue) ->
+	$scope.$watch 'selectedStage.getId()', (newValue, oldValue) ->
 		updateAddedLineListener()
 		retrieveLines()
 ]

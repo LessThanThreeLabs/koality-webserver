@@ -68,8 +68,8 @@ window.RepositoryStages = ['$scope', '$routeParams', 'rpc', 'events', 'currentCh
 			buildConsoleAddedEvents.unsubscribe()
 			buildConsoleAddedEvents = null
 
-		if $scope.currentChangeId?
-			buildConsoleAddedEvents = events('changes', 'new build console', $scope.currentChangeId).setCallback(handleBuildConsoleAdded).subscribe()
+		if $scope.selectedChange.getId()?
+			buildConsoleAddedEvents = events('changes', 'new build console', $scope.selectedChange.getId()).setCallback(handleBuildConsoleAdded).subscribe()
 	$scope.$on '$destroy', () -> buildConsoleAddedEvents.unsubscribe() if buildConsoleAddedEvents?
 
 	buildConsoleStatusUpdateEvents = null
@@ -78,8 +78,8 @@ window.RepositoryStages = ['$scope', '$routeParams', 'rpc', 'events', 'currentCh
 			buildConsoleStatusUpdateEvents.unsubscribe()
 			buildConsoleStatusUpdateEvents = null
 
-		if $scope.currentChangeId?
-			buildConsoleStatusUpdateEvents = events('changes', 'return code added', $scope.currentChangeId).setCallback(handleBuildConsoleStatusUpdate).subscribe()
+		if $scope.selectedChange.getId()?
+			buildConsoleStatusUpdateEvents = events('changes', 'return code added', $scope.selectedChange.getId()).setCallback(handleBuildConsoleStatusUpdate).subscribe()
 	$scope.$on '$destroy', () -> buildConsoleStatusUpdateEvents.unsubscribe() if buildConsoleStatusUpdateEvents?
 
 	$scope.stageSort = (stage) ->
