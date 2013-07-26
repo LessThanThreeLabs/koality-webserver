@@ -43,8 +43,11 @@ window.RepositoryStages = ['$scope', '$routeParams', 'rpc', 'events', 'currentCh
 			if $scope.stages.length is 0
 				$scope.selectedStage.setStage null, null
 
+			if not $scope.selectedStage.getId()?
+				$scope.selectedStage.setSummary()
+
 			if $scope.selectedStage.getId()? and not isStageIdInStages $scope.selectedStage.getId()
-				$scope.selectedStage.setStage null, null
+				$scope.selectedStage.setSummary()
 
 	getStageWithId = (id) ->
 		return (stage for stage in $scope.stages when stage.id is id)[0]

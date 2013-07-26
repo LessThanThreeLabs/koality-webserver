@@ -6,9 +6,11 @@ angular.module('koality.service.repository', []).
 		_information: null
 
 		setChange: (repositoryId, changeId) =>
-			console.log repositoryId + ' - ' + changeId
+			return if @_id is changeId
+
 			@_id = changeId
 			@_information = null
+
 			return if not repositoryId? or not changeId?
 
 			requestData =
@@ -28,10 +30,21 @@ angular.module('koality.service.repository', []).
 	factory('currentStage', ['rpc', 'integerConverter', (rpc, integerConverter) ->
 		_id: null
 		_information: null
+		_summary: false
+		_skipped: false
+		_merge: false
+		_debug: false
 
 		setStage: (repositoryId, stageId) =>
+			return if @_id is stageId
+
 			@_id = stageId
 			@_information = null
+			@_summary = false
+			@_skipped = false
+			@_merge = false
+			@_debug = false
+
 			return if not repositoryId? or not stageId?
 
 			requestData =
@@ -47,4 +60,48 @@ angular.module('koality.service.repository', []).
 
 		getInformation: () =>
 			return @_information
+
+		setSummary: () =>
+			@_id = null
+			@_information = null
+			@_summary = true
+			@_skipped = false
+			@_merge = false
+			@_debug = false
+
+		isSummary: () =>
+			return @_summary
+
+		setSkipped: () =>
+			@_id = null
+			@_information = null
+			@_summary = false
+			@_skipped = true
+			@_merge = false
+			@_debug = false
+
+		isSkipped: () =>
+			return @_skipped
+
+		setMerge: () =>
+			@_id = null
+			@_information = null
+			@_summary = false
+			@_skipped = false
+			@_merge = true
+			@_debug = false
+
+		isMerge: () =>
+			return @_merge
+
+		setDebug: () =>
+			@_id = null
+			@_information = null
+			@_summary = false
+			@_skipped = false
+			@_merge = false
+			@_debug = true
+
+		isDebug: () =>
+			return @_debug
 	])
