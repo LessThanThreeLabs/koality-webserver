@@ -6,11 +6,10 @@ angular.module('koality.service.repository', []).
 		_information: null
 
 		setChange: (repositoryId, changeId) =>
+			return if @_id is changeId
 			console.log 'change:' + repositoryId + ' - ' + changeId
 
-			return if @_id is changeId
-
-			@_id = changeId
+			@_id = integerConverter.toInteger changeId
 			@_information = null
 
 			return if not repositoryId? or not changeId?
@@ -19,8 +18,6 @@ angular.module('koality.service.repository', []).
 				repositoryId: integerConverter.toInteger repositoryId
 				id: integerConverter.toInteger changeId
 			rpc 'changes', 'read', 'getMetadata', requestData, (error, changeInformation) =>
-				console.log 'change information:'
-				console.log changeInformation
 				@_information = changeInformation
 
 		getId: () =>
@@ -38,11 +35,10 @@ angular.module('koality.service.repository', []).
 		_debug: false
 
 		setStage: (repositoryId, stageId) =>
+			return if @_id is stageId
 			console.log 'stage: ' + repositoryId + ' - ' + stageId
 
-			return if @_id is stageId
-
-			@_id = stageId
+			@_id = integerConverter.toInteger stageId
 			@_information = null
 			@_summary = false
 			@_skipped = false

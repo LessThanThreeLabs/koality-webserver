@@ -10,7 +10,8 @@ window.Repository = ['$scope', '$location', '$routeParams', 'rpc', 'events', 'cu
 
 	syncToRouteParams = () ->
 		$scope.selectedChange.setChange $routeParams.repositoryId, $routeParams.change
-		$scope.selectedStage.setStage $routeParams.repositoryId, $routeParams.stage
+		$scope.selectedStage.setStage $routeParams.repositoryId, $routeParams.stage if $routeParams.stage?
+		$scope.selectedStage.setSummary() if not $routeParams.stage?
 		$scope.selectedStage.setSkipped() if $routeParams.skipped?
 		$scope.selectedStage.setMerge() if $routeParams.merge?
 		$scope.selectedStage.setDebug() if $routeParams.debug?
