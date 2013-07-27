@@ -1,6 +1,7 @@
 'use strict'
 
-window.RepositoryStageDetails = ['$scope', '$location', 'rpc', 'events', 'currentChange', 'currentStage', ($scope, $location, rpc, events, currentChange, currentStage) ->
+window.RepositoryStageDetails = ['$scope', '$location', 'rpc', 'events', 'currentRepository', 'currentChange', 'currentStage', ($scope, $location, rpc, events, currentRepository, currentChange, currentStage) ->
+	$scope.selectedRepository = currentRepository
 	$scope.selectedChange = currentChange
 	$scope.selectedStage = currentStage
 

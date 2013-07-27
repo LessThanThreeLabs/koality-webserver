@@ -1,6 +1,30 @@
 'use strict'
 
 angular.module('koality.service.repository', []).
+	factory('currentRepository', ['rpc', 'integerConverter', (rpc, integerConverter) ->
+		_id: null
+		_information: null
+
+		setRepository: (repositoryId) =>
+			return if @_id is repositoryId
+			console.log 'repository: ' + repositoryId
+
+			@_id = integerConverter.toInteger repositoryId
+			@_information = null
+
+			return if not repositoryId?
+
+			requestData =
+				id: integerConverter.toInteger repositoryId
+			rpc 'repositories', 'read', 'getMetadata', requestData, (error, repositoryInformation) =>
+				@_information = repositoryInformation
+
+		getId: () =>
+			return @_id
+
+		getInformation: () =>
+			return @_information
+	]).
 	factory('currentChange', ['rpc', 'integerConverter', (rpc, integerConverter) ->
 		_id: null
 		_information: null

@@ -1,14 +1,12 @@
 'use strict'
 
-window.Repository = ['$scope', '$location', '$routeParams', 'rpc', 'events', 'currentChange', 'currentStage', ($scope, $location, $routeParams, rpc, events, currentChange, currentStage) ->
+window.Repository = ['$scope', '$location', '$routeParams', 'rpc', 'events', 'currentRepository', 'currentChange', 'currentStage', ($scope, $location, $routeParams, rpc, events, currentRepository, currentChange, currentStage) ->
+	$scope.selectedRepository = currentRepository
 	$scope.selectedChange = currentChange
 	$scope.selectedStage = currentStage
 
-	retrieveRepositoryInformation = () ->
-		rpc 'repositories', 'read', 'getMetadata', id: $routeParams.repositoryId, (error, repositoryInformation) ->
-			$scope.repository = repositoryInformation
-
 	syncToRouteParams = () ->
+		$scope.selectedRepository.setRepository $routeParams.repositoryId
 		$scope.selectedChange.setChange $routeParams.repositoryId, $routeParams.change
 		$scope.selectedStage.setStage $routeParams.repositoryId, $routeParams.stage if $routeParams.stage?
 		$scope.selectedStage.setSummary() if not $routeParams.stage?
@@ -17,8 +15,6 @@ window.Repository = ['$scope', '$location', '$routeParams', 'rpc', 'events', 'cu
 		$scope.selectedStage.setDebug() if $routeParams.debug?
 	$scope.$on '$routeUpdate', syncToRouteParams
 	syncToRouteParams()
-
-	retrieveRepositoryInformation()
 
 	$scope.$watch 'selectedChange.getId()', (newValue) ->
 		$location.search 'change', newValue ? null
