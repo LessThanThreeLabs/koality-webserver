@@ -1,6 +1,39 @@
-<div id="header" class="growingCentered" unselectable>
-	<span id="headerTitle" ng-click="visitHome()">Koality</span>
-	<div id="headerOptions" ng-show="loggedIn" ng-cloak>
+<div id="header" class="growingCentered unselectable">
+
+	<a id="title" href="/">Koality</a>
+
+	<div id="primaryNavigation">
+		<a href="/dashboard" ng-class="{disabled: path == '/dashboard'}">Dashboard</a>
+		<a href="/analytics" ng-class="{disabled: path == '/analytics'}">Analytics</a>
+
+		<dropdown>
+			<a>Repositories</a>
+			<dropdown-options>
+				<dropdown-option ng-href="/repository/1">Awesome Sauce</dropdown-option>
+				<dropdown-option ng-href="/repository/2">Awesome Sauce 2</dropdown-option>
+				<dropdown-option ng-href="/repository/2">Repository Awesome Sauce 3</dropdown-option>
+				<dropdown-option ng-href="/repository/2">Repository Awesome Sauce 4</dropdown-option>
+				<dropdown-option ng-href="/repository/2">Awesome Sauce 5</dropdown-option>
+				<dropdown-option ng-href="/repository/2">Awesome Sauce 6</dropdown-option>
+				<dropdown-option ng-href="/repository/2">Repository Awesome Sauce 7</dropdown-option>
+				<dropdown-option ng-href="/repository/2">Repository Awesome Sauce 8</dropdown-option>
+			</dropdown-options>
+		</dropdown>
+	</div>
+
+	<div id="secondaryNavigation">
+		<dropdown>
+			<a href="/account" ng-class="{disabled: path == '/account'}">Account</a>
+			<dropdown-options>
+				<dropdown-option>Logout</dropdownElement>
+			</dropdown-options>
+		</dropdown>
+
+		<a href="/admin" ng-class="{disabled: path == '/admin'}">Admin</a>
+	</div>
+
+
+	<!-- <div id="headerOptions" ng-show="loggedIn" ng-cloak>
 		<span dropdown-container class="headerOption" ng-controller="HeaderProfile" ng-click="profileClick()">{{user.firstName}} {{user.lastName}}
 			<dropdown dropdown-alignment="right" dropdown-options="profileDropdownOptions" dropdown-option-click="profileDropdownOptionClick(dropdownOption)" />
 		</span>
@@ -34,5 +67,5 @@
 				</content>
 			</div>
 		</modal>
-	</div>
+	</div> -->
 </div>

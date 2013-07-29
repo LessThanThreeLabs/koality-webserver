@@ -35,31 +35,31 @@ angular.module('koality.directive', []).
 		replace: true
 		template: '<div class="prettyDivider"></div>'
 	).
-	directive('dropdownContainer', ['$timeout', ($timeout) ->
-		restrict: 'A'
-		link: (scope, element, attributes) ->
-			element.addClass 'prettyDropdownContainer'
-	]).
-	directive('dropdown', ['$document', '$timeout', ($document, $timeout) ->
-		restrict: 'E'
-		replace: true
-		scope:
-			alignment: '@dropdownAlignment'
-			options: '=dropdownOptions'
-			clickHandler: '&dropdownOptionClick'
-		template: '<div class="prettyDropdown {{alignment}}Aligned">
-				<div class="prettyDropdownOption" ng-repeat="option in options | orderBy:\'title\'" ng-click="clickHandler({dropdownOption: option.name}); hideDropdown()">{{option.title}}</div>
-				<div class="prettyDropdownOption" ng-show="options.length == 0">-- empty --</div>
-			</div>'
-		link: (scope, element, attributes) ->
-			removeTemporaryHideWindowListener = () ->
-				element.removeClass 'temporaryHide'
-				$document.unbind 'mousemove', removeTemporaryHideWindowListener
+	# directive('dropdownContainer', ['$timeout', ($timeout) ->
+	# 	restrict: 'A'
+	# 	link: (scope, element, attributes) ->
+	# 		element.addClass 'prettyDropdownContainer'
+	# ]).
+	# directive('dropdown', ['$document', '$timeout', ($document, $timeout) ->
+	# 	restrict: 'E'
+	# 	replace: true
+	# 	scope:
+	# 		alignment: '@dropdownAlignment'
+	# 		options: '=dropdownOptions'
+	# 		clickHandler: '&dropdownOptionClick'
+	# 	template: '<div class="prettyDropdown {{alignment}}Aligned">
+	# 			<div class="prettyDropdownOption" ng-repeat="option in options | orderBy:\'title\'" ng-click="clickHandler({dropdownOption: option.name}); hideDropdown()">{{option.title}}</div>
+	# 			<div class="prettyDropdownOption" ng-show="options.length == 0">-- empty --</div>
+	# 		</div>'
+	# 	link: (scope, element, attributes) ->
+	# 		removeTemporaryHideWindowListener = () ->
+	# 			element.removeClass 'temporaryHide'
+	# 			$document.unbind 'mousemove', removeTemporaryHideWindowListener
 
-			scope.hideDropdown = () ->
-				element.addClass 'temporaryHide'
-				$document.bind 'mousemove', removeTemporaryHideWindowListener
-	]).
+	# 		scope.hideDropdown = () ->
+	# 			element.addClass 'temporaryHide'
+	# 			$document.bind 'mousemove', removeTemporaryHideWindowListener
+	# ]).
 	directive('autoScrollToBottom', ['integerConverter', (integerConverter) ->
 		restrict: 'A'
 		link: (scope, element, attributes) ->

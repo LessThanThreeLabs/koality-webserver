@@ -1,0 +1,61 @@
+@import '../constants';
+
+
+.dropdownContainer {
+	cursor: hand;
+	cursor: pointer;
+	display: inline-block;
+	position: relative;
+	height: 100%;
+
+	&:hover {
+		background-color: @koalityDarkGray;
+
+		.dropdownOptions { display: block; }
+	}
+
+	.dropdownOptions {
+		display: none;
+		position: absolute;
+		top: 100%;
+		left: 0;
+		min-width: 100%;
+		z-index: 9001;
+		text-align: left;
+		background-color: @koalityDarkGray;
+
+		// used in dropdown directive
+		&.temporaryHide {
+			display: none !important;
+		}
+
+		a.dropdownOption {
+			@dropdownHeight: 40px;
+
+			display: block !important;
+			margin: 0 !important;
+			padding: 0 20px 0 20px !important;
+			height: @dropdownHeight;
+			line-height: @dropdownHeight;
+			white-space: nowrap;
+			color: @koalityGreen;
+			border-top: 1px solid @koalityBlack;
+
+			&:last-child { 
+				border-bottom-left-radius: @borderRadius;
+				border-bottom-right-radius: @borderRadius;
+			}
+
+			&:link, &:visited, &:hover, &:active { text-decoration: none; }
+
+			&:hover {
+				background-color: @koalityGray;
+			}
+
+			&:active {
+				color: @koalityWhite;
+				background-color: @koalityGreen;	
+			}
+		}
+	}
+}
