@@ -4,36 +4,36 @@
 	@initialTop: -@notificationHeight;
 	@finalTop: 0;
 	
-	@keyframes slideIn { 
+	@keyframes notificationSlideIn { 
 		from { top: @initialTop; }
 		to { top: @finalTop; }
 	}
-	@-moz-keyframes slideIn {
+	@-moz-keyframes notificationSlideIn {
 		from { top: @initialTop; }
 		to { top: @finalTop; }
 	}
-	@-webkit-keyframes slideIn {
+	@-webkit-keyframes notificationSlideIn {
 		from { top: @initialTop; }
 		to { top: @finalTop; }
 	}
-	@-o-keyframes slideIn {
+	@-o-keyframes notificationSlideIn {
 		from { top: @initialTop; }
 		to { top: @finalTop; }
 	}
 
-	@keyframes slideOut { 
+	@keyframes notificationSlideOut { 
 		from { top: @finalTop }
 		to { top: @initialTop; }
 	}
-	@-moz-keyframes slideOut {
+	@-moz-keyframes notificationSlideOut {
 		from { top: @finalTop }
 		to { top: @initialTop; }
 	}
-	@-webkit-keyframes slideOut {
+	@-webkit-keyframes notificationSlideOut {
 		from { top: @finalTop }
 		to { top: @initialTop; }
 	}
-	@-o-keyframes slideOut {
+	@-o-keyframes notificationSlideOut {
 		from { top: @finalTop }
 		to { top: @initialTop; }
 	}
@@ -46,20 +46,20 @@
 	box-sizing: border-box;
 	-moz-box-sizing: border-box;
 
-	@slideInTransitionTime: 0.5s;
-	animation: slideIn @slideInTransitionTime ease-in-out;
-	-moz-animation: slideIn @slideInTransitionTime ease-in-out;
-	-webkit-animation: slideIn @slideInTransitionTime ease-in-out;
-	-o-animation: slideIn @slideInTransitionTime ease-in-out;
+	@notificationSlideInTransitionTime: 0.5s;
+	animation: notificationSlideIn @notificationSlideInTransitionTime ease-in-out;
+	-moz-animation: notificationSlideIn @notificationSlideInTransitionTime ease-in-out;
+	-webkit-animation: notificationSlideIn @notificationSlideInTransitionTime ease-in-out;
+	-o-animation: notificationSlideIn @notificationSlideInTransitionTime ease-in-out;
 
 	&.hiding {
 		top: @initialTop;
 
-		@slideOutTransitionTime: 0.5s;
-		animation: slideOut @slideOutTransitionTime ease-in-out;
-		-moz-animation: slideOut @slideOutTransitionTime ease-in-out;
-		-webkit-animation: slideOut @slideOutTransitionTime ease-in-out;
-		-o-animation: slideOut @slideOutTransitionTime ease-in-out;
+		@notificationSlideOutTransitionTime: 0.5s;
+		animation: notificationSlideOut @notificationSlideOutTransitionTime ease-in-out;
+		-moz-animation: notificationSlideOut @notificationSlideOutTransitionTime ease-in-out;
+		-webkit-animation: notificationSlideOut @notificationSlideOutTransitionTime ease-in-out;
+		-o-animation: notificationSlideOut @notificationSlideOutTransitionTime ease-in-out;
 	}
 
 	&.green {
