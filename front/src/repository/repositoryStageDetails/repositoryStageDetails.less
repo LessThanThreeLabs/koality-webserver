@@ -8,29 +8,17 @@
 	#loadingSpinner {
 		position: absolute;
 		z-index: 1;
-		top: 0px;
-		left: 0px;
-		right: 0px;
-		bottom: 0px;
+		top: 0;
+		left: 0;
+		right: 0;
+		bottom: 0;
 	}
 
 	#summary {
-		position: absolute;
-		z-index: 3;
-		top: 30px;
-		left: 30px;
-		right: 30px;
-		bottom: 30px;
-		overflow-x: hidden;
-		overflow-y: auto;
+
 	}
 
 	#skipped {
-		position: absolute;
-		z-index: 3;
-		top: 30px;
-		left: 30px;
-		right: 30px;
 
 		#skippedMessage {
 
@@ -42,18 +30,10 @@
 	}
 
 	#merge {
-		position: absolute;
-		z-index: 3;
-		top: 30px;
-		left: 30px;
+
 	}
 
 	#debug {
-		position: absolute;
-		z-index: 3;
-		top: 30px;
-		left: 30px;
-		right: 30px;
 
 		#debugMessage {
 
@@ -76,11 +56,16 @@
 		bottom: 30px;
 
 		.consoleTextContainer {
+			@scrollbarHideWidth: 50px;
+
 			position: absolute;
 			top: 0px;
 			left: 0px;
-			right: 0px;
+			right: -@scrollbarHideWidth;
 			bottom: 0px;
+			padding-right: @scrollbarHideWidth;
+			box-sizing: border-box;
+			-moz-box-sizing: border-box;
 			overflow-x: hidden;
 			overflow-y: auto;
 

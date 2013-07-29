@@ -25,13 +25,11 @@ angular.module('koality.directive.changes', []).
 		replace: true
 		transclude: true
 		template: '<div class="changesMenuOptions">
-				<div class="changesMenuOptionsScrollOuterWrapper">
-					<div class="changesMenuOptionsScrollInnerWrapper" ng-transclude></div>
-				</div>
+				<div class="changesMenuOptionsScrollWrapper" ng-transclude></div>
 			</div>'
 		link: (scope, element, attributes) ->
 			addScrollListener = () ->
-				outerElement = element.find('.changesMenuOptionsScrollOuterWrapper')
+				outerElement = element.find('.changesMenuOptionsScrollWrapper')
 				outerElement.bind 'scroll', (event) ->
 					scrolledToBottom = outerElement[0].scrollTop + outerElement[0].offsetHeight >= outerElement[0].scrollHeight
 					scope.$apply attributes.onScrollToBottom if scrolledToBottom
