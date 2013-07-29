@@ -3,7 +3,7 @@
 window.Header = ['$scope', '$location', 'initialState', 'rpc', 'events', ($scope, $location, initialState, rpc, events) ->
 	$scope.loggedIn = initialState.loggedIn
 	$scope.isAdmin = initialState.user.isAdmin
-	
+
 	getRepositories = () ->
 		return if not $scope.loggedIn
 
@@ -41,4 +41,6 @@ window.Header = ['$scope', '$location', 'initialState', 'rpc', 'events', ($scope
 			# this will force a refresh, rather than do html5 pushstate
 			window.location.href = '/'
 
+	$scope.$on '$routeChangeSuccess', () ->
+		$scope.path = $location.path()
 ]
