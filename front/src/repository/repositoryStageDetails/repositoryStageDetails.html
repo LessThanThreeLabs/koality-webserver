@@ -1,17 +1,17 @@
 <div id="repositoryStageDetails" ng-controller="RepositoryStageDetails">
 	<panel>
 		<panel-header>
-			<span ng-show="selectedChange.getId() != null && selectedStage.isSummary()">summary</span>
-			<span ng-show="selectedChange.getId() != null && selectedStage.getInformation() != null">{{selectedStage.getInformation().name}}</span>
-			<span ng-show="selectedChange.getId() != null && selectedStage.isSkipped()">skipped</span>
-			<span ng-show="selectedChange.getId() != null && selectedStage.isMerge()">merge</span>
-			<span ng-show="selectedChange.getId() != null && selectedStage.isDebug()">debug</span>
+			<span ng-show="selectedStage.isSummary()">summary</span>
+			<span ng-show="selectedStage.getInformation() != null">{{selectedStage.getInformation().name}}</span>
+			<span ng-show="selectedStage.isSkipped()">skipped</span>
+			<span ng-show="selectedStage.isMerge()">merge</span>
+			<span ng-show="selectedStage.isDebug()">debug</span>
 		</panel-header>
 
 		<panel-body>
 			<spinner id="loadingSpinner" spinner-running="spinnerOn"></spinner>
 
-			<div id="summary" ng-show="selectedChange.getId() != null && selectedStage.isSummary()">
+			<div id="summary" ng-show="selectedStage.isSummary() && selectedChange.getInformation() != null">
 				<table>
 					<tr>
 						<th>Name</th>
@@ -46,7 +46,7 @@
 				</table>
 			</div>
 
-			<div id="output" ng-show="selectedChange.getId() != null && selectedStage.getId() != null">
+			<div id="output" ng-show="selectedStage.getId() != null">
 				<div class="consoleTextTopBuffer"></div>
 				<div class="consoleTextContainer" auto-scroll-to-bottom="lines" auto-scroll-to-bottom-buffer="40" start-at-bottom>
 					<console-text class="consoleText" console-text-lines="lines"></console-text>
@@ -54,7 +54,7 @@
 				<div class="consoleTextBottomBuffer"></div>
 			</div>
 
-			<div id="skipped" ng-show="selectedChange.getId() != null && selectedStage.isSkipped()">
+			<div id="skipped" ng-show="selectedStage.isSkipped()">
 				<div id="skippedMessage">
 					This change was not verified because Koality is deactivated.
 				</div>
@@ -63,7 +63,7 @@
 				</div>
 			</div>
 
-			<div id="merge" ng-show="selectedChange.getId() != null && selectedStage.isMerge()">
+			<div id="merge" ng-show="selectedStage.isMerge()">
 				<div ng-show="selectedChange.getInformation().mergeStatus == 'passed'">
 					Change merged successfully.
 				</div>
@@ -72,7 +72,7 @@
 				</div>
 			</div>
 
-			<div id="debug" ng-show="selectedChange.getId() != null && selectedStage.isDebug()">
+			<div id="debug" ng-show="selectedStage.isDebug()">
 				<div id="debugMessage">
 					This change failed to create any output. This could be caused by invalid AWS credentials.
 				</div>
