@@ -9,6 +9,7 @@
 
 			"/css/src/elements/panel.css",
 			"/css/src/elements/changesMenu.css",
+			"/css/src/elements/notification.css",
 
 			"/css/src/prettyElements/prettyCenteredPanel.css",
 			"/css/src/prettyElements/prettyConsoleText.css",
@@ -16,7 +17,6 @@
 			"/css/src/prettyElements/prettyDropdown.css",
 			"/css/src/prettyElements/prettyForm.css",
 			"/css/src/prettyElements/prettyModal.css",
-			"/css/src/prettyElements/prettyNotification.css",
 			"/css/src/prettyElements/prettyTable.css",
 			"/css/src/prettyElements/prettyTooltip.css",
 			"/css/src/main.css",
