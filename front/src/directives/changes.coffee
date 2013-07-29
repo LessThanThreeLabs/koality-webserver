@@ -1,7 +1,6 @@
 angular.module('koality.directive.changes', []).
 	directive('changesMenu', () ->
 		restrict: 'E'
-		require: 'ngModel'
 		replace: true
 		transclude: true
 		template: '<div class="changesMenu unselectable" ng-transclude>

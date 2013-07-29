@@ -3,7 +3,7 @@
 angular.module('koality', ['ngSanitize', 
 		'koality.service', 'koality.service.repository',
 		'koality.filter',
-		'koality.directive', 'koality.directive.changes', 'koality.directive.panel', 'koality.d3.directive']).
+		'koality.directive', 'koality.directive.changes', 'koality.directive.panel', 'koality.directive.dropdown', 'koality.d3.directive']).
 	config(['$routeProvider', ($routeProvider) ->
 		$routeProvider.
 			when('/login',
