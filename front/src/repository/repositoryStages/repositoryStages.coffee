@@ -33,7 +33,11 @@ window.RepositoryStages = ['$scope', '$routeParams', 'rpc', 'events', 'currentCh
 
 	retrieveStages = () ->
 		$scope.stages = []
-		return if not $scope.selectedChange.getId()?
+
+		if not $scope.selectedChange.getId()?
+			console.log 'here...'
+			$scope.selectedStage.setStage null, null
+			return
 
 		$scope.retrievingStages = true
 		rpc 'buildConsoles', 'read', 'getBuildConsoles', changeId: $scope.selectedChange.getId(), (error, buildConsoles) ->
