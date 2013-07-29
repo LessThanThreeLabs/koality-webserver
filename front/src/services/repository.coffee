@@ -6,10 +6,12 @@ angular.module('koality.service.repository', []).
 		_information: null
 
 		setRepository: (repositoryId) =>
+			repositoryId = integerConverter.toInteger repositoryId
+
 			return if @_id is repositoryId
 			console.log 'repository: ' + repositoryId
 
-			@_id = integerConverter.toInteger repositoryId
+			@_id = repositoryId
 			@_information = null
 
 			return if not repositoryId?
@@ -30,17 +32,20 @@ angular.module('koality.service.repository', []).
 		_information: null
 
 		setChange: (repositoryId, changeId) =>
+			repositoryId = integerConverter.toInteger repositoryId
+			changeId = integerConverter.toInteger changeId
+
 			return if @_id is changeId
 			console.log 'change:' + repositoryId + ' - ' + changeId
 
-			@_id = integerConverter.toInteger changeId
+			@_id = changeId
 			@_information = null
 
 			return if not repositoryId? or not changeId?
 
 			requestData =
-				repositoryId: integerConverter.toInteger repositoryId
-				id: integerConverter.toInteger changeId
+				repositoryId: repositoryId
+				id: changeId
 			rpc 'changes', 'read', 'getMetadata', requestData, (error, changeInformation) =>
 				@_information = changeInformation
 
@@ -59,10 +64,13 @@ angular.module('koality.service.repository', []).
 		_debug: false
 
 		setStage: (repositoryId, stageId) =>
+			repositoryId = integerConverter.toInteger repositoryId
+			stageId = integerConverter.toInteger stageId
+
 			return if @_id is stageId
 			console.log 'stage: ' + repositoryId + ' - ' + stageId
 
-			@_id = integerConverter.toInteger stageId
+			@_id = stageId
 			@_information = null
 			@_summary = false
 			@_skipped = false
@@ -72,8 +80,8 @@ angular.module('koality.service.repository', []).
 			return if not repositoryId? or not stageId?
 
 			requestData =
-				repositoryId: integerConverter.toInteger repositoryId
-				id: integerConverter.toInteger stageId
+				repositoryId: repositoryId
+				id: stageId
 			rpc 'buildConsoles', 'read', 'getBuildConsole', requestData, (error, stageInformation) =>
 				@_information = stageInformation
 
