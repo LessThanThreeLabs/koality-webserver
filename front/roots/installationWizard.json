@@ -6,11 +6,11 @@
 
 			"/css/src/elements/panel.css",
 			"/css/src/elements/changesMenu.css",
+			"/css/src/elements/notification.css",
 			
 			"/css/src/prettyElements/prettyCenteredPanel.css",
 			"/css/src/prettyElements/prettyDivider.css",
 			"/css/src/prettyElements/prettyForm.css",
-			"/css/src/prettyElements/prettyNotification.css",
 			"/css/src/prettyElements/prettyTooltip.css",
 			"/css/src/main.css",
 			"/css/src/header/header.css",
