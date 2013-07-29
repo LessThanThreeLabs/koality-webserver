@@ -1,5 +1,6 @@
 @import '../constants';
 
+
 .changesMenu {
 	@headerHeight: 40px;
 	@footerHeight: 8px;
@@ -74,12 +75,12 @@
 		position: absolute;
 		z-index: 99;
 		top: @borderRadius;
-		left: 0px;
-		right: 0px;
+		left: 0;
+		right: 0;
 		bottom: @borderRadius;
 		overflow: hidden;
 
-		.changesMenuOptionsScrollOuterWrapper {
+		.changesMenuOptionsScrollWrapper {
 			@scrollbarHideWidth: 50px;
 
 			position: absolute;
@@ -87,121 +88,163 @@
 			left: 0px;
 			right: -@scrollbarHideWidth;
 			bottom: 0px;
+			padding-top: @headerHeight - @borderRadius;
+			padding-bottom: @footerHeight - @borderRadius;
 			overflow-y: auto;
 
-			.changesMenuOptionsScrollInnerWrapper {
-				padding-top: @headerHeight - @borderRadius;
-				padding-bottom: @footerHeight - @borderRadius;
-				width: @menuWidth;
+			.changesMenuOption {
+				cursor: hand; cursor: pointer;
+				display: block;
+				position: relative;
+				width: @menuWidth - @toothWidth;
+				height: @optionHeight;
 
-				.changesMenuOption {
-					cursor: hand; cursor: pointer;
+				.changesMenuOptionContents {
+					@transitionTime: 0.25s;
+					transition: all @transitionTime ease-in-out;
+					-moz-transition: all @transitionTime ease-in-out;
+					-webkit-transition: all @transitionTime ease-in-out;
+					-o-transition: all @transitionTime ease-in-out;
 
-					display: block;
-					position: relative;
-					width: 100%;
-					height: @optionHeight;
+					position: absolute;
+					top: 0;
+					left: 0;
+					right: 0;
+					bottom: 0;
+					color: @koalityGray;
+					line-height: 36px;
+					background-color: @panelBackground;
+					border-bottom: 1px solid @platformBackground;
 
-					.changesMenuOptionContents {
-						@transitionTime: 0.25s;
-						transition: all @transitionTime ease-in-out;
-						-moz-transition: all @transitionTime ease-in-out;
-						-webkit-transition: all @transitionTime ease-in-out;
-						-o-transition: all @transitionTime ease-in-out;
+					&.offsetText {
+						line-height: 40px;
+					}
 
+					.changesMenuOptionTextContainer {
+						position: absolute;
+						top: 2px;
+						left: 12px;
+						right: 22px;
+						bottom: 0px;
+						overflow: hidden;
+						text-overflow: ellipsis;
+						white-space: nowrap;
+
+						&.spinnerTextPadding {
+							right: 58px;
+						}
+
+						.changesMenuOptionIdentifier {
+							display: inline;
+							font-size: 18px;
+						}
+
+						.changesMenuOptionText {
+							display: inline;
+							padding-left: 2px;
+							font-size: 14px;
+						}
+					}
+
+					.changesMenuOptionSpinner {
 						position: absolute;
 						top: 0px;
-						left: 0px;
-						right: @toothWidth;
-						bottom: 0px;
-						color: @koalityGray;
-						line-height: 36px;
-						background-color: @panelBackground;
-						border-bottom: 1px solid @platformBackground;
+						right: 20px;
+						width: @optionHeight;
+						height: @optionHeight;
+					}
 
-						&.offsetText {
-							line-height: 40px;
-						}
+					.changesMenuOptionArrow {
+						@rightTransitionTime: 0.25s;
+						@borderColorTransitionTime: 0.25s;
+						transition: right @rightTransitionTime ease-in-out,
+							border-color @borderColorTransitionTime ease-in-out;
+						-moz-transition: right @rightTransitionTime ease-in-out,
+							border-color @borderColorTransitionTime ease-in-out;
+						-webkit-transition: right @rightTransitionTime ease-in-out,
+							border-color @borderColorTransitionTime ease-in-out;
+						-o-transition: right @rightTransitionTime ease-in-out,
+							border-color @borderColorTransitionTime ease-in-out;
 
-						.changesMenuOptionTextContainer {
-							position: absolute;
-							top: 2px;
-							left: 12px;
-							right: 22px;
-							bottom: 0px;
-							overflow: hidden;
-							text-overflow: ellipsis;
-							white-space: nowrap;
+						position: absolute;
+						top: 18px;
+						right: 10px;
+						width: 5px;
+						height: 5px;
+						border-top: 2px solid @koalityGray;
+						border-right: 2px solid @koalityGray;
 
-							&.spinnerTextPadding {
-								right: 58px;
-							}
+						transform: rotate(45deg);
+						-moz-transform: rotate(45deg);
+						-webkit-transform: rotate(45deg);
+						-ms-transform: rotate(45deg);
+						-o-transform: rotate(45deg);
+					}
+				}
 
-							.changesMenuOptionIdentifier {
-								display: inline;
-								font-size: 18px;
-							}
+				.changesMenuOptionTooth {
+					@transitionTime: 0.25s;
+					transition: all @transitionTime ease-in-out;
+					-moz-transition: all @transitionTime ease-in-out;
+					-webkit-transition: all @transitionTime ease-in-out;
+					-o-transition: all @transitionTime ease-in-out;
 
-							.changesMenuOptionText {
-								display: inline;
-								padding-left: 2px;
-								font-size: 14px;
-							}
-						}
+					position: absolute;
+					top: 0px;
+					left: @menuWidth - @toothWidth;
+					bottom: 0px;
+					width: 0px;
+					height: 0px;
 
-						.changesMenuOptionSpinner {
-							position: absolute;
-							top: 0px;
-							right: 20px;
-							width: @optionHeight;
-							height: @optionHeight;
-						}
+					border-left: 0px solid @panelBackground;
+					border-top: @optionHeight/2 solid transparent;
+					border-bottom: @optionHeight/2 solid transparent;
+				}
+
+				&.orange {
+					.changesMenuOptionContents {
+						color: @koalityOrange;
 
 						.changesMenuOptionArrow {
-							@rightTransitionTime: 0.25s;
-							@borderColorTransitionTime: 0.25s;
-							transition: right @rightTransitionTime ease-in-out,
-								border-color @borderColorTransitionTime ease-in-out;
-							-moz-transition: right @rightTransitionTime ease-in-out,
-								border-color @borderColorTransitionTime ease-in-out;
-							-webkit-transition: right @rightTransitionTime ease-in-out,
-								border-color @borderColorTransitionTime ease-in-out;
-							-o-transition: right @rightTransitionTime ease-in-out,
-								border-color @borderColorTransitionTime ease-in-out;
+							border-color: @koalityOrange;
+						}			
+					}
+				}
 
-							position: absolute;
-							top: 18px;
-							right: 10px;
-							width: 5px;
-							height: 5px;
-							border-top: 2px solid @koalityGray;
-							border-right: 2px solid @koalityGray;
+				&.red {
+					.changesMenuOptionContents {
+						color: @koalityRed;
 
-							transform: rotate(45deg);
-							-moz-transform: rotate(45deg);
-							-webkit-transform: rotate(45deg);
-							-ms-transform: rotate(45deg);
-							-o-transform: rotate(45deg);
+						.changesMenuOptionArrow {
+							border-color: @koalityRed;
+						}			
+					}
+				}
+
+				&:hover {
+
+					.changesMenuOptionContents {
+						color: @koalityWhite;
+						background-color: @changeHover;
+
+						.changesMenuOptionArrow {
+							right: 2px;
+							border-color: @koalityWhite;
 						}
 					}
 
 					.changesMenuOptionTooth {
-						@transitionTime: 0.25s;
-						transition: all @transitionTime ease-in-out;
-						-moz-transition: all @transitionTime ease-in-out;
-						-webkit-transition: all @transitionTime ease-in-out;
-						-o-transition: all @transitionTime ease-in-out;
+						border-left: @toothWidth solid @changeHover;
+					}
 
-						position: absolute;
-						top: 0px;
-						left: @menuWidth - @toothWidth;
-						bottom: 0px;
-						width: 0px;
-						height: 0px;
+					&.green {
+						.changesMenuOptionContents {
+							color: @koalityGreen;
 
-						border-left: 0px solid @panelBackground;
-						border-top: @optionHeight/2 solid transparent;
-						border-bottom: @optionHeight/2 solid transparent;
+							.changesMenuOptionArrow {
+								border-color: @koalityGreen;
+							}
+						}
 					}
 
 					&.orange {
@@ -210,11 +253,12 @@
 
 							.changesMenuOptionArrow {
 								border-color: @koalityOrange;
-							}			
+							}
 						}
 					}
 
 					&.red {
+
 						.changesMenuOptionContents {
 							color: @koalityRed;
 
@@ -223,117 +267,69 @@
 							}			
 						}
 					}
+				}
 
-					&:hover {
+				&.selected {
 
-						.changesMenuOptionContents {
-							color: @koalityWhite;
-							background-color: @changeHover;
+					.changesMenuOptionContents {
+						color: @koalityWhite;
+						background-color: @changeHover;
 
-							.changesMenuOptionArrow {
-								right: 2px;
-								border-color: @koalityWhite;
-							}
-						}
-
-						.changesMenuOptionTooth {
-							border-left: @toothWidth solid @changeHover;
-						}
-
-						&.green {
-							.changesMenuOptionContents {
-								color: @koalityGreen;
-
-								.changesMenuOptionArrow {
-									border-color: @koalityGreen;
-								}
-							}
-						}
-
-						&.orange {
-							.changesMenuOptionContents {
-								color: @koalityOrange;
-
-								.changesMenuOptionArrow {
-									border-color: @koalityOrange;
-								}
-							}
-						}
-
-						&.red {
-
-							.changesMenuOptionContents {
-								color: @koalityRed;
-
-								.changesMenuOptionArrow {
-									border-color: @koalityRed;
-								}			
-							}
+						.changesMenuOptionArrow {
+							right: 2px;
+							border-color: @koalityWhite;
 						}
 					}
 
-					&.selected {
+					.changesMenuOptionTooth {
+						border-left: @toothWidth solid @changeHover;
+					}
+
+					&.green {
 
 						.changesMenuOptionContents {
 							color: @koalityWhite;
-							background-color: @changeHover;
+							background-color: @koalityGreen;
 
 							.changesMenuOptionArrow {
-								right: 2px;
 								border-color: @koalityWhite;
 							}
 						}
 
 						.changesMenuOptionTooth {
-							border-left: @toothWidth solid @changeHover;
+							border-left-color: @koalityGreen;
 						}
+					}
 
-						&.green {
+					&.orange {
 
-							.changesMenuOptionContents {
-								color: @koalityWhite;
-								background-color: @koalityGreen;
+						.changesMenuOptionContents {
+							color: @koalityWhite;
+							background-color: @koalityOrange;
 
-								.changesMenuOptionArrow {
-									border-color: @koalityWhite;
-								}
-							}
-
-							.changesMenuOptionTooth {
-								border-left-color: @koalityGreen;
+							.changesMenuOptionArrow {
+								border-color: @koalityWhite;
 							}
 						}
 
-						&.orange {
+						.changesMenuOptionTooth {
+							border-left-color: @koalityOrange;
+						}
+					}
 
-							.changesMenuOptionContents {
-								color: @koalityWhite;
-								background-color: @koalityOrange;
+					&.red {
 
-								.changesMenuOptionArrow {
-									border-color: @koalityWhite;
-								}
-							}
+						.changesMenuOptionContents {
+							color: @koalityWhite;
+							background-color: @koalityRed;
 
-							.changesMenuOptionTooth {
-								border-left-color: @koalityOrange;
+							.changesMenuOptionArrow {
+								border-color: @koalityWhite;
 							}
 						}
 
-						&.red {
-
-							.changesMenuOptionContents {
-								color: @koalityWhite;
-								background-color: @koalityRed;
-
-								.changesMenuOptionArrow {
-									border-color: @koalityWhite;
-								}
-							}
-
-							.changesMenuOptionTooth {
-								border-left-color: @koalityRed;
-							}
+						.changesMenuOptionTooth {
+							border-left-color: @koalityRed;
 						}
 					}
 				}

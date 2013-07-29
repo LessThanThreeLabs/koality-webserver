@@ -6,7 +6,7 @@ body {
 	background-color: @platformBackground;
 	color: @koalityWhite;
 	font-family: 'Din', sans-serif;
-	font-weight: normal;
+	font-weight: 500;
 	font-size: @baseFont;
 
 	a {
@@ -113,7 +113,18 @@ body {
 	table {
 		border-spacing: 0;
 		border-collapse: collapse;
-		td, th { padding: 0; }
+
+		td, th {
+			padding: 5px 0 5px 0;
+			vertical-align: top;
+		}
+
+		th {
+			padding-right: 30px;
+			color: @koalityGray;
+			font-weight: 300;
+			text-align: left;
+		}
 	}
 }
 
