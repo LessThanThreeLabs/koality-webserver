@@ -1,14 +1,11 @@
 'use strict'
 
-window.ResetPassword = ['$scope', 'rpc', ($scope, rpc) ->
+window.ResetPassword = ['$scope', 'rpc', 'notification', ($scope, rpc, notification) ->
 	$scope.account = {}
+	$scope.showSuccess = false
 	
 	$scope.resetPassword = () ->
 		rpc 'users', 'update', 'resetPassword', $scope.account, (error) ->
-			if error?
-				$scope.showSuccess = false
-				$scope.showError = true
-			else 
-				$scope.showSuccess = true
-				$scope.showError = false
+			if error? then notification.error error
+			else $scope.showSuccess = true
 ]
