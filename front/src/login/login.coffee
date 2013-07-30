@@ -1,6 +1,6 @@
 'use strict'
 
-window.Login = ['$scope', 'rpc', 'cookieExtender', ($scope, rpc, cookieExtender) ->
+window.Login = ['$scope', 'rpc', 'cookieExtender', 'notification', ($scope, rpc, cookieExtender, notification) ->
 	$scope.account = {}
 
 	redirectToHome = () ->
@@ -9,7 +9,7 @@ window.Login = ['$scope', 'rpc', 'cookieExtender', ($scope, rpc, cookieExtender)
 
 	$scope.login = () ->
 		rpc 'users', 'update', 'login', $scope.account, (error, result) ->
-			if error? then $scope.showError = true
+			if error? then notification.error error
 			else
 				if $scope.account.rememberMe is 'yes'
 					cookieExtender.extendCookie (error) ->
@@ -17,6 +17,4 @@ window.Login = ['$scope', 'rpc', 'cookieExtender', ($scope, rpc, cookieExtender)
 						redirectToHome()
 				else
 					redirectToHome()
-
-	$scope.$watch 'account', (() -> $scope.showError = false), true
 ]
