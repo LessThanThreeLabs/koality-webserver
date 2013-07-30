@@ -35,7 +35,7 @@ window.Header = ['$scope', '$location', 'initialState', 'rpc', 'events', ($scope
 	# 	$scope.feedback.showSuccess = true
 	
 	$scope.performLogout = () ->
-		return if $scope.loggedIn
+		return if not $scope.loggedIn
 
 		rpc 'users', 'update', 'logout', null, (error) ->
 			# this will force a refresh, rather than do html5 pushstate

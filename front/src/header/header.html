@@ -27,7 +27,7 @@
 		<dropdown>
 			<a href="/account" ng-class="{disabled: path == '/account'}">Account</a>
 			<dropdown-options>
-				<dropdown-option>Logout</dropdownElement>
+				<dropdown-option ng-click="performLogout()">Logout</dropdownElement>
 			</dropdown-options>
 		</dropdown>
 
