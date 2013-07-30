@@ -53,19 +53,22 @@ window.RepositoryChanges = ['$scope', '$routeParams', 'changesRpc', 'events', 'c
 		if doesChangeMatchQuery(data) and not getChangeWithId(data.id)?
 			$scope.changes.unshift data
 
+		if $scope.selectedChange.getId() is data.id
+			$.extend true, $scope.selectedChange.getInformation(), data
+
 	handleChangeStarted = (data) ->
 		change = getChangeWithId data.id
-		console.log 'NEED TO COPY DATA INTO CHANGE'
-		# copyDataIntoChange change, data if change?
+		$.extend true, change, data if change?
+
+		if $scope.selectedChange.getId() is data.id
+			$.extend true, $scope.selectedChange.getInformation(), data
 
 	handleChangeFinished = (data) ->
 		change = getChangeWithId data.id
-		console.log 'NEED TO COPY DATA INTO CHANGE'
-		# copyDataIntoChange change, data if change?
+		$.extend true, change, data if change?
 
-		if $scope.currentChangeId is data.id
-			console.log 'NEED TO COPY DATA INTO CHANGE'
-			# copyDataIntoChange $scope.currentChangeInformation, data
+		if $scope.selectedChange.getId() is data.id
+			$.extend true, $scope.selectedChange.getInformation(), data
 
 	changeAddedEvents = events('repositories', 'change added', $routeParams.repositoryId).setCallback(handeChangeAdded).subscribe()
 	changeStartedEvents = events('repositories', 'change started', $routeParams.repositoryId).setCallback(handleChangeStarted).subscribe()

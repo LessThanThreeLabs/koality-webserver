@@ -15,11 +15,11 @@
 				<table>
 					<tr>
 						<th>Name</th>
-						<td>{{selectedChange.getInformation().user.firstName}} {{selectedChange.getInformation().user.lastName}}</td>
+						<td>{{selectedChange.getInformation().submitter.firstName}} {{selectedChange.getInformation().submitter.lastName}}</td>
 					</tr>
 					<tr>
 						<th>Email</th>
-						<td><a href="mailto:{{selectedChange.getInformation().user.email}}?subject=Koality%3A%20{{selectedRepository.getInformation().name}}%20-%20change%20%23{{selectedChange.getInformation().number}}&body=Link%20to%20change%3A%20{{currentUrl}}" target="_blank">{{selectedChange.getInformation().user.email}}</a></td>
+						<td><a href="mailto:{{selectedChange.getInformation().submitter.email}}?subject=Koality%3A%20{{selectedRepository.getInformation().name}}%20-%20change%20%23{{selectedChange.getInformation().number}}&body=Link%20to%20change%3A%20{{currentUrl}}" target="_blank">{{selectedChange.getInformation().submitter.email}}</a></td>
 					</tr>
 					<tr>
 						<th>Submit Time</th>

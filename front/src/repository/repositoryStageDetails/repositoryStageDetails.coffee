@@ -20,9 +20,9 @@ window.RepositoryStageDetails = ['$scope', '$location', 'rpc', 'events', 'curren
 	retrieveLines = () ->
 		$scope.lines = []
 		return if not $scope.selectedStage.getId()?
+		
 		$scope.spinnerOn = true
 
-		console.log 'retrieving lines...'
 		rpc 'buildConsoles', 'read', 'getLines', id: $scope.selectedStage.getId(), (error, lines) ->
 			$scope.spinnerOn = false
 
