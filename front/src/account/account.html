@@ -1,4 +1,29 @@
-<centered-panel id="account">
+<div id="account" ng-controller="Account">
+	<panel>
+		<panel-options>
+			<panel-option selected="view == 'summary'" ng-click="selectView('summary')">Settings</panel-option>
+			<panel-option selected="view == 'password'" ng-click="selectView('password')">Change Password</panel-option>
+			<panel-option selected="view == 'sshKeys'" ng-click="selectView('sshKeys')">SSH Keys</panel-option>
+		</panel-options>
+
+		<panel-header ng-show="view == 'summary'">Settings</panel-header>
+		<panel-header ng-show="view == 'password'">Password</panel-header>
+		<panel-header ng-show="view == 'sshKeys'">SSH Keys</panel-header>
+
+		<panel-body>
+			{{view}}
+		</panel-body>
+	</panel>
+</div>
+
+
+
+
+
+
+
+
+<!-- <centered-panel id="account">
 	<div id="accountOptions">
 		<content-menu>
 			<content-menu-header menu-header-padding>{{name}}</content-menu-header>
@@ -134,3 +159,4 @@
 		</content>
 	</div>
 </centered-panel>
+ -->

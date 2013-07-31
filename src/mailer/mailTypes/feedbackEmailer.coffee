@@ -8,9 +8,9 @@ exports.create = (configurationParams, emailSender, domainRetriever) ->
 
 
 class FeedbackEmailer extends Emailer
-	send: (user, feedback, userAgent, screen) =>
+	send: (user, feedback, userAgent, screen, callback) =>
 		@getDomain (error, domain) =>
-			if error? then console.error error
+			if error? then callback error
 			else 
 				payload =
 					from: "#{@configurationParams.from.name} <#{@configurationParams.from.email}@#{domain}>"
@@ -18,5 +18,4 @@ class FeedbackEmailer extends Emailer
 					subject: 'Feedback'
 					text: "User: #{user.firstName} #{user.lastName} (#{user.email})\n\nFeedback: #{feedback}\n\nUser Agent: #{userAgent}\n\nScreen: #{screen.width} x #{screen.height}"
 				
-				@emailSender.sendMail payload, (error) ->
-					console.error error if error?
+				@emailSender.sendMail payload, callback
