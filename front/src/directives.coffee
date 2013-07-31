@@ -85,7 +85,7 @@ angular.module('koality.directive', []).
 			busy: '=busy'
 			disabled: '=disabled'
 			click: '&click'
-		template: '<div ng-show="(show != null && show) || (show == null)">
+		template: '<div class="busyButton" ng-show="(show != null && show) || (show == null)">
 				<button ng-show="!busy" ng-click="click()" ng-disabled="disabled" ng-transclude></button>
 				<spinner white spinner-running="busy" class="busyButtonSpinner"></spinner>
 			</div>'

@@ -219,4 +219,4 @@ class Server
 					response.send 500, 'Error while trying to update oauth token'
 				else
 					@logger.info 'Successfully connected user to GitHub: ' + userId
-					response.redirect '/account?view=gitHub'
+					response.redirect '/'

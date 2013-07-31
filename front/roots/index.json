@@ -22,13 +22,19 @@
 			"/css/src/main.css",
 			"/css/src/header/header.css",
 			"/css/src/login/login.css",
-			"/css/src/account/account.css",
 			"/css/src/createAccount/createAccount.css",
 			"/css/src/resetPassword/resetPassword.css",
+			
+			"/css/src/account/account.css",
+			"/css/src/account/basic/accountBasic.css",
+			"/css/src/account/password/accountPassword.css",
+			"/css/src/account/sshKeys/accountSshKeys.css",
+
 			"/css/src/repository/repository.css",
 			"/css/src/repository/repositoryChanges/repositoryChanges.css",
 			"/css/src/repository/repositoryStages/repositoryStages.css",
 			"/css/src/repository/repositoryStageDetails/repositoryStageDetails.css",
+
 			"/css/src/analytics/analytics.css",
 			"/css/src/admin/admin.css"
 		]
@@ -71,6 +77,7 @@
 			"/js/src/account/account.js",
 			"/js/src/account/basic/accountBasic.js",
 			"/js/src/account/password/accountPassword.js",
+			"/js/src/account/sshKeys/accountSshKeys.js",
 
 			"/js/src/repository/repository.js",
 			"/js/src/repository/repositoryChanges/repositoryChanges.js",
@@ -100,6 +107,7 @@
 			"/html/account/account.html",
 			"/html/account/basic/accountBasic.html",
 			"/html/account/password/accountPassword.html",
+			"/html/account/sshKeys/accountSshKeys.html",
 
 			"/html/repository/repository.html",
 			"/html/repository/repositoryChanges/repositoryChanges.html",
