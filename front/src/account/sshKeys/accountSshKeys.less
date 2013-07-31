@@ -1,0 +1,48 @@
+@import '../../constants';
+
+
+#accountSshKeys {
+	table {
+		width: 100%;
+		table-layout: fixed;
+		border-spacing: 0;
+		border-collapse: separate;
+
+		th {
+			text-transform: uppercase;
+
+			&.aliasColumn, &.createdColumn {
+				cursor: hand;
+				cursor: pointer;
+			}
+		}
+
+		th, td {
+			padding: 15px 0 15px 0;
+			border-top: 1px solid @koalityDarkGray;
+			border-bottom: 1px solid @platformBackground;
+		}
+
+		tr {
+			&:first-child {
+				th, td { border-top-width: 0; }
+			}
+
+			&:last-child { 
+				th, td { border-bottom-width: 0; }
+			}
+		}
+
+		.aliasColumn {
+
+		}
+
+		.createdColumn {
+			width: 150px;
+		}
+
+		.removeColumn {
+			width: 150px;
+		}
+	}
+}

@@ -3,7 +3,7 @@
 
 .panel {
 	@optionsHeight: 40px;
-	@headerHeight: 40px;
+	@headerHeight: 50px;
 	@footerHeight: 8px;
 	
 	position: relative;
@@ -11,6 +11,9 @@
 	width: 100%;
 	min-height: 200px;
 	height: 100%;
+	overflow: hidden;
+	font-size: @baseFont;
+	font-weight: 300;
 
 	&.optionsVisible {
 		.panelHeader { 
@@ -66,16 +69,15 @@
 			&.selected {
 				color: @koalityWhite;
 				background-color: @panelHeaderBackground;
-				border-bottom: 1px solid @platformBackground;
 			}
 		}
 	}
 
 	.panelHeader {
 		position: absolute;
-		top: 0px;
-		left: 0px; 
-		right: 0px;
+		top: 0;
+		left: 0; 
+		right: 0;
 		padding-left: 12px;
 		padding-right: 12px;
 		height: @headerHeight;
@@ -84,32 +86,70 @@
 		white-space: nowrap;
 		color: @koalityWhite;
 		font-size: 18px;
+		font-weight: 500;
 		line-height: @headerHeight;
 		background-color: @panelHeaderBackground;
 		border-bottom: 1px solid @platformBackground;
-		z-index: 1;
 		border-top-left-radius: @borderRadius;
 		border-top-right-radius: @borderRadius;
+
+		button, .busyButton {
+			float: right;
+			margin: 6px 0 0 12px;
+			font-size: 12px;
+		}
+
+		.busyButton button { margin: 0; }
 	}
 
 	.panelBody {
+
 		position: absolute;
 		top: @headerHeight;
-		left: 0px;
-		right: 0px;
+		left: 0;
+		right: 0;
 		bottom: @footerHeight;
-		padding: 30px;
-		box-sizing: border-box;
-		-moz-box-sizing: border-box;
-		overflow: auto;
-		background-color: @panelBackground;
+
+		.panelDrawer, .panelBodyContents {
+			display: table-row;
+			padding: 30px;
+			box-sizing: border-box;
+			-moz-box-sizing: border-box;
+		}
+
+		.panelDrawer {
+			position: absolute;
+			top: 0;
+			left: 0;
+			right: 0;
+			z-index: 1;
+			min-height: 100px;
+			background-color: darken(@panelBackground, 3%);
+		}
+
+		.panelBodyContents {
+			@topTransitionTime: 0.5s;
+			transition: top @topTransitionTime ease-in-out;
+			-moz-transition: top @topTransitionTime ease-in-out;
+			-webkit-transition: top @topTransitionTime ease-in-out;
+			-o-transition: top @topTransitionTime ease-in-out;
+
+			position: absolute;
+			top: 0;
+			left: 0;
+			right: 0;
+			bottom: 0;
+			z-index: 2;
+			overflow-y: auto;
+			background-color: @panelBackground;
+		}
 	}
 
 	.panelFooter {
 		position: absolute;
-		left: 0px;
-		right: 0px;
-		bottom: 0px;
+		left: 0;
+		right: 0;
+		bottom: 0;
 		height: @footerHeight;
 		background-color: @panelFooterBackground;
 		border-bottom-left-radius: @borderRadius;
