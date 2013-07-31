@@ -64,13 +64,19 @@
 			"/js/src/main.js",
 			"/js/src/header/header.js",
 			"/js/src/login/login.js",
-			"/js/src/account/account.js",
+
 			"/js/src/createAccount/createAccount.js",
 			"/js/src/resetPassword/resetPassword.js",
+
+			"/js/src/account/account.js",
+			"/js/src/account/basic/accountBasic.js",
+			"/js/src/account/password/accountPassword.js",
+
 			"/js/src/repository/repository.js",
 			"/js/src/repository/repositoryChanges/repositoryChanges.js",
 			"/js/src/repository/repositoryStages/repositoryStages.js",
 			"/js/src/repository/repositoryStageDetails/repositoryStageDetails.js",
+
 			"/js/src/analytics/analytics.js",
 			"/js/src/admin/admin.js"
 		]
@@ -88,13 +94,18 @@
 		"text/html": [
 			"/html/header/header.html",
 			"/html/login/login.html",
-			"/html/account/account.html",
 			"/html/createAccount/createAccount.html",
 			"/html/resetPassword/resetPassword.html",
+
+			"/html/account/account.html",
+			"/html/account/basic/accountBasic.html",
+			"/html/account/password/accountPassword.html",
+
 			"/html/repository/repository.html",
 			"/html/repository/repositoryChanges/repositoryChanges.html",
 			"/html/repository/repositoryStages/repositoryStages.html",
 			"/html/repository/repositoryStageDetails/repositoryStageDetails.html",
+
 			"/html/analytics/analytics.html",
 			"/html/admin/admin.html"
 		]

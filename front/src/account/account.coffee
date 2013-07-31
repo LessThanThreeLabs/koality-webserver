@@ -1,7 +1,7 @@
 'use strict'
 
 window.Account = ['$scope', '$location', '$routeParams', ($scope, $location, $routeParams) ->
-	$scope.view = $routeParams.view ? 'summary'
+	$scope.view = $routeParams.view ? 'basic'
 
 	$scope.selectView = (view) ->
 		$scope.view = view
@@ -11,16 +11,7 @@ window.Account = ['$scope', '$location', '$routeParams', ($scope, $location, $ro
 ]
 
 
-# # window.AccountBasic = ['$scope', 'initialState', 'rpc', 'notification', ($scope, initialState, rpc, notification) ->
-# 	$scope.account =
-# 		firstName: initialState.user.firstName
-# 		lastName: initialState.user.lastName
 
-# 	$scope.submit = () ->
-# 		rpc 'users', 'update', 'changeBasicInformation', $scope.account, (error) ->
-# 			if error? then notification.error 'Unable to update account information'
-# 			else notification.success 'Updated account information'
-# ]
 
 
 # window.AccountPassword = ['$scope', 'rpc', 'notification', ($scope, rpc, notification) ->
