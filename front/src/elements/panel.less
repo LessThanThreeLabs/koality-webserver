@@ -2,6 +2,7 @@
 
 
 .panel {
+	@optionsHeight: 40px;
 	@headerHeight: 40px;
 	@footerHeight: 8px;
 	
@@ -10,6 +11,65 @@
 	width: 100%;
 	min-height: 200px;
 	height: 100%;
+
+	&.optionsVisible {
+		.panelHeader { 
+			top: @optionsHeight;
+			border-top-left-radius: 0;
+		}
+
+		.panelBody {
+			top: @optionsHeight + @headerHeight;
+		}
+	}
+
+	.panelOptions {
+		position: absolute;
+		top: 0;
+		left: 0;
+		right: 0;
+		height: @optionsHeight;
+
+		.panelOption {
+			@transitionTime: 0.25s;
+			transition: color @transitionTime ease-in-out,
+				background-color @transitionTime ease-in-out;
+			-moz-transition: color @transitionTime ease-in-out,
+				background-color @transitionTime ease-in-out;
+			-webkit-transition: color @transitionTime ease-in-out,
+				background-color @transitionTime ease-in-out;
+			-o-transition: color @transitionTime ease-in-out,
+				background-color @transitionTime ease-in-out;
+
+			cursor: hand;
+			cursor: pointer;
+			display: inline-block;
+			margin-right: 2px;
+			padding: 0 15px 0 15px;
+			min-width: 100px;
+			height: 100%;
+			box-sizing: border-box;
+			-moz-box-sizing: border-box;
+			vertical-align: top;
+			color: @koalityGreen;
+			text-align: center;
+			line-height: @optionsHeight;
+			background-color: @panelBackground;
+			border-top-left-radius: @borderRadius;
+			border-top-right-radius: @borderRadius;
+
+			&:hover {
+				color: @koalityWhite;
+				background-color: @panelHeaderBackground;
+			}
+
+			&.selected {
+				color: @koalityWhite;
+				background-color: @panelHeaderBackground;
+				border-bottom: 1px solid @platformBackground;
+			}
+		}
+	}
 
 	.panelHeader {
 		position: absolute;

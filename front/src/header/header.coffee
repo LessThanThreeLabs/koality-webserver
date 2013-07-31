@@ -1,8 +1,9 @@
 'use strict'
 
-window.Header = ['$scope', '$location', 'initialState', 'rpc', 'events', ($scope, $location, initialState, rpc, events) ->
+window.Header = ['$scope', '$location', 'initialState', 'rpc', 'events', 'notification', ($scope, $location, initialState, rpc, events, notification) ->
 	$scope.loggedIn = initialState.loggedIn
 	$scope.isAdmin = initialState.user.isAdmin
+	$scope.feedback = open: false
 
 	getRepositories = () ->
 		return if not $scope.loggedIn
@@ -25,14 +26,18 @@ window.Header = ['$scope', '$location', 'initialState', 'rpc', 'events', ($scope
 	
 	getRepositories()
 
-	# $scope.submitFeedback = () ->
-	# 	requestParams =
-	# 		feedback: $scope.feedback.text
-	# 		userAgent: navigator.userAgent
-	# 		screen: window.screen
-	# 	rpc 'users', 'update', 'submitFeedback', requestParams
+	$scope.sendFeedback = () ->
+		requestParams =
+			feedback: $scope.feedback.message
+			userAgent: navigator.userAgent
+			screen: window.screen
 
-	# 	$scope.feedback.showSuccess = true
+		$scope.feedback.makingRequest = true
+		rpc 'users', 'update', 'submitFeedback', requestParams, (error) ->
+			$scope.feedback.makingRequest = false
+			$scope.feedback.message = ''
+			$scope.feedback.open = false
+			notification.success 'Thank you for your feedback!'
 	
 	$scope.performLogout = () ->
 		return if not $scope.loggedIn

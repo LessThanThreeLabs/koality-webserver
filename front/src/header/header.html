@@ -20,12 +20,22 @@
 	</div>
 
 	<div id="secondaryNavigation" ng-show="loggedIn">
-		<a href="/feedback" ng-class="{disabled: path == '/feedback'}">Feedback</a>
+		<div id="feedback">
+			<a ng-click="feedback.open = !feedback.open">Feedback</a>
 
-		<div id="divider"></div>
+			<div id="feedbackMessageContainer" ng-show="feedback.open">
+				<form name="feedbackForm" novalidate>
+					<textarea ng-model="feedback.message" placeholder="I found an issue with foo, where bar will baz from time to time. I was able to reproduce the baz behavior by first... and then..." required></textarea>
 
-		<dropdown>
-			<a href="/account" ng-class="{disabled: path == '/account'}">Account</a>
+					<div id="feedbackOptions">
+						<spinner spinner-running="feedback.makingRequest"></spinner>
+						<a ng-click="feedback.open = false; feedback.message=''" ng-class="{disabled: feedback.makingRequest}">Cancel</a>
+						<a ng-click="sendFeedback()" ng-class="{disabled: feedback.makingRequest}">Send</a>
+					</div>
+				</form>
+			</div>
+		</div><!-- Do not add space here! --><div id="divider"></div><!-- Do not add space here! --><dropdown>
+			<a href="/account" ng-class="{disabled: path == '/account'}">My Account</a>
 			<dropdown-options>
 				<dropdown-option ng-click="performLogout()">Logout</dropdownElement>
 			</dropdown-options>
