@@ -11,18 +11,6 @@ window.AccountSshKeys = ['$scope', '$location', 'rpc', 'events', 'initialState',
 		rpc 'users', 'read', 'getSshKeys', null, (error, keys) ->
 			$scope.keys = keys
 
-	# addKey = () ->
-	# 	requestParams = 
-	# 		alias: $scope.addKey.alias
-	# 		key: $scope.addKey.key
-	# 	rpc 'users', 'update', 'addSshKey', requestParams, (error) ->
-	# 		if error?
-	# 			$scope.addKey.showError = true
-	# 		else 
-	# 			notification.success 'Added SSH key ' + $scope.addKey.alias
-	# 			$scope.addKey.showError = false
-	# 			$scope.addKey.modalVisible = false
-
 	handleAddedKey = (data) ->
 		$scope.keys.push data
 
@@ -37,11 +25,21 @@ window.AccountSshKeys = ['$scope', '$location', 'rpc', 'events', 'initialState',
 
 	getKeys()
 
-	# $scope.removeKey = (key) ->
-	# 	rpc 'users', 'update', 'removeSshKey', id: key.id
+	$scope.removeKey = (key) ->
+		rpc 'users', 'update', 'removeSshKey', id: key.id
 
-	# $scope.submitKey = () ->
-	# 	addKey()
+	$scope.submitKey = () ->
+		rpc 'users', 'update', 'addSshKey', $scope.addKey, (error) ->
+			if error? then notification.error error
+			else 
+				notification.success 'Added SSH key: ' + $scope.addKey.alias
+				$scope.clearAddKey()
+
+	$scope.clearAddKey = () ->
+		$scope.addKey =
+			alias: ''
+			key: ''
+			drawerOpen: false
 
 	$scope.importFromGitHub = () ->
 		return if $scope.waitingOnGitHubImportRequest
@@ -50,7 +48,7 @@ window.AccountSshKeys = ['$scope', '$location', 'rpc', 'events', 'initialState',
 		rpc 'users', 'update', 'addGitHubSshKeys', null, (error) ->
 			$scope.waitingOnGitHubImportRequest = false
 
-			if error
+			if error isnt 'Key is already in use'
 				# window.location.href = "http://127.0.0.1:1080/github/authenticate?url=#{$location.protocol()}://#{$location.host()}"
 				window.location.href = "http://127.0.0.1:1081/github/authenticate?url=#{$location.protocol()}://#{$location.host()}:1080"
 ]

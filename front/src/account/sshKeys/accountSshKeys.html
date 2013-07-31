@@ -7,7 +7,26 @@
 
 	<panel-body drawer-open="addKey.drawerOpen">
 		<panel-drawer>
-			<h1>surprise!!</h1>
+			<form id="addKeyForm" name="addKeyForm" novalidate>
+				<table>
+					<tr>
+						<td class="addKeyAliasColumn">
+							<label>Alias<span class="sublabel">Only letters and numbers</span></label>
+							<input type="text" ng-model="addKey.alias" name="alias" ng-pattern="/^[ a-zA-Z0-9]+$/" ng-maxlength="64" required>
+						</td>
+						<td class="addKeyValueColumn">
+							<label>SSH Key</label>
+							<textarea type="text" ng-model="addKey.key" name="key" ng-pattern="/^ssh-(?:dss|rsa) [A-Za-z0-9+/]+={0,2}/" ng-maxlength="8192" required></textarea>
+						</td>
+						<td class="addKeySubmitColumn">
+							<button ng-click="submitKey()" ng-disabled="addKeyForm.$invalid">Add Key</button>
+						</td>
+						<td class="addKeyCancelColumn">
+							<a ng-click="clearAddKey()">Cancel</a>
+						</td>
+					</tr>
+				</table>
+			</form>
 		</panel-drawer>
 
 		<table>
