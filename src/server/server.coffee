@@ -139,7 +139,7 @@ class Server
 				else
 					clearTimeout configureRoutesFailedTimeoutId
 
-					if initialized then addProjectBindings()
+					if initialized and false then addProjectBindings()
 					else addInstallationWizardBindings()
 
 					server = http.createServer expressServer

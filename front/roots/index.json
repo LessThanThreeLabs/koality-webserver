@@ -25,6 +25,7 @@
 			"/css/src/login/login.css",
 			"/css/src/createAccount/createAccount.css",
 			"/css/src/resetPassword/resetPassword.css",
+			"/css/src/analytics/analytics.css",
 			
 			"/css/src/account/account.css",
 			"/css/src/account/basic/accountBasic.css",
@@ -36,8 +37,8 @@
 			"/css/src/repository/repositoryStages/repositoryStages.css",
 			"/css/src/repository/repositoryStageDetails/repositoryStageDetails.css",
 
-			"/css/src/analytics/analytics.css",
-			"/css/src/admin/admin.css"
+			"/css/src/admin/admin.css",
+			"/css/src/admin/users/adminUsers.css"
 		]
 	},
 
@@ -74,6 +75,7 @@
 
 			"/js/src/createAccount/createAccount.js",
 			"/js/src/resetPassword/resetPassword.js",
+			"/js/src/analytics/analytics.js",
 
 			"/js/src/account/account.js",
 			"/js/src/account/basic/accountBasic.js",
@@ -85,8 +87,8 @@
 			"/js/src/repository/repositoryStages/repositoryStages.js",
 			"/js/src/repository/repositoryStageDetails/repositoryStageDetails.js",
 
-			"/js/src/analytics/analytics.js",
-			"/js/src/admin/admin.js"
+			"/js/src/admin/admin.js",
+			"/js/src/admin/users/adminUsers.js"
 		]
 	},
 
@@ -104,6 +106,7 @@
 			"/html/login/login.html",
 			"/html/createAccount/createAccount.html",
 			"/html/resetPassword/resetPassword.html",
+			"/html/analytics/analytics.html",
 
 			"/html/account/account.html",
 			"/html/account/basic/accountBasic.html",
@@ -115,8 +118,8 @@
 			"/html/repository/repositoryStages/repositoryStages.html",
 			"/html/repository/repositoryStageDetails/repositoryStageDetails.html",
 
-			"/html/analytics/analytics.html",
-			"/html/admin/admin.html"
+			"/html/admin/admin.html",
+			"/html/admin/users/adminUsers.html"
 		]
 	},
 
