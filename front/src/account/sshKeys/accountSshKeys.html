@@ -1,7 +1,7 @@
 <div id="accountSshKeys" ng-controller="AccountSshKeys">
 	<panel-header>
 		SSH Keys
-		<button ng-click="addKey.drawerOpen = !addKey.drawerOpen">Add a new SSH Key</button>
+		<button ng-click="addKey.drawerOpen = !addKey.drawerOpen">Add a New SSH Key</button>
 		<busy-button busy="waitingOnGitHubImportRequest" click="importFromGitHub()">Import GitHub SSH Keys</button>
 	</panel-header>
 
@@ -52,7 +52,7 @@
 				<tr ng-repeat="key in keys | orderBy:orderByPredicate:orderByReverse">
 					<td class="aliasColumn" text-selectable>{{key.alias}}</td>
 					<td class="createdColumn" text-selectable>{{key.timestamp | date:'MM/dd/yyyy'}}</td>
-					<td class="removeColumn"><a class="removeLink red" ng-click="removeKey(key)">Delete</a></td>
+					<td class="removeColumn"><a class="red" ng-click="removeKey(key)">Delete</a></td>
 				</tr>
 			</table>
 		</div>

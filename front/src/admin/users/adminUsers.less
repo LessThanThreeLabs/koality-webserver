@@ -3,148 +3,67 @@
 
 #adminUsers {
 
-	// #addKeyForm {
+	#addUsersForm {
 
-	// 	table {
-	// 		width: 100%;
-	// 		table-layout: fixed;
+		table {
+			width: 100%;
+			table-layout: fixed;
 
-	// 		td {
-	// 			padding: 0 15px 0 15px;
+			td {
+				padding: 0 15px 0 15px;
 
-	// 			&:first-child { padding-left: 0; }
-	// 			&:last-child { padding-right: 0; }
-	// 		}
+				&:first-child { padding-left: 0; }
+				&:last-child { padding-right: 0; }
+			}
 
-	// 		.addKeyAliasColumn {
-	// 			width: 300px;
+			.addUsersColumn {
 
-	// 			input {
-	// 				margin: 0;
-	// 			}
-	// 		}
+				input {
+					margin: 0;
+				}
+			}
 
-	// 		.addKeyValueColumn {
+			.addUsersSubmitColumn {
+				width: 120px;
+				padding-top: 23px;
+			}
 
-	// 			textarea {
-	// 				margin: 0;
-	// 				height: 40px;
-	// 			}
-	// 		}
+			.addUsersCancelColumn {
+				width: 100px;
+				padding-top: 23px;
+			}
+		}
+	}
 
-	// 		.addKeySubmitColumn {
-	// 			width: 100px;
-	// 			padding-top: 23px;
-	// 		}
+	#usersList {
+		table {
+			width: 100%;
+			table-layout: fixed;
 
-	// 		.addKeyCancelColumn {
-	// 			width: 100px;
-	// 			padding-top: 23px;
-	// 		}
-	// 	}
-	// }
+			th {
+				&.nameColumn, &.emailColumn, &.privilegesColumn {
+					cursor: hand;
+					cursor: pointer;
+				}
+			}
 
-	// #sshKeys {
-	// 	@bufferHeight: 35px;
-		
-	// 	position: absolute;
-	// 	top: 0;
-	// 	left: 0;
-	// 	right: 0;
-	// 	bottom: 0;
+			.nameColumn {
+				padding-left: 30px;
+				width: 350px;
+			}
 
-	// 	#sshKeysList {
-	// 		@scrollbarHideWidth: 50px;
+			.emailColumn {
 
-	// 		position: absolute;
-	// 		top: 0;
-	// 		left: 0;
-	// 		right: -@scrollbarHideWidth;
-	// 		bottom: 0;
-	// 		z-index: 1;
-	// 		padding: @bufferHeight @scrollbarHideWidth @bufferHeight 0;
-	// 		box-sizing: border-box;
-	// 		-moz-box-sizing: border-box;
-	// 		overflow-x: hidden;
-	// 		overflow-y: auto;
+			}
 
-	// 		table {
-	// 			width: 100%;
-	// 			table-layout: fixed;
-	// 			border-collapse: separate;
+			.privilegesColumn {
+				width: 150px;
+			}
 
-	// 			th, td {
-	// 				border-top: 1px solid @koalityDarkGray;
-	// 				border-bottom: 1px solid @platformBackground;
-	// 			}
-
-	// 			th {
-	// 				padding: 0 0 16px 0;
-	// 				text-transform: uppercase;
-
-	// 				&.aliasColumn, &.createdColumn {
-	// 					cursor: hand;
-	// 					cursor: pointer;
-	// 				}
-	// 			}
-
-	// 			td {
-	// 				padding: 16px 0 16px 0;
-	// 			}
-
-	// 			tr {
-	// 				&:first-child {
-	// 					th, td { border-top-width: 0; }
-	// 				}
-
-	// 				&:last-child { 
-	// 					th, td { border-bottom-width: 0; }
-	// 				}
-	// 			}
-
-	// 			.aliasColumn {
-	// 				padding-left: 30px;
-	// 			}
-
-	// 			.createdColumn {
-	// 				width: 180px;
-	// 			}
-
-	// 			.removeColumn {
-	// 				padding-right: 30px;
-	// 				width: 80px;
-	// 			}
-	// 		}
-	// 	}
-
-	// 	#sshKeysTopBuffer {
-	// 		position: absolute;
-	// 		top: 0;
-	// 		left: 0;
-	// 		right: 0;
-	// 		z-index: 2;
-	// 		height: @bufferHeight;
-
-	// 		background: linear-gradient(to bottom, fade(@panelBackground, 100%) 0%, fade(@panelBackground, 0%) 100%);
-	// 		background: -moz-linear-gradient(top, fade(@panelBackground, 100%) 0%, fade(@panelBackground, 0%) 100%);
-	// 		background: -webkit-linear-gradient(top, fade(@panelBackground, 100%) 0%, fade(@panelBackground, 0%) 100%);
-	// 		background: -o-linear-gradient(top, fade(@panelBackground, 100%) 0%, fade(@panelBackground, 0%) 100%);
-	// 		background: -ms-linear-gradient(top, fade(@panelBackground, 100%) 0%, fade(@panelBackground, 0%) 100%);
-	// 	}
-
-	// 	#sshKeysBottomBuffer {
-	// 		position: absolute;
-	// 		left: 0;
-	// 		bottom: 0;
-	// 		right: 0;
-	// 		z-index: 2;
-	// 		height: @bufferHeight;
-
-	// 		background: linear-gradient(to bottom, fade(@panelBackground, 0%) 0%, fade(@panelBackground, 100%) 100%);
-	// 		background: -moz-linear-gradient(top, fade(@panelBackground, 0%) 0%, fade(@panelBackground, 100%) 100%);
-	// 		background: -webkit-linear-gradient(top, fade(@panelBackground, 0%) 0%, fade(@panelBackground, 100%) 100%);
-	// 		background: -o-linear-gradient(top, fade(@panelBackground, 0%) 0%, fade(@panelBackground, 100%) 100%);
-	// 		background: -ms-linear-gradient(top, fade(@panelBackground, 0%) 0%, fade(@panelBackground, 100%) 100%);
-	// 	}
-	// }
+			.editColumn {
+				padding-right: 30px;
+				width: 120px;
+			}
+		}
+	}
 }

@@ -1,3 +1,5 @@
+'use strict'
+
 window.AccountBasic = ['$scope', 'initialState', 'rpc', 'notification', ($scope, initialState, rpc, notification) ->
 	$scope.makingRequest = false
 	$scope.account =
