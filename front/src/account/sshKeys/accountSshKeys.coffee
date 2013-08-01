@@ -1,3 +1,5 @@
+'use strict'
+
 window.AccountSshKeys = ['$scope', '$location', 'rpc', 'events', 'initialState', 'notification', ($scope, $location, rpc, events, initialState, notification) ->
 	$scope.orderByPredicate = 'alias'
 	$scope.orderByReverse = false

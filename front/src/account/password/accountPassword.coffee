@@ -1,3 +1,5 @@
+'use strict'
+
 window.AccountPassword = ['$scope', 'rpc', 'notification', ($scope, rpc, notification) ->
 	$scope.makingRequest = false
 	$scope.password = {}

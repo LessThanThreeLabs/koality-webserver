@@ -1,6 +1,54 @@
 <div id="adminUsers" ng-controller="AdminUsers">
-	<panel-header>Users</panel-header>
-	<panel-body>
-		hello
+	<panel-header>
+		Users
+		<button ng-click="addUsers.drawerOpen = !addUsers.drawerOpen">Add New Users</button>
+	</panel-header>
+
+	<panel-body no-padding drawer-open="addUsers.drawerOpen">
+		<panel-drawer>
+			<form id="addUsersForm" name="addUsersForm" novalidate>
+				<table>
+					<tr>
+						<td class="addUsersColumn">
+							<label>Add Users</label>
+							<input type="text" ng-model="addUsers.emails" name="emails" placeholder="first@email.com second@email.com third@email.com ..." focused required>
+						</td>
+						<td class="addUsersSubmitColumn">
+							<busy-button busy="addUsers.makingRequest" click="submitUsers()" disabled="addUsersForm.$invalid">Invite Users</busy-button>
+						</td>
+						<td class="addUsersCancelColumn">
+							<a ng-click="clearAddUsers()">Cancel</a>
+						</td>
+					</tr>
+				</table>
+			</form>
+		</panel-drawer>
+
+		<div id="usersList" fading-content>
+			<table class="delineated">
+				<tr>
+					<th class="nameColumn unselectable" ng-click="orderByPredicate = 'lastName'; orderByReverse = !orderByReverse">
+						<div class="triangle gray" ng-class="{right: orderByPredicate != 'lastName', up: orderByPredicate == 'lastName' && !orderByReverse, down: orderByPredicate == 'lastName' && orderByReverse}"></div>
+						Name
+					</th>
+					<th class="emailColumn unselectable" ng-click="orderByPredicate = 'email'; orderByReverse = !orderByReverse">
+						<div class="triangle gray" ng-class="{right: orderByPredicate != 'email', up: orderByPredicate == 'email' && !orderByReverse, down: orderByPredicate == 'email' && orderByReverse}"></div>
+						Email
+					</th>
+					<th class="privilegesColumn unselectable" ng-click="orderByPredicate = 'privilege'; orderByReverse = !orderByReverse">
+						<div class="triangle gray" ng-class="{right: orderByPredicate != 'privilege', up: orderByPredicate == 'privilege' && !orderByReverse, down: orderByPredicate == 'privilege' && orderByReverse}"></div>
+						Privileges
+					</th>
+					<th class="editColumn unselectable">Actions</th>
+				</tr>
+
+				<tr ng-repeat="user in users | orderBy:orderByPredicate:orderByReverse">
+					<td class="nameColumn" text-selectable>{{user.firstName}} {{user.lastName}}</td>
+					<td class="emailColumn" text-selectable><a href="mailto:{{user.email}}?subject=Koality" target="_blank">{{user.email}}</a></td>
+					<td class="privilegesColumn" text-selectable>{{user.privilege}}</td>
+					<td class="editColumn"><a ng-click="editUser(user)">Edit</a></td>
+				</tr>
+			</table>
+		</div>
 	</panel-body>
 </div>
