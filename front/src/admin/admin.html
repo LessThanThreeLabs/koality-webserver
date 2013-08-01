@@ -1,3 +1,32 @@
+<div id="admin" ng-controller="Admin">
+	<panel>
+		<panel-options>
+			<panel-option selected="view == 'users'" ng-click="selectView('users')">Users</panel-option>
+			<panel-option selected="view == 'repositories'" ng-click="selectView('repositories')">Repositories</panel-option>
+			<panel-option selected="view == 'aws'" ng-click="selectView('aws')">AWS</panel-option>
+			<panel-option selected="view == 'exporter'" ng-click="selectView('exporter')">Exporter</panel-option>
+			<panel-option selected="view == 'website'" ng-click="selectView('website')">Website</panel-option>
+			<panel-option selected="view == 'api'" ng-click="selectView('api')">API</panel-option>
+			<panel-option selected="view == 'plan'" ng-click="selectView('plan')">Plan</panel-option>
+			<panel-option selected="view == 'update'" ng-click="selectView('update')">Update</panel-option>
+		</panel-options>
+
+		<div ng-switch="view">
+			<div ng-switch-when="users" ng-include="'html/admin/users/adminUsers.html' | fileSuffix"></div>
+			<!-- <div ng-switch-when="password" ng-include="'html/admin/password/adminPassword.html' | fileSuffix"></div> -->
+			<!-- <div ng-switch-when="sshKeys" ng-include="'html/admin/sshKeys/adminSshKeys.html' | fileSuffix"></div> -->
+			<!-- <div ng-switch-when="sshKeys" ng-include="'html/admin/sshKeys/adminSshKeys.html' | fileSuffix"></div> -->
+			<!-- <div ng-switch-when="sshKeys" ng-include="'html/admin/sshKeys/adminSshKeys.html' | fileSuffix"></div> -->
+			<!-- <div ng-switch-when="sshKeys" ng-include="'html/admin/sshKeys/adminSshKeys.html' | fileSuffix"></div> -->
+			<!-- <div ng-switch-when="sshKeys" ng-include="'html/admin/sshKeys/adminSshKeys.html' | fileSuffix"></div> -->
+			<!-- <div ng-switch-when="sshKeys" ng-include="'html/admin/sshKeys/adminSshKeys.html' | fileSuffix"></div> -->
+		</div>
+	</panel>
+</div>
+
+
+
+<!-- 
 <centered-panel id="admin">
 	<div id="adminOptions">
 		<content-menu>
@@ -351,3 +380,4 @@
 		</content>
 	</div>
 </centered-panel>
+ -->
