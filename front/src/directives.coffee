@@ -57,6 +57,10 @@ angular.module('koality.directive', []).
 	directive('autoScrollToBottom', ['integerConverter', (integerConverter) ->
 		restrict: 'A'
 		link: (scope, element, attributes) ->
+			# fix to work with fading-content directive
+			if element.find('.fadingContent').length > 0
+				element = element.find '.fadingContent'
+
 			scrollToBottom = () ->
 				setTimeout (() -> element[0].scrollTop = element[0].scrollHeight), 0
 
