@@ -40,15 +40,15 @@
 				<div id="accountPasswordContent">
 					<styled-form name="passwordForm">
 						<styled-form-field label="Old password" label-padding="true">
-							<input type="password" ng-model="account.oldPassword" name="oldPassword" placeholder="old p4ssW0rd" required focused>
+							<input type="password" ng-model="account.old" name="oldPassword" placeholder="old p4ssW0rd" required focused>
 						</styled-form-field>
 						<styled-form-field label="New password" label-padding="true">
 							<input type="password" ng-model="account.new" name="newPassword" placeholder="new p4ssW0rd" ng-pattern="/^(?=.*[a-zA-Z])(?=.*\d).+$/" ng-minlength="8" ng-maxlength="256" required>
-							<styled-form-field-error tooltip="Password must contain at least 8 characters, a letter, and a number" error-visible="passwordForm.new.$dirty && passwordForm.new.$invalid"></styled-form-field-error>
+							<styled-form-field-error tooltip="Password must contain at least 8 characters, a letter, and a number" error-visible="passwordForm.newPassword.$dirty && passwordForm.newPassword.$invalid"></styled-form-field-error>
 						</styled-form-field>
 						<styled-form-field label="Confirm password" label-padding="true">
 							<input type="password" ng-model="account.confirm" name="confirmPassword" placeholder="p4ssW0rd, again" ng-pattern="/^(?=.*[a-zA-Z])(?=.*\d).+$/" ng-minlength="8" ng-maxlength="256" required>
-							<styled-form-field-error tooltip="Passwords do not match" error-visible="passwordForm.confirm.$dirty && account.new != account.confirm"></styled-form-field-error>
+							<styled-form-field-error tooltip="Passwords do not match" error-visible="passwordForm.confirmPassword.$dirty && account.new != account.confirm"></styled-form-field-error>
 						</styled-form-field>
 						<styled-form-field label="">
 							<button id="accountPasswordButton" ng-click="submit()" ng-disabled="passwordForm.$invalid">Save Changes</button>
