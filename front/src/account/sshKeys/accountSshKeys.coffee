@@ -5,6 +5,7 @@ window.AccountSshKeys = ['$scope', '$location', 'rpc', 'events', 'initialState',
 	$scope.waitingOnGitHubImportRequest = false
 
 	$scope.addKey =
+		makingRequest: false
 		drawerOpen: false
 
 	getKeys = () ->
@@ -29,17 +30,20 @@ window.AccountSshKeys = ['$scope', '$location', 'rpc', 'events', 'initialState',
 		rpc 'users', 'update', 'removeSshKey', id: key.id
 
 	$scope.submitKey = () ->
+		return if $scope.addKey.makingRequest
+		$scope.addKey.makingRequest = true
+
 		rpc 'users', 'update', 'addSshKey', $scope.addKey, (error) ->
+			$scope.addKey.makingRequest = false
 			if error? then notification.error error
 			else 
 				notification.success 'Added SSH key: ' + $scope.addKey.alias
 				$scope.clearAddKey()
 
 	$scope.clearAddKey = () ->
-		$scope.addKey =
-			alias: ''
-			key: ''
-			drawerOpen: false
+		$scope.addKey.alias = ''
+		$scope.addKey.key = ''
+		$scope.addKey.drawerOpen = false
 
 	$scope.importFromGitHub = () ->
 		return if $scope.waitingOnGitHubImportRequest
