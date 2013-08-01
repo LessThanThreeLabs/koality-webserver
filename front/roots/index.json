@@ -12,6 +12,7 @@
 			"/css/src/elements/notification.css",
 			"/css/src/elements/dropdown.css",
 			"/css/src/elements/triangle.css",
+			"/css/src/elements/fadingContent.css",
 
 			"/css/src/prettyElements/prettyCenteredPanel.css",
 			"/css/src/prettyElements/prettyConsoleText.css",

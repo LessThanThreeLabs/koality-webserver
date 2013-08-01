@@ -1,14 +1,6 @@
 'use strict'
 
 angular.module('koality.directive', []).
-	directive('highlightOnFirstClick', () ->
-		return (scope, element, attributes) ->
-			highlightText = () ->
-				element.select()
-				element.unbind 'click', highlightText
-
-			element.bind 'click', highlightText
-	).
 	directive('focused', () ->
 		return (scope, element, attributes) ->
 			element.focus()
@@ -17,6 +9,14 @@ angular.module('koality.directive', []).
 		return (scope, element, attributes) ->
 			element.bind 'click', (event) ->
 				element.find('input').focus()
+	).
+	directive('highlightOnFirstClick', () ->
+		return (scope, element, attributes) ->
+			highlightText = () ->
+				element.select()
+				element.unbind 'click', highlightText
+
+			element.bind 'click', highlightText
 	).
 	directive('licenseKey', () ->
 		restrict: 'A'
@@ -30,11 +30,30 @@ angular.module('koality.directive', []).
 
 				return if cleanedValue.length is 16 then cleanedValue else undefined
 	).
-	directive('divider', () ->
-		restrict: 'E'
+	directive('fadingContent', () ->
+		restrict: 'A'
 		replace: true
-		template: '<div class="prettyDivider"></div>'
+		transclude: true
+		template: '<div class="fadingContentContainer">
+				<div class="fadingContentTopBuffer"></div>
+				<div class="fadingContent" ng-transclude></div>
+				<div class="fadingContentBottomBuffer"></div>
+			</div>'
+		link: (scope, element, attributes, control) ->
+			console.log 'here!'
 	).
+	# directive('tooltip', () ->
+	# 	restrict: 'A'
+	# 	link: (scope, element, attributes) ->
+	# 		html = "<span class='prettyTooltipContainer'>
+	# 				<span class='prettyTooltipCenterAnchor'>
+	# 					<span class='prettyTooltipCenterContainer'>
+	# 						<span class='prettyTooltip'>#{attributes.tooltip}</span>
+	# 					</span>
+	# 				</span>
+	# 			</span>"
+	# 		element.append html
+	# ).
 	directive('autoScrollToBottom', ['integerConverter', (integerConverter) ->
 		restrict: 'A'
 		link: (scope, element, attributes) ->
@@ -85,72 +104,6 @@ angular.module('koality.directive', []).
 			element.width Math.max button.outerWidth(), 25 if not attributes.centered?
 			element.height Math.max button.outerHeight(), 25
 	).
-	directive('modal', ['$document', ($document) ->
-		restrict: 'E'
-		replace: true
-		transclude: true
-		scope: show: '=modalVisible'
-		template: '<div class="prettyModal" ng-class="{visible: show}">
-				<div class="prettyModalBackdrop" ng-click="show=false"></div>
-				<div class="prettyModalContent" ng-transclude></div>
-			</div>'
-		link: (scope, element, attributes) ->
-			escapeClickHandler = (event) ->
-				if event.keyCode is 27
-					scope.$apply () -> scope.show = false
-
-			scope.$watch 'show', () ->
-				if scope.show
-					$document.bind 'keydown', escapeClickHandler
-					setTimeout (() ->
-						firstInput = element.find('input,textarea,select').get(0)
-						firstInput.focus() if firstInput?
-					), 0
-				else
-					$document.unbind 'keydown', escapeClickHandler
-	]).
-	directive('tooltip', () ->
-		restrict: 'A'
-		link: (scope, element, attributes) ->
-			html = "<span class='prettyTooltipContainer'>
-					<span class='prettyTooltipCenterAnchor'>
-						<span class='prettyTooltipCenterContainer'>
-							<span class='prettyTooltip'>#{attributes.tooltip}</span>
-						</span>
-					</span>
-				</span>"
-			element.append html
-	).
-	directive('notification', () ->
-		restrict: 'E'
-		replace: true
-		transclude: true
-		scope:
-			type: '@'
-			durationInSeconds: '@'
-		template: '<div class="notification" ng-class="{green: type == \'success\', orange: type == \'warning\', red: type == \'error\'}">
-					<div class="notificationContent growingCentered">
-						<span ng-transclude></span>
-						<span class="notificationClose" ng-click="hide()">X</span>
-					</div>
-				</div>'
-		link: (scope, element, attributes) ->
-			getZIndex = (type, transient) ->
-				minorIndex = 0
-				switch type
-					when 'success' then minorIndex = 100
-					when 'warning' then minorIndex = 200
-					when 'error' then minorIndex = 300
-					else throw 'unexpected notification type ' + type
-				return if transient then minorIndex + 1000 else minorIndex
-
-			scope.hide = () ->
-				element.addClass 'hiding'
-				setTimeout (() -> element.remove()), 5000
-
-			element.css 'z-index', getZIndex attributes.type, attributes.durationInSeconds > 0
-			setTimeout scope.hide, attributes.durationInSeconds * 1000 if attributes.durationInSeconds > 0
-	).
 	directive('spinner', () ->
 		restrict: 'E'
 		replace: true
@@ -184,6 +137,36 @@ angular.module('koality.directive', []).
 
 			stopSpinner = () ->
 				spinner.stop() if spinner?
+	).
+	directive('notification', () ->
+		restrict: 'E'
+		replace: true
+		transclude: true
+		scope:
+			type: '@'
+			durationInSeconds: '@'
+		template: '<div class="notification" ng-class="{green: type == \'success\', orange: type == \'warning\', red: type == \'error\'}">
+					<div class="notificationContent growingCentered">
+						<span ng-transclude></span>
+						<span class="notificationClose" ng-click="hide()">X</span>
+					</div>
+				</div>'
+		link: (scope, element, attributes) ->
+			getZIndex = (type, transient) ->
+				minorIndex = 0
+				switch type
+					when 'success' then minorIndex = 100
+					when 'warning' then minorIndex = 200
+					when 'error' then minorIndex = 300
+					else throw 'unexpected notification type ' + type
+				return if transient then minorIndex + 1000 else minorIndex
+
+			scope.hide = () ->
+				element.addClass 'hiding'
+				setTimeout (() -> element.remove()), 5000
+
+			element.css 'z-index', getZIndex attributes.type, attributes.durationInSeconds > 0
+			setTimeout scope.hide, attributes.durationInSeconds * 1000 if attributes.durationInSeconds > 0
 	).
 	directive('consoleText', ['ansiparse', (ansiparse) ->
 		restrict: 'E'

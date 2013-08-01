@@ -168,6 +168,34 @@ body {
 			font-weight: 300;
 			text-align: left;
 		}
+
+		&.delineated {
+			border-collapse: separate;
+
+			th, td {
+				border-top: 1px solid @koalityDarkGray;
+				border-bottom: 1px solid @platformBackground;
+			}
+
+			th {
+				padding: 0 0 16px 0;
+				text-transform: uppercase;
+			}
+
+			td {
+				padding: 16px 0 16px 0;
+			}
+
+			tr {
+				&:first-child {
+					th, td { border-top-width: 0; }
+				}
+
+				&:last-child { 
+					th, td { border-bottom-width: 0; }
+				}
+			}
+		}
 	}
 }
 
