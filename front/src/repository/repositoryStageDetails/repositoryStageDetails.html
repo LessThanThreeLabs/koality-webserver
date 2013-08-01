@@ -47,11 +47,9 @@
 			</div>
 
 			<div id="output" ng-show="selectedStage.getId() != null">
-				<div class="consoleTextTopBuffer"></div>
-				<div class="consoleTextContainer" auto-scroll-to-bottom="lines" auto-scroll-to-bottom-buffer="40" start-at-bottom>
+				<div auto-scroll-to-bottom="lines" auto-scroll-to-bottom-buffer="40" start-at-bottom fading-content>
 					<console-text class="consoleText" console-text-lines="lines"></console-text>
 				</div>
-				<div class="consoleTextBottomBuffer"></div>
 			</div>
 
 			<div id="skipped" ng-show="selectedStage.isSkipped()">

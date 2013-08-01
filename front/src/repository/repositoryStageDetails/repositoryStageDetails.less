@@ -45,67 +45,11 @@
 	}
 
 	#output {
-		@bufferHeight: 20px;
-		@consoleTextWidth: 100%;
-
 		position: absolute;
-		top: 20px;
+		top: 0;
 		left: 10px;
 		right: 15px;
-		bottom: 30px;
+		bottom: 0;
 		overflow: hidden;
-
-		.consoleTextContainer {
-			@scrollbarHideWidth: 50px;
-
-			position: absolute;
-			top: 0;
-			left: 0;
-			right: -@scrollbarHideWidth;
-			bottom: 0;
-			padding-right: @scrollbarHideWidth;
-			box-sizing: border-box;
-			-moz-box-sizing: border-box;
-			overflow-x: hidden;
-			overflow-y: auto;
-
-			.consoleText {
-				margin-top: @bufferHeight;
-				margin-bottom: @bufferHeight;
-				width: @consoleTextWidth;
-			}
-		}
-
-		.consoleTextTopBuffer {
-			position: absolute;
-			z-index: 100;
-			top: 0;
-			left: 0;
-			right: 0;
-			width: @consoleTextWidth;
-			height: @bufferHeight;
-
-			background: linear-gradient(to bottom, fade(@panelBackground, 100%) 0%, fade(@panelBackground, 0%) 100%);
-			background: -moz-linear-gradient(top, fade(@panelBackground, 100%) 0%, fade(@panelBackground, 0%) 100%);
-			background: -webkit-linear-gradient(top, fade(@panelBackground, 100%) 0%, fade(@panelBackground, 0%) 100%);
-			background: -o-linear-gradient(top, fade(@panelBackground, 100%) 0%, fade(@panelBackground, 0%) 100%);
-			background: -ms-linear-gradient(top, fade(@panelBackground, 100%) 0%, fade(@panelBackground, 0%) 100%);
-		}
-
-		.consoleTextBottomBuffer {
-			position: absolute;
-			z-index: 100;
-			left: 0;
-			right: 0;
-			bottom: 0;
-			width: @consoleTextWidth;
-			height: @bufferHeight;
-
-			background: linear-gradient(to bottom, fade(@panelBackground, 0%) 0%, fade(@panelBackground, 100%) 100%);
-			background: -moz-linear-gradient(top, fade(@panelBackground, 0%) 0%, fade(@panelBackground, 100%) 100%);
-			background: -webkit-linear-gradient(top, fade(@panelBackground, 0%) 0%, fade(@panelBackground, 100%) 100%);
-			background: -o-linear-gradient(top, fade(@panelBackground, 0%) 0%, fade(@panelBackground, 100%) 100%);
-			background: -ms-linear-gradient(top, fade(@panelBackground, 0%) 0%, fade(@panelBackground, 100%) 100%);
-		}
 	}
 }
