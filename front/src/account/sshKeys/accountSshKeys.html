@@ -19,7 +19,7 @@
 							<textarea type="text" ng-model="addKey.key" name="key" ng-pattern="/^ssh-(?:dss|rsa) [A-Za-z0-9+/]+={0,2}/" ng-maxlength="8192" required></textarea>
 						</td>
 						<td class="addKeySubmitColumn">
-							<button ng-click="submitKey()" ng-disabled="addKeyForm.$invalid">Add Key</button>
+							<busy-button busy="addKey.makingRequest" click="submitKey()" disabled="addKeyForm.$invalid">Add Key</busy-button>
 						</td>
 						<td class="addKeyCancelColumn">
 							<a ng-click="clearAddKey()">Cancel</a>

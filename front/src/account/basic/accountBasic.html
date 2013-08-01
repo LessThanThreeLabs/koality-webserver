@@ -15,7 +15,7 @@
 
 			<div class="formDivider"></div>
 
-			<button class="centered" ng-click="submit()" ng-disabled="accountBasicForm.$invalid">Save Changes</button>
+			<busy-button centered busy="makingRequest" click="submit()" disabled="accountBasicForm.$invalid || (account.firstName == account.oldFirstName && account.lastName == account.oldLastName)">Save Changes</busy-button>
 		</form>
 	</panel-body>
 </div>
