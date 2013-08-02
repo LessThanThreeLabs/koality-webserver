@@ -39,7 +39,8 @@
 			"/css/src/repository/repositoryStageDetails/repositoryStageDetails.css",
 
 			"/css/src/admin/admin.css",
-			"/css/src/admin/users/adminUsers.css"
+			"/css/src/admin/users/adminUsers.css",
+			"/css/src/admin/repositories/adminRepositories.css"
 		]
 	},
 
@@ -89,7 +90,8 @@
 			"/js/src/repository/repositoryStageDetails/repositoryStageDetails.js",
 
 			"/js/src/admin/admin.js",
-			"/js/src/admin/users/adminUsers.js"
+			"/js/src/admin/users/adminUsers.js",
+			"/js/src/admin/repositories/adminRepositories.js"
 		]
 	},
 
@@ -120,7 +122,8 @@
 			"/html/repository/repositoryStageDetails/repositoryStageDetails.html",
 
 			"/html/admin/admin.html",
-			"/html/admin/users/adminUsers.html"
+			"/html/admin/users/adminUsers.html",
+			"/html/admin/repositories/adminRepositories.html"
 		]
 	},
 

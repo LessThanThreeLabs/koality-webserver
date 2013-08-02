@@ -6,16 +6,16 @@ window.AdminUsers = ['$scope', 'initialState', 'rpc', 'events', 'notification', 
 		makingRequest: false
 		drawerOpen: false
 
-	getUsers = () ->
-		addPrivilegesToUser = (user) ->
-			user.privilege = if user.isAdmin then 'Admin' else 'User'
-			return user
+	addUserPrivilege = (user) ->
+		user.privilege = if user.isAdmin then 'Admin' else 'User'
+		return user
 
+	getUsers = () ->
 		rpc 'users', 'read', 'getAllUsers', null, (error, users) ->
-			$scope.users = (addPrivilegesToUser user for user in users)
+			$scope.users = (addUserPrivilege user for user in users)
 
 	handleUserAdded = (data) ->
-		$scope.users.push addPrivilegesToUser data
+		$scope.users.push addUserPrivilege data
 
 	handleUserRemoved = (data) ->
 		userToRemoveIndex = (index for user, index in $scope.users when user.id is data.id)[0]

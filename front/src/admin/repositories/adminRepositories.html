@@ -1,0 +1,61 @@
+<div id="adminRepositories" ng-controller="AdminRepositories">
+	<panel-header>
+		Repositories
+		<button ng-click="addRepository.drawerOpen = !addRepository.drawerOpen">Add a New Repository</button>
+	</panel-header>
+
+	<panel-body no-padding drawer-open="addRepository.drawerOpen">
+		<panel-drawer>
+			<form id="addRepositoryForm" name="addRepositoryForm" novalidate>
+				<table>
+					<tr>
+						<!-- <td class="addRepositoryColumn">
+							<label>Add Users</label>
+							<input type="text" ng-model="addRepository.emails" name="emails" placeholder="first@email.com second@email.com third@email.com ..." focused required>
+						</td>
+						<td class="addRepositorySubmitColumn">
+							<busy-button busy="addRepository.makingRequest" click="submitUsers()" disabled="addRepositoryForm.$invalid">Invite Users</busy-button>
+						</td>
+						<td class="addRepositoryCancelColumn">
+							<a ng-click="clearAddUsers()">Cancel</a>
+						</td> -->
+					</tr>
+				</table>
+			</form>
+		</panel-drawer>
+
+		<div id="repositoriesList" fading-content>
+			<table class="delineated">
+				<tr>
+					<th class="nameColumn unselectable" ng-click="orderByPredicate = 'name'; orderByReverse = !orderByReverse">
+						<div class="triangle gray" ng-class="{right: orderByPredicate != 'name', up: orderByPredicate == 'name' && !orderByReverse, down: orderByPredicate == 'name' && orderByReverse}"></div>
+						Name
+					</th>
+					<th class="forwardUrlColumn unselectable" ng-click="orderByPredicate = 'forwardUrl'; orderByReverse = !orderByReverse">
+						<div class="triangle gray" ng-class="{right: orderByPredicate != 'forwardUrl', up: orderByPredicate == 'forwardUrl' && !orderByReverse, down: orderByPredicate == 'forwardUrl' && orderByReverse}"></div>
+						Forward URL
+					</th>
+					<th class="createdColumn unselectable" ng-click="orderByPredicate = 'timestamp'; orderByReverse = !orderByReverse">
+						<div class="triangle gray" ng-class="{right: orderByPredicate != 'timestamp', up: orderByPredicate == 'timestamp' && !orderByReverse, down: orderByPredicate == 'timestamp' && orderByReverse}"></div>
+						Date Created
+					</th>
+					<th class="editColumn unselectable">Actions</th>
+				</tr>
+
+				<tr ng-show="repositories.length == 0">
+					<td class="nameColumn" text-selectable>There are no repositories</td>
+					<td class="forwardUrlColumn" text-selectable></td>
+					<td class="createdColumn" text-selectable></td>
+					<td class="editColumn"></td>
+				</tr>
+
+				<tr ng-repeat="repository in repositories | orderBy:orderByPredicate:orderByReverse">
+					<td class="nameColumn" text-selectable>{{repository.name}}</td>
+					<td class="forwardUrlColumn" text-selectable>{{repository.forwardUrl}}</td>
+					<td class="createdColumn" text-selectable>{{repository.timestamp | date:'MM/dd/yyyy'}}</td>
+					<td class="editColumn"><a ng-click="editRepository(repository)">Edit</a></td>
+				</tr>
+			</table>
+		</div>
+	</panel-body>
+</div>
