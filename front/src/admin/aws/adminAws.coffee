@@ -22,7 +22,7 @@ window.AdminAws = ['$scope', 'rpc', 'notification', ($scope, rpc, notification) 
 			rpc 'systemSettings', 'update', 'setAwsKeys', $scope.awsKeys, defer awsKeysError
 			rpc 'systemSettings', 'update', 'setInstanceSettings', $scope.instanceSettings, defer instanceSettingsError
 
-		if awsKeysError then notification.error 'Unable to update aws keys'
-		else if instanceSettingsError then notification.error 'Unable to update aws instance information'
+		if awsKeysError then notification.error awsKeysError
+		else if instanceSettingsError then notification.error instanceSettingsError
 		else notification.success 'Updated aws information'
 ]
