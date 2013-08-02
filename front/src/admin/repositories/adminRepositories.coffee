@@ -1,3 +1,5 @@
+'use strict'
+
 window.AdminRepositories = ['$scope', '$routeParams', 'initialState', 'rpc', 'events', 'notification', ($scope, $routeParams, initialState, rpc, events, notification) ->
 	$scope.orderByPredicate = 'name'
 	$scope.orderByReverse = false
