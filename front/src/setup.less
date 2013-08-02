@@ -207,11 +207,18 @@ body {
 }
 
 .formContainer {
-	margin: 0 auto;
+	display: inline-block;
+	margin: 0 15px;
 	padding: 30px;
 	width: 350px;
+	vertical-align: top;
 	background-color: @platformBackground;
 	border-radius: @borderRadius;
+
+	&.centered {
+		display: block;
+		margin: 0 auto;
+	}
 }
 
 .formDivider {
