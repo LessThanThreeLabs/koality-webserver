@@ -40,7 +40,8 @@
 
 			"/css/src/admin/admin.css",
 			"/css/src/admin/users/adminUsers.css",
-			"/css/src/admin/repositories/adminRepositories.css"
+			"/css/src/admin/repositories/adminRepositories.css",
+			"/css/src/admin/aws/adminAws.css"
 		]
 	},
 
@@ -91,7 +92,8 @@
 
 			"/js/src/admin/admin.js",
 			"/js/src/admin/users/adminUsers.js",
-			"/js/src/admin/repositories/adminRepositories.js"
+			"/js/src/admin/repositories/adminRepositories.js",
+			"/js/src/admin/aws/adminAws.js"
 		]
 	},
 
@@ -123,7 +125,8 @@
 
 			"/html/admin/admin.html",
 			"/html/admin/users/adminUsers.html",
-			"/html/admin/repositories/adminRepositories.html"
+			"/html/admin/repositories/adminRepositories.html",
+			"/html/admin/aws/adminAws.html"
 		]
 	},
 

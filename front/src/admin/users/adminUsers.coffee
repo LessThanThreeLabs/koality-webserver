@@ -1,3 +1,5 @@
+'use strict'
+
 window.AdminUsers = ['$scope', 'initialState', 'rpc', 'events', 'notification', ($scope, initialState, rpc, events, notification) ->
 	$scope.orderByPredicate = 'privilege'
 	$scope.orderByReverse = false
