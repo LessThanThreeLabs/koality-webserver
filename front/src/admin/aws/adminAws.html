@@ -2,6 +2,33 @@
 	<panel-header>AWS</panel-header>
 
 	<panel-body>
-		hello there!
+		<form name="awsForm" novalidate>
+			<div class="formContainer">
+				<label>Access Key</label>
+				<input type="text" ng-model="awsKeys.accessKey" name="accessKey" ng-pattern="/^[\w]+$/" ng-minlength="16" ng-maxlength="32" focused required>
+
+				<label>Secret Key</label>
+				<input type="text" ng-model="awsKeys.secretKey" name="secretKey" ng-maxlength="128" required>
+			</div>
+
+			<div class="formContainer">
+				<label>Instance Size</label>
+				<select ng-model="instanceSettings.instanceSize" ng-options="instanceSize as instanceSize for instanceSize in allowedInstanceSizes"></select>
+
+				<div class="halfWidthFormElement left">
+					<label>Ready Instances</label>
+					<input type="number" ng-model="instanceSettings.numWaiting" name="numWaiting" min="0" max="1000" required>
+				</div>
+
+				<div class="halfWidthFormElement right">
+					<label>Max Running Instances</label>
+					<input type="number" ng-model="instanceSettings.maxRunning" name="maxRunning" min="1" max="10000" required>
+				</div>
+			</div>
+
+			<div class="formDivider"></div>
+
+			<busy-button centered busy="makingRequest" click="submit()" disabled="awsForm.$invalid">Save Changes</busy-button>
+		</form>
 	</panel-body>
 </div>
