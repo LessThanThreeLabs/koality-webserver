@@ -41,7 +41,8 @@
 			"/css/src/admin/admin.css",
 			"/css/src/admin/users/adminUsers.css",
 			"/css/src/admin/repositories/adminRepositories.css",
-			"/css/src/admin/aws/adminAws.css"
+			"/css/src/admin/aws/adminAws.css",
+			"/css/src/admin/exporter/adminExporter.css"
 		]
 	},
 
@@ -93,7 +94,8 @@
 			"/js/src/admin/admin.js",
 			"/js/src/admin/users/adminUsers.js",
 			"/js/src/admin/repositories/adminRepositories.js",
-			"/js/src/admin/aws/adminAws.js"
+			"/js/src/admin/aws/adminAws.js",
+			"/js/src/admin/exporter/adminExporter.js"
 		]
 	},
 
@@ -126,7 +128,8 @@
 			"/html/admin/admin.html",
 			"/html/admin/users/adminUsers.html",
 			"/html/admin/repositories/adminRepositories.html",
-			"/html/admin/aws/adminAws.html"
+			"/html/admin/aws/adminAws.html",
+			"/html/admin/exporter/adminExporter.html"
 		]
 	},
 

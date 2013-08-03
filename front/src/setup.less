@@ -153,6 +153,39 @@ body {
 		}
 	}
 
+	form {
+		.formContainer {
+			display: inline-block;
+			margin: 0 15px;
+			padding: 30px;
+			width: 350px;
+			vertical-align: top;
+			background-color: @platformBackground;
+			border-radius: @borderRadius;
+
+			&.centered {
+				display: block;
+				margin: 0 auto;
+			}
+		}
+
+		.formDivider {
+			margin: 40px 0 25px 0;
+			width: 100%;
+			height: 0;
+			border-top: 1px solid @platformBackground;
+			border-bottom: 1px solid @koalityDarkGray;
+		}
+
+		.submitContanier {
+			position: absolute;
+			left: 0;
+			right: 0;
+			bottom: 0;
+			margin-bottom: 30px;
+		}
+	}
+
 	table {
 		border-spacing: 0;
 		border-collapse: collapse;
@@ -204,29 +237,6 @@ body {
 			}
 		}
 	}
-}
-
-.formContainer {
-	display: inline-block;
-	margin: 0 15px;
-	padding: 30px;
-	width: 350px;
-	vertical-align: top;
-	background-color: @platformBackground;
-	border-radius: @borderRadius;
-
-	&.centered {
-		display: block;
-		margin: 0 auto;
-	}
-}
-
-.formDivider {
-	margin: 40px 0 25px 0;
-	width: 100%;
-	height: 0;
-	border-top: 1px solid @platformBackground;
-	border-bottom: 1px solid @koalityDarkGray;
 }
 
 .unselectable {
