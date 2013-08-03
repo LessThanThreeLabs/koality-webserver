@@ -56,7 +56,7 @@ angular.module('koality.service', []).
 			assert.ok typeof durationInSeconds is 'number' and durationInSeconds >= 0
 
 			if typeof text is 'object'
-				text = (value for key, value of value).join ', '
+				text = (value for key, value of text).join ', '
 
 			notification = "<notification type='#{type}' duration-in-seconds=#{durationInSeconds} unselectable>#{text}</notification>"
 
