@@ -51,15 +51,15 @@ body {
 	input,
 	select,
 	textarea {
-		border: 1px solid @koalityLightGray;
-		border-radius: @borderRadius;
+		margin: 0 0 15px 0;
+		padding: 6px;
+		width: 100%;
 		box-sizing: border-box;
 		-moz-box-sizing: border-box;
 		font-family: inherit;
 		font-weight: 300;
-		margin: 0 0 15px 0;
-		padding: 6px;
-		width: 100%;
+		border: 1px solid @koalityLightGray;
+		border-radius: @borderRadius;
 
 		&:focus {
 			box-shadow: none;
@@ -115,6 +115,32 @@ body {
 		border: 1px solid @koalityDarkGreen;
 		border-radius: @borderRadius;
 
+		&.red {
+			background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(@koalityDarkRed), to(@koalityRed)); /* Safari 4-5, Chrome 1-9 */
+			background: -webkit-linear-gradient(top, @koalityRed, @koalityDarkRed); /* Safari 5.1, Chrome 10+ */
+			background: -moz-linear-gradient(top, @koalityRed, @koalityDarkRed); /* Firefox 3.6+ */
+			background: -ms-linear-gradient(top, @koalityRed, @koalityDarkRed); /* IE 10 */
+			background: -o-linear-gradient(top, @koalityRed, @koalityDarkRed); /* Opera 11.10+ */
+
+			border: 1px solid @koalityDarkRed;
+
+			&:hover {
+				cursor: hand;
+				cursor: pointer;
+				color: @koalityWhite;
+				background: @koalityRed;
+			}
+		}
+
+		&.centered {
+			display: block;
+			margin: 0 auto;
+		}
+
+		&.fullWidth {
+			width: 100%;
+		}
+
 		&:hover {
 			cursor: hand;
 			cursor: pointer;
@@ -141,15 +167,6 @@ body {
 			&:active {
 				top: 0px;
 			}
-		}
-
-		&.centered {
-			display: block;
-			margin: 0 auto;
-		}
-
-		&.fullWidth {
-			width: 100%;
 		}
 	}
 
