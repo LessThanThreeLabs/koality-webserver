@@ -44,7 +44,9 @@
 			"/css/src/admin/aws/adminAws.css",
 			"/css/src/admin/exporter/adminExporter.css",
 			"/css/src/admin/website/adminWebsite.css",
-			"/css/src/admin/api/adminApi.css"
+			"/css/src/admin/api/adminApi.css",
+			"/css/src/admin/plan/adminPlan.css",
+			"/css/src/admin/upgrade/adminUpgrade.css"
 		]
 	},
 
@@ -99,7 +101,9 @@
 			"/js/src/admin/aws/adminAws.js",
 			"/js/src/admin/exporter/adminExporter.js",
 			"/js/src/admin/website/adminWebsite.js",
-			"/js/src/admin/api/adminApi.js"
+			"/js/src/admin/api/adminApi.js",
+			"/js/src/admin/plan/adminPlan.js",
+			"/js/src/admin/upgrade/adminUpgrade.js"
 		]
 	},
 
@@ -135,7 +139,9 @@
 			"/html/admin/aws/adminAws.html",
 			"/html/admin/exporter/adminExporter.html",
 			"/html/admin/website/adminWebsite.html",
-			"/html/admin/api/adminApi.html"
+			"/html/admin/api/adminApi.html",
+			"/html/admin/plan/adminPlan.html",
+			"/html/admin/upgrade/adminUpgrade.html"
 		]
 	},
 

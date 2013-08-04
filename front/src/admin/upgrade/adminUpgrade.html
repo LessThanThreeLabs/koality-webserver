@@ -1,0 +1,17 @@
+<div id="adminUpgrade" ng-controller="AdminUpgrade">
+	<panel-header>Upgrade</panel-header>
+
+	<panel-body>
+		<form name="updateForm" novalidate>
+			<div class="formContainer centered">
+				{{upgrade.message}}
+			</div>
+
+			<div class="submitContanier">
+				<div class="formDivider"></div>
+
+				<busy-button centered busy="makingRequest" click="submit()" disabled="!upgrade.upgradeAllowed">Update Koality Now</busy-button>
+			</div>
+		</form>
+	</panel-body>
+</div>

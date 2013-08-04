@@ -8,7 +8,7 @@
 			<panel-option selected="view == 'website'" ng-click="selectView('website')">Website</panel-option>
 			<panel-option selected="view == 'api'" ng-click="selectView('api')">API</panel-option>
 			<panel-option selected="view == 'plan'" ng-click="selectView('plan')">Plan</panel-option>
-			<panel-option selected="view == 'update'" ng-click="selectView('update')">Update</panel-option>
+			<panel-option selected="view == 'upgrade'" ng-click="selectView('upgrade')">Upgrade</panel-option>
 		</panel-options>
 
 		<div ng-switch="view">
@@ -18,8 +18,8 @@
 			<div ng-switch-when="exporter" ng-include="'html/admin/exporter/adminExporter.html' | fileSuffix"></div>
 			<div ng-switch-when="website" ng-include="'html/admin/website/adminWebsite.html' | fileSuffix"></div>
 			<div ng-switch-when="api" ng-include="'html/admin/api/adminApi.html' | fileSuffix"></div>
-			<!-- <div ng-switch-when="sshKeys" ng-include="'html/admin/sshKeys/adminSshKeys.html' | fileSuffix"></div> -->
-			<!-- <div ng-switch-when="sshKeys" ng-include="'html/admin/sshKeys/adminSshKeys.html' | fileSuffix"></div> -->
+			<div ng-switch-when="plan" ng-include="'html/admin/plan/adminPlan.html' | fileSuffix"></div>
+			<div ng-switch-when="upgrade" ng-include="'html/admin/upgrade/adminUpgrade.html' | fileSuffix"></div>
 		</div>
 	</panel>
 </div>
