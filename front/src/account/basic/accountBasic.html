@@ -13,7 +13,7 @@
 				<input ng-model="account.email" name="email" type="text" placeholder="Email" maxlength=256 readonly>
 			</div>
 
-			<div class="submitContanier">
+			<div class="bottomContanier">
 				<div class="formDivider"></div>
 
 				<busy-button centered busy="makingRequest" click="submit()" disabled="accountBasicForm.$invalid || (account.firstName == account.oldFirstName && account.lastName == account.oldLastName)">Save Changes</busy-button>
