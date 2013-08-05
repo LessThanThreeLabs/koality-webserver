@@ -52,7 +52,6 @@ window.AdminRepositories = ['$scope', '$routeParams', 'initialState', 'rpc', 'ev
 
 	createRepositoryForwardUrlUpdateHandler = (repository) ->
 		return (data) ->
-			console.log data
 			repository.forwardUrl = data.forwardUrl
 			repository.newForwardUrl = data.forwardUrl
 
@@ -88,7 +87,6 @@ window.AdminRepositories = ['$scope', '$routeParams', 'initialState', 'rpc', 'ev
 		requestParams =
 			id: repository.id
 			forwardUrl: repository.newForwardUrl
-		console.log requestParams
 		rpc 'repositories', 'update', 'setForwardUrl', requestParams, (error) ->
 			$scope.currentlyEditingRepositoryId = null
 
