@@ -12,9 +12,9 @@
 					<tr>
 						<td class="setupTypeColumn">
 							<label>Setup Type</label>
-							<select ng-model="addRepository.setupType">
+							<select ng-model="addRepository.setupType" required>
 								<option value="manual">Manual Setup</option>
-								<option value="github">GitHub Setup</option>
+								<!-- <option value="github">GitHub Setup</option> -->
 							</select>
 						</td>
 						<td class="nameColumn">
@@ -27,7 +27,7 @@
 						</td>
 						<td class="typeColumn">
 							<label>Type</label>
-							<select ng-model="addRepository.type">
+							<select ng-model="addRepository.type" required>
 								<option value="git">Git</option>
 								<option value="hg">Hg</option>
 							</select>
