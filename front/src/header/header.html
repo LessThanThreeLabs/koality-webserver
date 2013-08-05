@@ -23,7 +23,7 @@
 		<div id="feedback">
 			<a ng-click="feedback.open = !feedback.open">Feedback</a>
 
-			<div id="feedbackMessageContainer" ng-show="feedback.open">
+			<div id="feedbackMessageContainer" ng-show="feedback.open" hide-on-external-click="feedback.open" hide-function="hideFeedback()">
 				<form name="feedbackForm" novalidate>
 					<textarea ng-model="feedback.message" placeholder="I found an issue with foo, where bar will baz from time to time. I was able to reproduce the baz behavior by first... and then..." required></textarea>
 

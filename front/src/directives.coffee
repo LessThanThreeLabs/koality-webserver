@@ -18,6 +18,27 @@ angular.module('koality.directive', []).
 
 			element.bind 'click', highlightText
 	).
+	directive('hideOnExternalClick', ['$document', ($document) ->
+		restrict: 'A'
+		link: (scope, element, attributes) ->
+			addListeners = () ->
+				element.bind 'click', handleInternalClick
+				setTimeout (() -> $document.bind 'click', handleExternalClick), 0
+
+			removeListeners = () ->
+				element.unbind 'click', handleInternalClick
+				$document.unbind 'click', handleExternalClick
+
+			handleInternalClick = (event) ->
+				event.stopPropagation()
+
+			handleExternalClick = () ->
+				scope.$apply attributes.hideFunction
+
+			scope.$watch attributes.hideOnExternalClick, () ->
+				if scope.$eval attributes.hideOnExternalClick then addListeners()
+				else removeListeners()
+	]).
 	directive('licenseKey', () ->
 		restrict: 'A'
 		require: 'ngModel'
