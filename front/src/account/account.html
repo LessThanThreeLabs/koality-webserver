@@ -6,6 +6,9 @@
 			<panel-option selected="view == 'sshKeys'" ng-click="selectView('sshKeys')">SSH Keys</panel-option>
 		</panel-options>
 
+		<panel-header style="z-index: -1;"></panel-header>
+		<panel-body style="z-index: -1;"></panel-body>
+
 		<div ng-switch="view">
 			<div ng-switch-when="basic" ng-include="'html/account/basic/accountBasic.html' | fileSuffix"></div>
 			<div ng-switch-when="password" ng-include="'html/account/password/accountPassword.html' | fileSuffix"></div>
