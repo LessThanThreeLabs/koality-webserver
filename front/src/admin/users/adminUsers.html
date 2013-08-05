@@ -1,11 +1,11 @@
 <div id="adminUsers" ng-controller="AdminUsers">
 	<panel-header>
 		Users
-		<button ng-click="addUsers.drawerOpen = !addUsers.drawerOpen">Add New Users</button>
+		<button ng-click="toggleDrawer('addUsers')">Add New Users</button>
 	</panel-header>
 
-	<panel-body no-padding drawer-open="addUsers.drawerOpen">
-		<panel-drawer>
+	<panel-body no-padding open-drawer="currentlyOpenDrawer">
+		<panel-drawer drawer-name="addUsers">
 			<form id="addUsersForm" name="addUsersForm" novalidate>
 				<table>
 					<tr>

@@ -6,10 +6,10 @@ window.AdminUsers = ['$scope', 'initialState', 'rpc', 'events', 'notification', 
 
 	$scope.userId = initialState.user?.id
 	$scope.currentlyEditingUserId = null
+	$scope.currentlyOpenDrawer = null
 
 	$scope.addUsers =
 		makingRequest: false
-		drawerOpen: false
 
 	addUserPrivilege = (user) ->
 		user.privilege = if user.isAdmin then 'Admin' else 'User'
@@ -41,6 +41,12 @@ window.AdminUsers = ['$scope', 'initialState', 'rpc', 'events', 'notification', 
 	$scope.$on '$destroy', adminStatusEvents.unsubscribe
 
 	getUsers()
+
+	$scope.toggleDrawer = (drawerName) ->
+		if $scope.currentlyOpenDrawer is drawerName
+			$scope.currentlyOpenDrawer = null
+		else
+			$scope.currentlyOpenDrawer = drawerName
 
 	$scope.editUser = (user) ->
 		$scope.currentlyEditingUserId = user?.id
@@ -75,5 +81,5 @@ window.AdminUsers = ['$scope', 'initialState', 'rpc', 'events', 'notification', 
 
 	$scope.clearAddUsers = () ->
 		$scope.addUsers.emails = ''
-		$scope.addUsers.drawerOpen = false
+		$scope.currentlyOpenDrawer = null
 ]
