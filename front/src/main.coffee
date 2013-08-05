@@ -55,13 +55,13 @@ window.Main = ['$scope', 'rpc', 'events', 'initialState', 'notification', ($scop
 				notification.warning "Your payment method is about to expire. <a href='#{billingUpdateUrl}'>Update your billing information.</a>"
 
 		rpc 'systemSettings', 'read', 'getLicenseInformation', null, (error, licenseInformation) ->
-			if licenseInformation.licenseTrialExpirationTime?
-				if licenseInformation.licenseUnpaidExpirationTime?
-					handleTrialExpirationWithoutPaymentInfo getDaysRemaining licenseInformation.licenseTrialExpirationTime
+			if licenseInformation.trialExpirationTime?
+				if licenseInformation.unpaidExpirationTime?
+					handleTrialExpirationWithoutPaymentInfo getDaysRemaining licenseInformation.trialExpirationTime
 				else
-					handleTrialExpirationWithPaymentInfo getDaysRemaining licenseInformation.licenseTrialExpirationTime
-			else if licenseInformation.licenseUnpaidExpirationTime?
-				handleUnpaidExpiration getDaysRemaining licenseInformation.licenseUnpaidExpirationTime
+					handleTrialExpirationWithPaymentInfo getDaysRemaining licenseInformation.trialExpirationTime
+			else if licenseInformation.unpaidExpirationTime?
+				handleUnpaidExpiration getDaysRemaining licenseInformation.unpaidExpirationTime
 			else if not licenseInformation.active
 				notification.error "Your license has been deactivated. <a href='#{billingUpdateUrl}'>Update your billing information.</a>", 0
 
