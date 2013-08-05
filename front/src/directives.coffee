@@ -39,8 +39,6 @@ angular.module('koality.directive', []).
 				<div class="fadingContent" ng-transclude></div>
 				<div class="fadingContentBottomBuffer"></div>
 			</div>'
-		link: (scope, element, attributes, control) ->
-			console.log 'here!'
 	).
 	# directive('tooltip', () ->
 	# 	restrict: 'A'
