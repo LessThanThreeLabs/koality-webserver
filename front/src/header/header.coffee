@@ -42,6 +42,9 @@ window.Header = ['$scope', '$location', 'initialState', 'rpc', 'events', 'notifi
 			$scope.feedback.message = ''
 			$scope.feedback.open = false
 			notification.success 'Thank you for your feedback!'
+
+	$scope.hideFeedback = () ->
+		$scope.feedback.open = false
 	
 	$scope.performLogout = () ->
 		return if not $scope.loggedIn
