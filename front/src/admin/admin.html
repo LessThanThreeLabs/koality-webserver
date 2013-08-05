@@ -11,6 +11,9 @@
 			<panel-option selected="view == 'upgrade'" ng-click="selectView('upgrade')">Upgrade</panel-option>
 		</panel-options>
 
+		<panel-header style="z-index: -1;"></panel-header>
+		<panel-body style="z-index: -1;"></panel-body>
+
 		<div ng-switch="view">
 			<div ng-switch-when="users" ng-include="'html/admin/users/adminUsers.html' | fileSuffix"></div>
 			<div ng-switch-when="repositories" ng-include="'html/admin/repositories/adminRepositories.html' | fileSuffix"></div>
