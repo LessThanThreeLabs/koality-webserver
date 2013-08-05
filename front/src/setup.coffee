@@ -34,7 +34,7 @@ angular.module('koality', ['ngSanitize',
 				reloadOnSearch: false
 				redirectTo: if window.accountInformation.id is '' then '/login' else null
 			).
-			when('/',
+			when('/analytics',
 				templateUrl: "/html/analytics/analytics#{fileSuffix}.html"
 				controller: Analytics
 				reloadOnSearch: false
@@ -47,7 +47,7 @@ angular.module('koality', ['ngSanitize',
 				redirectTo: if window.accountInformation.isAdmin then null else '/'
 			).
 			otherwise(
-				redirectTo: '/'
+				redirectTo: '/analytics'
 			)
 	]).
 	config(['$locationProvider', ($locationProvider) ->
