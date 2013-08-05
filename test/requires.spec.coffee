@@ -12,4 +12,5 @@ describe 'webserver', () ->
 				requireText = line.substring line.indexOf('\'') + 1, line.lastIndexOf('\'')
 
 				continue if requireText.indexOf('./') is -1
+				console.log '../libs/' + requireText.substring(2)
 				require '../libs/' + requireText.substring(2)
