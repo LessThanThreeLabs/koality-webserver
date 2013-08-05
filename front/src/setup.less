@@ -14,8 +14,8 @@ body {
 		cursor: pointer;
 		color: @koalityGreen;
 
-		&.red { color: @koalityRed; }
-		&.gray { color: @koalityGray; }
+		&.red { color: @koalityRed !important; }
+		&.gray { color: @koalityGray !important; }
 
 		&:link { text-decoration: none; }
 		&:visited { text-decoration: none; }
@@ -40,6 +40,10 @@ body {
 		font-weight: 500;
 		color: #929497;
 		text-transform: uppercase;
+
+		&.red {
+			color: @koalityRed;
+		}
 
 		.sublabel {
 			display: inline-block;
@@ -130,6 +134,10 @@ body {
 				cursor: pointer;
 				color: @koalityWhite;
 				background: @koalityRed;
+			}
+
+			&:disabled {
+				// NEEDS TO BE IMPLEMENTED
 			}
 		}
 
@@ -242,6 +250,14 @@ body {
 			}
 
 			tr {
+				&.editing {
+					td { background-color: darken(@panelBackground, 3%); }
+
+					&:hover {
+						td { background-color: darken(@panelBackground, 3%); }
+					}
+				}
+
 				&:first-child {
 					th, td { border-top-width: 0; }
 				}

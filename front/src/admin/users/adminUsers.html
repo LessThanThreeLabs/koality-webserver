@@ -43,13 +43,13 @@
 				</tr>
 
 				<tr ng-repeat="user in users | orderBy:orderByPredicate:orderByReverse" ng-class="{editing: user.id == currentlyEditingUserId}">
-					<td class="nameColumn" text-selectable>
+					<td class="nameColumn">
 						{{user.firstName}} {{user.lastName}}
 					</td>
-					<td class="emailColumn" text-selectable>
+					<td class="emailColumn">
 						<a href="mailto:{{user.email}}?subject=Koality" target="_blank" ng-class="{disabled: user.id == currentlyEditingUserId}">{{user.email}}</a>
 					</td>
-					<td class="privilegesColumn" text-selectable>
+					<td class="privilegesColumn">
 						<span ng-show="user.id != currentlyEditingUserId">{{user.privilege}}</span>
 						<select ng-model="user.newPrivilege" ng-show="user.id == currentlyEditingUserId">
 							<option value="Admin">Admin</option>
@@ -57,7 +57,7 @@
 						</select>
 					</td>
 					<td class="editColumn">
-						<a ng-click="editUser(user)" ng-class="{disabled: user.id == userId}" ng-show="user.id != currentlyEditingUserId">Edit</a>
+						<a ng-click="editUser(user)" ng-show="user.id != userId && user.id != currentlyEditingUserId">Edit</a>
 						<a ng-click="saveUser(user)" ng-show="user.id == currentlyEditingUserId">Save</a>
 						<a class="red" ng-click="deleteUser(user)" ng-show="user.id == currentlyEditingUserId">Delete</a>
 						<a class="gray" ng-click="editUser(null)" ng-show="user.id == currentlyEditingUserId">Cancel</a>

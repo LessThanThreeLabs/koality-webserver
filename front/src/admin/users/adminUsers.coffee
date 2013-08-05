@@ -47,6 +47,7 @@ window.AdminUsers = ['$scope', 'initialState', 'rpc', 'events', 'notification', 
 			$scope.currentlyOpenDrawer = null
 		else
 			$scope.currentlyOpenDrawer = drawerName
+			$scope.currentlyEditingUserId = null
 
 	$scope.editUser = (user) ->
 		$scope.currentlyEditingUserId = user?.id
