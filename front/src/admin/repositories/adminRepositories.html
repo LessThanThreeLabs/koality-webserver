@@ -48,7 +48,7 @@
 				<tr>
 					<td class="sshKeyColumn">
 						<label>SSH Key<span class="sublabel">Unmodifiable</span></label>
-						<input type="text" ng-model="publicKey.key" highlight-on-first-click read-only>
+						<input type="text" ng-model="publicKey.key" highlight-on-first-click readonly>
 					</td>
 					<td class="closePublicKeyColumn">
 						<a ng-click="toggleDrawer('publicKey')">Close</a>
@@ -76,24 +76,49 @@
 				</tr>
 
 				<tr ng-show="repositories.length == 0">
-					<td class="nameColumn" text-selectable>There are no repositories</td>
-					<td class="forwardUrlColumn" text-selectable></td>
-					<td class="createdColumn" text-selectable></td>
+					<td class="nameColumn">There are no repositories</td>
+					<td class="forwardUrlColumn"></td>
+					<td class="createdColumn"></td>
 					<td class="editColumn"></td>
 				</tr>
 
 				<tr ng-repeat="repository in repositories | orderBy:orderByPredicate:orderByReverse" ng-class="{editing: repository.id == currentlyEditingRepositoryId}">
-					<td class="nameColumn" text-selectable>{{repository.name}}</td>
-					<td class="forwardUrlColumn" text-selectable>
-						<span ng-show="repository.id != currentlyEditingRepositoryId">{{repository.forwardUrl}}</span>
-						<input type="text" ng-model="repository.newForwardUrl" ng-maxlength=256 ng-show="repository.id == currentlyEditingRepositoryId">
+					<td class="nameColumn">
+						<span ng-show="repository.id != currentlyEditingRepositoryId">{{repository.name}}</span>
+
+						<div ng-show="repository.id == currentlyEditingRepositoryId">
+							<label>Name<span class="sublabel">Unmodifiable</span></label>
+							<input type="text" ng-model="repository.name" readonly>
+						</div>
 					</td>
-					<td class="createdColumn" text-selectable>{{repository.timestamp | date:'MM/dd/yyyy'}}</td>
-					<td class="editColumn">
+
+					<td class="forwardUrlColumn">
+						<span ng-show="repository.id != currentlyEditingRepositoryId">{{repository.forwardUrl}}</span>
+
+						<div ng-show="repository.id == currentlyEditingRepositoryId">
+							<label>Forward Url</label>
+							<input type="text" ng-model="repository.newForwardUrl" ng-maxlength=256>
+						</div>
+					</td>
+
+					<td class="createdColumn" ng-show="!repository.deleting">
+						{{repository.timestamp | date:'MM/dd/yyyy'}}
+					</td>
+
+					<td class="editColumn" ng-show="!repository.deleting">
 						<a ng-click="editRepository(repository)" ng-show="repository.id != currentlyEditingRepositoryId">Edit</a>
 						<a ng-click="saveRepository(repository)" ng-show="repository.id == currentlyEditingRepositoryId">Save</a>
-						<a class="red" ng-click="deleteRepository(repository)" ng-show="repository.id == currentlyEditingRepositoryId">Delete</a>
+						<a class="red" ng-click="repository.deleting = true" ng-show="repository.id == currentlyEditingRepositoryId">Delete</a>
 						<a class="gray" ng-click="editRepository(null)" ng-show="repository.id == currentlyEditingRepositoryId">Cancel</a>
+					</td>
+
+					<td class="deleteColumn" colspan="2" ng-show="repository.deleting">
+						<label class="red">Are you sure? Enter your password</label>
+						<div class="deleteRepositoryActions">
+							<input type="password" ng-model="repository.password" name="password" focused required>
+							<a class="red" ng-click="deleteRepository(repository)">Delete</a>
+							<a ng-click="repository.deleting = false">Cancel</a>
+						</div>
 					</td>
 				</tr>
 			</table>

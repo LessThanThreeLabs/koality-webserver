@@ -86,17 +86,24 @@
 
 			tr.editing {
 				color: @koalityGray;
+
+				.createdColumn, .editColumn {
+					padding-top: 46px;
+				}
 			}
 
 			.nameColumn {
 				padding-left: 30px;
 				width: 300px;
+
+				div {
+					margin-right: 30px;
+				}
 			}
 
 			.forwardUrlColumn {
-
-				input {
-					width: 95%;
+				div {
+					margin-right: 30px;
 				}
 			}
 
@@ -111,6 +118,25 @@
 				a {
 					display: inline-block;
 					margin-right: 10px;
+				}
+			}
+
+			.deleteColumn {
+
+				.deleteRepositoryActions {
+					height: 50px;
+
+					input {
+						display: inline-block;
+						width: 150px;
+						vertical-align: top;
+					}
+
+					a {
+						display: inline-block;
+						margin: 8px 0 0 15px;
+						vertical-align: top;
+					}
 				}
 			}
 		}

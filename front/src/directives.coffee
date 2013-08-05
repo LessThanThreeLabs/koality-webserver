@@ -93,6 +93,7 @@ angular.module('koality.directive', []).
 			button = element.find 'button'
 			button.addClass 'centered' if attributes.centered?
 			button.addClass 'fullWidth' if attributes.fullWidth?
+			button.addClass 'red' if attributes.red?
 
 			spinner = element.find '.busyButtonSpinner'
 			spinner.css

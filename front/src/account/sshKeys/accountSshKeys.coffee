@@ -28,6 +28,12 @@ window.AccountSshKeys = ['$scope', '$location', 'rpc', 'events', 'initialState',
 
 	getKeys()
 
+	$scope.toggleDrawer = (drawerName) ->
+		if $scope.currentlyOpenDrawer is drawerName
+			$scope.currentlyOpenDrawer = null
+		else
+			$scope.currentlyOpenDrawer = drawerName
+
 	$scope.removeKey = (key) ->
 		rpc 'users', 'update', 'removeSshKey', id: key.id
 

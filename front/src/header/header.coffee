@@ -27,6 +27,10 @@ window.Header = ['$scope', '$location', 'initialState', 'rpc', 'events', 'notifi
 	getRepositories()
 
 	$scope.sendFeedback = () ->
+		if not $scope.feedback.message or $scope.feedback.message is ''
+			notification.error 'Feedback cannot be empty'
+			return
+
 		requestParams =
 			feedback: $scope.feedback.message
 			userAgent: navigator.userAgent

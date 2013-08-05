@@ -1,12 +1,12 @@
 <div id="accountSshKeys" ng-controller="AccountSshKeys">
 	<panel-header>
 		SSH Keys
-		<button ng-click="addKey.drawerOpen = !addKey.drawerOpen">Add a New SSH Key</button>
-		<busy-button busy="waitingOnGitHubImportRequest" click="importFromGitHub()">Import GitHub SSH Keys</button>
+		<button ng-click="toggleDrawer('addKey')">Add a New SSH Key</button>
+		<!-- <busy-button busy="waitingOnGitHubImportRequest" click="importFromGitHub()">Import GitHub SSH Keys</button> -->
 	</panel-header>
 
-	<panel-body no-padding drawer-open="addKey.drawerOpen">
-		<panel-drawer>
+	<panel-body no-padding open-drawer="currentlyOpenDrawer">
+		<panel-drawer drawer-name="addKey">
 			<form id="addKeyForm" name="addKeyForm" novalidate>
 				<table>
 					<tr>

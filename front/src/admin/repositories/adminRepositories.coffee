@@ -79,8 +79,10 @@ window.AdminRepositories = ['$scope', '$routeParams', 'initialState', 'rpc', 'ev
 			$scope.currentlyOpenDrawer = null
 		else
 			$scope.currentlyOpenDrawer = drawerName
+			$scope.currentlyEditingRepositoryId = null
 
 	$scope.editRepository = (repository) ->
+		otherRepository.deleting = false for otherRepository in $scope.repositories
 		$scope.currentlyEditingRepositoryId = repository?.id
 
 	$scope.saveRepository = (repository) ->
@@ -95,26 +97,21 @@ window.AdminRepositories = ['$scope', '$routeParams', 'initialState', 'rpc', 'ev
 				repository.forwardUrl = repository.newForwardUrl
 				notification.success "Forward url changed for: #{repository.name}"
 
-	# $scope.deleteUser = (user) ->
-	# 	$scope.currentlyEditingUserId = null
+	$scope.deleteRepository = (repository) ->
+		if not repository.password? or repository.password is ''
+			notification.error 'You must provide a password to delete repository: ' + repository.name
+			return
 
-	# 	rpc 'users', 'delete', 'deleteUser', id: user.id, (error) ->
-	# 		if error? then notification.error error
-	# 		else notification.success "Deleted user #{user.firstName} #{user.lastName}"
+		return if repository.makingDeleteRequest
+		repository.makingDeleteRequest = true
 
-	$scope.deleteRepository = (user) ->
-		$scope.currentlyEditingRepositoryId = null
-		console.log 'need to delete...'
-
-# 		return if $scope.removeRepository.token isnt $scope.removeRepository.tokenToMatch
-
-# 		requestParams =
-# 			id: $scope.removeRepository.id
-# 			password: $scope.removeRepository.password
-# 		rpc 'repositories', 'delete', 'deleteRepository', requestParams, (error) ->
-# 			if error? then notification.error 'Unable to remove repository'
-# 			else
-# 				$scope.removeRepository.modalVisible = false
+		requestParams =
+			id: repository.id
+			password: repository.password
+		rpc 'repositories', 'delete', 'deleteRepository', requestParams, (error) ->
+			repository.makingDeleteRequest = false
+			if error? then notification.error error
+			else notification.success 'Successfully deleted repository: ' + repository.name
 
 	$scope.createRepository = () ->
 		return if $scope.addRepository.makingRequest

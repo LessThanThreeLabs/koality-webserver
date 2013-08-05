@@ -62,12 +62,12 @@
 				z-index: 9001;
 				width: 350px;
 				height: 120px;
-				padding: 30px;
+				padding: 30px 30px 10px 30px;
 				background-color: @headerBackground;
 				text-align: right;
 				overflow-x: hidden;
 				overflow-y: auto;
-				border-top: 1px solid @platformBackground;
+				border: 1px solid @platformBackground;
 				border-bottom-left-radius: @borderRadius;
 				border-bottom-right-radius: @borderRadius;
 
@@ -79,7 +79,7 @@
 
 				#feedbackOptions {
 					width: 100%;
-					height: 30px;
+					height: 20px;
 
 					a {
 						color: @koalityGreen;
@@ -87,7 +87,12 @@
 						line-height: normal;
 						padding-left: 12px;
 
-						&:hover { color: @koalityWhite; }
+						&:hover { color: @koalityGreen; }
+
+						&:link { text-decoration: none; }
+						&:visited { text-decoration: none; }
+						&:hover { text-decoration: underline; }
+						&:active { text-decoration: underline; }
 					}
 				}
 			}

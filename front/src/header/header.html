@@ -29,7 +29,7 @@
 
 					<div id="feedbackOptions">
 						<spinner spinner-running="feedback.makingRequest"></spinner>
-						<a ng-click="feedback.open = false; feedback.message=''" ng-class="{disabled: feedback.makingRequest}">Cancel</a>
+						<a class="gray" ng-click="feedback.open = false; feedback.message=''" ng-class="{disabled: feedback.makingRequest}">Cancel</a>
 						<a ng-click="sendFeedback()" ng-class="{disabled: feedback.makingRequest}">Send</a>
 					</div>
 				</form>
