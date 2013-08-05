@@ -4,12 +4,16 @@ window.AdminUsers = ['$scope', 'initialState', 'rpc', 'events', 'notification', 
 	$scope.orderByPredicate = 'privilege'
 	$scope.orderByReverse = false
 
+	$scope.userId = initialState.user?.id
+	$scope.currentlyEditingUserId = null
+
 	$scope.addUsers =
 		makingRequest: false
 		drawerOpen: false
 
 	addUserPrivilege = (user) ->
 		user.privilege = if user.isAdmin then 'Admin' else 'User'
+		user.newPrivilege = user.privilege  # used while in edit mode
 		return user
 
 	getUsers = () ->
@@ -23,16 +27,42 @@ window.AdminUsers = ['$scope', 'initialState', 'rpc', 'events', 'notification', 
 		userToRemoveIndex = (index for user, index in $scope.users when user.id is data.id)[0]
 		$scope.users.splice userToRemoveIndex, 1 if userToRemoveIndex?
 
+	handleUserAdminStatusChanged = (data) ->
+		userToUpdate = (user for user in $scope.users when user.id is data.id)[0]
+		privilege = if data.isAdmin then 'Admin' else 'User'
+		userToUpdate.privilege = privilege if userToUpdate?
+		userToUpdate.newPrivilege = privilege if userToUpdate?
+
 	addUserEvents = events('users', 'user created', initialState.user.id).setCallback(handleUserAdded).subscribe()
 	removeUserEvents = events('users', 'user removed', initialState.user.id).setCallback(handleUserRemoved).subscribe()
+	adminStatusEvents = events('users', 'user admin status', initialState.user.id).setCallback(handleUserAdminStatusChanged).subscribe()
 	$scope.$on '$destroy', addUserEvents.unsubscribe
 	$scope.$on '$destroy', removeUserEvents.unsubscribe
+	$scope.$on '$destroy', adminStatusEvents.unsubscribe
 
 	getUsers()
 
-	$scope.removeUser = (user) ->
+	$scope.editUser = (user) ->
+		$scope.currentlyEditingUserId = user?.id
+
+	$scope.saveUser = (user) ->
+		$scope.currentlyEditingUserId = null
+
+		requestParams =
+			id: user.id
+			isAdmin: user.newPrivilege is 'Admin'
+		rpc 'users', 'update', 'changeAdminStatus', requestParams, (error) ->
+			if error? then notification.error error
+			else 
+				user.privilege = user.newPrivilege
+				notification.success "Adimn status changed for: #{user.firstName} #{user.lastName}"
+
+	$scope.deleteUser = (user) ->
+		$scope.currentlyEditingUserId = null
+
 		rpc 'users', 'delete', 'deleteUser', id: user.id, (error) ->
-			if error? then notification.error 'Unable to delete user ' + user.email
+			if error? then notification.error error
+			else notification.success "Deleted user #{user.firstName} #{user.lastName}"
 
 	$scope.submitUsers = () ->
 		return if $scope.addUsers.makingRequest
