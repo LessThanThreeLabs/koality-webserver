@@ -67,11 +67,19 @@
 					<td class="editColumn"></td>
 				</tr>
 
-				<tr ng-repeat="repository in repositories | orderBy:orderByPredicate:orderByReverse">
+				<tr ng-repeat="repository in repositories | orderBy:orderByPredicate:orderByReverse" ng-class="{editing: repository.id == currentlyEditingRepositoryId}">
 					<td class="nameColumn" text-selectable>{{repository.name}}</td>
-					<td class="forwardUrlColumn" text-selectable>{{repository.forwardUrl}}</td>
+					<td class="forwardUrlColumn" text-selectable>
+						<span ng-show="repository.id != currentlyEditingRepositoryId">{{repository.forwardUrl}}</span>
+						<input type="text" ng-model="repository.newForwardUrl" ng-maxlength=256 ng-show="repository.id == currentlyEditingRepositoryId">
+					</td>
 					<td class="createdColumn" text-selectable>{{repository.timestamp | date:'MM/dd/yyyy'}}</td>
-					<td class="editColumn"><a ng-click="editRepository(repository)">Edit</a></td>
+					<td class="editColumn">
+						<a ng-click="editRepository(repository)" ng-show="repository.id != currentlyEditingRepositoryId">Edit</a>
+						<a ng-click="saveRepository(repository)" ng-show="repository.id == currentlyEditingRepositoryId">Save</a>
+						<a class="red" ng-click="deleteRepository(repository)" ng-show="repository.id == currentlyEditingRepositoryId">Delete</a>
+						<a class="gray" ng-click="editRepository(null)" ng-show="repository.id == currentlyEditingRepositoryId">Cancel</a>
+					</td>
 				</tr>
 			</table>
 		</div>
