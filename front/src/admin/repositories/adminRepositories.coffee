@@ -11,6 +11,10 @@ window.AdminRepositories = ['$scope', '$routeParams', 'initialState', 'rpc', 'ev
 		makingRequest: false
 		drawerOpen: false
 
+	$scope.publicKey =
+		key: null
+		drawerOpen: false
+
 	getRepositories = () ->
 		addNewForwardUrl = (repository) ->
 			# needed when editing repository
