@@ -7,9 +7,7 @@ angular.module('koality.service.repository', []).
 
 		setRepository: (repositoryId) =>
 			repositoryId = integerConverter.toInteger repositoryId
-
 			return if @_id is repositoryId
-			console.log 'repository: ' + repositoryId
 
 			@_id = repositoryId
 			@_information = null
@@ -34,9 +32,7 @@ angular.module('koality.service.repository', []).
 		setChange: (repositoryId, changeId) =>
 			repositoryId = integerConverter.toInteger repositoryId
 			changeId = integerConverter.toInteger changeId
-
 			return if @_id is changeId
-			console.log 'change:' + repositoryId + ' - ' + changeId
 
 			@_id = changeId
 			@_information = null
@@ -66,9 +62,7 @@ angular.module('koality.service.repository', []).
 		setStage: (repositoryId, stageId) =>
 			repositoryId = integerConverter.toInteger repositoryId
 			stageId = integerConverter.toInteger stageId
-
 			return if @_id is stageId
-			console.log 'stage: ' + repositoryId + ' - ' + stageId
 
 			@_id = stageId
 			@_information = null
