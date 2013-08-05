@@ -9,16 +9,34 @@
 			<form id="addRepositoryForm" name="addRepositoryForm" novalidate>
 				<table>
 					<tr>
-						<!-- <td class="addRepositoryColumn">
-							<label>Add Users</label>
-							<input type="text" ng-model="addRepository.emails" name="emails" placeholder="first@email.com second@email.com third@email.com ..." focused required>
+						<td class="setupTypeColumn">
+							<label>Setup Type</label>
+							<select ng-model="addRepository.setupType">
+								<option value="manual">Manual Setup</option>
+								<option value="github">GitHub Setup</option>
+							</select>
+						</td>
+						<td class="nameColumn">
+							<label>Name</label>
+							<input type="text" ng-model="addRepository.name" name="name" ng-maxlength=64 focused required>
+						</td>
+						<td class="forwardUrlColumn">
+							<label>Forward Url</label>
+							<input type="text" ng-model="addRepository.forwardUrl" name="forwardUrl" ng-maxlength=256 required>
+						</td>
+						<td class="typeColumn">
+							<label>Type</label>
+							<select ng-model="addRepository.type">
+								<option value="git">Git</option>
+								<option value="hg">Hg</option>
+							</select>
 						</td>
 						<td class="addRepositorySubmitColumn">
-							<busy-button busy="addRepository.makingRequest" click="submitUsers()" disabled="addRepositoryForm.$invalid">Invite Users</busy-button>
+							<busy-button busy="addRepository.makingRequest" click="createRepository()" disabled="addRepositoryForm.$invalid">Add</busy-button>
 						</td>
 						<td class="addRepositoryCancelColumn">
-							<a ng-click="clearAddUsers()">Cancel</a>
-						</td> -->
+							<a ng-click="clearAddRepository()">Cancel</a>
+						</td>
 					</tr>
 				</table>
 			</form>

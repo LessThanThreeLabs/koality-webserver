@@ -5,12 +5,12 @@ window.AdminRepositories = ['$scope', '$routeParams', 'initialState', 'rpc', 'ev
 	$scope.orderByReverse = false
 
 	$scope.addRepository =
+		setupType: 'manual'
 		makingRequest: false
 		drawerOpen: false
 
 	getRepositories = () ->
 		rpc 'repositories', 'read', 'getRepositoriesWithForwardUrls', null, (error, repositories) ->
-			console.log repositories
 			$scope.repositories = repositories	
 
 	getMaxRepositoryCount = () ->
@@ -42,19 +42,34 @@ window.AdminRepositories = ['$scope', '$routeParams', 'initialState', 'rpc', 'ev
 	# 	rpc 'users', 'delete', 'deleteUser', id: user.id, (error) ->
 	# 		if error? then notification.error 'Unable to delete user ' + user.email
 
-	# $scope.submitUsers = () ->
-	# 	return if $scope.addUsers.makingRequest
-	# 	$scope.addUsers.makingRequest = true
+	$scope.submitRemoveRepository = () ->
+# 		return if $scope.removeRepository.token isnt $scope.removeRepository.tokenToMatch
 
-	# 	rpc 'users', 'create', 'inviteUsers', emails: $scope.addUsers.emails, (error) ->
-	# 		$scope.addUsers.makingRequest = false
-	# 		if error? then notification.error error
-	# 		else 
-	# 			notification.success 'Invited new users'
-	# 			$scope.clearAddUsers()
+# 		requestParams =
+# 			id: $scope.removeRepository.id
+# 			password: $scope.removeRepository.password
+# 		rpc 'repositories', 'delete', 'deleteRepository', requestParams, (error) ->
+# 			if error? then notification.error 'Unable to remove repository'
+# 			else
+# 				$scope.removeRepository.modalVisible = false
 
-	$scope.clearAddReposity = () ->
-		# $scope.addRepository.emails = ''
+	$scope.createRepository = () ->
+		return if $scope.addRepository.makingRequest
+		$scope.addRepository.makingRequest = true
+
+		rpc 'repositories', 'create', 'createRepository', $scope.addRepository, (error, repositoryId) ->
+			$scope.addRepository.makingRequest = false
+			if error then notification.error error
+			else if error? then notification.error 'Unable to create repository'
+			else
+				notification.success 'Created repository ' + $scope.addRepository.name
+				$scope.clearAddRepository()
+
+	$scope.clearAddRepository = () ->
+		$scope.addRepository.setupType = 'manual'
+		$scope.addRepository.name = ''
+		$scope.addRepository.forwardUrl = ''
+		$scope.addRepository.type = ''
 		$scope.addRepository.drawerOpen = false
 ]
 
