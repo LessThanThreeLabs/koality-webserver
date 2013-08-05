@@ -60,6 +60,10 @@
 				}
 			}
 
+			tr.editing {
+				color: @koalityGray;
+			}
+
 			.nameColumn {
 				padding-left: 30px;
 				width: 300px;
@@ -67,6 +71,9 @@
 
 			.forwardUrlColumn {
 
+				input {
+					width: 95%;
+				}
 			}
 
 			.createdColumn {
@@ -75,7 +82,12 @@
 
 			.editColumn {
 				padding-right: 30px;
-				width: 120px;
+				width: 150px;
+
+				a {
+					display: inline-block;
+					margin-right: 10px;
+				}
 			}
 		}
 	}

@@ -46,21 +46,19 @@ window.AdminUsers = ['$scope', 'initialState', 'rpc', 'events', 'notification', 
 		$scope.currentlyEditingUserId = user?.id
 
 	$scope.saveUser = (user) ->
-		$scope.currentlyEditingUserId = null
-
 		requestParams =
 			id: user.id
 			isAdmin: user.newPrivilege is 'Admin'
 		rpc 'users', 'update', 'changeAdminStatus', requestParams, (error) ->
+			$scope.currentlyEditingUserId = null
 			if error? then notification.error error
 			else 
 				user.privilege = user.newPrivilege
 				notification.success "Adimn status changed for: #{user.firstName} #{user.lastName}"
 
 	$scope.deleteUser = (user) ->
-		$scope.currentlyEditingUserId = null
-
 		rpc 'users', 'delete', 'deleteUser', id: user.id, (error) ->
+			$scope.currentlyEditingUserId = null
 			if error? then notification.error error
 			else notification.success "Deleted user #{user.firstName} #{user.lastName}"
 

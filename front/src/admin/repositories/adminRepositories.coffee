@@ -4,14 +4,22 @@ window.AdminRepositories = ['$scope', '$routeParams', 'initialState', 'rpc', 'ev
 	$scope.orderByPredicate = 'name'
 	$scope.orderByReverse = false
 
+	$scope.currentlyEditingRepositoryId = null
+
 	$scope.addRepository =
 		setupType: 'manual'
 		makingRequest: false
 		drawerOpen: false
 
 	getRepositories = () ->
+		addNewForwardUrl = (repository) ->
+			# needed when editing repository
+			repository.newForwardUrl = repository.forwardUrl
+			return repository
+
 		rpc 'repositories', 'read', 'getRepositoriesWithForwardUrls', null, (error, repositories) ->
-			$scope.repositories = repositories	
+			$scope.repositories = (addNewForwardUrl repository for repository in repositories)
+			updateRepositoryForwardUrlUpdatedListeners()
 
 	getMaxRepositoryCount = () ->
 		rpc 'systemSettings', 'read', 'getMaxRepositoryCount', null, (error, maxRepositoryCount) ->
@@ -30,6 +38,22 @@ window.AdminRepositories = ['$scope', '$routeParams', 'initialState', 'rpc', 'ev
 		repositoryToRemoveIndex = (index for repository, index in $scope.repositories when repository.id is data.id)[0]
 		$scope.repositories.splice repositoryToRemoveIndex, 1 if repositoryToRemoveIndex?
 
+	createRepositoryForwardUrlUpdateHandler = (repository) ->
+		return (data) ->
+			console.log data
+			repository.forwardUrl = data.forwardUrl
+			repository.newForwardUrl = data.forwardUrl
+
+	repositoryForwardUrlUpdatedListeners = []
+	updateRepositoryForwardUrlUpdatedListeners = () ->
+		repositoryForwardUrlUpdatedListener.unsubscribe() for repositoryForwardUrlUpdatedListener in repositoryForwardUrlUpdatedListeners
+		repositoryForwardUrlUpdatedListeners = []
+
+		for repository in $scope.repositories
+			repositoryForwardUrlUpdatedListener = events('repositories', 'forward url updated', repository.id).setCallback(createRepositoryForwardUrlUpdateHandler(repository)).subscribe()
+			repositoryForwardUrlUpdatedListeners.push repositoryForwardUrlUpdatedListener
+	$scope.$on '$destroy', () -> repositoryForwardUrlUpdatedListener.unsubscribe() for repositoryForwardUrlUpdatedListener in repositoryForwardUrlUpdatedListeners
+
 	addRepositoryEvents = events('users', 'repository added', initialState.user.id).setCallback(handleAddedRepositoryUpdate).subscribe()
 	removeRepositoryEvents = events('users', 'repository removed', initialState.user.id).setCallback(handleRemovedRepositoryUpdate).subscribe()
 	$scope.$on '$destroy', addRepositoryEvents.unsubscribe
@@ -38,11 +62,33 @@ window.AdminRepositories = ['$scope', '$routeParams', 'initialState', 'rpc', 'ev
 	getRepositories()
 	getMaxRepositoryCount()
 
-	# $scope.removeUser = (user) ->
-	# 	rpc 'users', 'delete', 'deleteUser', id: user.id, (error) ->
-	# 		if error? then notification.error 'Unable to delete user ' + user.email
+	$scope.editRepository = (repository) ->
+		$scope.currentlyEditingRepositoryId = repository?.id
 
-	$scope.submitRemoveRepository = () ->
+	$scope.saveRepository = (repository) ->
+		requestParams =
+			id: repository.id
+			forwardUrl: repository.newForwardUrl
+		console.log requestParams
+		rpc 'repositories', 'update', 'setForwardUrl', requestParams, (error) ->
+			$scope.currentlyEditingRepositoryId = null
+
+			if error? then notification.error error
+			else 
+				repository.forwardUrl = repository.newForwardUrl
+				notification.success "Forward url changed for: #{repository.name}"
+
+	# $scope.deleteUser = (user) ->
+	# 	$scope.currentlyEditingUserId = null
+
+	# 	rpc 'users', 'delete', 'deleteUser', id: user.id, (error) ->
+	# 		if error? then notification.error error
+	# 		else notification.success "Deleted user #{user.firstName} #{user.lastName}"
+
+	$scope.deleteRepository = (user) ->
+		$scope.currentlyEditingRepositoryId = null
+		console.log 'need to delete...'
+
 # 		return if $scope.removeRepository.token isnt $scope.removeRepository.tokenToMatch
 
 # 		requestParams =
