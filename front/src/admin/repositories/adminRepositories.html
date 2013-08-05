@@ -1,12 +1,12 @@
 <div id="adminRepositories" ng-controller="AdminRepositories">
 	<panel-header>
 		Repositories
-		<button ng-click="addRepository.drawerOpen = !addRepository.drawerOpen">Add a New Repository</button>
-		<a ng-click="publicKey.drawerOpen = !publicKey.drawerOpen">Show SSH Key</a>
+		<button ng-click="toggleDrawer('addRepository')">Add a New Repository</button>
+		<a ng-click="toggleDrawer('publicKey')">Show SSH Key</a>
 	</panel-header>
 
-	<panel-body no-padding drawer-open="addRepository.drawerOpen">
-		<panel-drawer>
+	<panel-body no-padding open-drawer="currentlyOpenDrawer">
+		<panel-drawer drawer-name="addRepository">
 			<form id="addRepositoryForm" name="addRepositoryForm" novalidate>
 				<table>
 					<tr>
@@ -41,6 +41,20 @@
 					</tr>
 				</table>
 			</form>
+		</panel-drawer>
+
+		<panel-drawer drawer-name="publicKey">
+			<table id="publicKeyTable">
+				<tr>
+					<td class="sshKeyColumn">
+						<label>SSH Key<span class="sublabel">Unmodifiable</span></label>
+						<input type="text" ng-model="publicKey.key" highlight-on-first-click read-only>
+					</td>
+					<td class="closePublicKeyColumn">
+						<a ng-click="toggleDrawer('publicKey')">Close</a>
+					</td>
+				</tr>
+			</table>
 		</panel-drawer>
 
 		<div id="repositoriesList" fading-content>

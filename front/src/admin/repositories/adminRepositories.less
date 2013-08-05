@@ -48,6 +48,30 @@
 		}
 	}
 
+	table#publicKeyTable {
+		width: 100%;
+		table-layout: fixed;
+
+		td {
+			padding: 0 15px 0 15px;
+
+			&:first-child { padding-left: 0; }
+			&:last-child { padding-right: 0; }
+		}
+
+		.sshKeyColumn {
+
+			input {
+				margin: 0;
+			}
+		}
+
+		.closePublicKeyColumn {
+			width: 100px;
+			padding-top: 23px;
+		}
+	}
+
 	#repositoriesList {
 		table {
 			width: 100%;
