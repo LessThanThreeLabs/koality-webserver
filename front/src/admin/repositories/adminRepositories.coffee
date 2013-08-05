@@ -5,15 +5,14 @@ window.AdminRepositories = ['$scope', '$routeParams', 'initialState', 'rpc', 'ev
 	$scope.orderByReverse = false
 
 	$scope.currentlyEditingRepositoryId = null
+	$scope.currentlyOpenDrawer = null
 
 	$scope.addRepository =
 		setupType: 'manual'
 		makingRequest: false
-		drawerOpen: false
 
 	$scope.publicKey =
 		key: null
-		drawerOpen: false
 
 	getRepositories = () ->
 		addNewForwardUrl = (repository) ->
@@ -22,18 +21,27 @@ window.AdminRepositories = ['$scope', '$routeParams', 'initialState', 'rpc', 'ev
 			return repository
 
 		rpc 'repositories', 'read', 'getRepositoriesWithForwardUrls', null, (error, repositories) ->
-			$scope.repositories = (addNewForwardUrl repository for repository in repositories)
-			updateRepositoryForwardUrlUpdatedListeners()
+			if error? then notification.error error
+			else 
+				$scope.repositories = (addNewForwardUrl repository for repository in repositories)
+				updateRepositoryForwardUrlUpdatedListeners()
 
 	getMaxRepositoryCount = () ->
 		rpc 'systemSettings', 'read', 'getMaxRepositoryCount', null, (error, maxRepositoryCount) ->
-			$scope.maxRepositoryCount = maxRepositoryCount ? Number.POSITIVE_INFINITY
-			showRepositoriesLimitWarningIfNecessary()
+			if error? then notification.error error
+			else 
+				$scope.maxRepositoryCount = maxRepositoryCount ? Number.POSITIVE_INFINITY
+				showRepositoriesLimitWarningIfNecessary()
 
 	showRepositoriesLimitWarningIfNecessary = () ->
 		upgradeUrl = 'https://koalitycode.com/account/plan'
 		if $routeParams.view is 'repositories' and $scope.repositories.length >= $scope.maxRepositoryCount
 			notification.warning "Max number of repositories reached. <a href='#{upgradeUrl}'>Upgrade to increase this limit</a>"
+
+	getPublicKey = () ->
+		rpc 'repositories', 'read', 'getPublicKey', null, (error, publicKey) ->
+			if error? then notification.error error
+			else $scope.publicKey.key = publicKey
 
 	handleAddedRepositoryUpdate = (data) ->
 		$scope.repositories.push data
@@ -65,6 +73,13 @@ window.AdminRepositories = ['$scope', '$routeParams', 'initialState', 'rpc', 'ev
 
 	getRepositories()
 	getMaxRepositoryCount()
+	getPublicKey()
+
+	$scope.toggleDrawer = (drawerName) ->
+		if $scope.currentlyOpenDrawer is drawerName
+			$scope.currentlyOpenDrawer = null
+		else
+			$scope.currentlyOpenDrawer = drawerName
 
 	$scope.editRepository = (repository) ->
 		$scope.currentlyEditingRepositoryId = repository?.id
@@ -120,5 +135,5 @@ window.AdminRepositories = ['$scope', '$routeParams', 'initialState', 'rpc', 'ev
 		$scope.addRepository.name = ''
 		$scope.addRepository.forwardUrl = ''
 		$scope.addRepository.type = ''
-		$scope.addRepository.drawerOpen = false
+		$scope.currentlyOpenDrawer = null
 ]

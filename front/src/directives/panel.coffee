@@ -45,27 +45,31 @@ angular.module('koality.directive.panel', []).
 		replace: true
 		transclude: true
 		scope:
-			drawerOpen: '='
+			openDrawer: '='
 		template: '<div class="panelBody">
 				<div class="panelBodyContents textSelectable" ng-transclude></div>
 			</div>'
 		link: (scope, element, attributes) ->
-			setDrawerState = (open) ->
-				panelDrawer = element.find('.panelDrawer')
+			openDrawer = (drawerToOpen) ->
+				panelDrawer = element.find(".panelDrawer[drawer-name='#{drawerToOpen}']")
+				otherPanelDrawers = element.find(".panelDrawer:not([drawer-name='#{drawerToOpen}'])")
 				panelBodyContents = element.find('.panelBodyContents')
 
-				return if panelDrawer.length is 0 or panelBodyContents.length is 0
+				return if panelBodyContents.length is 0
 
-				if open then panelBodyContents.css 'top', panelDrawer.outerHeight() + 'px'
-				else panelBodyContents.css 'top', '0px'
+				if panelDrawer.length isnt 0
+					otherPanelDrawers.css 'z-index', 0
+					panelDrawer.css 'z-index', 1
+					panelBodyContents.css 'top', panelDrawer.outerHeight() + 'px'
+				else panelBodyContents.css 'top', '0'
 
 			moveDrawerOutOfNgTranslate = () ->
 				element.append element.find('.panelDrawer')
 
 			moveDrawerOutOfNgTranslate() if element.find('.panelDrawer').length > 0
 
-			scope.$watch 'drawerOpen', (open) ->
-				setDrawerState open
+			scope.$watch 'openDrawer', (drawerToOpen) ->
+				openDrawer drawerToOpen
 	).
 	directive('panelDrawer', () ->
 		restrict: 'E'
