@@ -64,7 +64,7 @@ angular.module('koality.directive', []).
 		transclude: true
 		template: '<div class="fadingContentContainer">
 				<div class="fadingContentTopBuffer"></div>
-				<div class="fadingContentOuterScrollWrapper">
+				<div class="fadingContentScrollWrapper">
 					<div class="fadingContent" ng-transclude></div>
 				</div>
 				<div class="fadingContentBottomBuffer"></div>
@@ -77,8 +77,8 @@ angular.module('koality.directive', []).
 		restrict: 'A'
 		link: (scope, element, attributes) ->
 			# fix to work with fading-content directive
-			if element.find('.fadingContent').length > 0
-				element = element.find '.fadingContent'
+			if element.find('.fadingContentScrollWrapper').length > 0
+				element = element.find '.fadingContentScrollWrapper'
 
 			scrollToBottom = () ->
 				setTimeout (() -> element[0].scrollTop = element[0].scrollHeight), 0
