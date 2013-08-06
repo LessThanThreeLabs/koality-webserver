@@ -16,7 +16,7 @@
 						</td>
 						<td class="addKeyValueColumn">
 							<label>SSH Key</label>
-							<textarea type="text" ng-model="addKey.key" name="key" ng-pattern="/^ssh-(?:dss|rsa) [A-Za-z0-9+/]+={0,2}/" ng-maxlength="8192" required></textarea>
+							<textarea type="text" ng-model="addKey.key" name="key" ng-maxlength="8192" required></textarea>
 						</td>
 						<td class="addKeySubmitColumn">
 							<busy-button busy="addKey.makingRequest" click="submitKey()" disabled="addKeyForm.$invalid">Add Key</busy-button>
