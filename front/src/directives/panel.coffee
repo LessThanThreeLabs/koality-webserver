@@ -76,6 +76,8 @@ angular.module('koality.directive.panel', []).
 
 			moveDrawerOutOfNgTranslate() if element.find('.panelDrawer').length > 0
 
+			element.addClass 'noScroll' if attributes.noScroll?
+
 			scope.$watch 'openDrawer', (drawerToOpen) ->
 				openDrawer drawerToOpen
 	).

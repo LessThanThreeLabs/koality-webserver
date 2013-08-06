@@ -1,7 +1,7 @@
 <div id="analytics" ng-controller="Analytics">
 	<panel>
 		<panel-header>Analytics</panel-header>
-		<panel-body>
+		<panel-body no-scroll>
 			<div id="analyticsOptions">
 				<div class="analyticsOptionTitle">Graph</div>
 				<select ng-model="options.graph" ng-options="graph as graph.title for graph in allowedGraphs"></select>

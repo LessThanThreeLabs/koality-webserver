@@ -2,7 +2,7 @@
 	<panel>
 		<panel-header>Login</panel-header>
 
-		<panel-body>
+		<panel-body no-scroll>
 			<form name="loginForm" novalidate>
 				<input ng-model="account.email" name="email" type="email" placeholder="Email" maxlength=256 autocomplete="on" focused required>
 				<input ng-model="account.password" name="password" type="password" placeholder="Password" ng-maxlength=256 required>
@@ -12,7 +12,7 @@
 					<tr>
 						<td><input ng-model="account.rememberMe" ng-true-value="yes" ng-false-value="no" name="rememberMe" type="checkbox"></td>
 						<td>Stay Logged In</td>
-						<td><a href="/recoverPassword">Forgot your password?</a></td>
+						<td><a href="/resetPassword">Forgot your password?</a></td>
 					</tr>
 				</table>
 			</form>
