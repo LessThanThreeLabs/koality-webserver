@@ -119,8 +119,7 @@ window.AdminRepositories = ['$scope', '$routeParams', 'initialState', 'rpc', 'ev
 
 		rpc 'repositories', 'create', 'createRepository', $scope.addRepository, (error, repositoryId) ->
 			$scope.addRepository.makingRequest = false
-			if error then notification.error error
-			else if error? then notification.error 'Unable to create repository'
+			if error? then notification.error error
 			else
 				notification.success 'Created repository ' + $scope.addRepository.name
 				$scope.clearAddRepository()
