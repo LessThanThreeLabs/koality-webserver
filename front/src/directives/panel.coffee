@@ -57,9 +57,17 @@ angular.module('koality.directive.panel', []).
 
 				return if panelBodyContents.length is 0
 
-				if panelDrawer.length isnt 0
+				hideOtherDrawers = () ->
 					otherPanelDrawers.css 'z-index', 0
+					otherPanelDrawers.css 'display', 'none'
+
+				bringDrawerToTop = () ->
 					panelDrawer.css 'z-index', 1
+					panelDrawer.css 'display', 'block'
+
+				if panelDrawer.length isnt 0
+					hideOtherDrawers()
+					bringDrawerToTop()
 					panelBodyContents.css 'top', panelDrawer.outerHeight() + 'px'
 				else panelBodyContents.css 'top', '0'
 

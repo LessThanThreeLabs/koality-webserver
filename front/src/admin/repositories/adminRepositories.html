@@ -14,7 +14,6 @@
 							<label>Setup Type</label>
 							<select ng-model="addRepository.setupType" required>
 								<option value="manual">Manual Setup</option>
-								<!-- <option value="github">GitHub Setup</option> -->
 							</select>
 						</td>
 						<td class="nameColumn">
@@ -76,11 +75,12 @@
 				</tr>
 
 				<tr ng-show="repositories.length == 0">
-					<td class="nameColumn">There are no repositories</td>
-					<td class="forwardUrlColumn"></td>
-					<td class="createdColumn"></td>
-					<td class="editColumn"></td>
+					<td class="nameColumn" colspan="4">There are no repositories</td>
 				</tr>
+
+				<!-- <tr ng-repeat="repository in repositories | orderBy:orderByPredicate:orderByReverse" ng-class="{editing: repository.id == currentlyEditingRepositoryId}">
+					<td colspan="4">hello</td>
+				</tr> -->
 
 				<tr ng-repeat="repository in repositories | orderBy:orderByPredicate:orderByReverse" ng-class="{editing: repository.id == currentlyEditingRepositoryId}">
 					<td class="nameColumn">
@@ -115,7 +115,7 @@
 					<td class="deleteColumn" colspan="2" ng-show="repository.deleting">
 						<label class="red">Are you sure? Enter your password</label>
 						<div class="deleteRepositoryActions">
-							<input type="password" ng-model="repository.password" name="password" focused required>
+							<input type="password" ng-model="repository.password">
 							<a class="red" ng-click="deleteRepository(repository)">Delete</a>
 							<a ng-click="repository.deleting = false">Cancel</a>
 						</div>

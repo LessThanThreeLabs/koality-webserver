@@ -2,6 +2,7 @@
 
 window.AdminUpgrade = ['$scope', 'initialState', 'rpc', 'events', ($scope, initialState, rpc, events) ->
 	$scope.upgrade = {}
+	$scope.makingRequest = false
 
 	getUpgradeStatus = () ->
 		rpc 'systemSettings', 'read', 'getUpgradeStatus', null, (error, upgradeStatus) ->
@@ -34,6 +35,10 @@ window.AdminUpgrade = ['$scope', 'initialState', 'rpc', 'events', ($scope, initi
 	getUpgradeStatus()
 
 	$scope.performUpgrade = () ->
+		return if $scope.makingRequest
+		$scope.makingRequest = true
+
 		$scope.upgrade.upgradeAllowed = false
-		rpc 'systemSettings', 'update', 'upgradeDeployment', null
+		rpc 'systemSettings', 'update', 'upgradeDeployment', null, (error) ->
+			$scope.makingRequest = false
 ]
