@@ -7,6 +7,8 @@ window.AccountPassword = ['$scope', 'rpc', 'notification', ($scope, rpc, notific
 	$scope.submit = () ->
 		if $scope.password.new isnt $scope.password.confirm
 			notification.error 'Invalid password confirmation. Please check that you correctly confirmed your new password'
+		else if $scope.password.old is $scope.password.new
+			notification.error 'New password must be different from old password'
 		else
 			return if $scope.makingRequest
 			$scope.makingRequest = true
