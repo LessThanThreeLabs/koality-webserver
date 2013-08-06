@@ -47,7 +47,7 @@
 				<tr>
 					<td class="sshKeyColumn">
 						<label>SSH Key<span class="sublabel">Unmodifiable</span></label>
-						<input type="text" ng-model="publicKey.key" highlight-on-first-click readonly>
+						<input type="text" ng-model="publicKey.key" highlight-on-click readonly>
 					</td>
 					<td class="closePublicKeyColumn">
 						<a ng-click="toggleDrawer('publicKey')">Close</a>
@@ -77,10 +77,6 @@
 				<tr ng-show="repositories.length == 0">
 					<td class="nameColumn" colspan="4">There are no repositories</td>
 				</tr>
-
-				<!-- <tr ng-repeat="repository in repositories | orderBy:orderByPredicate:orderByReverse" ng-class="{editing: repository.id == currentlyEditingRepositoryId}">
-					<td colspan="4">hello</td>
-				</tr> -->
 
 				<tr ng-repeat="repository in repositories | orderBy:orderByPredicate:orderByReverse" ng-class="{editing: repository.id == currentlyEditingRepositoryId}">
 					<td class="nameColumn">

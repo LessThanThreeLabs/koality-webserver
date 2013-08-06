@@ -10,11 +10,11 @@ angular.module('koality.directive', []).
 			element.bind 'click', (event) ->
 				element.find('input').focus()
 	).
-	directive('highlightOnFirstClick', () ->
+	directive('highlightOnClick', () ->
 		return (scope, element, attributes) ->
 			highlightText = () ->
 				element.select()
-				element.unbind 'click', highlightText
+				element.unbind 'click', highlightText if attributes.firstOnly
 
 			element.bind 'click', highlightText
 	).
