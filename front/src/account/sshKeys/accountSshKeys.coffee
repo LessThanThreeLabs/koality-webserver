@@ -4,6 +4,7 @@ window.AccountSshKeys = ['$scope', '$location', 'rpc', 'events', 'initialState',
 	$scope.orderByPredicate = 'alias'
 	$scope.orderByReverse = false
 
+	$scope.currentlyOpenDrawer = null
 	$scope.waitingOnGitHubImportRequest = false
 
 	$scope.addKey =
@@ -51,7 +52,7 @@ window.AccountSshKeys = ['$scope', '$location', 'rpc', 'events', 'initialState',
 	$scope.clearAddKey = () ->
 		$scope.addKey.alias = ''
 		$scope.addKey.key = ''
-		$scope.addKey.drawerOpen = false
+		$scope.currentlyOpenDrawer = null
 
 	$scope.importFromGitHub = () ->
 		return if $scope.waitingOnGitHubImportRequest
