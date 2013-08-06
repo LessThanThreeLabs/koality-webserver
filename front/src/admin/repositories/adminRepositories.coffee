@@ -14,12 +14,11 @@ window.AdminRepositories = ['$scope', '$routeParams', 'initialState', 'rpc', 'ev
 	$scope.publicKey =
 		key: null
 
-	getRepositories = () ->
-		addNewForwardUrl = (repository) ->
-			# needed when editing repository
-			repository.newForwardUrl = repository.forwardUrl
-			return repository
+	addNewForwardUrl = (repository) ->
+		repository.newForwardUrl = repository.forwardUrl # needed when editing repository
+		return repository
 
+	getRepositories = () ->
 		rpc 'repositories', 'read', 'getRepositoriesWithForwardUrls', null, (error, repositories) ->
 			if error? then notification.error error
 			else 
@@ -44,7 +43,7 @@ window.AdminRepositories = ['$scope', '$routeParams', 'initialState', 'rpc', 'ev
 			else $scope.publicKey.key = publicKey
 
 	handleAddedRepositoryUpdate = (data) ->
-		$scope.repositories.push data
+		$scope.repositories.push addNewForwardUrl data
 
 	handleRemovedRepositoryUpdate = (data) ->
 		repositoryToRemoveIndex = (index for repository, index in $scope.repositories when repository.id is data.id)[0]
