@@ -61,7 +61,7 @@ window.AdminUsers = ['$scope', 'initialState', 'rpc', 'events', 'notification', 
 			if error? then notification.error error
 			else 
 				user.privilege = user.newPrivilege
-				notification.success "Adimn status changed for: #{user.firstName} #{user.lastName}"
+				notification.success "Admin status changed for: #{user.firstName} #{user.lastName}"
 
 	$scope.deleteUser = (user) ->
 		rpc 'users', 'delete', 'deleteUser', id: user.id, (error) ->
