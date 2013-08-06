@@ -26,6 +26,7 @@ window.AdminApi = ['$scope', 'rpc', 'notification', ($scope, rpc, notification) 
 			$scope.makingRequest = false
 			$scope.apiKey = apiKey
 			$scope.mustConfirmRegenerateKey = false
+			notification.success 'Successfully updated API key'
 
 	$scope.cancelRegenerateKey = () ->
 		$scope.mustConfirmRegenerateKey = false
