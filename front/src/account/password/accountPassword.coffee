@@ -14,5 +14,7 @@ window.AccountPassword = ['$scope', 'rpc', 'notification', ($scope, rpc, notific
 			rpc 'users', 'update', 'changePassword', $scope.password, (error) ->
 				$scope.makingRequest = false
 				if error? then notification.error error
-				else notification.success 'Updated account password'
+				else
+					$scope.password = {} 
+					notification.success 'Updated account password'
 ]
