@@ -14,6 +14,7 @@ class FeedbackEmailer extends Emailer
 			else 
 				payload =
 					from: "#{@configurationParams.from.name} <#{@configurationParams.from.email}@#{domain}>"
+					replyTo: "#{user.firstName} #{user.lastName} <#{user.email}>, #{@configurationParams.to.email}"
 					to: @configurationParams.to.email
 					subject: 'Feedback'
 					text: "User: #{user.firstName} #{user.lastName} (#{user.email})\n\nFeedback: #{feedback}\n\nUser Agent: #{userAgent}\n\nScreen: #{screen.width} x #{screen.height}"
