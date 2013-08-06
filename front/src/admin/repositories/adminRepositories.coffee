@@ -116,7 +116,7 @@ window.AdminRepositories = ['$scope', '$routeParams', 'initialState', 'rpc', 'ev
 		return if $scope.addRepository.makingRequest
 		$scope.addRepository.makingRequest = true
 
-		rpc 'repositories', 'create', 'createRepository', $scope.addRepository, (error, repositoryId) ->
+		rpc 'repositories', 'create', 'createRepository', $scope.addRepository, false, (error, repositoryId) ->
 			$scope.addRepository.makingRequest = false
 			if error? then notification.error error
 			else

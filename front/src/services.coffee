@@ -86,13 +86,18 @@ angular.module('koality.service', []).
 
 		previousEventToCallbacks = {}
 
-		makeRequest: (resource, requestType, methodName, data, callback) ->
+		makeRequest: (resource, requestType, methodName, data, timeout, callback) ->
 			assert.ok typeof resource is 'string' and typeof requestType is 'string' and typeof methodName is 'string'
 			assert.ok resource.indexOf('.') is -1 and requestType.indexOf('.') is -1
+			assert.ok typeof requestType is 'string'
+			assert.ok typeof methodName is 'string'
+			assert.ok typeof data is 'object'
+			assert.ok typeof timeout is 'number'
+			assert.ok typeof callback is 'function'
 
 			requestHandled = false
 			handleResponse = (error, response) ->
-				clearTimeout timeoutId
+				clearTimeout timeoutId if timeoutId?
 
 				return if requestHandled
 				requestHandled = true
@@ -105,7 +110,9 @@ angular.module('koality.service', []).
 					when 403 then window.location.href = '/invalidPermissions'
 					else callback error, response if callback?
 
-			timeoutId = setTimeout (() -> handleResponse 'Timed out'), 30000
+			if timeout > 0
+				timeoutId = setTimeout (() -> handleResponse 'Timed out'), timeout
+
 			socket.emit "#{resource}.#{requestType}", {method: methodName, args: data}, handleResponse
 
 		respondTo: (eventName, callback) ->
@@ -120,8 +127,17 @@ angular.module('koality.service', []).
 				previousEventToCallbacks[eventName].push callback
 	]).
 	factory('rpc', ['$rootScope', 'socket', ($rootScope, socket) ->
-		return (resource, requestType, methodName, data, callback) ->
-			socket.makeRequest resource, requestType, methodName, data, (error, result) ->
+		defaultTimeout = 30000
+
+		return (resource, requestType, methodName, data, allowTimeout, callback) ->
+			# specifying the timeout isn't necessary
+			if not callback?
+				callback = allowTimeout
+				timeout = defaultTimeout
+			else
+				timeout = if allowTimeout then defaultTimeout else -1
+
+			socket.makeRequest resource, requestType, methodName, data, timeout, (error, result) ->
 				if callback? then $rootScope.$apply () -> callback error, result
 	]).
 	factory('events', ['$rootScope', 'socket', 'integerConverter', ($rootScope, socket, integerConverter) ->
@@ -137,7 +153,7 @@ angular.module('koality.service', []).
 
 			subscribe: () =>
 				assert.ok @_callback?
-				socket.makeRequest @resource, 'subscribe', @eventName, id: @id, (error, eventToListenFor) =>
+				socket.makeRequest @resource, 'subscribe', @eventName, id: @id, 30000, (error, eventToListenFor) =>
 					if error? then console.error error
 					else socket.respondTo eventToListenFor, (data) =>
 						if @_callback? then $rootScope.$apply () => @_callback data 
@@ -145,7 +161,7 @@ angular.module('koality.service', []).
 
 			unsubscribe: () =>
 				@_callback = null
-				socket.makeRequest @resource, 'unsubscribe', @eventName, id: @id, (error) ->
+				socket.makeRequest @resource, 'unsubscribe', @eventName, id: @id, 30000, (error) ->
 					console.error if error?
 				return @
 
