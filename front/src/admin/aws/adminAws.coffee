@@ -30,5 +30,5 @@ window.AdminAws = ['$scope', 'rpc', 'notification', ($scope, rpc, notification) 
 		$scope.makingRequest = false
 		if awsKeysError then notification.error awsKeysError
 		else if instanceSettingsError then notification.error instanceSettingsError
-		else notification.success 'Updated aws information'
+		else notification.success 'Updated AWS information'
 ]
