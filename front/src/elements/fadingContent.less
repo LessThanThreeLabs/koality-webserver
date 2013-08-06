@@ -3,6 +3,7 @@
 
 .fadingContentContainer {
 	@bufferHeight: 35px;
+	@scrollbarHideWidth: 50px;
 
 	position: absolute;
 	top: 0;
@@ -25,22 +26,24 @@
 		background: -ms-linear-gradient(top, fade(@panelBackground, 100%) 0%, fade(@panelBackground, 0%) 100%);
 	}
 
-	.fadingContent {
-		@scrollbarHideWidth: 50px;
-
+	.fadingContentOuterScrollWrapper {
 		position: absolute;
 		top: 0;
 		left: 0;
 		right: -@scrollbarHideWidth;
 		bottom: 0;
 		z-index: 1;
-		padding-top: @bufferHeight;
-		padding-right: @scrollbarHideWidth;
-		padding-bottom: @bufferHeight;
-		box-sizing: border-box;
-		-moz-box-sizing: border-box;
 		overflow-x: hidden;
 		overflow-y: auto;
+
+		.fadingContent {
+			position: relative;
+			padding-top: @bufferHeight;
+			padding-bottom: @bufferHeight;
+			box-sizing: border-box;
+			-moz-box-sizing: border-box;
+			// width dynamically set in directive
+		}
 	}
 
 	.fadingContentBottomBuffer {

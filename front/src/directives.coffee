@@ -64,9 +64,14 @@ angular.module('koality.directive', []).
 		transclude: true
 		template: '<div class="fadingContentContainer">
 				<div class="fadingContentTopBuffer"></div>
-				<div class="fadingContent" ng-transclude></div>
+				<div class="fadingContentOuterScrollWrapper">
+					<div class="fadingContent" ng-transclude></div>
+				</div>
 				<div class="fadingContentBottomBuffer"></div>
 			</div>'
+		link: (scope, element, attributes) ->
+			fadingContentElement = element.find('.fadingContent')
+			fadingContentElement.width element.width()
 	).
 	directive('autoScrollToBottom', ['integerConverter', (integerConverter) ->
 		restrict: 'A'
