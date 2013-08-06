@@ -1,8 +1,12 @@
 <div id="accountSshKeys" ng-controller="AccountSshKeys">
 	<panel-header>
-		SSH Keys
-		<button ng-click="toggleDrawer('addKey')">Add a New SSH Key</button>
-		<!-- <busy-button busy="waitingOnGitHubImportRequest" click="importFromGitHub()">Import GitHub SSH Keys</button> -->
+		<div class="left">
+			SSH Keys
+		</div>
+		<div class="right">
+			<!-- <busy-button busy="waitingOnGitHubImportRequest" click="importFromGitHub()">Import GitHub SSH Keys</busy-button> -->
+			<button ng-click="toggleDrawer('addKey')">Add a New SSH Key</button>
+		</div>
 	</panel-header>
 
 	<panel-body no-padding open-drawer="currentlyOpenDrawer">

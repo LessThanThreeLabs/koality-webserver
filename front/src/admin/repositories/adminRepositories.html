@@ -1,8 +1,12 @@
 <div id="adminRepositories" ng-controller="AdminRepositories">
 	<panel-header>
-		Repositories
-		<button ng-click="toggleDrawer('addRepository')">Add a New Repository</button>
-		<a ng-click="toggleDrawer('publicKey')">Show SSH Key</a>
+		<div class="left">
+			Repositories
+		</div>
+		<div class="right">
+			<a ng-click="toggleDrawer('publicKey')">Show SSH Key</a>
+			<button ng-click="toggleDrawer('addRepository')">Add a New Repository</button>
+		</div>
 	</panel-header>
 
 	<panel-body no-padding open-drawer="currentlyOpenDrawer">

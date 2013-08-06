@@ -99,16 +99,32 @@
 		border-top-left-radius: @borderRadius;
 		border-top-right-radius: @borderRadius;
 
-		a {
+		.left {
+			float: left;
+		}
+
+		.right {
 			float: right;
-			margin-right: 15px;
+
+			a, button, .busyButton {
+				margin-right: 12px;
+
+				&:last-child {
+					margin-right: 0;
+				}
+			}
+		}
+
+		a {
+			vertical-align: top;
 			font-size: 16px;
 			font-weight: 300;
 		}
 
 		button, .busyButton {
-			float: right;
-			margin: 6px 0 0 12px;
+			display: inline-block;
+			margin-top: 6px;
+			vertical-align: top;
 			font-size: 12px;
 		}
 

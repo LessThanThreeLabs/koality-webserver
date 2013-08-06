@@ -171,7 +171,7 @@ angular.module('koality.directive', []).
 			durationInSeconds: '@'
 		template: '<div class="notification" ng-class="{green: type == \'success\', orange: type == \'warning\', red: type == \'error\'}">
 					<div class="notificationContent growingCentered">
-						<span ng-transclude></span>
+						<span class="notificationMessage" ng-transclude></span>
 						<span class="notificationClose" ng-click="hide()">X</span>
 					</div>
 				</div>'

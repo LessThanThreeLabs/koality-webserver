@@ -1,7 +1,11 @@
 <div id="adminUsers" ng-controller="AdminUsers">
 	<panel-header>
-		Users
-		<button ng-click="toggleDrawer('addUsers')">Add New Users</button>
+		<div class="left">
+			Users
+		</div>
+		<div class="right">
+			<button ng-click="toggleDrawer('addUsers')">Add New Users</button>
+		</div>
 	</panel-header>
 
 	<panel-body no-padding open-drawer="currentlyOpenDrawer">

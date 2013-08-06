@@ -90,13 +90,17 @@
 		text-overflow: ellipsis;
 		white-space: nowrap;
 
-		a {
-			color: @koalityWhite;
+		.notificationMessage {
+			float: left;
 
-			&:link { text-decoration: underline; }
-			&:visited { text-decoration: underline; }
-			&:hover { text-decoration: underline; }
-			&:active { text-decoration: underline; }
+			a {
+				color: @koalityWhite;
+
+				&:link { text-decoration: underline; }
+				&:visited { text-decoration: underline; }
+				&:hover { text-decoration: underline; }
+				&:active { text-decoration: underline; }
+			}
 		}
 
 		.notificationClose {
