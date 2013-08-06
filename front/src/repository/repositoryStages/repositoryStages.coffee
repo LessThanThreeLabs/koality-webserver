@@ -35,7 +35,6 @@ window.RepositoryStages = ['$scope', '$routeParams', 'rpc', 'events', 'currentCh
 		$scope.stages = []
 
 		if not $scope.selectedChange.getId()?
-			console.log 'here...'
 			$scope.selectedStage.setStage null, null
 			return
 

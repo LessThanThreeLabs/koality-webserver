@@ -14,7 +14,7 @@
 				<input type="text" ng-model="account.lastName" name="lastName" placeholder="Last" ng-pattern="/^[-'a-zA-Z]+$/" ng-maxlength="64" autocomplete="on" required>
 
 				<label>Password<span class="sublabel">Min 8 characters, one letter, one number</span></label>
-				<input type="password" ng-model="account.password" name="password" placeholder="Password" ng-pattern="/^(?=.*[a-zA-Z])(?=.*\d).+$/" ng-minlength="8" ng-maxlength="256" required>
+				<input type="password" ng-model="account.password" name="password" placeholder="Password" ng-pattern="/^(?=.*[a-zA-Z])(?=.*\d).+$/" ng-minlength="8" ng-maxlength="256" auto-fillable-field required>
 
 				<button class="fullWidth" ng-click="submit()" ng-disabled="createAccountForm.$invalid">Create Account</button>
 

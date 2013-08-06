@@ -18,6 +18,13 @@ angular.module('koality.directive', []).
 
 			element.bind 'click', highlightText
 	).
+	directive('autoFillableField', () ->
+		# This is a hack until the following bug is fixed:
+		# https://github.com/angular/angular.js/issues/1460
+		return (scope, element, attributes) ->
+			element.on 'change.autofill DOMAttrModified.autofill keydown.autofill propertychange.autofill', () ->
+				element.trigger 'input' if element.val() isnt ''
+	).
 	directive('hideOnExternalClick', ['$document', ($document) ->
 		restrict: 'A'
 		link: (scope, element, attributes) ->
@@ -61,18 +68,6 @@ angular.module('koality.directive', []).
 				<div class="fadingContentBottomBuffer"></div>
 			</div>'
 	).
-	# directive('tooltip', () ->
-	# 	restrict: 'A'
-	# 	link: (scope, element, attributes) ->
-	# 		html = "<span class='prettyTooltipContainer'>
-	# 				<span class='prettyTooltipCenterAnchor'>
-	# 					<span class='prettyTooltipCenterContainer'>
-	# 						<span class='prettyTooltip'>#{attributes.tooltip}</span>
-	# 					</span>
-	# 				</span>
-	# 			</span>"
-	# 		element.append html
-	# ).
 	directive('autoScrollToBottom', ['integerConverter', (integerConverter) ->
 		restrict: 'A'
 		link: (scope, element, attributes) ->
