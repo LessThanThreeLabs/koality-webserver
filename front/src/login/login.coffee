@@ -9,7 +9,9 @@ window.Login = ['$scope', 'rpc', 'cookieExtender', 'notification', ($scope, rpc,
 
 	$scope.login = () ->
 		rpc 'users', 'update', 'login', $scope.account, (error, result) ->
-			if error? then notification.error error
+			if error?
+				$scope.account.password = ''
+				notification.error error
 			else
 				if $scope.account.rememberMe is 'yes'
 					cookieExtender.extendCookie (error) ->
