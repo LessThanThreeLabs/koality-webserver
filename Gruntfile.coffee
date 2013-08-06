@@ -152,7 +152,7 @@ module.exports = (grunt) ->
 
 	grunt.registerTask 'default', ['compile']
 	grunt.registerTask 'compile', ['shell:removeCompile', 'shell:compileCoffee', 'less:development', 'shell:copyHtml']
-	grunt.registerTask 'compile-production', ['shell:removeCompile', 'shell:compileCoffee', 'less:production']
+	grunt.registerTask 'compile-production', ['shell:removeCompile', 'shell:compileCoffee', 'less:production', 'shell:copyHtml']
 
 	grunt.registerTask 'run', ['shell:runServer']
 	grunt.registerTask 'run-production', ['shell:runServerProduction']
