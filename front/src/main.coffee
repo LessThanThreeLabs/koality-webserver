@@ -4,6 +4,11 @@
 window.Main = ['$scope', 'rpc', 'events', 'initialState', 'notification', ($scope, rpc, events, initialState, notification) ->
 	repositories = []
 
+	checkSshKeyExists = () ->
+		rpc 'users', 'read', 'getSshKeys', null, (error, sshKeys) ->
+			if sshKeys.length
+				notification.warning 'You need to set up an SSH Key. <a href="/account?view=sshKeys">Click here to add one</a>', 60
+
 	getRepositories = () ->
 		rpc 'repositories', 'read', 'getRepositories', null, (error, repos) ->
 			repositories = repos
@@ -66,6 +71,7 @@ window.Main = ['$scope', 'rpc', 'events', 'initialState', 'notification', ($scop
 				notification.error "Your license has been deactivated. <a href='#{billingUpdateUrl}'>Update your billing information.</a>", 0
 
 	if initialState.loggedIn
+		checkSshKeyExists()
 		getRepositories()
 		checkLicenseStatus()
 ]
