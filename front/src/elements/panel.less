@@ -15,12 +15,6 @@
 	font-size: @baseFont;
 	font-weight: 300;
 
-	&.noScroll {
-		.panelBodyContents {
-			overflow-y: hidden;
-		}
-	}
-
 	&.optionsVisible {
 		.panelHeader { 
 			top: @optionsHeight;
@@ -138,6 +132,12 @@
 		left: 0;
 		right: 0;
 		bottom: @footerHeight;
+
+		&.noScroll {
+			.panelBodyContents {
+				overflow-y: hidden;
+			}
+		}
 
 		.panelDrawer, .panelBodyContents {
 			display: table-row;
