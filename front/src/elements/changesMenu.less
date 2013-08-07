@@ -15,7 +15,7 @@
 		position: absolute;
 		z-index: 1;
 		top: @headerHeight;
-		left: 0px;
+		left: 0;
 		right: @toothWidth;
 		bottom: @footerHeight;
 		background-color: @panelBackground;
@@ -24,9 +24,9 @@
 	.changesMenuHeader {
 		position: absolute;
 		z-index: 100;
-		top: 0px;
-		left: 0px;
-		right: 0px;
+		top: 0;
+		left: 0;
+		right: 0;
 		height: @headerHeight;
 
 		&.noPadding {
@@ -38,8 +38,8 @@
 
 		.changesMenuHeaderContent {
 			position: absolute;
-			top: 0px;
-			left: 0px;
+			top: 0;
+			left: 0;
 			right: @toothWidth;
 			padding-left: 12px;
 			padding-right: 12px;
@@ -58,8 +58,8 @@
 
 		.changesMenuHeaderBuffer {
 			position: absolute;
-			top: 0px;
-			right: 0px;
+			top: 0;
+			right: 0;
 			width: @toothWidth;
 			height: @headerHeight + 1;
 
@@ -84,13 +84,24 @@
 			@scrollbarHideWidth: 50px;
 
 			position: absolute;
-			top: 0px;
-			left: 0px;
+			top: 0;
+			left: 0;
 			right: -@scrollbarHideWidth;
-			bottom: 0px;
+			bottom: 0;
 			padding-top: @headerHeight - @borderRadius;
 			padding-bottom: @footerHeight - @borderRadius;
 			overflow-y: auto;
+
+			.changesMenuEmptyMessage {
+				position: absolute;
+				top: @headerHeight - @borderRadius;
+				left: 0;
+				width: @menuWidth - @toothWidth;
+				z-index: -1;
+				padding: 12px;
+				box-sizing: border-box;
+				-moz-box-sizing: border-box;
+			}
 
 			.changesMenuOption {
 				cursor: hand; cursor: pointer;
@@ -121,7 +132,7 @@
 						top: 2px;
 						left: 12px;
 						right: 22px;
-						bottom: 0px;
+						bottom: 0;
 						overflow: hidden;
 						text-overflow: ellipsis;
 						white-space: nowrap;
@@ -144,7 +155,7 @@
 
 					.changesMenuOptionSpinner {
 						position: absolute;
-						top: 0px;
+						top: 0;
 						right: 20px;
 						width: @optionHeight;
 						height: @optionHeight;
@@ -186,13 +197,13 @@
 					-o-transition: all @transitionTime ease-in-out;
 
 					position: absolute;
-					top: 0px;
+					top: 0;
 					left: @menuWidth - @toothWidth;
-					bottom: 0px;
-					width: 0px;
-					height: 0px;
+					bottom: 0;
+					width: 0;
+					height: 0;
 
-					border-left: 0px solid @panelBackground;
+					border-left: 0 solid @panelBackground;
 					border-top: @optionHeight/2 solid transparent;
 					border-bottom: @optionHeight/2 solid transparent;
 				}
@@ -336,9 +347,9 @@
 	.changesMenuFooter {
 		position: absolute;
 		z-index: 100;
-		left: 0px;
+		left: 0;
 		right: @toothWidth;
-		bottom: 0px;
+		bottom: 0;
 		height: @footerHeight;
 		background-color: @panelFooterBackground;
 		border-bottom-left-radius: @borderRadius;

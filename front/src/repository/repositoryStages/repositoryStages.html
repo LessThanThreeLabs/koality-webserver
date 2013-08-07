@@ -13,7 +13,7 @@
 
 			<changes-menu-option menu-option-text="merge" ng-show="selectedChange.getInformation().mergeStatus != null" ng-click="selectedStage.setMerge()" ng-class="{selected: selectedStage.isMerge(), green: selectedChange.getInformation().mergeStatus == 'passed', red: selectedChange.getInformation().mergeStatus == 'failed'}"></changes-menu-option>
 
-			<changes-menu-option menu-option-text="debug" ng-show="selectedChange.getInformation().aggregateStatus == 'failed' && !retrievingStages && stages.length == 0" ng-click="selectedStage.setDebug()" ng-class="{selected: selectedStage.isDebug(), red: true}"></changes-menu-option>
+			<changes-menu-option menu-option-text="debug" ng-show="selectedChange.getInformation().aggregateStatus == 'failed' && stages.length == 0" ng-click="selectedStage.setDebug()" ng-class="{selected: selectedStage.isDebug(), red: true}"></changes-menu-option>
 		</changes-menu-options>
 	</changes-menu>
 </div>

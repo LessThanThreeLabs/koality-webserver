@@ -2,7 +2,6 @@
 
 window.RepositoryChanges = ['$scope', '$routeParams', 'changesRpc', 'events', 'currentChange', 'localStorage', 'initialState', ($scope, $routeParams, changesRpc, events, currentChange, localStorage, initialState) ->
 	$scope.selectedChange = currentChange
-	$scope.changes = []
 
 	$scope.search = {}
 	$scope.search.mode = localStorage.searchMode ? 'all'
@@ -29,10 +28,10 @@ window.RepositoryChanges = ['$scope', '$routeParams', 'changesRpc', 'events', 'c
 				$scope.selectedChange.setChange $routeParams.repositoryId, changes[0].id
 
 	handleMoreChanges = (error, changes) ->
+		$scope.changes ?= []
 		$scope.changes = $scope.changes.concat changes
 
 	getInitialChanges = () ->
-		$scope.changes = []
 		changesRpc.queueRequest $routeParams.repositoryId, getGroupFromMode(), getNamesFromNamesQuery(), 0, handleInitialChanges
 
 	getMoreChanges = () ->
@@ -47,10 +46,12 @@ window.RepositoryChanges = ['$scope', '$routeParams', 'changesRpc', 'events', 'c
 				(change.submitter.lastName.toLowerCase() in getNamesFromNamesQuery())
 
 	getChangeWithId = (id) ->
+		return null if not $scope.changes?
 		return (change for change in $scope.changes when change.id is id)[0]
 
 	handeChangeAdded = (data) ->
 		if doesChangeMatchQuery(data) and not getChangeWithId(data.id)?
+			$scope.changes ?= []
 			$scope.changes.unshift data
 
 		if $scope.selectedChange.getId() is data.id

@@ -3,11 +3,6 @@
 window.RepositoryStages = ['$scope', '$routeParams', 'rpc', 'events', 'currentChange', 'currentStage', ($scope, $routeParams, rpc, events, currentChange, currentStage) ->
 	$scope.selectedChange = currentChange
 	$scope.selectedStage = currentStage
-	$scope.stages = []
-
-	isStageIdInStages = (stageId) ->
-		stage = (stage for stage in $scope.stages when stage.id is stageId)[0]
-		return stage?
 
 	getMostImportantStageWithTypeAndName = (type, name) ->
 		mostImportantStage = null
@@ -32,15 +27,12 @@ window.RepositoryStages = ['$scope', '$routeParams', 'rpc', 'events', 'currentCh
 		return stage1.type is stage2.type and stage1.name is stage2.name
 
 	retrieveStages = () ->
-		$scope.stages = []
-
 		if not $scope.selectedChange.getId()?
+			$scope.stages = null
 			$scope.selectedStage.setStage null, null
 			return
 
-		$scope.retrievingStages = true
 		rpc 'buildConsoles', 'read', 'getBuildConsoles', changeId: $scope.selectedChange.getId(), (error, buildConsoles) ->
-			$scope.retrievingStages = false
 			$scope.stages = buildConsoles
 
 			if $scope.stages.length is 0
@@ -49,18 +41,22 @@ window.RepositoryStages = ['$scope', '$routeParams', 'rpc', 'events', 'currentCh
 			if not $scope.selectedStage.getId()?
 				$scope.selectedStage.setSummary()
 
-			if $scope.selectedStage.getId()? and not isStageIdInStages $scope.selectedStage.getId()
+			if $scope.selectedStage.getId()? and not getStageWithId($scope.selectedStage.getId())?
 				$scope.selectedStage.setSummary()
 
 	getStageWithId = (id) ->
+		return null if not $scope.stages?
 		return (stage for stage in $scope.stages when stage.id is id)[0]
 
 	handleBuildConsoleAdded = (data) ->
+		$scope.stages ?= []
 		$scope.stages.push data if not getStageWithId(data.id)?
 
 	handleBuildConsoleStatusUpdate = (data) ->
 		stage = getStageWithId data.id
-		stage.status = data.status if stage?
+		return if not stage?
+
+		stage.status = data.status
 
 		if stage.status is 'failed' and isMirrorStage stage, $scope.selectedStage.getInformation()
 			$scope.selectedStage.setStage $routeParams.repositoryId, stage.id

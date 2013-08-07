@@ -14,6 +14,7 @@
 		</changes-menu-header>
 
 		<changes-menu-options on-scroll-to-bottom="scrolledToBottom()">
+			<changes-menu-empty-message ng-show="changes.length == 0">You have no changes</changes-menu-empty-message>
 			<changes-menu-option ng-repeat="change in changes | orderBy:'number':true" menu-option-identifier="{{change.number}}" menu-option-text="{{change.aggregateStatus}}" menu-option-spinning="{{change.verificationStatus == 'running'}}" ng-click="selectChange(change)" ng-class="{selected: change.id == selectedChange.getId(), green: change.aggregateStatus == 'passed', orange: change.aggregateStatus == 'skipped', red: change.aggregateStatus == 'failed'}"></changes-menu-option>
 		</changes-menu-options>
 	</changes-menu>

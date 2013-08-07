@@ -1,4 +1,4 @@
-angular.module('koality.directive.changes', []).
+angular.module('koality.directive.changesMenu', []).
 	directive('changesMenu', () ->
 		restrict: 'E'
 		replace: true
@@ -34,6 +34,12 @@ angular.module('koality.directive.changes', []).
 					scope.$apply attributes.onScrollToBottom if scrolledToBottom
 
 			addScrollListener() if attributes.onScrollToBottom?
+	).
+	directive('changesMenuEmptyMessage', () ->
+		restrict: 'E'
+		replace: true
+		transclude: true
+		template: '<div class="changesMenuEmptyMessage" ng-transclude></div>'
 	).
 	directive('changesMenuOption', () ->
 		restrict: 'E'
