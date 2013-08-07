@@ -36,7 +36,4 @@ class IndexHandler extends RequestHandler
 		cssFiles: @cssFilesString
 		jsFiles: @jsFilesString
 		userId: session.userId
-		email: user.email
-		firstName: user.first_name
-		lastName: user.last_name
 		isAdmin: user.admin	? false

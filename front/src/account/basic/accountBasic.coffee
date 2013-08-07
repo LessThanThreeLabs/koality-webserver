@@ -13,11 +13,16 @@ window.AccountBasic = ['$scope', 'initialState', 'rpc', 'notification', ($scope,
 	getName = () ->
 		rpc 'users', 'read', 'getBasicInformation', null, (error, basicInformation) ->
 			if error? then notification.error error
-			else if not $scope.account.firstName? and not $scope.account.lastName?
-				$scope.account.firstName = basicInformation.firstName
+			else
+				$scope.account.email = basicInformation.email
 				$scope.account.oldFirstName = basicInformation.firstName
-				$scope.account.lastName = basicInformation.lastName
 				$scope.account.oldLastName = basicInformation.lastName
+
+				if not $scope.account.firstName?
+					$scope.account.firstName = basicInformation.firstName
+					
+				if not $scope.account.lastName?
+					$scope.account.lastName = basicInformation.lastName
 
 	getName()
 
