@@ -24,6 +24,7 @@ window.AdminRepositories = ['$scope', '$routeParams', 'initialState', 'rpc', 'ev
 			else 
 				$scope.repositories = (addNewForwardUrl repository for repository in repositories)
 				updateRepositoryForwardUrlUpdatedListeners()
+				getMaxRepositoryCount()
 
 	getMaxRepositoryCount = () ->
 		rpc 'systemSettings', 'read', 'getMaxRepositoryCount', null, (error, maxRepositoryCount) ->
@@ -70,7 +71,6 @@ window.AdminRepositories = ['$scope', '$routeParams', 'initialState', 'rpc', 'ev
 	$scope.$on '$destroy', removeRepositoryEvents.unsubscribe
 
 	getRepositories()
-	getMaxRepositoryCount()
 	getPublicKey()
 
 	$scope.toggleDrawer = (drawerName) ->
