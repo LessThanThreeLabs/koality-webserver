@@ -55,6 +55,7 @@ angular.module('koality.directive.panel', []).
 				otherPanelDrawers = element.find(".panelDrawer:not([drawer-name='#{drawerToOpen}'])")
 				panelBodyContents = element.find('.panelBodyContents')
 
+				assert.ok panelDrawer.length <= 1
 				return if panelBodyContents.length is 0
 
 				hideOtherDrawers = () ->
@@ -69,7 +70,9 @@ angular.module('koality.directive.panel', []).
 					hideOtherDrawers()
 					bringDrawerToTop()
 					panelBodyContents.css 'top', panelDrawer.outerHeight() + 'px'
-				else panelBodyContents.css 'top', '0'
+				else
+					panelBodyContents.css 'top', '0'
+					setTimeout (() -> hideOtherDrawers()), 1000
 
 			moveDrawerOutOfNgTranslate = () ->
 				element.append element.find('.panelDrawer')
