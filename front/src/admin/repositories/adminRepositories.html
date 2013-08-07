@@ -5,7 +5,7 @@
 		</div>
 		<div class="right">
 			<a ng-click="toggleDrawer('publicKey')">Show SSH Key</a>
-			<button ng-click="toggleDrawer('addRepository')">Add a New Repository</button>
+			<button ng-click="toggleDrawer('addRepository')" ng-disabled="maxRepositoryCount == null">Add a New Repository</button>
 		</div>
 	</panel-header>
 
