@@ -54,5 +54,7 @@ window.Header = ['$scope', '$location', 'initialState', 'rpc', 'events', 'notifi
 			window.location.href = '/'
 
 	$scope.$on '$routeChangeSuccess', () ->
-		$scope.path = $location.path()
+		secondSlashIndex = $location.path().indexOf '/', 1
+		$scope.rootPath = if secondSlashIndex is -1 then $location.path() else $location.path().substring 0, secondSlashIndex
+		$scope.fullPath = $location.path()
 ]

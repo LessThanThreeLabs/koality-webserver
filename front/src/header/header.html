@@ -3,16 +3,16 @@
 	<a id="title" href="/">Koality</a>
 
 	<div id="primaryNavigation" ng-show="loggedIn">
-		<!-- <a href="/dashboard" ng-class="{disabled: path == '/dashboard'}">Dashboard</a> -->
-		<a href="/analytics" ng-class="{disabled: path == '/analytics'}">Analytics</a>
+		<!-- <a href="/dashboard" ng-class="{disabled: rootPath == '/dashboard'}">Dashboard</a> -->
+		<a href="/analytics" ng-class="{disabled: rootPath == '/analytics'}">Analytics</a>
 
 		<dropdown>
-			<a>Repositories</a>
+			<a ng-class="{disabled: rootPath == '/repository'}">Repositories</a>
 			<dropdown-options>
 				<dropdown-option
 					ng-repeat="repository in repositories | orderBy:'name'"
 					ng-href="/repository/{{repository.id}}"
-					ng-class="{disabled: path == '/repository/{{repository.id}}'}">
+					ng-class="{disabled: fullPath == '/repository/{{repository.id}}'}">
 					{{repository.name}}
 				</dropdopwn-option>
 			</dropdown-options>
@@ -34,8 +34,8 @@
 					</div>
 				</form>
 			</div>
-		</div><!-- Do not add space here! --><div id="divider"></div><!-- Do not add space here! --><a href="/admin" ng-class="{disabled: path == '/admin'}" ng-show="isAdmin">Admin</a><!-- Do not add space here! --><dropdown>
-			<a href="/account" ng-class="{disabled: path == '/account'}">My Account</a>
+		</div><!-- Do not add space here! --><div id="divider"></div><!-- Do not add space here! --><a href="/admin" ng-class="{disabled: rootPath == '/admin'}" ng-show="isAdmin">Admin</a><!-- Do not add space here! --><dropdown>
+			<a href="/account" ng-class="{disabled: rootPath == '/account'}">My Account</a>
 			<dropdown-options>
 				<dropdown-option ng-click="performLogout()">Logout</dropdownElement>
 			</dropdown-options>
