@@ -1,7 +1,7 @@
 <div id="repositoryStageDetails" ng-controller="RepositoryStageDetails">
 	<panel>
 		<panel-header>
-			<span ng-show="selectedStage.isSummary()">summary</span>
+			<span ng-show="selectedChange.getInformation() != null && selectedStage.isSummary()">summary</span>
 			<span ng-show="selectedStage.getInformation() != null">{{selectedStage.getInformation().name}}</span>
 			<span ng-show="selectedStage.isSkipped()">skipped</span>
 			<span ng-show="selectedStage.isMerge()">merge</span>
