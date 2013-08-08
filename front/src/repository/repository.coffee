@@ -16,6 +16,12 @@ window.Repository = ['$scope', '$location', '$routeParams', 'rpc', 'events', 'cu
 	$scope.$on '$routeUpdate', syncToRouteParams
 	syncToRouteParams()
 
+	$scope.$watch 'selectedRepository.getInformation().type + selectedRepository.getInformation().uri', () ->
+		repositoryInformation = $scope.selectedRepository.getInformation()
+		
+		if repositoryInformation?.type? and repositoryInformation?.uri?
+			$scope.cloneUri = repositoryInformation.type + ' clone ' + repositoryInformation.uri
+
 	$scope.$watch 'selectedChange.getId()', (newValue) ->
 		$location.search 'change', newValue ? null
 

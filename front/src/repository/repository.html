@@ -1,7 +1,7 @@
 <div id="repository">
 	<div id="repositoryHeader">
 		<span id="title">{{selectedRepository.getInformation().name}}</span>
-		<input id="uri" ng-model="selectedRepository.getInformation().uri" highlight-on-click first-only readonly></input>
+		<input id="uri" ng-model="cloneUri" highlight-on-click first-only readonly>
 	</div>
 
 	<div id="changes" ng-include="'html/repository/repositoryChanges/repositoryChanges.html' | fileSuffix"></div>

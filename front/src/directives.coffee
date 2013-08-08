@@ -14,7 +14,7 @@ angular.module('koality.directive', []).
 		return (scope, element, attributes) ->
 			highlightText = () ->
 				element.select()
-				element.unbind 'click', highlightText if attributes.firstOnly
+				element.unbind 'click', highlightText if attributes.firstOnly?
 
 			element.bind 'click', highlightText
 	).
