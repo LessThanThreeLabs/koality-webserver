@@ -127,6 +127,7 @@ class Server
 			expressServer.get '/unexpectedError', @handlers.unexpectedErrorHandler.handleRequest
 			expressServer.get '/invalidPermissions', @handlers.invalidPermissionsHandler.handleRequest
 
+			expressServer.get '/ping', @_handlePing
 			expressServer.post '/extendCookieExpiration', @_handleExtendCookieExpiration
 			expressServer.get '/github/oauth', @_handleSetGitHubOAuthToken
 			
@@ -192,6 +193,10 @@ class Server
 		expressServer.set 'view engine', 'ejs'
 		expressServer.set 'views', @configurationParams.staticFiles.rootDirectory + '/roots'
 		expressServer.locals.layout = false
+
+
+	_handlePing: (request, response) =>
+		response.end 'ok'
 
 
 	_handleExtendCookieExpiration: (request, response) =>
