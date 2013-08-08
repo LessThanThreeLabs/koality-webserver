@@ -1,8 +1,31 @@
 'use strict'
 
-window.AdminUpgrade = ['$scope', 'initialState', 'rpc', 'events', ($scope, initialState, rpc, events) ->
+window.AdminUpgrade = ['$scope', '$http', '$timeout', 'initialState', 'rpc', 'events', 'notification', ($scope, $http, $timeout, initialState, rpc, events, notification) ->
 	$scope.upgrade = {}
 	$scope.makingRequest = false
+
+	listenForWebserverComingBackUp = () ->
+		intervalTime = 5000
+
+		checkIfWebserverIsDown = () ->
+			request = $http.get '/ping', timeout: intervalTime
+			request.success (data, status, headers, config) ->
+				$timeout checkIfWebserverIsDown, intervalTime
+
+			request.error (data, status, headers, config) ->
+				$timeout checkIfWebserverIsUp, intervalTime
+				console.log 'Webserver is down. Listening for webserver to come back up...'
+
+		checkIfWebserverIsUp = () ->
+			request = $http.get '/ping', timeout: intervalTime
+			request.success (data, status, headers, config) ->
+				notification.success 'Update successful! Your browser will automatically refresh in 60 seconds', 60
+				$timeout (() -> location.reload()), 60000
+
+			request.error (data, status, headers, config) ->
+				$timeout checkIfWebserverIsUp, intervalTime
+
+		checkIfWebserverIsDown()
 
 	getUpgradeStatus = () ->
 		rpc 'systemSettings', 'read', 'getUpgradeStatus', null, (error, upgradeStatus) ->
@@ -41,4 +64,5 @@ window.AdminUpgrade = ['$scope', 'initialState', 'rpc', 'events', ($scope, initi
 		$scope.upgrade.upgradeAllowed = false
 		rpc 'systemSettings', 'update', 'upgradeDeployment', null, (error) ->
 			$scope.makingRequest = false
+			listenForWebserverComingBackUp()
 ]

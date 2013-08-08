@@ -101,7 +101,7 @@ class Server
 		turnOffInstallationWizard = (request, response) =>
 			removeInstallationWizardBindings()
 			addProjectBindings()
-			response.end 'ok'
+			response.send 'ok'
 
 		removeInstallationWizardBindings = () =>
 			expressServer.routes.get = expressServer.routes.get.filter (route) -> route.path isnt '/'
@@ -196,19 +196,19 @@ class Server
 
 
 	_handlePing: (request, response) =>
-		response.end 'ok'
+		response.send 'ok'
 
 
 	_handleExtendCookieExpiration: (request, response) =>
 		if not request.session.userId?
 			@logger.warn 'Tried to extend cookie expiration for user not logged in'
-			response.end '403'
+			response.send 403, 'User not logged in'
 		else
 			@logger.info 'Extending cookie expiration for: ' + request.session.userId
 			request.session.cookie.maxAge = 2592000000 # one month
 			request.session.cookieExpirationIncreased ?= 0 
 			request.session.cookieExpirationIncreased++
-			response.end 'ok'
+			response.send 'ok'
 
 
 	_handleSetGitHubOAuthToken: (request, response) =>
