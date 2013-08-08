@@ -40,7 +40,7 @@ angular.module('koality.directive.panel', []).
 		transclude: true
 		template: '<div class="panelHeaderSubtext" ng-transclude></div>'
 	).
-	directive('panelBody', () ->
+	directive('panelBody', ['$timeout', ($timeout) ->
 		restrict: 'E'
 		replace: true
 		transclude: true
@@ -72,7 +72,7 @@ angular.module('koality.directive.panel', []).
 					panelBodyContents.css 'top', panelDrawer.outerHeight() + 'px'
 				else
 					panelBodyContents.css 'top', '0'
-					setTimeout (() -> hideOtherDrawers()), 1000
+					$timeout (() -> hideOtherDrawers()), 1000
 
 			moveDrawerOutOfNgTranslate = () ->
 				element.append element.find('.panelDrawer')
@@ -83,7 +83,7 @@ angular.module('koality.directive.panel', []).
 
 			scope.$watch 'openDrawer', (drawerToOpen) ->
 				openDrawer drawerToOpen
-	).
+	]).
 	directive('panelDrawer', () ->
 		restrict: 'E'
 		replace: true

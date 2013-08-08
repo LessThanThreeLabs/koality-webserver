@@ -25,12 +25,12 @@ angular.module('koality.directive', []).
 			element.on 'change.autofill DOMAttrModified.autofill keydown.autofill propertychange.autofill', () ->
 				element.trigger 'input' if element.val() isnt ''
 	).
-	directive('hideOnExternalClick', ['$document', ($document) ->
+	directive('hideOnExternalClick', ['$document', '$timeout', ($document, $timeout) ->
 		restrict: 'A'
 		link: (scope, element, attributes) ->
 			addListeners = () ->
 				element.bind 'click', handleInternalClick
-				setTimeout (() -> $document.bind 'click', handleExternalClick), 0
+				$timeout (() -> $document.bind 'click', handleExternalClick)
 
 			removeListeners = () ->
 				element.unbind 'click', handleInternalClick
@@ -73,7 +73,7 @@ angular.module('koality.directive', []).
 			fadingContentElement = element.find('.fadingContent')
 			fadingContentElement.width element.width()
 	).
-	directive('autoScrollToBottom', ['integerConverter', (integerConverter) ->
+	directive('autoScrollToBottom', ['$timeout', 'integerConverter', ($timeout, integerConverter) ->
 		restrict: 'A'
 		link: (scope, element, attributes) ->
 			# fix to work with fading-content directive
@@ -81,7 +81,7 @@ angular.module('koality.directive', []).
 				element = element.find '.fadingContentScrollWrapper'
 
 			scrollToBottom = () ->
-				setTimeout (() -> element[0].scrollTop = element[0].scrollHeight), 0
+				$timeout (() -> element[0].scrollTop = element[0].scrollHeight)
 
 			scrollBottomBuffer = integerConverter.toInteger(attributes.autoScrollToBottomBuffer) ? 20
 
@@ -162,7 +162,7 @@ angular.module('koality.directive', []).
 			stopSpinner = () ->
 				spinner.stop() if spinner?
 	).
-	directive('notification', () ->
+	directive('notification', ['$timeout', ($timeout) ->
 		restrict: 'E'
 		replace: true
 		transclude: true
@@ -187,11 +187,11 @@ angular.module('koality.directive', []).
 
 			scope.hide = () ->
 				element.addClass 'hiding'
-				setTimeout (() -> element.remove()), 5000
+				$timeout (() -> element.remove()), 5000
 
 			element.css 'z-index', getZIndex attributes.type, attributes.durationInSeconds > 0
-			setTimeout scope.hide, attributes.durationInSeconds * 1000 if attributes.durationInSeconds > 0
-	).
+			$timeout scope.hide, attributes.durationInSeconds * 1000 if attributes.durationInSeconds > 0
+	]).
 	directive('consoleText', ['ansiparse', (ansiparse) ->
 		restrict: 'E'
 		replace: true

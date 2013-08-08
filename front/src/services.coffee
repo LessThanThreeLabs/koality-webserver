@@ -46,7 +46,7 @@ angular.module('koality.service', []).
 
 			$http.post('/extendCookieExpiration').success(successHandler).error(errorHandler)
 	]).
-	factory('notification', ['$compile', '$rootScope', '$document', ($compile, $rootScope, $document) ->
+	factory('notification', ['$compile', '$rootScope', '$document', '$timeout', ($compile, $rootScope, $document, $timeout) ->
 		container = $document.find '#notificationsContainer'
 		
 		add = (type, text, durationInSeconds) ->
@@ -59,7 +59,7 @@ angular.module('koality.service', []).
 
 			scope = $rootScope.$new(true)
 			notification = $compile(notification)(scope)
-			setTimeout (() -> scope.$apply () -> container.append notification), 0
+			$timeout (() -> scope.$apply () -> container.append notification)
 
 		toReturn =
 			success: (text, durationInSeconds=8) -> add 'success', text, durationInSeconds
@@ -67,7 +67,7 @@ angular.module('koality.service', []).
 			error: (text, durationInSeconds=8) -> add 'error', text, durationInSeconds
 		return toReturn
 	]).
-	factory('socket', ['$window', '$location', 'initialState', 'notification', ($window, $location, initialState, notification) ->
+	factory('socket', ['$window', '$location', '$timeout', 'initialState', 'notification', ($window, $location, $timeout, initialState, notification) ->
 		maxReconnectionAttempts = 10
 
 		socket = io.connect "//#{$location.host()}?csrfToken=#{initialState.csrfToken}",
@@ -94,7 +94,7 @@ angular.module('koality.service', []).
 
 			requestHandled = false
 			handleResponse = (error, response) ->
-				clearTimeout timeoutId if timeoutId?
+				$timeout.cancel timeoutPromise if timeoutPromise?
 
 				return if requestHandled
 				requestHandled = true
@@ -108,7 +108,7 @@ angular.module('koality.service', []).
 					else callback error, response if callback?
 
 			if timeout > 0
-				timeoutId = setTimeout (() -> handleResponse 'Timed out'), timeout
+				timeoutPromise = $timeout (() -> handleResponse 'Timed out'), timeout
 
 			socket.emit "#{resource}.#{requestType}", {method: methodName, args: data}, handleResponse
 
