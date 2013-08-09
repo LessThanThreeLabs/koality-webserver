@@ -6,7 +6,7 @@
 			<form name="loginForm" novalidate>
 				<input ng-model="account.email" name="email" type="email" placeholder="Email" maxlength=256 autocomplete="on" focused required>
 				<input ng-model="account.password" name="password" type="password" placeholder="Password" ng-maxlength=256 auto-fillable-field required>
-				<button class="fullWidth" ng-click="login()" ng-disabled="loginForm.$invalid">Log In</button>
+				<busy-button full-width busy="makingRequest" click="login()" disabled="loginForm.$invalid">Log In</busy-button>
 
 				<table>
 					<tr>

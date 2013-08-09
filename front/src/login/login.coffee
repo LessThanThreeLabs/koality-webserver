@@ -1,6 +1,7 @@
 'use strict'
 
 window.Login = ['$scope', 'rpc', 'cookieExtender', 'notification', ($scope, rpc, cookieExtender, notification) ->
+	$scope.makingRequest = false
 	$scope.account = {}
 
 	redirectToHome = () ->
@@ -8,7 +9,12 @@ window.Login = ['$scope', 'rpc', 'cookieExtender', 'notification', ($scope, rpc,
 		window.location.href = '/'
 
 	$scope.login = () ->
+		return if $scope.makingRequest
+		$scope.makingRequest = true
+
 		rpc 'users', 'update', 'login', $scope.account, (error, result) ->
+			$scope.makingRequest = false
+			
 			if error?
 				$scope.account.password = ''
 				notification.error error
