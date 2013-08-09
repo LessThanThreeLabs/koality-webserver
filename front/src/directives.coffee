@@ -93,7 +93,7 @@ angular.module('koality.directive', []).
 					scrollToBottom() if attributes.startAtBottom?
 			), true
 	]).
-	directive('busyButton', () ->
+	directive('busyButton', ['$timeout', ($timeout) ->
 		restrict: 'E'
 		replace: true
 		transclude: true
@@ -101,9 +101,9 @@ angular.module('koality.directive', []).
 			show: '=show'
 			busy: '=busy'
 			disabled: '=disabled'
-			click: '&click'
+			clickHandler: '&click'
 		template: '<div class="busyButton" ng-show="(show != null && show) || (show == null)">
-				<button ng-show="!busy" ng-click="click()" ng-disabled="disabled" ng-transclude></button>
+				<button ng-show="!busy" ng-mouseup="click($event)" ng-click="click($event)" ng-disabled="disabled" ng-transclude></button>
 				<spinner white spinner-running="busy" class="busyButtonSpinner"></spinner>
 			</div>'
 		link: (scope, element, attributes) ->
@@ -127,7 +127,19 @@ angular.module('koality.directive', []).
 
 			element.width Math.max button.outerWidth(), 25 if not attributes.centered?
 			element.height Math.max button.outerHeight(), 25
-	).
+
+			# This allows us to have more responsive buttons that respond to
+			# mouseup (because buttons are buggy in osx...) while still supporting
+			# form submission logic (clicking the enter key while focus is in a form)
+			ignoreClickEvents = false
+			scope.click = (event) ->
+				return if ignoreClickEvents
+				ignoreClickEvents = true
+
+				scope.clickHandler()
+
+				$timeout (() -> ignoreClickEvents = false), 100
+	]).
 	directive('spinner', () ->
 		restrict: 'E'
 		replace: true
