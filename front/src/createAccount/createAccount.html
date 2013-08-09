@@ -16,7 +16,7 @@
 				<label>Password<span class="sublabel">Min 8 characters, one letter, one number</span></label>
 				<input type="password" ng-model="account.password" name="password" placeholder="Password" ng-pattern="/^(?=.*[a-zA-Z])(?=.*\d).+$/" ng-minlength="8" ng-maxlength="256" auto-fillable-field required>
 
-				<button class="fullWidth" ng-click="submit()" ng-disabled="createAccountForm.$invalid">Create Account</button>
+				<busy-button full-width busy="makingRequest" click="submit()" disabled="createAccountForm.$invalid">Create Account</busy-button>
 
 				<div>
 					<input ng-model="account.rememberMe" ng-true-value="yes" ng-false-value="no" name="rememberMe" type="checkbox">Stay Logged In
