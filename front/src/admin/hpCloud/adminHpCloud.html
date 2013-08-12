@@ -13,16 +13,16 @@
 				<label>Tenant Name</label>
 				<input type="text" ng-model="hpCloudKeys.tenantName" name="tenantName" ng-maxlength="256" required>
 
-				<!-- <label>Region</label>
-				<select ng-model="hpCloudKeys.region" ng-options="region as region for region in allowedRegions" required></select> -->
+				<label>Region</label>
+				<select ng-model="hpCloudKeys.region" ng-options="region as region for region in allowedRegions" required></select>
 			</div>
 
 			<div class="formContainer">
 				<label>Security Group</label>
 				<select ng-model="instanceSettings.securityGroup" ng-options="securityGroup as securityGroup for securityGroup in allowedSecurityGroups"></select>
 
-				<!-- <label>Instance Size</label>
-				<select ng-model="instanceSettings.instanceSize" ng-options="instanceSize as instanceSize for instanceSize in allowedInstanceSizes"></select> -->
+				<label>Instance Size</label>
+				<select ng-model="instanceSettings.instanceSize" ng-options="instanceSize as instanceSize for instanceSize in allowedInstanceSizes"></select>
 
 				<div class="halfWidthFormElement left">
 					<label>Ready Instances</label>

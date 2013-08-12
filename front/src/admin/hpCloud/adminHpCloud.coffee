@@ -7,6 +7,10 @@ window.AdminHpCloud = ['$scope', 'rpc', 'notification', ($scope, rpc, notificati
 		rpc 'systemSettings', 'read', 'getHpCloudKeys', null, (error, hpCloudKeys) ->
 			$scope.hpCloudKeys = hpCloudKeys
 
+	getAllowedRegions = () ->
+		rpc 'systemSettings', 'read', 'getHpCloudAllowedRegions', null, (error, allowedRegions) ->
+			$scope.allowedRegions = allowedRegions
+
 	getAllowedInstanceSizes = () ->
 		rpc 'systemSettings', 'read', 'getHpCloudAllowedInstanceSizes', null, (error, allowedInstanceSizes) ->
 			$scope.allowedInstanceSizes = allowedInstanceSizes
@@ -25,6 +29,7 @@ window.AdminHpCloud = ['$scope', 'rpc', 'notification', ($scope, rpc, notificati
 
 	getHpCloudKeys()
 	getAllowedInstanceSizes()
+	getAllowedRegions()
 	getAllowedSecurityGroups()
 	getInstanceSettings()
 	getVerifierPoolSettings()
