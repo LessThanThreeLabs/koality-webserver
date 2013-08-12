@@ -15,6 +15,7 @@
 	<div id="wizardContent">
 		<div class="wizardStage" ng-show="stage == 'licenseKey'">
 			<div class="stageInstructions">Enter your License Key to continue</div>
+			<div class="stageSubInstructions">This license key was emailed to you from KoalityCode.com</div>
 
 			<form name="licenseKeyForm" novalidate>
 				<input type="text" ng-model="license.licenseKey" name="licenseKey" placeholder="1111-2222-3333-4444" ng-pattern="/^[-a-zA-Z0-9]+$/" license-key required focused>
@@ -69,6 +70,7 @@
 
 		<div class="wizardStage" ng-show="stage == 'website'">
 			<div class="stageInstructions">Where will Koality be deployed?</div>
+			<div class="stageSubInstructions">This is the domain name where users will connect to Koality. Your DNS information should be updated to reflect this. This can be updated in the future.</div>
 
 			<form name="websiteForm" novalidate>
 				<label>Domain Name</label>
@@ -81,6 +83,7 @@
 
 		<div class="wizardStage" ng-show="stage == 'aws'">
 			<div class="stageInstructions">Add your AWS credentials</div>
+			<div class="stageSubInstructions">These credentials must have access to the EC2 API and the S3 API.</div>
 
 			<form name="awsForm" novalidate>
 				<label>AWS Access Key Id</label>

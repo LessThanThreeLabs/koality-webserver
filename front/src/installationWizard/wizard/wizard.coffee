@@ -1,11 +1,11 @@
 'use strict'
 
-window.Wizard = ['$scope', '$http', 'rpc', 'notification', ($scope, $http, rpc, notification) ->
+window.Wizard = ['$scope', '$location', '$http', 'rpc', 'notification', ($scope, $location, $http, rpc, notification) ->
 	$scope.stage = 'licenseKey'
 
 	$scope.license = {}
 	$scope.admin = {}
-	$scope.website = {}
+	$scope.website = domainName: $location.host()
 	$scope.aws = {}
 
 	$scope.waitingOnRequest = false
