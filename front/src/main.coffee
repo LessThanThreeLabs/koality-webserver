@@ -6,7 +6,7 @@ window.Main = ['$scope', 'rpc', 'events', 'initialState', 'notification', ($scop
 
 	checkSshKeyExists = () ->
 		rpc 'users', 'read', 'getSshKeys', null, (error, sshKeys) ->
-			if sshKeys.length
+			if sshKeys.length is 0
 				notification.warning 'You need to set up an SSH Key. <a href="/account?view=sshKeys">Click here to add one</a>', 60
 
 	getRepositories = () ->
