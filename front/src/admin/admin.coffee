@@ -1,7 +1,13 @@
 'use strict'
 
-window.Admin = ['$scope', '$location', '$routeParams', ($scope, $location, $routeParams) ->
+window.Admin = ['$scope', '$location', '$routeParams', 'rpc', ($scope, $location, $routeParams, rpc) ->
 	$scope.view = $routeParams.view ? 'users'
+
+	getCloudProvider = () ->
+		rpc 'systemSettings', 'read', 'getCloudProvider', null, (error, cloudProvider) ->
+			$scope.cloudProvider = cloudProvider
+
+	getCloudProvider()
 
 	$scope.selectView = (view) ->
 		$scope.view = view

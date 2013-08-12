@@ -1,6 +1,6 @@
 {
   "name": "koality-webserver",
-  "version": "0.2.2",
+  "version": "0.3.0",
 
   "dependencies": {
     "amqp": "0.1.4",

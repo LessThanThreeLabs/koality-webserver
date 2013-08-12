@@ -12,17 +12,20 @@
 			</div>
 
 			<div class="formContainer">
+				<label>Security Group</label>
+				<select ng-model="instanceSettings.securityGroup" ng-options="securityGroup as securityGroup for securityGroup in allowedSecurityGroups" required></select>
+
 				<label>Instance Size</label>
-				<select ng-model="instanceSettings.instanceSize" ng-options="instanceSize as instanceSize for instanceSize in allowedInstanceSizes"></select>
+				<select ng-model="instanceSettings.instanceSize" ng-options="instanceSize as instanceSize for instanceSize in allowedInstanceSizes" required></select>
 
 				<div class="halfWidthFormElement left">
 					<label>Ready Instances</label>
-					<input type="number" ng-model="instanceSettings.numWaiting" name="numWaiting" required>
+					<input type="number" ng-model="verifierPoolSettings.numWaiting" name="numWaiting" required>
 				</div>
 
 				<div class="halfWidthFormElement right">
 					<label>Max Running Instances</label>
-					<input type="number" ng-model="instanceSettings.maxRunning" name="maxRunning" required>
+					<input type="number" ng-model="verifierPoolSettings.maxRunning" name="maxRunning" required>
 				</div>
 			</div>
 

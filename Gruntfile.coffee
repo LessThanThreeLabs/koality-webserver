@@ -2,6 +2,7 @@ module.exports = (grunt) ->
 
 	grunt.initConfig
 		package: grunt.file.readJSON('package.json');
+		nodeModulesDirectory: 'node_modules'
 		backSourceDirectory: 'src'
 		backCompiledDirectory: 'libs'
 		backTestDirectory: 'test'
@@ -132,15 +133,15 @@ module.exports = (grunt) ->
 
 		watch:
 			compile:
-				files: ['<%= backSourceDirectory %>/**/*.coffee', '<%= frontSourceDirectory %>/**/*.coffee', '<%= frontSourceDirectory %>/**/*.less']
+				files: ['<%= backSourceDirectory %>/**/*.coffee', '<%= frontSourceDirectory %>/**/*.coffee', '<%= frontSourceDirectory %>/**/*.less', '<%= nodeModulesDirectory %>/**/*.coffee']
 				tasks: ['compile']
 
 			test:
-				files: ['<%= backSourceDirectory %>/**/*.coffee', '<%= frontSourceDirectory %>/**/*.coffee', '<%= frontSourceDirectory %>/**/*.less', '<%= frontTestDirectory %>/**/*.coffee']
+				files: ['<%= backSourceDirectory %>/**/*.coffee', '<%= frontSourceDirectory %>/**/*.coffee', '<%= frontSourceDirectory %>/**/*.less', '<%= frontTestDirectory %>/**/*.coffee', '<%= nodeModulesDirectory %>/**/*.coffee']
 				tasks: ['compile', 'test']
 
 			run:
-				files: ['<%= backSourceDirectory %>/**/*.coffee', '<%= frontSourceDirectory %>/**/*.coffee', '<%= frontSourceDirectory %>/**/*.less', '<%= frontSourceDirectory %>/**/*.html', '<%= frontRootsDirectory %>/**/*.ejs', '<%= frontRootsDirectory %>/**/*.json']
+				files: ['<%= backSourceDirectory %>/**/*.coffee', '<%= frontSourceDirectory %>/**/*.coffee', '<%= frontSourceDirectory %>/**/*.less', '<%= frontSourceDirectory %>/**/*.html', '<%= frontRootsDirectory %>/**/*.ejs', '<%= frontRootsDirectory %>/**/*.json', '<%= nodeModulesDirectory %>/**/*.coffee']
 				tasks: ['shell:killServer', 'compile', 'run']
 				options:
 					interrupt: true
