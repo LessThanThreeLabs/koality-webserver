@@ -214,9 +214,11 @@ class Server
 	_handleSetGitHubOAuthToken: (request, response) =>
 		userId = request.session.userId
 		oauthToken = request.query?.token
+		action = request.query?.action
 
 		if not userId then response.send 500, 'Not logged in'
 		else if not oauthToken? then response.send 400, 'No OAuth Token provided'
+		else if not action? then response.send 400, 'No action provided'
 		else
 			@modelConnection.rpcConnection.users.update.change_github_oauth_token userId, oauthToken, (error) =>
 				if error?
@@ -224,4 +226,4 @@ class Server
 					response.send 500, 'Error while trying to update oauth token'
 				else
 					@logger.info 'Successfully connected user to GitHub: ' + userId
-					response.redirect '/'
+					response.redirect '/account?view=sshKeys&importGitHubKeys'

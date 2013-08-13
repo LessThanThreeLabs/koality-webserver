@@ -1,6 +1,6 @@
 'use strict'
 
-window.AccountSshKeys = ['$scope', '$location', 'rpc', 'events', 'initialState', 'notification', ($scope, $location, rpc, events, initialState, notification) ->
+window.AccountSshKeys = ['$scope', '$location', '$routeParams', '$timeout', 'rpc', 'events', 'initialState', 'notification', ($scope, $location, $routeParams, $timeout, rpc, events, initialState, notification) ->
 	$scope.orderByPredicate = 'alias'
 	$scope.orderByReverse = false
 
@@ -10,6 +10,12 @@ window.AccountSshKeys = ['$scope', '$location', 'rpc', 'events', 'initialState',
 	$scope.addKey =
 		makingRequest: false
 		drawerOpen: false
+
+	if $routeParams.importGitHubKeys
+		$timeout (() -> 
+			$scope.importFromGitHub()
+			$location.search 'importGitHubKeys', null
+		), 100
 
 	getKeys = () ->
 		rpc 'users', 'read', 'getSshKeys', null, (error, keys) ->
@@ -61,7 +67,11 @@ window.AccountSshKeys = ['$scope', '$location', 'rpc', 'events', 'initialState',
 		rpc 'users', 'update', 'addGitHubSshKeys', null, (error) ->
 			$scope.waitingOnGitHubImportRequest = false
 
-			if error isnt 'Key is already in use'
-				# window.location.href = "http://127.0.0.1:1080/github/authenticate?url=#{$location.protocol()}://#{$location.host()}"
-				window.location.href = "http://127.0.0.1:1081/github/authenticate?url=#{$location.protocol()}://#{$location.host()}:1080"
+			if error?
+				if error isnt 'NoSuchGitHubOAuthToken' and error isnt 'InvalidGitHubOAuthToken' then notification.error error
+				else
+					# window.location.href = "http://127.0.0.1:1080/github/authenticate?url=#{$location.protocol()}://#{$location.host()}"
+					window.location.href = "http://127.0.0.1:1081/github/authenticate?url=#{$location.protocol()}://#{$location.host()}:1080&action=sshKeys"
+			else
+				notification.success 'Added GitHub SSH Keys'
 ]
