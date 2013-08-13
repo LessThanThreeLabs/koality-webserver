@@ -9,7 +9,8 @@ window.AdminRepositories = ['$scope', '$routeParams', 'initialState', 'rpc', 'ev
 
 	$scope.addRepository =
 		setupType: 'manual'
-		makingRequest: false
+		manual: {}
+		gitHub: {}
 
 	$scope.publicKey =
 		key: null
@@ -113,21 +114,20 @@ window.AdminRepositories = ['$scope', '$routeParams', 'initialState', 'rpc', 'ev
 			if error? then notification.error error
 			else notification.success 'Successfully deleted repository: ' + repository.name
 
-	$scope.createRepository = () ->
-		return if $scope.addRepository.makingRequest
-		$scope.addRepository.makingRequest = true
+	$scope.createManualRepository = () ->
+		return if $scope.addRepository.manual.makingRequest
+		$scope.addRepository.manual.makingRequest = true
 
-		rpc 'repositories', 'create', 'createRepository', $scope.addRepository, false, (error, repositoryId) ->
-			$scope.addRepository.makingRequest = false
+		rpc 'repositories', 'create', 'createRepository', $scope.addRepository.manual, false, (error, repositoryId) ->
+			$scope.addRepository.manual.makingRequest = false
 			if error? then notification.error error
 			else
-				notification.success 'Created repository ' + $scope.addRepository.name
+				notification.success 'Created repository ' + $scope.addRepository.manual.name
 				$scope.clearAddRepository()
 
 	$scope.clearAddRepository = () ->
 		$scope.addRepository.setupType = 'manual'
-		$scope.addRepository.name = ''
-		$scope.addRepository.forwardUrl = ''
-		$scope.addRepository.type = ''
+		$scope.addRepository.manual = {}
+		$scope.addRepository.gitHub = {}
 		$scope.currentlyOpenDrawer = null
 ]

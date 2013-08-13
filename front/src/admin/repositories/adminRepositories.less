@@ -3,47 +3,73 @@
 
 #adminRepositories {
 
-	#addRepositoryForm {
+	table#setupTypeTable {
+		width: 100%;
+		table-layout: fixed;
 
-		table {
-			width: 100%;
-			table-layout: fixed;
+		input {
+			margin: 0;
+		}
 
-			td {
-				padding: 0 15px 0 15px;
+		.setupTypeColumn {
+			padding-right: 15px;
+			width: 150px;
+		}
 
-				&:first-child { padding-left: 0; }
-				&:last-child { padding-right: 0; }
+		.setupColumn {
+
+			table#manualSetupTable, table#gitHubSetupTable {
+				table-layout: fixed;
+
+				td {
+					padding: 0 15px 0 15px;
+
+					&:first-child { padding-left: 0; }
+					&:last-child { padding-right: 0; }
+				}
 			}
 
-			input {
-				margin: 0;
+			table#manualSetupTable {
+				width: 100%;
+
+				.manualNameColumn {
+					width: 200px;
+				}
+
+				.manualForwardUrlColumn {
+
+				}
+
+				.manualTypeColumn {
+					width: 100px;
+				}
+
+				.manualAddRepositorySubmitColumn {
+					width: 90px;
+					padding-top: 23px;
+				}
+
+				.manualAddRepositoryCancelColumn {
+					width: 60px;
+					padding-top: 23px;
+				}
 			}
 
-			.setupTypeColumn {
-				width: 150px;
-			}
+			table#gitHubSetupTable {
 
-			.nameColumn {
-				width: 200px;
-			}
+				.gitHubNameColumn {
+					width: 400px;
+				}
 
-			.forwardUrlColumn {
+				.gitHubAddRepositorySubmitColumn {
+					width: 90px;
+					padding-top: 23px;
+				}
 
-			}
-
-			.typeColumn {
-				width: 100px;
-			}
-
-			.addRepositorySubmitColumn {
-				width: 90px;
-				padding-top: 23px;
-			}
-
-			.addRepositoryCancelColumn {
-				width: 100px;
-				padding-top: 23px;
+				.gitHubAddRepositoryCancelColumn {
+					width: 60px;
+					padding-top: 23px;
+				}
 			}
 		}
 	}

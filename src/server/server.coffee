@@ -226,4 +226,7 @@ class Server
 					response.send 500, 'Error while trying to update oauth token'
 				else
 					@logger.info 'Successfully connected user to GitHub: ' + userId
-					response.redirect '/account?view=sshKeys&importGitHubKeys'
+
+					if action is 'sshKeys' then response.redirect '/account?view=sshKeys&importGitHubKeys'
+					else if action is 'addRepository' then response.redirect '/admin?view=repositories&addGitHubRepository'
+					else response.redirect '/'

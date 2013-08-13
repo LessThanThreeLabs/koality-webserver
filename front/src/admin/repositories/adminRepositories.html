@@ -5,45 +5,70 @@
 		</div>
 		<div class="right">
 			<a ng-click="toggleDrawer('publicKey')">Show SSH Key</a>
-			<button ng-click="toggleDrawer('addRepository')" ng-disabled="maxRepositoryCount == null">Add a New Repository</button>
+			<button ng-click="toggleDrawer('addRepository')" ng-disabled="exceededMaxRepositoryCount == null || exceededMaxRepositoryCount">Add a New Repository</button>
 		</div>
 	</panel-header>
 
 	<panel-body no-padding open-drawer="currentlyOpenDrawer">
 		<panel-drawer drawer-name="addRepository">
-			<form id="addRepositoryForm" name="addRepositoryForm" novalidate>
-				<table>
-					<tr>
-						<td class="setupTypeColumn">
-							<label>Setup Type</label>
-							<select ng-model="addRepository.setupType" required>
-								<option value="manual">Manual Setup</option>
-							</select>
-						</td>
-						<td class="nameColumn">
-							<label>Name</label>
-							<input type="text" ng-model="addRepository.name" name="name" ng-maxlength=64 focused required>
-						</td>
-						<td class="forwardUrlColumn">
-							<label>Forward Url</label>
-							<input type="text" ng-model="addRepository.forwardUrl" name="forwardUrl" ng-maxlength=256 required>
-						</td>
-						<td class="typeColumn">
-							<label>Type</label>
-							<select ng-model="addRepository.type" required>
-								<option value="git">Git</option>
-								<option value="hg">Hg</option>
-							</select>
-						</td>
-						<td class="addRepositorySubmitColumn">
-							<busy-button busy="addRepository.makingRequest" click="createRepository()" disabled="addRepositoryForm.$invalid">Add</busy-button>
-						</td>
-						<td class="addRepositoryCancelColumn">
-							<a ng-click="clearAddRepository()">Cancel</a>
-						</td>
-					</tr>
-				</table>
-			</form>
+			<table id="setupTypeTable">
+				<tr>
+					<td class="setupTypeColumn">
+						<label>Setup Type</label>
+						<select ng-model="addRepository.setupType" required>
+							<option value="manual">Manual Setup</option>
+							<!-- <option value="gitHub">GitHub Setup</option> -->
+						</select>
+					</td>
+
+					<td class="setupColumn">
+						<form id="addRepositoryManualForm" name="addRepositoryManualForm" novalidate>
+							<table id="manualSetupTable" ng-show="addRepository.setupType == 'manual'">
+								<tr>
+									<td class="manualNameColumn">
+										<label>Name</label>
+										<input type="text" ng-model="addRepository.manual.name" name="name" ng-maxlength=64 focused required>
+									</td>
+									<td class="manualForwardUrlColumn">
+										<label>Forward Url</label>
+										<input type="text" ng-model="addRepository.manual.forwardUrl" name="forwardUrl" ng-maxlength=256 required>
+									</td>
+									<td class="manualTypeColumn">
+										<label>Type</label>
+										<select ng-model="addRepository.manual.type" required>
+											<option value="git">Git</option>
+											<option value="hg">Hg</option>
+										</select>
+									</td>
+									<td class="manualAddRepositorySubmitColumn">
+										<busy-button busy="addRepository.manual.makingRequest" click="createManualRepository()" disabled="addRepositoryManualForm.$invalid">Add</busy-button>
+									</td>
+									<td class="manualAddRepositoryCancelColumn">
+										<a ng-click="clearAddRepository()">Cancel</a>
+									</td>
+								</tr>
+							</table>
+						</form>
+
+						<form id="addRepositoryGitHubForm" name="addRepositoryGitHubForm" novalidate>
+							<table id="gitHubSetupTable" ng-show="addRepository.setupType == 'gitHub'">
+								<tr>
+									<td class="gitHubNameColumn">
+										<label>Name</label>
+										<select ng-model="addRepository.gitHub.name" ng-options="repository as repository for repository in gitHubRepositories" required></select>
+									</td>
+									<td class="gitHubAddRepositorySubmitColumn">
+										<busy-button busy="addRepository.gitHub.makingRequest" click="createGitHubRepository()" disabled="addRepositoryGitHubForm.$invalid">Add</busy-button>
+									</td>
+									<td class="gitHubAddRepositoryCancelColumn">
+										<a ng-click="clearAddRepository()">Cancel</a>
+									</td>
+								</tr>
+							</table>
+						</form>
+					</td>
+				</tr>
+			</table>
 		</panel-drawer>
 
 		<panel-drawer drawer-name="publicKey">
