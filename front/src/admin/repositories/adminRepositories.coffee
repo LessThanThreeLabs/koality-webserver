@@ -31,6 +31,7 @@ window.AdminRepositories = ['$scope', '$routeParams', 'initialState', 'rpc', 'ev
 			if error? then notification.error error
 			else 
 				$scope.maxRepositoryCount = maxRepositoryCount ? Number.POSITIVE_INFINITY
+				$scope.exceededMaxRepositoryCount = $scope.repositories.length >= $scope.maxRepositoryCount
 				showRepositoriesLimitWarningIfNecessary()
 
 	showRepositoriesLimitWarningIfNecessary = () ->
