@@ -50,6 +50,8 @@ angular.module('koality.directive.panel', []).
 				<div class="panelBodyContents textSelectable" ng-transclude></div>
 			</div>'
 		link: (scope, element, attributes) ->
+			hideOtherDrawersTimeoutPromise = null
+
 			openDrawer = (drawerToOpen) ->
 				panelDrawer = element.find(".panelDrawer[drawer-name='#{drawerToOpen}']")
 				otherPanelDrawers = element.find(".panelDrawer:not([drawer-name='#{drawerToOpen}'])")
@@ -57,6 +59,8 @@ angular.module('koality.directive.panel', []).
 
 				assert.ok panelDrawer.length <= 1
 				return if panelBodyContents.length is 0
+
+				$timeout.cancel hideOtherDrawersTimeoutPromise if hideOtherDrawersTimeoutPromise?
 
 				hideOtherDrawers = () ->
 					otherPanelDrawers.css 'z-index', 0
@@ -72,7 +76,7 @@ angular.module('koality.directive.panel', []).
 					panelBodyContents.css 'top', panelDrawer.outerHeight() + 'px'
 				else
 					panelBodyContents.css 'top', '0'
-					$timeout (() -> hideOtherDrawers()), 1000
+					hideOtherDrawersTimeoutPromise = $timeout (() -> hideOtherDrawers()), 1000
 
 			moveDrawerOutOfNgTranslate = () ->
 				element.append element.find('.panelDrawer')
