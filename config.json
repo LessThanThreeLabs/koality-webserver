@@ -52,6 +52,10 @@
 		}
 	},
 
+	"gitHubConnection": {
+		"brokerUri": "http://127.0.0.1:1081/github"
+	},
+
 	"mailer": {
 		"mailgun": {
 			"user": "postmaster@koalitycode.com",

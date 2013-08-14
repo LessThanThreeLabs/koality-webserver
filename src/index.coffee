@@ -2,6 +2,7 @@ fs = require 'fs'
 
 Logger = require 'koality-logger'
 ModelConnection = require 'koality-model-connection'
+GitHubConnection = require 'koality-github-connection'
 
 environment = require './environment'
 
@@ -30,6 +31,8 @@ startEverything = () ->
 		configurationParams.modelConnection.events,
 		logger
 
+	gitHubConnection = GitHubConnection.create configurationParams.gitHubConnection, modelConnection, logger
+
 	process.on 'uncaughtException', (error) ->
 		logger.error error, true
 		setTimeout (() -> process.exit 1), 10000
@@ -45,7 +48,7 @@ startEverything = () ->
 
 			domainRetriever.setModelConnection modelConnection
 
-			server = Server.create configurationParams.server, modelConnection, mailer, logger
+			server = Server.create configurationParams.server, modelConnection, gitHubConnection, mailer, logger
 			server.initialize (error) =>
 				if error? then throw error
 				else server.start()

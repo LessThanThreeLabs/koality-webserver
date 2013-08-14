@@ -20,13 +20,13 @@ UnexpectedErrorHandler = require './handlers/unexpectedErrorHandler'
 InvalidPermissionsHandler = require './handlers/invalidPermissionsHandler'
 
 
-exports.create = (configurationParams, modelConnection, mailer, logger) ->
+exports.create = (configurationParams, modelConnection, gitHubConnection, mailer, logger) ->
 	stores =
 		sessionStore: SessionStore.create configurationParams
 		createAccountStore: CreateAccountStore.create configurationParams
 	
 	cookieName = 'koality.session.id'
-	resourceConnection = ResourceConnection.create modelConnection, stores, cookieName, mailer, logger
+	resourceConnection = ResourceConnection.create modelConnection, stores, gitHubConnection, cookieName, mailer, logger
 	
 	staticServer = StaticServer.create()
 	apiServer = ApiServer.create modelConnection, logger
@@ -43,15 +43,15 @@ exports.create = (configurationParams, modelConnection, mailer, logger) ->
 
 class Server
 	constructor: (@configurationParams, @cookieName, @modelConnection, @resourceConnection, @stores, @handlers, @staticServer, @apiServer, @logger) ->
-		assert.ok @configurationParams?
-		assert.ok @cookieName?
-		assert.ok @modelConnection?
-		assert.ok @resourceConnection?
-		assert.ok @stores?
-		assert.ok @handlers?
-		assert.ok @staticServer?
-		assert.ok @apiServer?
-		assert.ok @logger?
+		assert.ok typeof @configurationParams is 'object'
+		assert.ok typeof @cookieName is 'string'
+		assert.ok typeof @modelConnection is 'object'
+		assert.ok typeof @resourceConnection is 'object'
+		assert.ok typeof @stores is 'object'
+		assert.ok typeof @handlers is 'object'
+		assert.ok typeof @staticServer is 'object'
+		assert.ok typeof @apiServer is 'object'
+		assert.ok typeof @logger is 'object'
 
 
 	initialize: (callback) =>
