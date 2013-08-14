@@ -1,7 +1,7 @@
 'use strict'
 
 
-window.Main = ['$scope', 'rpc', 'events', 'initialState', 'notification', ($scope, rpc, events, initialState, notification) ->
+window.Main = ['$scope', '$timeout', 'rpc', 'events', 'initialState', 'notification', ($scope, $timeout, rpc, events, initialState, notification) ->
 	repositories = []
 
 	checkSshKeyExists = () ->
@@ -71,7 +71,10 @@ window.Main = ['$scope', 'rpc', 'events', 'initialState', 'notification', ($scop
 				notification.error "Your license has been deactivated. <a href='#{billingUpdateUrl}'>Update your billing information.</a>", 0
 
 	if initialState.loggedIn
-		checkSshKeyExists()
 		getRepositories()
-		checkLicenseStatus()
+
+		$timeout (() ->
+			checkSshKeyExists()
+			checkLicenseStatus()
+		), 5000
 ]
