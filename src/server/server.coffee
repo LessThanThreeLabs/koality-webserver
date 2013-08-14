@@ -129,7 +129,7 @@ class Server
 
 			expressServer.get '/ping', @_handlePing
 			expressServer.post '/extendCookieExpiration', @_handleExtendCookieExpiration
-			expressServer.get '/github/oauth', @_handleSetGitHubOAuthToken
+			expressServer.get '/github/oAuthToken', @_handleSetGitHubOAuthToken
 			
 			@apiServer.addRoutes expressServer
 			expressServer.get '*', @staticServer.handleRequest

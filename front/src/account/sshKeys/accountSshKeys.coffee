@@ -68,10 +68,8 @@ window.AccountSshKeys = ['$scope', '$location', '$routeParams', '$timeout', 'rpc
 			$scope.waitingOnGitHubImportRequest = false
 
 			if error?
-				if error isnt 'NoSuchGitHubOAuthToken' and error isnt 'InvalidGitHubOAuthToken' then notification.error error
-				else
-					# window.location.href = "http://127.0.0.1:1080/github/authenticate?url=#{$location.protocol()}://#{$location.host()}"
-					window.location.href = "http://127.0.0.1:1081/github/authenticate?url=#{$location.protocol()}://#{$location.host()}:1080&action=sshKeys"
+				if error.redirect? then window.location.href = error.redirect
+				else notification.error error
 			else
 				notification.success 'Added GitHub SSH Keys'
 ]
