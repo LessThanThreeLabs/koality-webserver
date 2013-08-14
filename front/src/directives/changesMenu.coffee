@@ -48,8 +48,8 @@ angular.module('koality.directive.changesMenu', []).
 		template: '<div class="changesMenuOption">
 				<div class="changesMenuOptionContents">
 					<div class="changesMenuOptionTextContainer">
-						<span class="changesMenuOptionIdentifier">{{identifier}}</span>
-						<span class="changesMenuOptionText">{{text}}</span>
+						<span class="changesMenuOptionIdentifier" ng-show="identifier != null">{{identifier}}</span>
+						<span class="changesMenuOptionText" ng-show="text != null">{{text}}</span>
 					</div>
 					<div class="changesMenuOptionArrow"></div>
 					<spinner class="changesMenuOptionSpinner" spinner-running="spinning"></spinner>

@@ -1,7 +1,7 @@
 <div id="repositoryStages" ng-controller="RepositoryStages">
 	<changes-menu>
 		<changes-menu-header>
-			<span ng-show="selectedChange.getInformation() != null">Change {{selectedChange.getInformation().number}}</span>
+			<span ng-show="selectedChange.getInformation() != null">Change {{selectedChange.getInformation().headCommit.sha | limitTo: 6}}</span>
 		</changes-menu-header>
 
 		<changes-menu-options>

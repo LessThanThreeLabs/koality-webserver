@@ -5,6 +5,13 @@ angular.module('koality.filter', ['koality.service']).
 		(input) ->
 			return fileSuffixAdder.addFileSuffix input
 	]).
+	filter('emailToAlias', [() ->
+		(input) ->
+			if input.indexOf '@' isnt -1
+				return input.substring 0, input.indexOf '@'
+			else
+				return input
+	]).
 	filter('ascii', [() ->
 		(input) ->
 			return null if not input? or typeof input isnt 'string'
