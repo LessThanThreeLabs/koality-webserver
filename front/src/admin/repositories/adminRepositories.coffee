@@ -45,6 +45,12 @@ window.AdminRepositories = ['$scope', '$routeParams', 'initialState', 'rpc', 'ev
 			if error? then notification.error error
 			else $scope.publicKey.key = publicKey
 
+	getIsConnectedToGitHub = () ->
+		rpc 'users', 'read', 'isConnectedToGitHub', null, (error, connectedToGitHub) ->
+			console.log connectedToGitHub
+			if error? then notification.error error
+			else $scope.isConnectedToGitHub = connectedToGitHub
+
 	handleAddedRepositoryUpdate = (data) ->
 		$scope.repositories.push addNewForwardUrl data
 
@@ -74,6 +80,7 @@ window.AdminRepositories = ['$scope', '$routeParams', 'initialState', 'rpc', 'ev
 
 	getRepositories()
 	getPublicKey()
+	getIsConnectedToGitHub()
 
 	$scope.toggleDrawer = (drawerName) ->
 		if $scope.currentlyOpenDrawer is drawerName
