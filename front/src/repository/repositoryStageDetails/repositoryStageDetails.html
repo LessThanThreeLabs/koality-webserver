@@ -60,7 +60,28 @@
 			</div>
 
 			<div id="junit" ng-show="outputType == 'junit'">
-				{{junit}}
+				<div fading-content>
+					<table class="delineated">
+						<tr>
+						<th class="nameColumn unselectable" ng-click="orderByPredicate = 'name'; orderByReverse = !orderByReverse">
+							<div class="triangle gray" ng-class="{right: orderByPredicate != 'name', up: orderByPredicate == 'name' && !orderByReverse, down: orderByPredicate == 'name' && orderByReverse}"></div>
+							Name
+						</th>
+						<!-- <th class="timeColumn unselectable" ng-click="orderByPredicate = 'status'; orderByReverse = !orderByReverse">
+							<div class="triangle gray" ng-class="{right: orderByPredicate != 'status', up: orderByPredicate == 'status' && !orderByReverse, down: orderByPredicate == 'status' && orderByReverse}"></div>
+							Status
+						</th> -->
+						<th class="timeColumn unselectable" ng-click="orderByPredicate = 'time'; orderByReverse = !orderByReverse">
+							<div class="triangle gray" ng-class="{right: orderByPredicate != 'time', up: orderByPredicate == 'time' && !orderByReverse, down: orderByPredicate == 'time' && orderByReverse}"></div>
+							Time
+						</th>
+					</tr>
+						<tr ng-repeat="testCase in junit">
+							<td class="nameColumn">{{testCase.__name}}</td>
+							<td class="timeColumn">{{testCase.__time | number: 6}}</td>
+						</tr>
+					</table>
+				</div>
 			</div>
 
 			<div id="skipped" ng-show="selectedStage.isSkipped()">

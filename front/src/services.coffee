@@ -40,7 +40,7 @@ angular.module('koality.service', []).
 	factory('xmlParser', ['$window', ($window) ->
 		return parse: (xml) ->
 			dom = $window.parseXml xml
-			json = $window.xml2json dom
+			json = $window.xml2json dom, ''
 			return JSON.parse json
 	]).
 	factory('cookieExtender', ['$http', ($http) ->

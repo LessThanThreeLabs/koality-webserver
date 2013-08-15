@@ -40,8 +40,34 @@ window.RepositoryStageDetails = ['$scope', '$location', 'rpc', 'events', 'xmlPar
 		$scope.spinnerOn = true
 		rpc 'buildConsoles', 'read', 'getJUnit', id: $scope.selectedStage.getId(), (error, junitOutputs) ->
 			$scope.spinnerOn = false
-			$scope.junit = (xmlParser.parse junitOutput	for junitOutput in junitOutputs)
-			console.log $scope.junit
+
+			getArrayOfTestSuites = () ->
+				testSuites = []
+				for junitOutput in junitOutputs
+					parsed = xmlParser.parse junitOutput
+					parsedTestSuites = if parsed.testsuites then parsed.testsuites.testsuite else parsed.testsuite
+
+					if parsedTestSuites instanceof Array
+						testSuites = testSuites.concat parsedTestSuites
+					else
+						testSuites.push parsedTestSuites
+
+				return testSuites
+
+			getAllTestCases = (testSuites) ->
+				testCases = []
+				for testSuite in testSuites
+					if testSuite.testcase instanceof Array
+						testCases = testCases.concat testSuite.testcase
+					else
+						testCases.push testSuite.testcase
+
+				return testCases
+
+			testSuites = getArrayOfTestSuites()
+			testCases = getAllTestCases testSuites
+			console.log testCases
+			$scope.junit = testCases
 
 	handleExportUrisAdded = (data) ->
 		$scope.exportUris ?= []
