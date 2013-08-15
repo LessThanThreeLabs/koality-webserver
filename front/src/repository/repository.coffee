@@ -6,20 +6,27 @@ window.Repository = ['$scope', '$location', '$routeParams', 'rpc', 'events', 'cu
 	$scope.selectedStage = currentStage
 
 	syncToRouteParams = () ->
-		$scope.selectedRepository.setRepository $routeParams.repositoryId
-		$scope.selectedChange.setChange $routeParams.repositoryId, $routeParams.change
-		$scope.selectedStage.setStage $routeParams.repositoryId, $routeParams.stage if $routeParams.stage?
+		$scope.selectedRepository.setId $routeParams.repositoryId
+		$scope.selectedRepository.retrieveInformation $routeParams.repositoryId
+
+		if $routeParams.change?
+			$scope.selectedChange.setId $routeParams.repositoryId, $routeParams.change
+			$scope.selectedChange.retrieveInformation $routeParams.repositoryId, $routeParams.change
+
+		if $routeParams.stage?
+			$scope.selectedStage.setId $routeParams.repositoryId, $routeParams.stage
+			# $scope.selectedStage.retrieveInformation $routeParams.repositoryId, $routeParams.stage
+
 		$scope.selectedStage.setSummary() if not $routeParams.stage?
 		$scope.selectedStage.setSkipped() if $routeParams.skipped?
 		$scope.selectedStage.setMerge() if $routeParams.merge?
 		$scope.selectedStage.setDebug() if $routeParams.debug?
-	$scope.$on '$routeUpdate', syncToRouteParams
 	syncToRouteParams()
 
 	$scope.$watch 'selectedRepository.getInformation().type + selectedRepository.getInformation().uri', () ->
 		repositoryInformation = $scope.selectedRepository.getInformation()
-		
-		if repositoryInformation?.type? and repositoryInformation?.uri?
+
+		if repositoryInformation?
 			$scope.cloneUri = repositoryInformation.type + ' clone ' + repositoryInformation.uri
 
 	$scope.$watch 'selectedChange.getId()', (newValue) ->

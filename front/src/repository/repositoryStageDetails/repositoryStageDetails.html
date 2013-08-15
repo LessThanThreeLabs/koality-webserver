@@ -1,11 +1,18 @@
 <div id="repositoryStageDetails" ng-controller="RepositoryStageDetails">
 	<panel>
 		<panel-header>
-			<span ng-show="selectedChange.getInformation() != null && selectedStage.isSummary()">summary</span>
-			<span ng-show="selectedStage.getInformation() != null">{{selectedStage.getInformation().name}}</span>
-			<span ng-show="selectedStage.isSkipped()">skipped</span>
-			<span ng-show="selectedStage.isMerge()">merge</span>
-			<span ng-show="selectedStage.isDebug()">debug</span>
+			<div class="left">
+				<span ng-show="selectedChange.getInformation() != null && selectedStage.isSummary()">summary</span>
+				<span ng-show="selectedStage.getInformation() != null">{{selectedStage.getInformation().name}}</span>
+				<span ng-show="selectedStage.isSkipped()">skipped</span>
+				<span ng-show="selectedStage.isMerge()">merge</span>
+				<span ng-show="selectedStage.isDebug()">debug</span>
+			</div>
+
+			<div class="right" ng-show="selectedStage.getInformation().hasJUnit">
+				<a ng-click="selectOutputType('junit')" ng-show="outputType != null && outputType != 'junit'">Show JUnit</a>
+				<a ng-click="selectOutputType('lines')" ng-show="outputType != null && outputType != 'lines'">Show Text</a>
+			</div>
 		</panel-header>
 
 		<panel-body>
@@ -15,11 +22,11 @@
 				<table>
 					<tr>
 						<th>Name</th>
-						<td>{{selectedChange.getInformation().submitter.firstName}} {{selectedChange.getInformation().submitter.lastName}}</td>
+						<td>{{selectedChange.getInformation().user.name.first}} {{selectedChange.getInformation().user.name.last}}</td>
 					</tr>
 					<tr>
 						<th>Email</th>
-						<td><a href="mailto:{{selectedChange.getInformation().submitter.email}}?subject=Koality%3A%20{{selectedRepository.getInformation().name}}%20-%20change%20%23{{selectedChange.getInformation().number}}&body=Link%20to%20change%3A%20{{currentUrl}}" target="_blank">{{selectedChange.getInformation().submitter.email}}</a></td>
+						<td><a href="mailto:{{selectedChange.getInformation().user.email}}?subject=Koality%3A%20{{selectedRepository.getInformation().name}}%20-%20change%20%23{{selectedChange.getInformation().number}}&body=Link%20to%20change%3A%20{{currentUrl}}" target="_blank">{{selectedChange.getInformation().user.email}}</a></td>
 					</tr>
 					<tr>
 						<th>Submit Time</th>

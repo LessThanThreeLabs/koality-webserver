@@ -5,18 +5,21 @@ angular.module('koality.service.repository', []).
 		_id: null
 		_information: null
 
-		setRepository: (repositoryId) =>
-			repositoryId = integerConverter.toInteger repositoryId
-			return if @_id is repositoryId
-
-			@_id = repositoryId
+		clear: () =>
+			@_id = null
 			@_information = null
 
-			return if not repositoryId?
+		setId: (repositoryId) =>
+			@_id = integerConverter.toInteger repositoryId
 
-			requestData =
-				id: integerConverter.toInteger repositoryId
-			rpc 'repositories', 'read', 'getMetadata', requestData, (error, repositoryInformation) =>
+		setInformation: (repositoryInformation) =>
+			assert.ok @_id?
+			assert.ok repositoryInformation?
+			@_information = repositoryInformation
+
+		retrieveInformation: () =>
+			assert.ok @_id
+			rpc 'repositories', 'read', 'getMetadata', id: @_id, (error, repositoryInformation) =>
 				@_information = repositoryInformation
 
 		getId: () =>
@@ -26,22 +29,32 @@ angular.module('koality.service.repository', []).
 			return @_information
 	]).
 	factory('currentChange', ['rpc', 'integerConverter', (rpc, integerConverter) ->
+		_repositoryId: null
 		_id: null
 		_information: null
 
-		setChange: (repositoryId, changeId) =>
-			repositoryId = integerConverter.toInteger repositoryId
-			changeId = integerConverter.toInteger changeId
-			return if @_id is changeId
-
-			@_id = changeId
+		clear: () =>
+			@_repositoryId = null
+			@_id = null
 			@_information = null
 
-			return if not repositoryId? or not changeId?
+		setId: (repositoryId, changeId) =>
+			@_repositoryId = integerConverter.toInteger repositoryId
+			@_id = integerConverter.toInteger changeId
+
+		setInformation: (changeInformation) =>
+			assert.ok @_repositoryId?
+			assert.ok @_id?
+			assert.ok changeInformation?
+			@_information = changeInformation
+
+		retrieveInformation: () =>
+			assert.ok @_repositoryId?
+			assert.ok @_id?
 
 			requestData =
-				repositoryId: repositoryId
-				id: changeId
+				repositoryId: @_repositoryId
+				id: @_id
 			rpc 'changes', 'read', 'getMetadata', requestData, (error, changeInformation) =>
 				@_information = changeInformation
 
@@ -52,6 +65,7 @@ angular.module('koality.service.repository', []).
 			return @_information
 	]).
 	factory('currentStage', ['rpc', 'integerConverter', (rpc, integerConverter) ->
+		_repositoryId: null
 		_id: null
 		_information: null
 		_summary: false
@@ -59,25 +73,40 @@ angular.module('koality.service.repository', []).
 		_merge: false
 		_debug: false
 
-		setStage: (repositoryId, stageId) =>
-			repositoryId = integerConverter.toInteger repositoryId
-			stageId = integerConverter.toInteger stageId
-			return if @_id is stageId
-
-			@_id = stageId
+		clear: () =>
+			@_repositoryId = null
+			@_id = null
 			@_information = null
-			@_summary = false
-			@_skipped = false
-			@_merge = false
-			@_debug = false
 
-			return if not repositoryId? or not stageId?
+		setId: (repositoryId, stageId) =>
+			@_id = integerConverter.toInteger stageId
 
-			requestData =
-				repositoryId: repositoryId
-				id: stageId
-			rpc 'buildConsoles', 'read', 'getBuildConsole', requestData, (error, stageInformation) =>
-				@_information = stageInformation
+		setInformation: (stageInformation) =>
+			assert.ok @_repositoryId?
+			assert.ok @_id?
+			assert.ok stageInformation?
+			@_information = stageInformation
+
+		# setStage: (repositoryId, stageId) =>
+		# 	repositoryId = integerConverter.toInteger repositoryId
+		# 	stageId = integerConverter.toInteger stageId
+		# 	return if @_id is stageId
+
+		# 	@_id = stageId
+		# 	@_information = null
+		# 	@_summary = false
+		# 	@_skipped = false
+		# 	@_merge = false
+		# 	@_debug = false
+
+		# 	return if not repositoryId? or not stageId?
+
+		# 	requestData =
+		# 		repositoryId: repositoryId
+		# 		id: stageId
+		# 	rpc 'buildConsoles', 'read', 'getBuildConsole', requestData, (error, stageInformation) =>
+		# 		@_information = stageInformation
+		# 		@_information.hasJUnit = true
 
 		getId: () =>
 			return @_id

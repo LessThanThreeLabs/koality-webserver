@@ -133,15 +133,15 @@ module.exports = (grunt) ->
 
 		watch:
 			compile:
-				files: ['<%= backSourceDirectory %>/**/*.coffee', '<%= frontSourceDirectory %>/**/*.coffee', '<%= frontSourceDirectory %>/**/*.less', '<%= nodeModulesDirectory %>/**/*.js']
+				files: ['<%= backSourceDirectory %>/**/*.coffee', '<%= frontSourceDirectory %>/**/*.coffee', '<%= frontSourceDirectory %>/**/*.less', '<%= nodeModulesDirectory %>/**/*.coffee']
 				tasks: ['compile']
 
 			test:
-				files: ['<%= backSourceDirectory %>/**/*.coffee', '<%= frontSourceDirectory %>/**/*.coffee', '<%= frontSourceDirectory %>/**/*.less', '<%= frontTestDirectory %>/**/*.coffee', '<%= nodeModulesDirectory %>/**/*.js']
+				files: ['<%= backSourceDirectory %>/**/*.coffee', '<%= frontSourceDirectory %>/**/*.coffee', '<%= frontSourceDirectory %>/**/*.less', '<%= frontTestDirectory %>/**/*.coffee', '<%= nodeModulesDirectory %>/**/*.coffee']
 				tasks: ['compile', 'test']
 
 			run:
-				files: ['<%= backSourceDirectory %>/**/*.coffee', '<%= frontSourceDirectory %>/**/*.coffee', '<%= frontSourceDirectory %>/**/*.less', '<%= frontSourceDirectory %>/**/*.html', '<%= frontRootsDirectory %>/**/*.ejs', '<%= frontRootsDirectory %>/**/*.json', '<%= nodeModulesDirectory %>/**/*.js']
+				files: ['<%= backSourceDirectory %>/**/*.coffee', '<%= frontSourceDirectory %>/**/*.coffee', '<%= frontSourceDirectory %>/**/*.less', '<%= frontSourceDirectory %>/**/*.html', '<%= frontRootsDirectory %>/**/*.ejs', '<%= frontRootsDirectory %>/**/*.json', '<%= nodeModulesDirectory %>/**/*.coffee']
 				tasks: ['shell:killServer', 'compile', 'run']
 				options:
 					interrupt: true

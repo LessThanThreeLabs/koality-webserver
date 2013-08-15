@@ -1,6 +1,7 @@
 'use strict'
 
-window.RepositoryChanges = ['$scope', '$routeParams', 'changesRpc', 'events', 'currentChange', 'localStorage', 'initialState', ($scope, $routeParams, changesRpc, events, currentChange, localStorage, initialState) ->
+window.RepositoryChanges = ['$scope', 'changesRpc', 'events', 'currentRepository', 'currentChange', 'localStorage', 'initialState', ($scope, changesRpc, events, currentRepository, currentChange, localStorage, initialState) ->
+	$scope.selectedRepository = currentRepository
 	$scope.selectedChange = currentChange
 
 	$scope.search = {}
@@ -22,20 +23,20 @@ window.RepositoryChanges = ['$scope', '$routeParams', 'changesRpc', 'events', 'c
 	handleInitialChanges = (error, changes) ->
 		$scope.changes = changes
 		if $scope.changes.length is 0
-			$scope.selectedChange.setChange null, null
-		else if $scope.changes[0]?
-			if not $scope.selectedChange.getId()?
-				$scope.selectedChange.setChange $routeParams.repositoryId, changes[0].id
+			$scope.selectedChange.clear()
+		else if $scope.changes[0]? and not $scope.selectedChange.getId()?
+			$scope.selectedChange.setId $scope.selectedRepository.getId(), changes[0].id
+			$scope.selectedChange.setInformation changes[0]
 
 	handleMoreChanges = (error, changes) ->
 		$scope.changes ?= []
 		$scope.changes = $scope.changes.concat changes
 
 	getInitialChanges = () ->
-		changesRpc.queueRequest $routeParams.repositoryId, getGroupFromMode(), getNamesFromNamesQuery(), 0, handleInitialChanges
+		changesRpc.queueRequest $scope.selectedRepository.getId(), getGroupFromMode(), getNamesFromNamesQuery(), 0, handleInitialChanges
 
 	getMoreChanges = () ->
-		changesRpc.queueRequest $routeParams.repositoryId, getGroupFromMode(), getNamesFromNamesQuery(), $scope.changes.length, handleMoreChanges
+		changesRpc.queueRequest $scope.selectedRepository.getId(), getGroupFromMode(), getNamesFromNamesQuery(), $scope.changes.length, handleMoreChanges
 
 	doesChangeMatchQuery = (change) ->
 		if $scope.search.mode is 'me'
@@ -71,9 +72,9 @@ window.RepositoryChanges = ['$scope', '$routeParams', 'changesRpc', 'events', 'c
 		if $scope.selectedChange.getId() is data.id
 			$.extend true, $scope.selectedChange.getInformation(), data
 
-	changeAddedEvents = events('repositories', 'change added', $routeParams.repositoryId).setCallback(handeChangeAdded).subscribe()
-	changeStartedEvents = events('repositories', 'change started', $routeParams.repositoryId).setCallback(handleChangeStarted).subscribe()
-	changeFinishedEvents = events('repositories', 'change finished', $routeParams.repositoryId).setCallback(handleChangeFinished).subscribe()
+	changeAddedEvents = events('repositories', 'change added', $scope.selectedRepository.getId()).setCallback(handeChangeAdded).subscribe()
+	changeStartedEvents = events('repositories', 'change started', $scope.selectedRepository.getId()).setCallback(handleChangeStarted).subscribe()
+	changeFinishedEvents = events('repositories', 'change finished', $scope.selectedRepository.getId()).setCallback(handleChangeFinished).subscribe()
 	$scope.$on '$destroy', changeAddedEvents.unsubscribe
 	$scope.$on '$destroy', changeStartedEvents.unsubscribe
 	$scope.$on '$destroy', changeFinishedEvents.unsubscribe
@@ -83,7 +84,8 @@ window.RepositoryChanges = ['$scope', '$routeParams', 'changesRpc', 'events', 'c
 		$scope.search.namesQuery = '' if mode isnt 'search'
 
 	$scope.selectChange = (change) ->
-		$scope.selectedChange.setChange $routeParams.repositoryId, change.id
+		$scope.selectedChange.setId $scope.selectedRepository.getId(), change.id
+		$scope.selectedChange.setInformation change
 
 	$scope.scrolledToBottom = () ->
 		getMoreChanges()
