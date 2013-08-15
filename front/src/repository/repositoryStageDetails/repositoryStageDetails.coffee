@@ -1,6 +1,9 @@
 'use strict'
 
 window.RepositoryStageDetails = ['$scope', '$location', 'rpc', 'events', 'xmlParser', 'currentRepository', 'currentChange', 'currentStage', ($scope, $location, rpc, events, xmlParser, currentRepository, currentChange, currentStage) ->
+	$scope.jUnitOrderByPredicate = 'status'
+	$scope.jUnitOrderByReverse = false
+
 	$scope.selectedRepository = currentRepository
 	$scope.selectedChange = currentChange
 	$scope.selectedStage = currentStage
@@ -54,19 +57,27 @@ window.RepositoryStageDetails = ['$scope', '$location', 'rpc', 'events', 'xmlPar
 
 				return testSuites
 
-			getAllTestCases = (testSuites) ->
+			getAllSanitizedTestCases = (testSuites) ->
+				sanitizeTestCase = (testCase) ->
+					name: testCase.__name
+					time: testCase.__time
+					status: if testCase.failure? or testCase['system-err']? then 'failed' else 'passed'
+					failure:
+						message: testCase.failure?.__message if testCase.failure?.__message?
+						text: testCase.failure?.text if testCase.failure?.text?
+					error: testCase['system-err'] if testCase['system-err']?
+
 				testCases = []
 				for testSuite in testSuites
 					if testSuite.testcase instanceof Array
-						testCases = testCases.concat testSuite.testcase
+						testCases = testCases.concat (sanitizeTestCase testCase for testCase in testSuite.testcase)
 					else
-						testCases.push testSuite.testcase
+						testCases.push sanitizeTestCase testSuite.testcase
 
 				return testCases
 
 			testSuites = getArrayOfTestSuites()
-			testCases = getAllTestCases testSuites
-			console.log testCases
+			testCases = getAllSanitizedTestCases testSuites
 			$scope.junit = testCases
 
 	handleExportUrisAdded = (data) ->

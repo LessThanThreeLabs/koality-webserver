@@ -31,15 +31,15 @@
 		<div id="usersList" fading-content>
 			<table class="delineated">
 				<tr>
-					<th class="nameColumn unselectable" ng-click="orderByPredicate = 'lastName'; orderByReverse = !orderByReverse">
+					<th class="nameColumn sortableColumn unselectable" ng-click="orderByPredicate = 'lastName'; orderByReverse = !orderByReverse">
 						<div class="triangle gray" ng-class="{right: orderByPredicate != 'lastName', up: orderByPredicate == 'lastName' && !orderByReverse, down: orderByPredicate == 'lastName' && orderByReverse}"></div>
 						Name
 					</th>
-					<th class="emailColumn unselectable" ng-click="orderByPredicate = 'email'; orderByReverse = !orderByReverse">
+					<th class="emailColumn sortableColumn unselectable" ng-click="orderByPredicate = 'email'; orderByReverse = !orderByReverse">
 						<div class="triangle gray" ng-class="{right: orderByPredicate != 'email', up: orderByPredicate == 'email' && !orderByReverse, down: orderByPredicate == 'email' && orderByReverse}"></div>
 						Email
 					</th>
-					<th class="privilegesColumn unselectable" ng-click="orderByPredicate = 'privilege'; orderByReverse = !orderByReverse">
+					<th class="privilegesColumn sortableColumn unselectable" ng-click="orderByPredicate = 'privilege'; orderByReverse = !orderByReverse">
 						<div class="triangle gray" ng-class="{right: orderByPredicate != 'privilege', up: orderByPredicate == 'privilege' && !orderByReverse, down: orderByPredicate == 'privilege' && orderByReverse}"></div>
 						Privileges
 					</th>

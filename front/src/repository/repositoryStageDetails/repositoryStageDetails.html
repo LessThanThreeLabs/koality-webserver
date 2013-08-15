@@ -63,22 +63,23 @@
 				<div fading-content>
 					<table class="delineated">
 						<tr>
-						<th class="nameColumn unselectable" ng-click="orderByPredicate = 'name'; orderByReverse = !orderByReverse">
-							<div class="triangle gray" ng-class="{right: orderByPredicate != 'name', up: orderByPredicate == 'name' && !orderByReverse, down: orderByPredicate == 'name' && orderByReverse}"></div>
+						<th class="nameColumn sortableColumn unselectable" ng-click="jUnitOrderByPredicate = 'name'; jUnitOrderByReverse = !jUnitOrderByReverse">
+							<div class="triangle gray" ng-class="{right: jUnitOrderByPredicate != 'name', up: jUnitOrderByPredicate == 'name' && !jUnitOrderByReverse, down: jUnitOrderByPredicate == 'name' && jUnitOrderByReverse}"></div>
 							Name
 						</th>
-						<!-- <th class="timeColumn unselectable" ng-click="orderByPredicate = 'status'; orderByReverse = !orderByReverse">
-							<div class="triangle gray" ng-class="{right: orderByPredicate != 'status', up: orderByPredicate == 'status' && !orderByReverse, down: orderByPredicate == 'status' && orderByReverse}"></div>
+						<th class="statusColumn sortableColumn unselectable" ng-click="jUnitOrderByPredicate = 'status'; jUnitOrderByReverse = !jUnitOrderByReverse">
+							<div class="triangle gray" ng-class="{right: jUnitOrderByPredicate != 'status', up: jUnitOrderByPredicate == 'status' && !jUnitOrderByReverse, down: jUnitOrderByPredicate == 'status' && jUnitOrderByReverse}"></div>
 							Status
-						</th> -->
-						<th class="timeColumn unselectable" ng-click="orderByPredicate = 'time'; orderByReverse = !orderByReverse">
-							<div class="triangle gray" ng-class="{right: orderByPredicate != 'time', up: orderByPredicate == 'time' && !orderByReverse, down: orderByPredicate == 'time' && orderByReverse}"></div>
-							Time
+						</th>
+						<th class="timeColumn sortableColumn unselectable" ng-click="jUnitOrderByPredicate = 'time'; jUnitOrderByReverse = !jUnitOrderByReverse">
+							<div class="triangle gray" ng-class="{right: jUnitOrderByPredicate != 'time', up: jUnitOrderByPredicate == 'time' && !jUnitOrderByReverse, down: jUnitOrderByPredicate == 'time' && jUnitOrderByReverse}"></div>
+							Duration
 						</th>
 					</tr>
-						<tr ng-repeat="testCase in junit">
-							<td class="nameColumn">{{testCase.__name}}</td>
-							<td class="timeColumn">{{testCase.__time | number: 6}}</td>
+						<tr ng-repeat="testCase in junit | orderBy:jUnitOrderByPredicate:jUnitOrderByReverse" ng-class="{red: testCase.status == 'failed'}">
+							<td class="nameColumn">{{testCase.name}}</td>
+							<td class="statusColumn">{{testCase.status}}</td>
+							<td class="timeColumn">{{testCase.time | number: 6}}</td>
 						</tr>
 					</table>
 				</div>
