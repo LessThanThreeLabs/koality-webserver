@@ -24,8 +24,6 @@ window.RepositoryStageDetails = ['$scope', '$location', 'rpc', 'events', 'xmlPar
 		return if not $scope.selectedStage.getId()?
 		
 		$scope.spinnerOn = true
-
-		console.log 'requesting lines'
 		rpc 'buildConsoles', 'read', 'getLines', id: $scope.selectedStage.getId(), (error, lines) ->
 			$scope.spinnerOn = false
 
@@ -40,8 +38,6 @@ window.RepositoryStageDetails = ['$scope', '$location', 'rpc', 'events', 'xmlPar
 		return if not $scope.selectedStage.getId()?
 
 		$scope.spinnerOn = true
-
-		console.log 'requesting junit'
 		rpc 'buildConsoles', 'read', 'getJUnit', id: $scope.selectedStage.getId(), (error, junitOutputs) ->
 			$scope.spinnerOn = false
 			$scope.junit = (xmlParser.parse junitOutput	for junitOutput in junitOutputs)
