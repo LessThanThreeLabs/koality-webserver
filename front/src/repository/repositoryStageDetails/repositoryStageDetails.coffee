@@ -1,6 +1,6 @@
 'use strict'
 
-window.RepositoryStageDetails = ['$scope', '$location', 'rpc', 'events', 'currentRepository', 'currentChange', 'currentStage', ($scope, $location, rpc, events, currentRepository, currentChange, currentStage) ->
+window.RepositoryStageDetails = ['$scope', '$location', 'rpc', 'events', 'xmlParser', 'currentRepository', 'currentChange', 'currentStage', ($scope, $location, rpc, events, xmlParser, currentRepository, currentChange, currentStage) ->
 	$scope.selectedRepository = currentRepository
 	$scope.selectedChange = currentChange
 	$scope.selectedStage = currentStage
@@ -42,9 +42,10 @@ window.RepositoryStageDetails = ['$scope', '$location', 'rpc', 'events', 'curren
 		$scope.spinnerOn = true
 
 		console.log 'requesting junit'
-		rpc 'buildConsoles', 'read', 'getJUnit', id: $scope.selectedStage.getId(), (error, junit) ->
+		rpc 'buildConsoles', 'read', 'getJUnit', id: $scope.selectedStage.getId(), (error, junitOutputs) ->
 			$scope.spinnerOn = false
-			$scope.junit = junit
+			$scope.junit = (xmlParser.parse junitOutput	for junitOutput in junitOutputs)
+			console.log $scope.junit
 
 	handleExportUrisAdded = (data) ->
 		$scope.exportUris ?= []

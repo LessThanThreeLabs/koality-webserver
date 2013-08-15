@@ -37,6 +37,12 @@ angular.module('koality.service', []).
 		return parse: (text) ->
 			return '<span class="ansi">' + $window.ansiparse(text) + '</span>'
 	]).
+	factory('xmlParser', ['$window', ($window) ->
+		return parse: (xml) ->
+			dom = $window.parseXml xml
+			json = $window.xml2json dom
+			return JSON.parse json
+	]).
 	factory('cookieExtender', ['$http', ($http) ->
 		return extendCookie: (callback) ->
 			successHandler = (data, status, headers, config) ->
