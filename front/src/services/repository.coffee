@@ -60,7 +60,7 @@ angular.module('koality.service.repository', []).
 			requestData =
 				repositoryId: @_repositoryId
 				id: @_id
-			rpc 'changes', 'read', 'getMetadata', requestData, (error, changeInformation) =>
+			rpc 'changes', 'read', 'getChange', requestData, (error, changeInformation) =>
 				@_information = changeInformation
 
 		getInformation: () =>
