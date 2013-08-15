@@ -79,6 +79,8 @@ window.RepositoryChanges = ['$scope', 'changesRpc', 'events', 'currentRepository
 	$scope.$on '$destroy', changeStartedEvents.unsubscribe
 	$scope.$on '$destroy', changeFinishedEvents.unsubscribe
 
+	getInitialChanges()
+
 	$scope.searchModeClicked = (mode) ->
 		$scope.search.mode = mode
 		$scope.search.namesQuery = '' if mode isnt 'search'
@@ -91,6 +93,7 @@ window.RepositoryChanges = ['$scope', 'changesRpc', 'events', 'currentRepository
 		getMoreChanges()
 
 	$scope.$watch 'search', ((newValue, oldValue) ->
+		return if newValue is oldValue
 		getInitialChanges()
 		localStorage.searchMode = $scope.search.mode
 	), true

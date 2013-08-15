@@ -15,7 +15,7 @@ window.Repository = ['$scope', '$location', '$routeParams', 'rpc', 'events', 'cu
 
 		if $routeParams.stage?
 			$scope.selectedStage.setId $routeParams.repositoryId, $routeParams.stage
-			# $scope.selectedStage.retrieveInformation $routeParams.repositoryId, $routeParams.stage
+			$scope.selectedStage.retrieveInformation $routeParams.repositoryId, $routeParams.stage
 
 		$scope.selectedStage.setSummary() if not $routeParams.stage?
 		$scope.selectedStage.setSkipped() if $routeParams.skipped?

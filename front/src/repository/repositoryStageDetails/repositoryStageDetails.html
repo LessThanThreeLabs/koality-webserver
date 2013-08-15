@@ -9,9 +9,9 @@
 				<span ng-show="selectedStage.isDebug()">debug</span>
 			</div>
 
-			<div class="right" ng-show="selectedStage.getInformation().hasJUnit">
-				<a ng-click="selectOutputType('junit')" ng-show="outputType != null && outputType != 'junit'">Show JUnit</a>
-				<a ng-click="selectOutputType('lines')" ng-show="outputType != null && outputType != 'lines'">Show Text</a>
+			<div class="right" ng-show="selectedStage.getInformation() != null && outputType != null">
+				<a ng-click="selectOutputType('lines')" ng-show="outputType != 'lines'">Show Text</a>
+				<a ng-click="selectOutputType('junit')" ng-show="outputType != 'junit' && selectedStage.getInformation().hasJUnit">Show JUnit</a>
 			</div>
 		</panel-header>
 
@@ -53,10 +53,14 @@
 				</table>
 			</div>
 
-			<div id="output" ng-show="selectedStage.getId() != null">
+			<div id="lines" ng-show="outputType == 'lines'">
 				<div auto-scroll-to-bottom="lines" auto-scroll-to-bottom-buffer="40" start-at-bottom fading-content>
 					<console-text class="consoleText" console-text-lines="lines"></console-text>
 				</div>
+			</div>
+
+			<div id="junit" ng-show="outputType == 'junit'">
+				{{junit}}
 			</div>
 
 			<div id="skipped" ng-show="selectedStage.isSkipped()">

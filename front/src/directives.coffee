@@ -219,8 +219,8 @@ angular.module('koality.directive', []).
 				else
 					element.append '<li>' + html + '</li>'
 
-			handleLinesUpdate = (newValue, oldValue) ->
-				if not newValue? or newValue.length is 0
+			handleLinesUpdate = (newValue=[], oldValue=[]) ->
+				if newValue.length is 0
 					element.empty()
 				else
 					for line, index in newValue

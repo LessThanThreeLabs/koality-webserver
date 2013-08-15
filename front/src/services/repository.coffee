@@ -11,6 +11,10 @@ angular.module('koality.service.repository', []).
 
 		setId: (repositoryId) =>
 			@_id = integerConverter.toInteger repositoryId
+			@_information = null
+
+		getId: () =>
+			return @_id
 
 		setInformation: (repositoryInformation) =>
 			assert.ok @_id?
@@ -21,9 +25,6 @@ angular.module('koality.service.repository', []).
 			assert.ok @_id
 			rpc 'repositories', 'read', 'getMetadata', id: @_id, (error, repositoryInformation) =>
 				@_information = repositoryInformation
-
-		getId: () =>
-			return @_id
 
 		getInformation: () =>
 			return @_information
@@ -41,6 +42,10 @@ angular.module('koality.service.repository', []).
 		setId: (repositoryId, changeId) =>
 			@_repositoryId = integerConverter.toInteger repositoryId
 			@_id = integerConverter.toInteger changeId
+			@_information = null
+
+		getId: () =>
+			return @_id
 
 		setInformation: (changeInformation) =>
 			assert.ok @_repositoryId?
@@ -57,9 +62,6 @@ angular.module('koality.service.repository', []).
 				id: @_id
 			rpc 'changes', 'read', 'getMetadata', requestData, (error, changeInformation) =>
 				@_information = changeInformation
-
-		getId: () =>
-			return @_id
 
 		getInformation: () =>
 			return @_information
@@ -79,7 +81,16 @@ angular.module('koality.service.repository', []).
 			@_information = null
 
 		setId: (repositoryId, stageId) =>
+			@_repositoryId = integerConverter.toInteger repositoryId
 			@_id = integerConverter.toInteger stageId
+			@_information = null
+			@_summary = false
+			@_skipped = false
+			@_merge = false
+			@_debug = false
+
+		getId: () =>
+			return @_id
 
 		setInformation: (stageInformation) =>
 			assert.ok @_repositoryId?
@@ -87,29 +98,15 @@ angular.module('koality.service.repository', []).
 			assert.ok stageInformation?
 			@_information = stageInformation
 
-		# setStage: (repositoryId, stageId) =>
-		# 	repositoryId = integerConverter.toInteger repositoryId
-		# 	stageId = integerConverter.toInteger stageId
-		# 	return if @_id is stageId
+		retrieveInformation: () =>
+			assert.ok @_repositoryId?
+			assert.ok @_id?
 
-		# 	@_id = stageId
-		# 	@_information = null
-		# 	@_summary = false
-		# 	@_skipped = false
-		# 	@_merge = false
-		# 	@_debug = false
-
-		# 	return if not repositoryId? or not stageId?
-
-		# 	requestData =
-		# 		repositoryId: repositoryId
-		# 		id: stageId
-		# 	rpc 'buildConsoles', 'read', 'getBuildConsole', requestData, (error, stageInformation) =>
-		# 		@_information = stageInformation
-		# 		@_information.hasJUnit = true
-
-		getId: () =>
-			return @_id
+			requestData =
+				repositoryId: @_repositoryId
+				id: @_id
+			rpc 'buildConsoles', 'read', 'getBuildConsole', requestData, (error, stageInformation) =>
+				@_information = stageInformation
 
 		getInformation: () =>
 			return @_information
