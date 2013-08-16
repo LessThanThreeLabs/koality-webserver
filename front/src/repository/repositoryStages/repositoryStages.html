@@ -1,19 +1,29 @@
 <div id="repositoryStages" ng-controller="RepositoryStages">
 	<changes-menu>
 		<changes-menu-header>
-			<span ng-show="selectedChange.getInformation() != null">Change {{selectedChange.getInformation().headCommit.sha | limitTo: 6}}</span>
+			<span ng-show="selectedChange.getInformation() != null">Change {{selectedChange.getInformation().headCommit.sha | limitTo: 4}}</span>
 		</changes-menu-header>
 
 		<changes-menu-options>
-			<changes-menu-option menu-option-text="summary" ng-show="selectedChange.getInformation() != null" ng-click="selectedStage.setSummary()" ng-class="{selected: selectedStage.isSummary(), green: selectedChange.getInformation().aggregateStatus == 'passed', red: selectedChange.getInformation().aggregateStatus == 'failed' || selectedChange.getInformation().aggregateStatus == 'skipped'}"></changes-menu-option>
+			<changes-menu-option ng-show="selectedChange.getInformation() != null" ng-click="selectedStage.setSummary()" ng-class="{selected: selectedStage.isSummary(), green: selectedChange.getInformation().aggregateStatus == 'passed', red: selectedChange.getInformation().aggregateStatus == 'failed' || selectedChange.getInformation().aggregateStatus == 'skipped'}">
+				<span>summary</span>
+			</changes-menu-option>
 
-			<changes-menu-option ng-repeat="stage in stages | filter:shouldStageBeVisible | orderBy:[stageSort, 'name']" menu-option-text="{{stage.name}}" menu-option-spinning="{{stage.status == 'running'}}" ng-click="selectStage(stage)" ng-class="{selected: stage.id == selectedStage.getId(), green: stage.status == 'passed', red: stage.status == 'failed'}"></changes-menu-option>
+			<changes-menu-option ng-repeat="stage in stages | filter:shouldStageBeVisible | orderBy:[stageSort, 'name']" menu-option-spinning="{{stage.status == 'running'}}" ng-click="selectStage(stage)" ng-class="{selected: stage.id == selectedStage.getId(), green: stage.status == 'passed', red: stage.status == 'failed'}">
+				<span>{{stage.name}}</span>
+			</changes-menu-option>
 
-			<changes-menu-option menu-option-text="skipped" ng-show="selectedChange.getInformation().aggregateStatus == 'skipped'" ng-click="selectedStage.setSkipped()" ng-class="{selected: selectedStage.isSkipped(), red: true}"></changes-menu-option>
+			<changes-menu-option ng-show="selectedChange.getInformation().aggregateStatus == 'skipped'" ng-click="selectedStage.setSkipped()" ng-class="{selected: selectedStage.isSkipped(), red: true}">
+				<span>skipped</span>
+			</changes-menu-option>
 
-			<changes-menu-option menu-option-text="merge" ng-show="selectedChange.getInformation().mergeStatus != null" ng-click="selectedStage.setMerge()" ng-class="{selected: selectedStage.isMerge(), green: selectedChange.getInformation().mergeStatus == 'passed', red: selectedChange.getInformation().mergeStatus == 'failed'}"></changes-menu-option>
+			<changes-menu-option menu-option-text="merge" ng-show="selectedChange.getInformation().mergeStatus != null" ng-click="selectedStage.setMerge()" ng-class="{selected: selectedStage.isMerge(), green: selectedChange.getInformation().mergeStatus == 'passed', red: selectedChange.getInformation().mergeStatus == 'failed'}">
+				<span>merge</span>
+			</changes-menu-option>
 
-			<changes-menu-option menu-option-text="debug" ng-show="selectedChange.getInformation().aggregateStatus == 'failed' && stages.length == 0" ng-click="selectedStage.setDebug()" ng-class="{selected: selectedStage.isDebug(), red: true}"></changes-menu-option>
+			<changes-menu-option ng-show="selectedChange.getInformation().aggregateStatus == 'failed' && stages.length == 0" ng-click="selectedStage.setDebug()" ng-class="{selected: selectedStage.isDebug(), red: true}">
+				<span>debug</span>
+			</changes-menu-option>
 		</changes-menu-options>
 	</changes-menu>
 </div>

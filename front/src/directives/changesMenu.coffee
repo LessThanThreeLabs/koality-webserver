@@ -44,25 +44,17 @@ angular.module('koality.directive.changesMenu', []).
 	directive('changesMenuOption', () ->
 		restrict: 'E'
 		replace: true
-		scope: true
+		transclude: true
+		# scope: true
 		template: '<div class="changesMenuOption">
 				<div class="changesMenuOptionContents">
-					<div class="changesMenuOptionTextContainer">
-						<span class="changesMenuOptionIdentifier" ng-show="identifier != null">{{identifier}}</span>
-						<span class="changesMenuOptionText" ng-show="text != null">{{text}}</span>
-					</div>
+					<div class="changesMenuOptionTextContainer" ng-transclude></div>
 					<div class="changesMenuOptionArrow"></div>
 					<spinner class="changesMenuOptionSpinner" spinner-running="spinning"></spinner>
 				</div>
 				<div class="changesMenuOptionTooth"></div>
 			</div>'
 		link: (scope, element, attributes) ->
-			attributes.$observe 'menuOptionIdentifier', (identifier) ->
-				scope.identifier = identifier
-
-			attributes.$observe 'menuOptionText', (text) ->
-				scope.text = text
-
 			attributes.$observe 'menuOptionSpinning', (spinning) ->
 				scope.spinning = if typeof spinning is 'boolean' then spinning else spinning is 'true'
 

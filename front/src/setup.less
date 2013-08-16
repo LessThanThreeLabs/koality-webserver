@@ -14,8 +14,9 @@ body {
 		cursor: pointer;
 		color: @koalityGreen;
 
-		&.red { color: @koalityRed !important; }
 		&.gray { color: @koalityGray !important; }
+		&.red { color: @koalityRed !important; }
+		&.orange { color: @koalityOrange !important; }
 
 		&:link { text-decoration: none; }
 		&:visited { text-decoration: none; }
@@ -238,6 +239,11 @@ body {
 				white-space: nowrap;
 				border-top: 1px solid @koalityDarkGray;
 				border-bottom: 1px solid @platformBackground;
+
+				&.gray { color: @koalityGray; }
+				&.green { color: @koalityGreen; }
+				&.orange { color: @koalityOrange; }
+				&.red { color: @koalityRed; }
 			}
 
 			th {
@@ -251,7 +257,7 @@ body {
 			}
 
 			td {
-				padding: 16px 0 16px 0;
+				padding: 16px 16px 16px 0;
 			}
 
 			tr {

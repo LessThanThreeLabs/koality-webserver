@@ -26,7 +26,7 @@
 					</tr>
 					<tr>
 						<th>Email</th>
-						<td><a href="mailto:{{selectedChange.getInformation().user.email}}?subject=Koality%3A%20{{selectedRepository.getInformation().name}}%20-%20change%20%23{{selectedChange.getInformation().number}}&body=Link%20to%20change%3A%20{{currentUrl}}" target="_blank">{{selectedChange.getInformation().user.email}}</a></td>
+						<td><a ng-href="mailto:{{selectedChange.getInformation().user.email}}?subject=Koality%3A%20{{selectedRepository.getInformation().name}}%20-%20change%20%23{{selectedChange.getInformation().headCommit.sha | limitTo:4}}&body=Link%20to%20change%3A%20{{currentUrl}}" target="_blank">{{selectedChange.getInformation().user.email}}</a></td>
 					</tr>
 					<tr>
 						<th>Submit Time</th>

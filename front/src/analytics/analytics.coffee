@@ -133,5 +133,4 @@ window.Analytics = ['$scope', 'rpc', 'events', ($scope, rpc, events) ->
 
 	$scope.$watch 'options.interval', () ->
 		$scope.graphOptions.interval = $scope.options.interval.value
-
 ]

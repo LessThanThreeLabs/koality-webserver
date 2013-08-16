@@ -123,34 +123,24 @@
 					right: 0;
 					bottom: 0;
 					color: @koalityGray;
-					line-height: 36px;
 					background-color: @panelBackground;
 					border-bottom: 1px solid @platformBackground;
 
 					.changesMenuOptionTextContainer {
 						position: absolute;
-						top: 2px;
+						top: 0;
 						left: 12px;
 						right: 22px;
 						bottom: 0;
 						overflow: hidden;
+						font-size: 14px;
+						font-weight: 300;
+						line-height: @optionHeight;
 						text-overflow: ellipsis;
 						white-space: nowrap;
 
 						&.spinnerTextPadding {
 							right: 58px;
-						}
-
-						.changesMenuOptionIdentifier {
-							display: inline;
-							padding-right: 2px;
-							font-size: 18px;
-						}
-
-						.changesMenuOptionText {
-							display: inline;
-							padding-left: 2px;
-							font-size: 14px;
 						}
 					}
 

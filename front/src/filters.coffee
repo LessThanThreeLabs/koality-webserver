@@ -20,4 +20,9 @@ angular.module('koality.filter', ['koality.service']).
 			input = input.replace /\t/g, '    '
 			input = input.replace /\040/g, '&nbsp;'
 			return input
+	]).
+	filter('onlyFirstLine', [() ->
+		(input) ->
+			return null if not input? or typeof input isnt 'string'
+			return input.split('\n')[0]
 	])
