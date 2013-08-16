@@ -12,10 +12,14 @@ window.Repository = ['$scope', '$location', '$routeParams', 'rpc', 'events', 'cu
 		if $routeParams.change?
 			$scope.selectedChange.setId $routeParams.repositoryId, $routeParams.change
 			$scope.selectedChange.retrieveInformation $routeParams.repositoryId, $routeParams.change
+		else
+			$scope.selectedChange.clear()
 
 		if $routeParams.stage?
 			$scope.selectedStage.setId $routeParams.repositoryId, $routeParams.stage
 			$scope.selectedStage.retrieveInformation $routeParams.repositoryId, $routeParams.stage
+		else
+			$scope.selectedStage.clear()
 
 		$scope.selectedStage.setSummary() if not $routeParams.stage?
 		$scope.selectedStage.setSkipped() if $routeParams.skipped?
