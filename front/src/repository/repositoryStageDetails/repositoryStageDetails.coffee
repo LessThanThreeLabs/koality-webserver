@@ -62,9 +62,7 @@ window.RepositoryStageDetails = ['$scope', '$location', 'rpc', 'events', 'xmlPar
 					name: testCase.__name
 					time: testCase.__time
 					status: if testCase.failure? or testCase['system-err']? then 'failed' else 'passed'
-					failure:
-						message: testCase.failure?.__message if testCase.failure?.__message?
-						text: testCase.failure?.text if testCase.failure?.text?
+					failure: testCase.failure?.text if testCase.failure?.text?
 					error: testCase['system-err'] if testCase['system-err']?
 
 				testCases = []

@@ -76,8 +76,16 @@
 							Duration
 						</th>
 					</tr>
-						<tr ng-repeat="testCase in junit | orderBy:jUnitOrderByPredicate:jUnitOrderByReverse" ng-class="{red: testCase.status == 'failed'}">
-							<td class="nameColumn">{{testCase.name}}</td>
+						<tr ng-repeat="testCase in junit | orderBy:jUnitOrderByPredicate:jUnitOrderByReverse" ng-class="{red: testCase.status == 'failed'}" ng-click="testCase.showMore = !testCase.showMore">
+							<td class="nameColumn" ng-class="{selectable: testCase.failure != null || testCase.error != null}">
+								{{testCase.name}}
+								<div class="failureText" ng-show="testCase.showMore && testCase.failure != null">
+									{{testCase.failure}}
+								</div>
+								<div class="errorText" ng-show="testCase.showMore && testCase.error != null">
+									{{testCase.error}}
+								</div>
+							</td>
 							<td class="statusColumn">{{testCase.status}}</td>
 							<td class="timeColumn">{{testCase.time | number: 6}}</td>
 						</tr>

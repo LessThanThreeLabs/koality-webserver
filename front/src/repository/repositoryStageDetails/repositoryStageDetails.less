@@ -65,8 +65,21 @@
 			width: 100%;
 			table-layout: fixed;
 
+			.failureText, .errorText {
+				margin-top: 10px;
+				font-family: 'PT Mono', monospace;
+				font-size: 11px;
+				color: @koalityWhite;
+				white-space: normal;
+			}
+
 			.nameColumn {
 				padding-left: 15px;
+
+				&.selectable {
+					cursor: hand;
+					cursor: pointer;
+				}
 			}
 
 			.statusColumn {
