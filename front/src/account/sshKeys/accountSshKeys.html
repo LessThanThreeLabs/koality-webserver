@@ -36,11 +36,11 @@
 		<div id="sshKeys" fading-content>
 			<table class="delineated">
 				<tr>
-					<th class="aliasColumn unselectable" ng-click="orderByPredicate = 'alias'; orderByReverse = !orderByReverse">
+					<th class="aliasColumn sortableColumn unselectable" ng-click="orderByPredicate = 'alias'; orderByReverse = !orderByReverse">
 						<div class="triangle gray" ng-class="{right: orderByPredicate != 'alias', up: orderByPredicate == 'alias' && !orderByReverse, down: orderByPredicate == 'alias' && orderByReverse}"></div>
 						Alias
 					</th>
-					<th class="createdColumn unselectable" ng-click="orderByPredicate = 'timestamp'; orderByReverse = !orderByReverse">
+					<th class="createdColumn sortableColumn unselectable" ng-click="orderByPredicate = 'timestamp'; orderByReverse = !orderByReverse">
 						<div class="triangle gray" ng-class="{right: orderByPredicate != 'timestamp', up: orderByPredicate == 'timestamp' && !orderByReverse, down: orderByPredicate == 'timestamp' && orderByReverse}"></div>
 						Date Created
 					</th>

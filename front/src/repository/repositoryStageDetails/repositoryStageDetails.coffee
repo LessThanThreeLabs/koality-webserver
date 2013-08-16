@@ -1,6 +1,9 @@
 'use strict'
 
 window.RepositoryStageDetails = ['$scope', '$location', 'rpc', 'events', 'xmlParser', 'currentRepository', 'currentChange', 'currentStage', ($scope, $location, rpc, events, xmlParser, currentRepository, currentChange, currentStage) ->
+	$scope.jUnitOrderByPredicate = 'status'
+	$scope.jUnitOrderByReverse = false
+
 	$scope.selectedRepository = currentRepository
 	$scope.selectedChange = currentChange
 	$scope.selectedStage = currentStage
@@ -40,8 +43,40 @@ window.RepositoryStageDetails = ['$scope', '$location', 'rpc', 'events', 'xmlPar
 		$scope.spinnerOn = true
 		rpc 'buildConsoles', 'read', 'getJUnit', id: $scope.selectedStage.getId(), (error, junitOutputs) ->
 			$scope.spinnerOn = false
-			$scope.junit = (xmlParser.parse junitOutput	for junitOutput in junitOutputs)
-			console.log $scope.junit
+
+			getArrayOfTestSuites = () ->
+				testSuites = []
+				for junitOutput in junitOutputs
+					parsed = xmlParser.parse junitOutput
+					parsedTestSuites = if parsed.testsuites then parsed.testsuites.testsuite else parsed.testsuite
+
+					if parsedTestSuites instanceof Array
+						testSuites = testSuites.concat parsedTestSuites
+					else
+						testSuites.push parsedTestSuites
+
+				return testSuites
+
+			getAllSanitizedTestCases = (testSuites) ->
+				sanitizeTestCase = (testCase) ->
+					name: testCase.__name
+					time: testCase.__time
+					status: if testCase.failure? or testCase['system-err']? then 'failed' else 'passed'
+					failure: testCase.failure?.text if testCase.failure?.text?
+					error: testCase['system-err'] if testCase['system-err']?
+
+				testCases = []
+				for testSuite in testSuites
+					if testSuite.testcase instanceof Array
+						testCases = testCases.concat (sanitizeTestCase testCase for testCase in testSuite.testcase)
+					else
+						testCases.push sanitizeTestCase testSuite.testcase
+
+				return testCases
+
+			testSuites = getArrayOfTestSuites()
+			testCases = getAllSanitizedTestCases testSuites
+			$scope.junit = testCases
 
 	handleExportUrisAdded = (data) ->
 		$scope.exportUris ?= []

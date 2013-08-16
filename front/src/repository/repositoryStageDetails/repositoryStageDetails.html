@@ -60,7 +60,37 @@
 			</div>
 
 			<div id="junit" ng-show="outputType == 'junit'">
-				{{junit}}
+				<div fading-content>
+					<table class="delineated">
+						<tr>
+						<th class="nameColumn sortableColumn unselectable" ng-click="jUnitOrderByPredicate = 'name'; jUnitOrderByReverse = !jUnitOrderByReverse">
+							<div class="triangle gray" ng-class="{right: jUnitOrderByPredicate != 'name', up: jUnitOrderByPredicate == 'name' && !jUnitOrderByReverse, down: jUnitOrderByPredicate == 'name' && jUnitOrderByReverse}"></div>
+							Name
+						</th>
+						<th class="statusColumn sortableColumn unselectable" ng-click="jUnitOrderByPredicate = 'status'; jUnitOrderByReverse = !jUnitOrderByReverse">
+							<div class="triangle gray" ng-class="{right: jUnitOrderByPredicate != 'status', up: jUnitOrderByPredicate == 'status' && !jUnitOrderByReverse, down: jUnitOrderByPredicate == 'status' && jUnitOrderByReverse}"></div>
+							Status
+						</th>
+						<th class="timeColumn sortableColumn unselectable" ng-click="jUnitOrderByPredicate = 'time'; jUnitOrderByReverse = !jUnitOrderByReverse">
+							<div class="triangle gray" ng-class="{right: jUnitOrderByPredicate != 'time', up: jUnitOrderByPredicate == 'time' && !jUnitOrderByReverse, down: jUnitOrderByPredicate == 'time' && jUnitOrderByReverse}"></div>
+							Duration
+						</th>
+					</tr>
+						<tr ng-repeat="testCase in junit | orderBy:jUnitOrderByPredicate:jUnitOrderByReverse" ng-class="{red: testCase.status == 'failed'}" ng-click="testCase.showMore = !testCase.showMore">
+							<td class="nameColumn" ng-class="{selectable: testCase.failure != null || testCase.error != null}">
+								{{testCase.name}}
+								<div class="failureText" ng-show="testCase.showMore && testCase.failure != null">
+									{{testCase.failure}}
+								</div>
+								<div class="errorText" ng-show="testCase.showMore && testCase.error != null">
+									{{testCase.error}}
+								</div>
+							</td>
+							<td class="statusColumn">{{testCase.status}}</td>
+							<td class="timeColumn">{{testCase.time | number: 6}}</td>
+						</tr>
+					</table>
+				</div>
 			</div>
 
 			<div id="skipped" ng-show="selectedStage.isSkipped()">

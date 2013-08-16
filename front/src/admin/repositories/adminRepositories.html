@@ -88,15 +88,15 @@
 		<div id="repositoriesList" fading-content>
 			<table class="delineated">
 				<tr>
-					<th class="nameColumn unselectable" ng-click="orderByPredicate = 'name'; orderByReverse = !orderByReverse">
+					<th class="nameColumn sortableColumn unselectable" ng-click="orderByPredicate = 'name'; orderByReverse = !orderByReverse">
 						<div class="triangle gray" ng-class="{right: orderByPredicate != 'name', up: orderByPredicate == 'name' && !orderByReverse, down: orderByPredicate == 'name' && orderByReverse}"></div>
 						Name
 					</th>
-					<th class="forwardUrlColumn unselectable" ng-click="orderByPredicate = 'forwardUrl'; orderByReverse = !orderByReverse">
+					<th class="forwardUrlColumn sortableColumn unselectable" ng-click="orderByPredicate = 'forwardUrl'; orderByReverse = !orderByReverse">
 						<div class="triangle gray" ng-class="{right: orderByPredicate != 'forwardUrl', up: orderByPredicate == 'forwardUrl' && !orderByReverse, down: orderByPredicate == 'forwardUrl' && orderByReverse}"></div>
 						Forward URL
 					</th>
-					<th class="createdColumn unselectable" ng-click="orderByPredicate = 'timestamp'; orderByReverse = !orderByReverse">
+					<th class="createdColumn sortableColumn unselectable" ng-click="orderByPredicate = 'timestamp'; orderByReverse = !orderByReverse">
 						<div class="triangle gray" ng-class="{right: orderByPredicate != 'timestamp', up: orderByPredicate == 'timestamp' && !orderByReverse, down: orderByPredicate == 'timestamp' && orderByReverse}"></div>
 						Date Created
 					</th>

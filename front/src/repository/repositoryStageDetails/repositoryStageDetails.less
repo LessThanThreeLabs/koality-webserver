@@ -56,9 +56,39 @@
 	#junit {
 		position: absolute;
 		top: 0;
-		left: 10px;
-		right: 15px;
+		left: 0;
+		right: 0;
 		bottom: 0;
 		overflow: hidden;
+
+		table {
+			width: 100%;
+			table-layout: fixed;
+
+			.failureText, .errorText {
+				margin-top: 10px;
+				font-family: 'PT Mono', monospace;
+				font-size: 11px;
+				color: @koalityWhite;
+				white-space: normal;
+			}
+
+			.nameColumn {
+				padding-left: 15px;
+
+				&.selectable {
+					cursor: hand;
+					cursor: pointer;
+				}
+			}
+
+			.statusColumn {
+				width: 120px;
+			}
+
+			.timeColumn {
+				width: 120px;
+			}
+		}
 	}
 }

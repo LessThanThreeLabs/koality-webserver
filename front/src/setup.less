@@ -243,6 +243,11 @@ body {
 			th {
 				padding: 0 0 16px 0;
 				text-transform: uppercase;
+
+				&.sortableColumn {
+					cursor: hand;
+					cursor: pointer;
+				}
 			}
 
 			td {
@@ -257,6 +262,8 @@ body {
 						td { background-color: darken(@panelBackground, 3%); }
 					}
 				}
+
+				&.red { color: @koalityRed; }
 
 				&:first-child {
 					th, td { border-top-width: 0; }

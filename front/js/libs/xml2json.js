@@ -12,7 +12,7 @@ function xml2json(xml, tab) {
          if (xml.nodeType==1) {   // element node ..
             if (xml.attributes.length)   // element with attributes  ..
                for (var i=0; i<xml.attributes.length; i++)
-                  o["@"+xml.attributes[i].nodeName] = (xml.attributes[i].nodeValue||"").toString();
+                  o["__"+xml.attributes[i].nodeName.toLowerCase()] = (xml.attributes[i].nodeValue||"").toString();
             if (xml.firstChild) { // element has child nodes ..
                var textChild=0, cdataChild=0, hasElementChild=false;
                for (var n=xml.firstChild; n; n=n.nextSibling) {
@@ -25,38 +25,38 @@ function xml2json(xml, tab) {
                      X.removeWhite(xml);
                      for (var n=xml.firstChild; n; n=n.nextSibling) {
                         if (n.nodeType == 3)  // text node
-                           o["#text"] = X.escape(n.nodeValue);
+                           o["text"] = X.escape(n.nodeValue);
                         else if (n.nodeType == 4)  // cdata node
-                           o["#cdata"] = X.escape(n.nodeValue);
-                        else if (o[n.nodeName]) {  // multiple occurence of element ..
-                           if (o[n.nodeName] instanceof Array)
-                              o[n.nodeName][o[n.nodeName].length] = X.toObj(n);
+                           o["cdata"] = X.escape(n.nodeValue);
+                        else if (o[n.nodeName.toLowerCase()]) {  // multiple occurence of element ..
+                           if (o[n.nodeName.toLowerCase()] instanceof Array)
+                              o[n.nodeName.toLowerCase()][o[n.nodeName.toLowerCase()].length] = X.toObj(n);
                            else
-                              o[n.nodeName] = [o[n.nodeName], X.toObj(n)];
+                              o[n.nodeName.toLowerCase()] = [o[n.nodeName.toLowerCase()], X.toObj(n)];
                         }
                         else  // first occurence of element..
-                           o[n.nodeName] = X.toObj(n);
+                           o[n.nodeName.toLowerCase()] = X.toObj(n);
                      }
                   }
                   else { // mixed content
                      if (!xml.attributes.length)
                         o = X.escape(X.innerXml(xml));
                      else
-                        o["#text"] = X.escape(X.innerXml(xml));
+                        o["text"] = X.escape(X.innerXml(xml));
                   }
                }
                else if (textChild) { // pure text
                   if (!xml.attributes.length)
                      o = X.escape(X.innerXml(xml));
                   else
-                     o["#text"] = X.escape(X.innerXml(xml));
+                     o["text"] = X.escape(X.innerXml(xml));
                }
                else if (cdataChild) { // cdata
                   if (cdataChild > 1)
                      o = X.escape(X.innerXml(xml));
                   else
                      for (var n=xml.firstChild; n; n=n.nextSibling)
-                        o["#cdata"] = X.escape(n.nodeValue);
+                        o["cdata"] = X.escape(n.nodeValue);
                }
             }
             if (!xml.attributes.length && !xml.firstChild) o = null;
@@ -65,7 +65,7 @@ function xml2json(xml, tab) {
             o = X.toObj(xml.documentElement);
          }
          else
-            alert("unhandled node type: " + xml.nodeType);
+            console.error("unhandled node type: " + xml.nodeType);
          return o;
       },
       toJson: function(o, name, ind) {
@@ -97,14 +97,14 @@ function xml2json(xml, tab) {
             var asXml = function(n) {
                var s = "";
                if (n.nodeType == 1) {
-                  s += "<" + n.nodeName;
+                  s += "<" + n.nodeName.toLowerCase();
                   for (var i=0; i<n.attributes.length;i++)
                      s += " " + n.attributes[i].nodeName + "=\"" + (n.attributes[i].nodeValue||"").toString() + "\"";
                   if (n.firstChild) {
                      s += ">";
                      for (var c=n.firstChild; c; c=c.nextSibling)
                         s += asXml(c);
-                     s += "</"+n.nodeName+">";
+                     s += "</"+n.nodeName.toLowerCase()+">";
                   }
                   else
                      s += "/>";
