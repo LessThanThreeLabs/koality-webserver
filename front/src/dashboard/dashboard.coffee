@@ -1,7 +1,11 @@
 'use strict'
 
-window.Dashboard = ['$scope', '$location', 'rpc', 'events', 'notification', ($scope, $location, rpc, events, notification) ->
+window.Dashboard = ['$scope', '$location', 'rpc', 'events', 'localStorage', 'notification', ($scope, $location, rpc, events, localStorage, notification) ->
 	repositoryCache = {}
+
+	$scope.search = {}
+	$scope.search.mode = localStorage.dashboardSearchMode ? 'all'
+	$scope.search.query = ''
 
 	getRepositories = () ->
 		rpc 'repositories', 'read', 'getRepositories', null, (error, repositories) ->
@@ -57,4 +61,14 @@ window.Dashboard = ['$scope', '$location', 'rpc', 'events', 'notification', ($sc
 
 	getRepositories()
 	getChanges()
+
+	$scope.searchModeClicked = (mode) ->
+		$scope.search.mode = mode
+		$scope.search.query = '' if mode isnt 'search'
+
+	$scope.$watch 'search', ((newValue, oldValue) ->
+		return if newValue is oldValue
+		# getInitialChanges()
+		localStorage.dashboardSearchMode = $scope.search.mode
+	), true
 ]

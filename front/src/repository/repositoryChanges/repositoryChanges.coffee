@@ -5,18 +5,18 @@ window.RepositoryChanges = ['$scope', 'changesRpc', 'events', 'currentRepository
 	$scope.selectedChange = currentChange
 
 	$scope.search = {}
-	$scope.search.mode = localStorage.searchMode ? 'all'
-	$scope.search.namesQuery = ''
+	$scope.search.mode = localStorage.repositoryChangesSearchMode ? 'all'
+	$scope.search.query = ''
 
 	getGroupFromMode = () ->
 		if $scope.search.mode is 'all' or $scope.search.mode is 'me'
 			return $scope.search.mode
-		if $scope.search.namesQuery is ''
+		if $scope.search.query is ''
 			return 'all'
 		return null
 
 	getNamesFromNamesQuery = () ->
-		names = $scope.search.namesQuery.toLowerCase().split ' '
+		names = $scope.search.query.toLowerCase().split ' '
 		names = names.filter (name) -> name.length > 0
 		return if names.length > 0 then names else null
 
@@ -83,7 +83,7 @@ window.RepositoryChanges = ['$scope', 'changesRpc', 'events', 'currentRepository
 
 	$scope.searchModeClicked = (mode) ->
 		$scope.search.mode = mode
-		$scope.search.namesQuery = '' if mode isnt 'search'
+		$scope.search.query = '' if mode isnt 'search'
 
 	$scope.selectChange = (change) ->
 		$scope.selectedChange.setId $scope.selectedRepository.getId(), change.id
@@ -95,6 +95,6 @@ window.RepositoryChanges = ['$scope', 'changesRpc', 'events', 'currentRepository
 	$scope.$watch 'search', ((newValue, oldValue) ->
 		return if newValue is oldValue
 		getInitialChanges()
-		localStorage.searchMode = $scope.search.mode
+		localStorage.repositoryChangesSearchMode = $scope.search.mode
 	), true
 ]

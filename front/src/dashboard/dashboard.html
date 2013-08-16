@@ -1,6 +1,22 @@
 <div id="dashboard">
 	<panel>
-		<panel-header>Dashboard</panel-header>
+		<panel-header>
+			<div class="left">
+				Dashboard
+			</div>
+			<div class="right">
+				<div id="search" ng-class="{searchOn: search.mode == 'search'}">
+					<div id="searchAll" ng-class="{selected: search.mode == 'all'}" ng-click="searchModeClicked('all')">All</div>
+					<div id="searchMe" ng-class="{selected: search.mode == 'me'}" ng-click="searchModeClicked('me')">Me</div>
+					<div id="searchQuery" ng-class="{selected: search.mode == 'search'}" ng-click="searchModeClicked('search')" input-focus-on-click>
+						<div id="searchImageAndInputContainer">
+							<img ng-src="{{'/img/icons/search.png' | fileSuffix}}">
+							<input type="text" ng-model="search.query" placeholder="User">
+						</div>
+					</div>
+				</div>
+			</div>
+		</panel-header>
 		<panel-body>
 			<div fading-content>
 				<table class="delineated">
