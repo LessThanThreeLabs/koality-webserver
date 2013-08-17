@@ -18,7 +18,7 @@
 			</div>
 		</panel-header>
 		<panel-body>
-			<div fading-content>
+			<div fading-content on-scroll-to-bottom="changesManager.getMoreChanges()">
 				<table class="delineated">
 					<tr>
 						<th class="statusColumn">Status</th>
@@ -28,6 +28,7 @@
 						<th class="userColumn">Commiter</th>
 						<th class="timeColumn">Commit Time</th>
 					</tr>
+
 					<tr ng-repeat="change in changesManager.getChanges()">
 						<td class="statusColumn gray" ng-class="{green: change.aggregateStatus == 'passed', orange: change.aggregateStatus == 'skipped', red: change.aggregateStatus == 'failed'}">
 							{{change.aggregateStatus}}

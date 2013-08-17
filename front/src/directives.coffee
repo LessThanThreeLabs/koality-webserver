@@ -64,7 +64,7 @@ angular.module('koality.directive', []).
 		transclude: true
 		template: '<div class="fadingContentContainer">
 				<div class="fadingContentTopBuffer"></div>
-				<div class="fadingContentScrollWrapper">
+				<div class="fadingContentScrollWrapper autoScrollToBottomDirectiveAnchor onScrollToBottomDirectiveAnchor">
 					<div class="fadingContent" ng-transclude></div>
 				</div>
 				<div class="fadingContentBottomBuffer"></div>
@@ -76,9 +76,8 @@ angular.module('koality.directive', []).
 	directive('autoScrollToBottom', ['$timeout', 'integerConverter', ($timeout, integerConverter) ->
 		restrict: 'A'
 		link: (scope, element, attributes) ->
-			# fix to work with fading-content directive
-			if element.find('.fadingContentScrollWrapper').length > 0
-				element = element.find '.fadingContentScrollWrapper'
+			if element.find('.autoScrollToBottomDirectiveAnchor').length > 0
+				element = element.find '.autoScrollToBottomDirectiveAnchor'
 
 			scrollToBottom = () ->
 				$timeout (() -> element[0].scrollTop = element[0].scrollHeight)
@@ -92,6 +91,19 @@ angular.module('koality.directive', []).
 				else
 					scrollToBottom() if attributes.startAtBottom?
 			), true
+	]).
+	directive('onScrollToBottom', [() ->
+		restrict: 'A'
+		link: (scope, element, attributes) ->
+			if element.find('.onScrollToBottomDirectiveAnchor').length > 0
+				element = element.find '.onScrollToBottomDirectiveAnchor'
+
+			addScrollListener = () ->
+				element.bind 'scroll', (event) ->
+					scrolledToBottom = element[0].scrollTop + element[0].offsetHeight >= element[0].scrollHeight
+					scope.$apply attributes.onScrollToBottom if scrolledToBottom
+
+			addScrollListener()
 	]).
 	directive('busyButton', ['$timeout', ($timeout) ->
 		restrict: 'E'
