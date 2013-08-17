@@ -1,6 +1,6 @@
 'use strict'
 
-angular.module('koalitySetup', ['ngSanitize', 'koality.service', 'koality.directive', 'koality.filter']).
+angular.module('koalitySetup', ['ngSanitize', 'koality.service', 'koality.service.socket', 'koality.directive', 'koality.filter']).
 	config(['$routeProvider', ($routeProvider) ->
 		$routeProvider.
 			when('/wizard',

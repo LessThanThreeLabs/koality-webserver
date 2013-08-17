@@ -29,6 +29,7 @@
 			"/js/libs/spinner.js",
 
 			"/js/src/services.js",
+			"/js/src/services/socket.js",
 			"/js/src/directives.js",
 			"/js/src/filters.js",
 

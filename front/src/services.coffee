@@ -73,161 +73,106 @@ angular.module('koality.service', []).
 			error: (text, durationInSeconds=8) -> add 'error', text, durationInSeconds
 		return toReturn
 	]).
-	factory('socket', ['$window', '$location', '$timeout', 'initialState', 'notification', ($window, $location, $timeout, initialState, notification) ->
-		maxReconnectionAttempts = 10
+	factory('changesManager', ['initialState', 'changesRpc', 'events', (initialState, changesRpc, events) ->
+		class ChangesManager
+			_changes: []
+			_gettingMoreChanges: false
 
-		socket = io.connect "//#{$location.host()}?csrfToken=#{initialState.csrfToken}",
-			'resource': 'socket'
-			'connection timeout': 5000
-			'reconnection delay': 200
-			'reconnection limit': 1000
-			'max reconnection attempts': maxReconnectionAttempts
+			_changeAddedListeners: []
+			_changeStartedListeners: []
+			_changeFinishedListeners: []
 
-		socket.on 'reconnecting', (delay, attempt) ->
-			if attempt >= maxReconnectionAttempts
-				notification.warning 'Unable to connect to server. Refreshing may resolve this issue', 0
+			constructor: (@repositoryIds, @searchModel) ->
+				assert.ok typeof @repositoryIds is 'object'
+				assert.ok typeof @searchModel is 'object'
 
-		previousEventToCallbacks = {}
+			_getGroupFromMode: () =>
+				if @searchModel.mode is 'all' or @searchModel.mode is 'me'
+					return @searchModel.mode
+				if @searchModel.query.trim() is ''
+					return 'all'
+				return null
 
-		makeRequest: (resource, requestType, methodName, data, timeout, callback) ->
-			assert.ok typeof resource is 'string' and typeof requestType is 'string' and typeof methodName is 'string'
-			assert.ok resource.indexOf('.') is -1 and requestType.indexOf('.') is -1
-			assert.ok typeof requestType is 'string'
-			assert.ok typeof methodName is 'string'
-			assert.ok typeof data is 'object'
-			assert.ok typeof timeout is 'number'
-			assert.ok typeof callback is 'function'
+			_getQuery: () =>
+				if @searchModel.mode isnt 'search' then return null
 
-			requestHandled = false
-			handleResponse = (error, response) ->
-				$timeout.cancel timeoutPromise if timeoutPromise?
+				query = @searchModel.query.trim()
+				if query is '' then return null
+				else return query
 
-				return if requestHandled
-				requestHandled = true
+			_doesChangeMatchQuery: (change) =>
+				if @searchModel.mode is 'me'
+					return initialState.user.id is change.user.id
+				else
+					return true if @searchModel.query.trim() is ''
 
-				if error?
-					console.error "#{resource}.#{requestType} - #{methodName}"
-					console.error error
-				switch error
-					when 400, 404, 500 then window.location.href = '/unexpectedError'
-					when 403 then window.location.href = '/invalidPermissions'
-					else callback error, response if callback?
+					stingsToMatch = @searchModel.query.trim().split(' ')
+						.filter((string) -> return string isnt '')
+						.map((string) -> return string.toLowerCase())
 
-			if timeout > 0
-				timeoutPromise = $timeout (() -> handleResponse 'Timed out'), timeout
+					return (change.user.name.first.toLowerCase() in stringsToMatch) or
+						(change.user.name.last.toLowerCase() in stringsToMatch) or
+						(change.headCommit.sha.toLowerCase() in stringsToMatch)
 
-			socket.emit "#{resource}.#{requestType}", {method: methodName, args: data}, handleResponse
+			_getChangeWithId: (id) =>
+				return (change for change in @_changes when change.id is id)[0]
 
-		respondTo: (eventName, callback) ->
-			if not previousEventToCallbacks[eventName]?
-				socket.on eventName, callback
-				previousEventToCallbacks[eventName] = [callback]
-			else
-				for otherCallback in previousEventToCallbacks[eventName]
-					return if callback is otherCallback
+			_initialChangesHandler: (error, changes) =>
+				@_gettingMoreChanges = false
+				@_changes = changes
 
-				socket.on eventName, callback
-				previousEventToCallbacks[eventName].push callback
-	]).
-	factory('rpc', ['$rootScope', 'socket', ($rootScope, socket) ->
-		defaultTimeout = 30000
+			_moreChangesHandler: (error, additionalChanges) =>
+				@_gettingMoreChanges = false
+				@_changes = @_changes.concat additionalChanges
 
-		return (resource, requestType, methodName, data, allowTimeout, callback) ->
-			# specifying the timeout isn't necessary
-			if not callback?
-				callback = allowTimeout
-				timeout = defaultTimeout
-			else
-				timeout = if allowTimeout then defaultTimeout else -1
+			_handleChangeAdded: (data) =>
+				if _doesChangeMatchQuery(data) and not _getChangeWithId(data.id)?
+					@_changes.unshift data
 
-			socket.makeRequest resource, requestType, methodName, data, timeout, (error, result) ->
-				if callback? then $rootScope.$apply () -> callback error, result
-	]).
-	factory('events', ['$rootScope', 'socket', 'integerConverter', ($rootScope, socket, integerConverter) ->
-		class EventListener
-			constructor: (@resource, @eventName, id) ->
-				@_callback = null
-				@id = integerConverter.toInteger id
+			_handleChangeStarted: (data) =>
+				# @changeStartedHandler data if @changeStartedHandler?
 
-			setCallback: (callback) =>
-				assert.ok callback?
-				@_callback = callback
-				return @
+			_handleChangeFinished: (data) =>
+				# @changeFinishedHandler data if @changeFinishedHandler?
 
-			subscribe: () =>
-				assert.ok @_callback?
-				socket.makeRequest @resource, 'subscribe', @eventName, id: @id, 30000, (error, eventToListenFor) =>
-					if error? then console.error error
-					else socket.respondTo eventToListenFor, (data) =>
-						if @_callback? then $rootScope.$apply () => @_callback data 
-				return @
+			_addListeners: (listeners, eventType, handler) =>
+				@_removeListeners listeners
 
-			unsubscribe: () =>
-				@_callback = null
-				socket.makeRequest @resource, 'unsubscribe', @eventName, id: @id, 30000, (error) ->
-					console.error if error?
-				return @
+				for repositoryId in @repositoryIds
+					listener = events('repositories', eventType, repositoryId).setCallback(handler).subscribe()
+					listeners.push listener
 
-		return (resource, eventName, id) ->
-			return new EventListener resource, eventName, id
-	]).
-	factory('changesRpc', ['rpc', 'integerConverter', (rpc, integerConverter) ->
-		NUM_CHANGES_TO_REQUEST = 100
-		noMoreChangesToRequest = false
+			_removeListeners: (listeners) =>
+				listener.unsubscribe() for listener in listeners
+				listeners.length = 0
 
-		currentNameQuery = null
-		currentCallback = null
-		nextNameQuery = null
-		nextCallback = null
+			getInitialChanges: () =>
+				@_changes = []
+				@_gettingMoreChanges = true
+				changesRpc.queueRequest @repositoryIds, @_getGroupFromMode(), @_getQuery(), 0, @_initialChangesHandler
 
-		createChangesQuery = (repositoryId, group, names, startIndex) ->
-			repositoryId: repositoryId
-			group: group
-			names: names
-			startIndex: startIndex
-			numToRetrieve: NUM_CHANGES_TO_REQUEST
+			getMoreChanges: () =>
+				@_gettingMoreChanges = true
+				changesRpc.queueRequest @repositoryIds, @_getGroupFromMode(), @_getQuery(), @_changes.length, @_moreChangesHandler	
 
-		shiftChangesRequest = () ->
-			if not nextNameQuery?
-				currentNameQuery = null
-				currentCallback = null
-			else
-				currentNameQuery = nextNameQuery
-				currentCallback = nextCallback
-				nextNameQuery = null
-				nextCallback = null
+			getChanges: () =>
+				return @_changes
 
-				retrieveMoreChanges()
+			isGettingMoreChanges: () =>
+				return @_gettingMoreChanges
 
-		retrieveMoreChanges = () ->
-			assert.ok currentNameQuery?
-			assert.ok currentCallback?
+			listenToEvents: () =>
+				@_addListeners @_changeAddedListeners, 'change added', @_handleChangeAdded
+				@_addListeners @_changeStartedListeners, 'change started', @_handleChangeStarted
+				@_addListeners @_changeFinishedListeners, 'change finished', @_handleChangeFinished
+					
+			stopListeningToEvents: () =>
+				@_removeListeners @_changeAddedListeners
+				@_removeListeners @_changeStartedListeners
+				@_removeListeners @_changeFinishedListeners
 
-			noMoreChangesToRequest = false if currentNameQuery.startIndex is 0
 
-			if noMoreChangesToRequest
-				shiftChangesRequest()
-			else
-				rpc 'changes', 'read', 'getChanges', currentNameQuery, (error, changes) ->
-					noMoreChangesToRequest = changes.length < NUM_CHANGES_TO_REQUEST
-					currentCallback error, changes  # there is already a $apply() in progress
-					shiftChangesRequest()
-
-		return queueRequest: (repositoryId, group, names, startIndex, callback) ->
-			repositoryId = integerConverter.toInteger repositoryId
-
-			assert.ok typeof repositoryId is 'number'
-			assert.ok not group? or (typeof group is 'string' and (group is 'all' or group is 'me'))
-			assert.ok not names? or (typeof names is 'object')
-			assert.ok (group? and not names?) or (not group? and names?)
-			assert.ok typeof startIndex is 'number'
-			assert.ok typeof callback is 'function'
-
-			if currentNameQuery?
-				nextNameQuery = createChangesQuery repositoryId, group, names, startIndex
-				nextCallback = callback
-			else
-				currentNameQuery = createChangesQuery repositoryId, group, names, startIndex
-				currentCallback = callback
-				retrieveMoreChanges()
+		return create: (repositoryIds, search) ->
+			return new ChangesManager repositoryIds, search
 	])
+	

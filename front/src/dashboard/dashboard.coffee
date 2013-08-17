@@ -3,9 +3,9 @@
 window.Dashboard = ['$scope', '$location', 'rpc', 'events', 'localStorage', 'notification', ($scope, $location, rpc, events, localStorage, notification) ->
 	repositoryCache = {}
 
-	$scope.search = {}
-	$scope.search.mode = localStorage.dashboardSearchMode ? 'all'
-	$scope.search.query = ''
+	$scope.search =
+		mode: localStorage.dashboardSearchMode ? 'all'
+		query: ''
 
 	getRepositories = () ->
 		rpc 'repositories', 'read', 'getRepositories', null, (error, repositories) ->
