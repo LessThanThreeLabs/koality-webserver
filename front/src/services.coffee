@@ -126,14 +126,16 @@ angular.module('koality.service', []).
 				@_changes = @_changes.concat additionalChanges
 
 			_handleChangeAdded: (data) =>
-				if _doesChangeMatchQuery(data) and not _getChangeWithId(data.id)?
+				if @_doesChangeMatchQuery(data) and not @_getChangeWithId(data.id)?
 					@_changes.unshift data
 
 			_handleChangeStarted: (data) =>
-				# @changeStartedHandler data if @changeStartedHandler?
+				change = @_getChangeWithId data.id
+				$.extend true, change, data if change?
 
 			_handleChangeFinished: (data) =>
-				# @changeFinishedHandler data if @changeFinishedHandler?
+				change = @_getChangeWithId data.id
+				$.extend true, change, data if change?
 
 			_addListeners: (listeners, eventType, handler) =>
 				@_removeListeners listeners

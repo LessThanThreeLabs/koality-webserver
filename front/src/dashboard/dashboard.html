@@ -6,9 +6,9 @@
 			</div>
 			<div class="right">
 				<div id="search" ng-class="{searchOn: search.mode == 'search'}">
-					<div id="searchAll" ng-class="{selected: search.mode == 'all'}" ng-click="searchModeClicked('all')">All</div>
-					<div id="searchMe" ng-class="{selected: search.mode == 'me'}" ng-click="searchModeClicked('me')">Me</div>
-					<div id="searchQuery" ng-class="{selected: search.mode == 'search'}" ng-click="searchModeClicked('search')" input-focus-on-click>
+					<div id="searchAll" ng-class="{selected: search.mode == 'all'}" ng-click="search.mode ='all'">All</div>
+					<div id="searchMe" ng-class="{selected: search.mode == 'me'}" ng-click="search.mode ='me'">Me</div>
+					<div id="searchQuery" ng-class="{selected: search.mode == 'search'}" ng-click="search.mode ='search'" input-focus-on-click>
 						<div id="searchImageAndInputContainer">
 							<img ng-src="{{'/img/icons/search.png' | fileSuffix}}">
 							<input type="text" ng-model="search.query" placeholder="User">
@@ -28,7 +28,7 @@
 						<th class="userColumn">Commiter</th>
 						<th class="timeColumn">Commit Time</th>
 					</tr>
-					<tr ng-repeat="change in changes">
+					<tr ng-repeat="change in changesManager.getChanges()">
 						<td class="statusColumn gray" ng-class="{green: change.aggregateStatus == 'passed', orange: change.aggregateStatus == 'skipped', red: change.aggregateStatus == 'failed'}">
 							{{change.aggregateStatus}}
 						</td>

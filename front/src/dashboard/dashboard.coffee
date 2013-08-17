@@ -1,10 +1,10 @@
 'use strict'
 
-window.Dashboard = ['$scope', '$location', 'rpc', 'events', 'localStorage', 'notification', ($scope, $location, rpc, events, localStorage, notification) ->
+window.Dashboard = ['$scope', 'rpc', 'events', 'changesManager', 'localStorage', ($scope, rpc, events, changesManager, localStorage) ->
 	repositoryCache = {}
 
 	$scope.search =
-		mode: localStorage.dashboardSearchMode ? 'all'
+		mode: localStorage.repositoryChangesSearchMode ? 'all'
 		query: ''
 
 	getRepositories = () ->
@@ -13,20 +13,7 @@ window.Dashboard = ['$scope', '$location', 'rpc', 'events', 'localStorage', 'not
 			else
 				$scope.repositories = repositories
 				createRepositoryCache()
-				updateChangesWithRepositoryInformation()
-
-	getChanges = () ->
-		requestParams =
-			repositoryId: 1
-			group: 'all'
-			names: null
-			startIndex: 0
-			numToRetrieve: 100
-		rpc 'changes', 'read', 'getChanges', requestParams, (error, changes) ->
-			if error? then notification.error error
-			else
-				$scope.changes = changes
-				updateChangesWithRepositoryInformation()
+				getChanges()
 
 	createRepositoryCache = () ->
 		for repository in $scope.repositories
@@ -34,41 +21,32 @@ window.Dashboard = ['$scope', '$location', 'rpc', 'events', 'localStorage', 'not
 
 	updateChangesWithRepositoryInformation = () ->
 		assert.ok repositoryCache?
-		return if not $scope.changes? or $scope.changes.length < 1
+		return if not $scope.changesManager?.getChanges()?
 
-		for change in $scope.changes
+		for change in $scope.changesManager.getChanges()
 			repository = repositoryCache[change.repository.id]
 			change.repository = repository if repository?
 
-	getChangeWithId = (id) ->
-		return (change for change in $scope.graphOptions.changes when change.id is id)[0]
+	getChanges = () ->
+		getRepositoryIds = () ->
+			return $scope.repositories.map (repository) -> return repository.id
 
-	# handleChangeFinished = (data) ->
-	# 	$scope.graphOptions.changes.push data if not getChangeWithId(data.id)?
+		$scope.changesManager = changesManager.create getRepositoryIds(), $scope.search
+		
+		$scope.changesManager.listenToEvents()
+		$scope.$on '$destroy', $scope.changesManager.stopListeningToEvents
 
-	# changeFinishedListeners = []
-	# updateChangeFinishedListeners = () ->
-	# 	changeFinishedListener.unsubscribe() for changeFinishedListener in changeFinishedListeners
-	# 	changeFinishedListeners = []
-
-	# 	return if $scope.options.duration.value isnt 'today'
-
-	# 	for repositoryId in getRepositoryIdsToDisplay()
-	# 		console.log repositoryId
-	# 		changeFinishedListener = events('repositories', 'change finished', repositoryId).setCallback(handleChangeFinished).subscribe()
-	# 		changeFinishedListeners.push changeFinishedListener
-	# $scope.$on '$destroy', () -> changeFinishedListener.unsubscribe() for changeFinishedListener in changeFinishedListeners
+		$scope.changesManager.getInitialChanges()
 
 	getRepositories()
-	getChanges()
 
-	$scope.searchModeClicked = (mode) ->
-		$scope.search.mode = mode
-		$scope.search.query = '' if mode isnt 'search'
+	$scope.$watch 'changesManager.getChanges()', () ->
+		updateChangesWithRepositoryInformation()
 
 	$scope.$watch 'search', ((newValue, oldValue) ->
 		return if newValue is oldValue
-		# getInitialChanges()
-		localStorage.dashboardSearchMode = $scope.search.mode
+		$scope.changesManager.getInitialChanges() if $scope.changesManager?
+		localStorage.repositoryChangesSearchMode = $scope.search.mode
 	), true
+
 ]
