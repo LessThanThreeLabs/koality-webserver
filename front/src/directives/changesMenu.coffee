@@ -45,7 +45,6 @@ angular.module('koality.directive.changesMenu', []).
 		restrict: 'E'
 		replace: true
 		transclude: true
-		# scope: true
 		template: '<div class="changesMenuOption">
 				<div class="changesMenuOptionContents">
 					<div class="changesMenuOptionTextContainer" ng-transclude></div>
@@ -56,7 +55,7 @@ angular.module('koality.directive.changesMenu', []).
 			</div>'
 		link: (scope, element, attributes) ->
 			attributes.$observe 'menuOptionSpinning', (spinning) ->
-				scope.spinning = if typeof spinning is 'boolean' then spinning else spinning is 'true'
+				scope.spinning = scope.$eval spinning
 
 			scope.$watch 'spinning', (newValue, oldValue) ->
 				element.find('.changesMenuOptionTextContainer').toggleClass 'spinnerTextPadding', scope.spinning
