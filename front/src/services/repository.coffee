@@ -68,6 +68,7 @@ angular.module('koality.service.repository', []).
 	]).
 	factory('currentStage', ['rpc', 'integerConverter', (rpc, integerConverter) ->
 		_repositoryId: null
+		_changeId: null
 		_id: null
 		_information: null
 		_summary: false
@@ -80,8 +81,9 @@ angular.module('koality.service.repository', []).
 			@_id = null
 			@_information = null
 
-		setId: (repositoryId, stageId) =>
+		setId: (repositoryId, changeId, stageId) =>
 			@_repositoryId = integerConverter.toInteger repositoryId
+			@_changeId = integerConverter.toInteger changeId
 			@_id = integerConverter.toInteger stageId
 			@_information = null
 			@_summary = false
@@ -94,12 +96,14 @@ angular.module('koality.service.repository', []).
 
 		setInformation: (stageInformation) =>
 			assert.ok @_repositoryId?
+			assert.ok @_changeId?
 			assert.ok @_id?
 			assert.ok stageInformation?
 			@_information = stageInformation
 
 		retrieveInformation: () =>
 			assert.ok @_repositoryId?
+			assert.ok @_changeId?
 			assert.ok @_id?
 
 			requestData =

@@ -334,10 +334,25 @@
 			}
 
 			.changesMenuRetrievingMore {
+				@keyframes changesMenuRetrievingMoreFadeIn {
+					0% { opacity: 0.0; }
+					50% { opacity: 0.0; }
+					100% { opacity: 1.0; }
+				}
+
+				@-webkit-keyframes changesMenuRetrievingMoreFadeIn {
+					0% { opacity: 0.0; }
+					50% { opacity: 0.0; }
+					100% { opacity: 1.0; }
+				}
+
 				display: block;
 				position: relative;
 				width: @menuWidth - @toothWidth;
 				height: @optionHeight;
+
+				animation: changesMenuRetrievingMoreFadeIn 1s linear;
+				-webkit-animation: changesMenuRetrievingMoreFadeIn 1s linear;
 
 				#retrievingMoreSpinner {
 					position: absolute;

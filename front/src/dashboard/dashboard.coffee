@@ -22,13 +22,11 @@ window.Dashboard = ['$scope', 'rpc', 'events', 'ChangesManager', 'localStorage',
 	updateChangesWithRepositoryInformation = () ->
 		assert.ok repositoryCache?
 
+		return if not $scope.changesManager?
+
 		for change in $scope.changesManager.getChanges()
 			repository = repositoryCache[change.repository.id]
 			change.repository = repository if repository?
-
-			if not repository?
-				console.log 'WTF NO REPOSITORY!?!' 
-				console.log change
 
 	getChanges = () ->
 		repositoryIds = $scope.repositories.map (repository) -> return repository.id
@@ -41,8 +39,9 @@ window.Dashboard = ['$scope', 'rpc', 'events', 'ChangesManager', 'localStorage',
 
 	getRepositories()
 
-	$scope.$watch 'changesManager.getChanges()', () ->
+	$scope.$watch 'changesManager.getChanges()', (() ->
 		updateChangesWithRepositoryInformation()
+	), true
 
 	$scope.$watch 'search', ((newValue, oldValue) ->
 		return if newValue is oldValue

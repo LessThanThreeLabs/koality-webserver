@@ -15,8 +15,8 @@ window.Repository = ['$scope', '$location', '$routeParams', 'rpc', 'events', 'cu
 		else
 			$scope.selectedChange.clear()
 
-		if $routeParams.stage?
-			$scope.selectedStage.setId $routeParams.repositoryId, $routeParams.stage
+		if $routeParams.change? and $routeParams.stage?
+			$scope.selectedStage.setId $routeParams.repositoryId, $routeParams.change, $routeParams.stage
 			$scope.selectedStage.retrieveInformation $routeParams.repositoryId, $routeParams.stage
 		else
 			$scope.selectedStage.clear()

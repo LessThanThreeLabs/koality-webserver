@@ -81,11 +81,14 @@
 			"/js/src/services.js",
 			"/js/src/services/socket.js",
 			"/js/src/services/repository.js",
+			"/js/src/services/changes.js",
+
 			"/js/src/directives.js",
 			"/js/src/directives/panel.js",
 			"/js/src/directives/changesMenu.js",
 			"/js/src/directives/dropdown.js",
 			"/js/src/d3Directives.js",
+			
 			"/js/src/filters.js",
 
 			"/js/src/setup.js",
