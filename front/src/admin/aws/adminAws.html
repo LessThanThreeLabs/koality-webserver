@@ -20,12 +20,12 @@
 
 				<div class="halfWidthFormElement left">
 					<label>Ready Instances</label>
-					<input type="number" ng-model="verifierPoolSettings.numWaiting" name="numWaiting" required>
+					<input type="number" ng-model="verifierPoolSettings.numWaiting" name="numWaiting" min=0 max=1000 required>
 				</div>
 
 				<div class="halfWidthFormElement right">
 					<label>Max Running Instances</label>
-					<input type="number" ng-model="verifierPoolSettings.maxRunning" name="maxRunning" required>
+					<input type="number" ng-model="verifierPoolSettings.maxRunning" name="maxRunning" min=1 max=10000 required>
 				</div>
 			</div>
 
