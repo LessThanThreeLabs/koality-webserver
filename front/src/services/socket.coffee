@@ -176,6 +176,6 @@ angular.module('koality.service.socket', []).
 				return newQuery.id
 
 
-		return create: (numChangesToRequest=20) ->
+		return create: (numChangesToRequest=100) ->
 			return new ChangesRpc numChangesToRequest
 	])
