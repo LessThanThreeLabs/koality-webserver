@@ -29,7 +29,7 @@
 						<th class="timeColumn">Commit Time</th>
 					</tr>
 
-					<tr ng-repeat="change in changesManager.getChanges()">
+					<tr ng-repeat="change in changesManager.getChanges() | orderBy:'createTime':true">
 						<td class="statusColumn gray" ng-class="{green: change.aggregateStatus == 'passed', orange: change.aggregateStatus == 'skipped', red: change.aggregateStatus == 'failed'}">
 							{{change.aggregateStatus}}
 						</td>
