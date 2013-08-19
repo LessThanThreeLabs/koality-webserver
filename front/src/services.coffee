@@ -73,10 +73,12 @@ angular.module('koality.service', []).
 			error: (text, durationInSeconds=8) -> add 'error', text, durationInSeconds
 		return toReturn
 	]).
-	factory('changesManager', ['initialState', 'changesRpc', 'events', (initialState, changesRpc, events) ->
+	factory('ChangesManager', ['initialState', 'ChangesRpc', 'events', (initialState, ChangesRpc, events) ->
 		class ChangesManager
 			_changes: []
+			_changesCache: {}
 			_gettingMoreChanges: false
+			_currentRequestId: null
 
 			_changeAddedListeners: []
 			_changeStartedListeners: []
@@ -85,6 +87,8 @@ angular.module('koality.service', []).
 			constructor: (@repositoryIds, @searchModel) ->
 				assert.ok typeof @repositoryIds is 'object'
 				assert.ok typeof @searchModel is 'object'
+
+				@changesRpc = ChangesRpc.create()
 
 			_getGroupFromMode: () =>
 				if @searchModel.mode is 'all' or @searchModel.mode is 'me'
@@ -106,7 +110,7 @@ angular.module('koality.service', []).
 				else
 					return true if @searchModel.query.trim() is ''
 
-					stingsToMatch = @searchModel.query.trim().split(' ')
+					stringsToMatch = @searchModel.query.trim().split(' ')
 						.filter((string) -> return string isnt '')
 						.map((string) -> return string.toLowerCase())
 
@@ -114,27 +118,27 @@ angular.module('koality.service', []).
 						(change.user.name.last.toLowerCase() in stringsToMatch) or
 						(change.headCommit.sha.toLowerCase() in stringsToMatch)
 
-			_getChangeWithId: (id) =>
-				return (change for change in @_changes when change.id is id)[0]
+			_changesRetrievedHandler: (error, changesData) =>
+				return if @_currentRequestId isnt changesData.requestId
 
-			_initialChangesHandler: (error, changes) =>
-				@_gettingMoreChanges = false
-				@_changes = changes
+				changesData.changes = changesData.changes.filter (change) =>
+					return not @_changesCache[change.id]?
 
-			_moreChangesHandler: (error, additionalChanges) =>
+				@_changesCache[change.id] = change for change in changesData.changes
+				@_changes = @_changes.concat changesData.changes
 				@_gettingMoreChanges = false
-				@_changes = @_changes.concat additionalChanges
 
 			_handleChangeAdded: (data) =>
-				if @_doesChangeMatchQuery(data) and not @_getChangeWithId(data.id)?
+				if @_doesChangeMatchQuery(data) and not @_changesCache[data.id]?
+					@_changesCache[data.id] = data
 					@_changes.unshift data
 
 			_handleChangeStarted: (data) =>
-				change = @_getChangeWithId data.id
+				change = @_changesCache[data.id]
 				$.extend true, change, data if change?
 
 			_handleChangeFinished: (data) =>
-				change = @_getChangeWithId data.id
+				change = @_changesCache[data.id]
 				$.extend true, change, data if change?
 
 			_addListeners: (listeners, eventType, handler) =>
@@ -150,12 +154,16 @@ angular.module('koality.service', []).
 
 			getInitialChanges: () =>
 				@_changes = []
+				@_changesCache = {}
 				@_gettingMoreChanges = true
-				changesRpc.queueRequest @repositoryIds, @_getGroupFromMode(), @_getQuery(), 0, @_initialChangesHandler
+				@_currentRequestId = @changesRpc.queueRequest @repositoryIds, @_getGroupFromMode(), @_getQuery(), 0, @_changesRetrievedHandler
 
 			getMoreChanges: () =>
+				return if @_changes.length is 0
+				return if @_gettingMoreChanges
+				return if not @changesRpc.hasMoreChangesToRequest()
 				@_gettingMoreChanges = true
-				changesRpc.queueRequest @repositoryIds, @_getGroupFromMode(), @_getQuery(), @_changes.length, @_moreChangesHandler	
+				@_currentRequestId = @changesRpc.queueRequest @repositoryIds, @_getGroupFromMode(), @_getQuery(), @_changes.length, @_changesRetrievedHandler	
 
 			getChanges: () =>
 				return @_changes

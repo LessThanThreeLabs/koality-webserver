@@ -116,7 +116,7 @@ angular.module('koality.directive', []).
 			clickHandler: '&click'
 		template: '<div class="busyButton" ng-show="(show != null && show) || (show == null)">
 				<button ng-show="!busy" ng-mouseup="click($event)" ng-click="click($event)" ng-disabled="disabled" ng-transclude></button>
-				<spinner white spinner-running="busy" class="busyButtonSpinner"></spinner>
+				<spinner white running="busy" class="busyButtonSpinner"></spinner>
 			</div>'
 		link: (scope, element, attributes) ->
 			element.css
@@ -155,7 +155,7 @@ angular.module('koality.directive', []).
 	directive('spinner', () ->
 		restrict: 'E'
 		replace: true
-		scope: running: '=spinnerRunning'
+		scope: running: '=running'
 		template: '<div class="spinnerContainer"></div>'
 		link: (scope, element, attributes) ->
 			spinner = null

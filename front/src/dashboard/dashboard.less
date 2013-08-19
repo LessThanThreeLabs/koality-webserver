@@ -128,5 +128,36 @@
 		.timeColumn {
 			width: 150px;
 		}
+
+		.retrievingMoreColumn {
+			@keyframes retrievingMoreFadeIn {
+				0% { opacity: 0.0; }
+				50% { opacity: 0.0; }
+				100% { opacity: 1.0; }
+			}
+
+			@-webkit-keyframes retrievingMoreFadeIn {
+				0% { opacity: 0.0; }
+				50% { opacity: 0.0; }
+				100% { opacity: 1.0; }
+			}
+
+			animation: retrievingMoreFadeIn 1s linear;
+			-webkit-animation: retrievingMoreFadeIn 1s linear;
+
+			.retrievingMoreMessage {
+				margin: 0 auto;
+				width: 190px;
+
+				#retrievingMoreSpinner {
+					float: left;
+					margin-top: 7px;
+				}
+
+				span {
+					float: right;
+				}
+			}
+		}
 	}
 }

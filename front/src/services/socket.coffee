@@ -99,63 +99,83 @@ angular.module('koality.service.socket', []).
 		return (resource, eventName, id) ->
 			return new EventListener resource, eventName, id
 	]).
-	factory('changesRpc', ['rpc', 'integerConverter', (rpc, integerConverter) ->
-		NUM_CHANGES_TO_REQUEST = 100
-		noMoreChangesToRequest = false
+	factory('ChangesRpc', ['rpc', 'integerConverter', (rpc, integerConverter) ->
 
-		currentQuery = null
-		currentCallback = null
-		nextQuery = null
-		nextCallback = null
+		class ChangesRpc
+			_requestIdCounter: 0
+			_noMoreChangesToRequest: false
 
-		createChangesQuery = (repositoryIds, group, query, startIndex) ->
-			repositoryIds: repositoryIds
-			group: group
-			query: query
-			startIndex: startIndex
-			numToRetrieve: NUM_CHANGES_TO_REQUEST
+			_currentQuery: null
+			_currentCallback: null
+			_nextQuery: null
+			_nextCallback: null
 
-		shiftChangesRequest = () ->
-			if not nextQuery?
-				currentQuery = null
-				currentCallback = null
-			else
-				currentQuery = nextQuery
-				currentCallback = nextCallback
-				nextQuery = null
-				nextCallback = null
+			constructor: (@_numChangesToRequest) ->
+				assert.ok typeof @_numChangesToRequest is 'number'
 
-				retrieveMoreChanges()
+			_createChangesQuery: (id, repositoryIds, group, query, startIndex) =>
+				id: id
+				repositoryIds: repositoryIds
+				group: group
+				query: query
+				startIndex: startIndex
+				numToRetrieve: @_numChangesToRequest
 
-		retrieveMoreChanges = () ->
-			assert.ok currentQuery?
-			assert.ok currentCallback?
+			_shiftChangesRequest: () =>
+				if not @_nextQuery?
+					@_currentQuery = null
+					@_currentCallback = null
+				else
+					@_currentQuery = @_nextQuery
+					@_currentCallback = @_nextCallback
+					@_nextQuery = null
+					@_nextCallback = null
 
-			noMoreChangesToRequest = false if currentQuery.startIndex is 0
+					@_retrieveMoreChanges()
 
-			if noMoreChangesToRequest
-				shiftChangesRequest()
-			else
-				rpc 'changes', 'read', 'getChanges', currentQuery, (error, changes) ->
-					noMoreChangesToRequest = changes.length < NUM_CHANGES_TO_REQUEST
-					currentCallback error, changes
-					shiftChangesRequest()
+			_retrieveMoreChanges: () =>
+				assert.ok @_currentQuery?
+				assert.ok @_currentCallback?
 
-		return queueRequest: (repositoryIds, group, query, startIndex, callback) ->
-			assert.ok typeof repositoryIds is 'object' and repositoryIds.length > 0
-			assert.ok not group? or (typeof group is 'string' and (group is 'all' or group is 'me'))
-			assert.ok not query? or (typeof query is 'string')
-			assert.ok (group? and not query?) or (not group? and query?)
-			assert.ok typeof startIndex is 'number'
-			assert.ok typeof callback is 'function'
+				@_noMoreChangesToRequest = false if @_currentQuery.startIndex is 0
 
-			repositoryIds = repositoryIds.map (repositoryId) -> return integerConverter.toInteger repositoryId
+				if @_noMoreChangesToRequest
+					@_shiftChangesRequest()
+				else
+					rpc 'changes', 'read', 'getChanges', @_currentQuery, (error, changes) =>
+						@_noMoreChangesToRequest = changes.length < @_numChangesToRequest
+						@_currentCallback error,
+							requestId: @_currentQuery.id
+							changes: changes
+						@_shiftChangesRequest()
 
-			if currentQuery?
-				nextQuery = createChangesQuery repositoryIds, group, query, startIndex
-				nextCallback = callback
-			else
-				currentQuery = createChangesQuery repositoryIds, group, query, startIndex
-				currentCallback = callback
-				retrieveMoreChanges()
+			hasMoreChangesToRequest: () =>
+				return not @_noMoreChangesToRequest
+
+			queueRequest: (repositoryIds, group, query, startIndex, callback) ->
+				assert.ok typeof repositoryIds is 'object' and repositoryIds.length > 0
+				assert.ok not group? or (typeof group is 'string' and (group is 'all' or group is 'me'))
+				assert.ok not query? or (typeof query is 'string')
+				assert.ok (group? and not query?) or (not group? and query?)
+				assert.ok typeof startIndex is 'number'
+				assert.ok typeof callback is 'function'
+
+				repositoryIds = repositoryIds.map (repositoryId) -> return integerConverter.toInteger repositoryId
+
+				newQuery = @_createChangesQuery @_requestIdCounter, repositoryIds, group, query, startIndex
+				@_requestIdCounter++
+
+				if @_currentQuery?
+					@_nextQuery = newQuery
+					@_nextCallback = callback
+				else
+					@_currentQuery = newQuery
+					@_currentCallback = callback
+					@_retrieveMoreChanges()
+
+				return newQuery.id
+
+
+		return create: (numChangesToRequest=20) ->
+			return new ChangesRpc numChangesToRequest
 	])

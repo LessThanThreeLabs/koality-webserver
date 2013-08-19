@@ -1,6 +1,6 @@
 'use strict'
 
-window.Dashboard = ['$scope', 'rpc', 'events', 'changesManager', 'localStorage', ($scope, rpc, events, changesManager, localStorage) ->
+window.Dashboard = ['$scope', 'rpc', 'events', 'ChangesManager', 'localStorage', ($scope, rpc, events, ChangesManager, localStorage) ->
 	repositoryCache = {}
 
 	$scope.search =
@@ -28,10 +28,8 @@ window.Dashboard = ['$scope', 'rpc', 'events', 'changesManager', 'localStorage',
 			change.repository = repository if repository?
 
 	getChanges = () ->
-		getRepositoryIds = () ->
-			return $scope.repositories.map (repository) -> return repository.id
-
-		$scope.changesManager = changesManager.create getRepositoryIds(), $scope.search
+		repositoryIds = $scope.repositories.map (repository) -> return repository.id
+		$scope.changesManager = ChangesManager.create repositoryIds, $scope.search
 		
 		$scope.changesManager.listenToEvents()
 		$scope.$on '$destroy', $scope.changesManager.stopListeningToEvents

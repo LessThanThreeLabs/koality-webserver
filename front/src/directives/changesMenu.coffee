@@ -33,6 +33,12 @@ angular.module('koality.directive.changesMenu', []).
 		transclude: true
 		template: '<div class="changesMenuEmptyMessage" ng-transclude></div>'
 	).
+	directive('changesMenuRetrievingMore', () ->
+		restrict: 'E'
+		replace: true
+		transclude: true
+		template: '<div class="changesMenuRetrievingMore" ng-transclude></div>'
+	).
 	directive('changesMenuOption', () ->
 		restrict: 'E'
 		replace: true
@@ -41,7 +47,7 @@ angular.module('koality.directive.changesMenu', []).
 				<div class="changesMenuOptionContents">
 					<div class="changesMenuOptionTextContainer" ng-transclude></div>
 					<div class="changesMenuOptionArrow"></div>
-					<spinner class="changesMenuOptionSpinner" spinner-running="spinning"></spinner>
+					<spinner class="changesMenuOptionSpinner" running="spinning"></spinner>
 				</div>
 				<div class="changesMenuOptionTooth"></div>
 			</div>'

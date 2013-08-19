@@ -1,6 +1,6 @@
 'use strict'
 
-window.RepositoryChanges = ['$scope', 'changesManager', 'currentRepository', 'currentChange', 'localStorage', ($scope, changesManager, currentRepository, currentChange, localStorage) ->
+window.RepositoryChanges = ['$scope', 'ChangesManager', 'currentRepository', 'currentChange', 'localStorage', ($scope, ChangesManager, currentRepository, currentChange, localStorage) ->
 	$scope.selectedRepository = currentRepository
 	$scope.selectedChange = currentChange
 
@@ -8,7 +8,7 @@ window.RepositoryChanges = ['$scope', 'changesManager', 'currentRepository', 'cu
 		mode: localStorage.repositoryChangesSearchMode ? 'all'
 		query: ''
 
-	$scope.changesManager = changesManager.create [$scope.selectedRepository.getId()], $scope.search
+	$scope.changesManager = ChangesManager.create [$scope.selectedRepository.getId()], $scope.search
 	
 	$scope.changesManager.listenToEvents()
 	$scope.$on '$destroy', $scope.changesManager.stopListeningToEvents

@@ -58,6 +58,15 @@
 							{{change.createTime | date:'MM/dd hh:mm:ss a'}}
 						</td>
 					</tr>
+
+					<tr ng-if="changesManager.isGettingMoreChanges()">
+						<td class="retrievingMoreColumn" colspan="6">
+							<div class="retrievingMoreMessage">
+								<spinner id="retrievingMoreSpinner" running="changesManager.isGettingMoreChanges()"></spinner>
+								<span>Retrieving more changes...</span>
+							</div>
+						</td>
+					</tr>
 				</table>
 			</div>
 		</panel-body>
