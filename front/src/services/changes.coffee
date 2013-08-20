@@ -141,12 +141,13 @@ angular.module('koality.service.changes', []).
 				$.extend true, stage, data if stage?
 
 			setChangeId: (changeId) =>
-				assert.ok typeof changeId is 'number'
+				assert.ok not changeId? or typeof changeId is 'number'
 
 				if @_changeId isnt changeId
 					@_stages = []
 					@_stagesCache = {}					
 					@_changeId = changeId
+					@stopListeningToEvents()
 
 			retrieveStages: () =>
 				assert.ok @_changeId?

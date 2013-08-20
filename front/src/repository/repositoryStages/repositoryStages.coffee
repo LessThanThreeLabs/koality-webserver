@@ -72,8 +72,10 @@ window.RepositoryStages = ['$scope', '$routeParams', 'StagesManager', 'currentRe
 		$scope.selectedStage.setSummary() if newChangeId isnt oldChangeId
 
 		$scope.stagesManager.setChangeId $scope.selectedChange.getId()
-		$scope.stagesManager.listenToEvents()
-		$scope.stagesManager.retrieveStages()
+
+		if $scope.selectedChange.getId()?
+			$scope.stagesManager.listenToEvents()
+			$scope.stagesManager.retrieveStages()
 
 	$scope.$watch 'stagesManager.getStages()', ((newValue, oldValue) ->
 		return if newValue is oldValue
