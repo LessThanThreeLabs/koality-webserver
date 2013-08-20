@@ -1,12 +1,11 @@
 'use strict'
 
-window.RepositoryStageDetails = ['$scope', '$location', 'rpc', 'events', 'xmlParser', 'integerConverter', 'currentRepository', 'currentChange', 'currentStage', ($scope, $location, rpc, events, xmlParser, integerConverter, currentRepository, currentChange, currentStage) ->
+window.RepositoryStageDetails = ['$scope', '$location', 'rpc', 'events', 'xunit', 'stringHasher', 'integerConverter', 'currentRepository', 'currentChange', 'currentStage', ($scope, $location, rpc, events, xunit, stringHasher, integerConverter, currentRepository, currentChange, currentStage) ->
 	$scope.selectedRepository = currentRepository
 	$scope.selectedChange = currentChange
 	$scope.selectedStage = currentStage
 
-	$scope.lines = null
-	$scope.linesCache = {}
+	$scope.lines = {}
 
 	$scope.jUnitOrderByPredicate = 'status'
 	$scope.jUnitOrderByReverse = false
@@ -26,7 +25,7 @@ window.RepositoryStageDetails = ['$scope', '$location', 'rpc', 'events', 'xmlPar
 	retrieveLines = () ->
 		assert.ok $scope.outputType is 'lines'
 
-		$scope.lines = null
+		$scope.lines = {}
 		return if not $scope.selectedStage.getId()?
 		
 		$scope.spinnerOn = true
@@ -34,89 +33,40 @@ window.RepositoryStageDetails = ['$scope', '$location', 'rpc', 'events', 'xmlPar
 			$scope.spinnerOn = false
 			processLines lines
 
-			# $scope.lines ?= []
-			# for lineNumber, lineText of lines
-			# 	addLine lineNumber, lineText
+	retrieveXUnitOutput = () ->
+		assert.ok $scope.outputType is 'xunit'
 
-	retrieveJUnitOutput = () ->
-		assert.ok $scope.outputType is 'junit'
-
-		$scope.lines = []
-		$scope.linesCache = {}
+		$scope.lines = {}
 		return if not $scope.selectedStage.getId()?
 
 		$scope.spinnerOn = true
-		rpc 'buildConsoles', 'read', 'getJUnit', id: $scope.selectedStage.getId(), (error, junitOutputs) ->
+		rpc 'buildConsoles', 'read', 'getJUnit', id: $scope.selectedStage.getId(), (error, xunitOutputs) ->
 			$scope.spinnerOn = false
-
-			getArrayOfTestSuites = () ->
-				testSuites = []
-				for junitOutput in junitOutputs
-					parsed = xmlParser.parse junitOutput
-					parsedTestSuites = if parsed.testsuites then parsed.testsuites.testsuite else parsed.testsuite
-
-					if parsedTestSuites instanceof Array
-						testSuites = testSuites.concat parsedTestSuites
-					else
-						testSuites.push parsedTestSuites
-
-				return testSuites
-
-			getAllSanitizedTestCases = (testSuites) ->
-				sanitizeTestCase = (testCase) ->
-					name: testCase.__name
-					time: testCase.__time
-					status: if testCase.failure? or testCase['system-err']? then 'failed' else 'passed'
-					failure: testCase.failure?.text if testCase.failure?.text?
-					error: testCase['system-err'] if testCase['system-err']?
-
-				testCases = []
-				for testSuite in testSuites
-					if testSuite.testcase instanceof Array
-						testCases = testCases.concat (sanitizeTestCase testCase for testCase in testSuite.testcase)
-					else
-						testCases.push sanitizeTestCase testSuite.testcase
-
-				return testCases
-
-			testSuites = getArrayOfTestSuites()
-			testCases = getAllSanitizedTestCases testSuites
-			$scope.junit = testCases
+			$scope.xunit = xunit.getTestCases xunitOutputs
 
 	handleExportUrisAdded = (data) ->
 		$scope.exportUris ?= []
 		$scope.exportUris = $scope.exportUris.concat data.uris
 
-	# addLine = (lineNumber, lineText) ->
-	# 	$scope.lines[lineNumber-1] = lineText
-
 	handleLinesAdded = (data) ->
-		# $scope.lines ?= []
-		# for lineNumber, lineText of data
-		# 	addLine lineNumber, lineText
-
 		processLines data
 
-	processLines = (lines) ->
-		$scope.lines ?= []
-		$scope.linesCache ?= {}
-		for lineNumber, lineText of lines
+	processLines = (data) ->
+		for lineNumber, lineText of data
 			lineNumber = integerConverter.toInteger lineNumber
+			lineHash = stringHasher.hash lineText
 
-			if $scope.linesCache[lineNumber]?
-				$scope.linesCache[lineNumber].text = lineText
+			if $scope.lines[lineNumber]?
+				$scope.lines[lineNumber].text = lineText
+				$scope.lines[lineNumber].hash = lineHash
 			else
-				lineToAdd = 
-					number: lineNumber
+				$scope.lines[lineNumber] =
 					text: lineText
-				$scope.lines.push lineToAdd
-				$scope.linesCache[lineNumber] = lineToAdd
+					hash: lineHash
 
 	clearOutput = () ->
-		$scope.outputType = null
-		$scope.lines = []
-		$scope.linesCache = {}
-		$scope.junit = null
+		$scope.lines = {}
+		$scope.xunit = null
 
 	addedExportUrisEvents = null
 	updateExportUrisAddedListener = () ->
@@ -138,28 +88,25 @@ window.RepositoryStageDetails = ['$scope', '$location', 'rpc', 'events', 'xmlPar
 			addedLineEvents = events('buildConsoles', 'new output', $scope.selectedStage.getId()).setCallback(handleLinesAdded).subscribe()
 	$scope.$on '$destroy', () -> addedLineEvents.unsubscribe() if addedLineEvents?
 
-	$scope.selectOutputType = (outputType) =>
-		return if $scope.outputType is outputType
-
+	$scope.$watch 'outputType', () ->
+		console.log 'this does not have a . , so angular will probably mess up when setting this variable. Should create state object or something...'
 		clearOutput()
-		$scope.outputType = outputType
 
 		updateAddedLineListener()
 		if $scope.outputType is 'lines' then retrieveLines()
-		if $scope.outputType is 'junit' then retrieveJUnitOutput()
+		if $scope.outputType is 'xunit' then retrieveXUnitOutput()
 
 	$scope.$watch 'selectedChange.getId()', () ->
 		updateExportUrisAddedListener()
 		retrieveCurrentChangeExportUris()
 
 	$scope.$watch 'selectedStage.getId()', () ->
-		clearOutput()
-		updateAddedLineListener()
+		$scope.outputType = null
 
 	$scope.$watch 'selectedStage.getInformation()', (() ->
 		return if not $scope.selectedStage.getInformation()?
 
-		if $scope.selectedStage.getInformation().hasJUnit then $scope.selectOutputType 'junit'
-		else $scope.selectOutputType 'lines'
+		if $scope.selectedStage.getInformation().hasXUnit then $scope.outputType = 'xunit'
+		else $scope.outputType = 'lines'
 	), true
 ]

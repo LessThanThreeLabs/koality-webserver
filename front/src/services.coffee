@@ -43,6 +43,50 @@ angular.module('koality.service', []).
 			json = $window.xml2json dom, ''
 			return JSON.parse json
 	]).
+	factory('xunit', ['xmlParser', (xmlParser) ->
+		return getTestCases: (xunitOutputs) ->
+			getArrayOfTestSuites = () ->
+				testSuites = []
+				for xunitOutput in xunitOutputs
+					parsed = xmlParser.parse xunitOutput
+					parsedTestSuites = if parsed.testsuites then parsed.testsuites.testsuite else parsed.testsuite
+
+					if parsedTestSuites instanceof Array
+						testSuites = testSuites.concat parsedTestSuites
+					else
+						testSuites.push parsedTestSuites
+
+				return testSuites
+
+			getAllSanitizedTestCases = (testSuites) ->
+				sanitizeTestCase = (testCase) ->
+					name: testCase.__name
+					time: testCase.__time
+					status: if testCase.failure? or testCase['system-err']? then 'failed' else 'passed'
+					failure: testCase.failure?.text if testCase.failure?.text?
+					error: testCase['system-err'] if testCase['system-err']?
+
+				testCases = []
+				for testSuite in testSuites
+					if testSuite.testcase instanceof Array
+						testCases = testCases.concat (sanitizeTestCase testCase for testCase in testSuite.testcase)
+					else
+						testCases.push sanitizeTestCase testSuite.testcase
+
+				return testCases
+
+			testSuites = getArrayOfTestSuites()
+			testCases = getAllSanitizedTestCases testSuites
+			retrun testCases
+	]).
+	factory('stringHasher', [() ->
+		return hash: (text) =>
+			return null if typeof text isnt 'string'
+
+			hash = 0
+			hash += text.charCodeAt index for index in [0...text.length]
+			return hash
+	]).
 	factory('cookieExtender', ['$http', ($http) ->
 		return extendCookie: (callback) ->
 			successHandler = (data, status, headers, config) ->

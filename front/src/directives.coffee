@@ -219,7 +219,7 @@ angular.module('koality.directive', []).
 	directive('consoleText', ['ansiparse', (ansiparse) ->
 		restrict: 'E'
 		replace: true
-		scope: lines: '=consoleTextLines'
+		scope: lines: '=lines'
 		template: '<ol class="prettyConsoleText"></ol>'
 		link: (scope, element, attributes) ->
 			addLine = (number, line="", linePreviouslyExisted) ->
@@ -232,17 +232,19 @@ angular.module('koality.directive', []).
 					element.append '<li>' + html + '</li>'
 
 			handleLinesUpdate = (newValue=[], oldValue=[]) ->
-				if newValue.length is 0
-					element.empty()
-				else
-					for line, index in newValue
-						if newValue[index] isnt oldValue[index] or index >= oldValue.length
-							# It's possible that we get an event for line X although
-							# lines [0, x) haven't loaded. When lines [0, x) come in,
-							# we want those lines to replace the old lines [0, x),
-							# which are null
-							replacePrevious = oldValue[index]? or oldValue.length > index
-							addLine index+1, line, replacePrevious
+				console.log 'lines updated'
+				console.log newValue
+				# if newValue.length is 0
+				# 	element.empty()
+				# else
+				# 	for line, index in newValue
+				# 		if newValue[index] isnt oldValue[index] or index >= oldValue.length
+				# 			# It's possible that we get an event for line X although
+				# 			# lines [0, x) haven't loaded. When lines [0, x) come in,
+				# 			# we want those lines to replace the old lines [0, x),
+				# 			# which are null
+				# 			replacePrevious = oldValue[index]? or oldValue.length > index
+				# 			addLine index+1, line, replacePrevious
 
 			scope.$watch 'lines', handleLinesUpdate, true
 	])

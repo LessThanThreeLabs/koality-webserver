@@ -10,8 +10,8 @@
 			</div>
 
 			<div class="right" ng-show="selectedStage.getInformation() != null && outputType != null">
-				<a ng-click="selectOutputType('lines')" ng-show="outputType != 'lines'">Show Text</a>
-				<a ng-click="selectOutputType('junit')" ng-show="outputType != 'junit' && selectedStage.getInformation().hasJUnit">Show JUnit</a>
+				<a ng-click="outputType = 'lines'" ng-show="outputType != 'lines'">Show Text</a>
+				<a ng-click="outputType = 'junit'" ng-show="outputType != 'junit' && selectedStage.getInformation().hasJUnit">Show JUnit</a>
 			</div>
 		</panel-header>
 
@@ -55,12 +55,7 @@
 
 			<div id="lines" ng-show="outputType == 'lines'">
 				<div auto-scroll-to-bottom="lines" auto-scroll-to-bottom-buffer="40" start-at-bottom fading-content>
-					<!-- <console-text class="consoleText" console-text-lines="lines"></console-text> -->
-					<ol class="prettyConsoleText">
-						<li ng-repeat="line in lines | orderBy:'number'">
-							<span class="prettyConsoleTextLineText" ng-bind-html="line.text | ansi"></span>
-						</li>
-					</ol>
+					<console-text class="consoleText" lines="lines"></console-text>
 				</div>
 			</div>
 
