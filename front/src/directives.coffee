@@ -177,8 +177,8 @@ angular.module('koality.directive', []).
 				top: 'auto'
 				left: 'auto'
 
-			scope.$watch 'running', (newValue, oldValue) ->
-				if newValue then startSpinner() else stopSpinner()
+			scope.$watch 'running', () ->
+				if scope.running then startSpinner() else stopSpinner()
 
 			startSpinner = () ->
 				spinner = new Spinner(spinnerOptions).spin(element[0])

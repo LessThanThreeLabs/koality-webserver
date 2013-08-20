@@ -9,7 +9,7 @@
 				<span>summary</span>
 			</changes-menu-option>
 
-			<changes-menu-option ng-repeat="stage in stagesManager.getStages() | filter:shouldStageBeVisible | orderBy:[stageSort, 'name']" menu-option-spinning="stage.status == 'running'" ng-click="selectStage(stage)" ng-class="{selected: stage.id == selectedStage.getId(), green: stage.status == 'passed', red: stage.status == 'failed'}">
+			<changes-menu-option ng-repeat="stage in stagesManager.getStages() | filter:shouldStageBeVisible | orderBy:[stageSort, 'name']" menu-option-spinning="{{stage.status == 'running'}}" ng-click="selectStage(stage)" ng-class="{selected: stage.id == selectedStage.getId(), green: stage.status == 'passed', red: stage.status == 'failed'}">
 				<span>{{stage.name}}</span>
 			</changes-menu-option>
 

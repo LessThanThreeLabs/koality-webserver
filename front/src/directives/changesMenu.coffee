@@ -53,8 +53,9 @@ angular.module('koality.directive.changesMenu', []).
 			</div>'
 		link: (scope, element, attributes) ->
 			attributes.$observe 'menuOptionSpinning', (spinning) ->
-				scope.spinning = scope.$eval spinning
+				# typeof spinning is 'string'...
+				scope.spinning = spinning is 'true'
 
-			scope.$watch 'spinning', (newValue, oldValue) ->
+			scope.$watch 'spinning', () ->
 				element.find('.changesMenuOptionTextContainer').toggleClass 'spinnerTextPadding', scope.spinning
 	)
