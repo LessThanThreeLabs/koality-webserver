@@ -25,4 +25,9 @@ angular.module('koality.filter', ['koality.service']).
 		(input) ->
 			return null if not input? or typeof input isnt 'string'
 			return input.split('\n')[0]
+	]).
+	filter('ansi', ['ansiparse', (ansiparse) ->
+		(input) ->
+			return null if not input? or typeof input isnt 'string'
+			return ansiParsedLine = ansiparse.parse input
 	])

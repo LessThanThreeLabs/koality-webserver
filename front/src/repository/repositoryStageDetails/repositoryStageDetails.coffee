@@ -1,12 +1,15 @@
 'use strict'
 
-window.RepositoryStageDetails = ['$scope', '$location', 'rpc', 'events', 'xmlParser', 'currentRepository', 'currentChange', 'currentStage', ($scope, $location, rpc, events, xmlParser, currentRepository, currentChange, currentStage) ->
-	$scope.jUnitOrderByPredicate = 'status'
-	$scope.jUnitOrderByReverse = false
-
+window.RepositoryStageDetails = ['$scope', '$location', 'rpc', 'events', 'xmlParser', 'integerConverter', 'currentRepository', 'currentChange', 'currentStage', ($scope, $location, rpc, events, xmlParser, integerConverter, currentRepository, currentChange, currentStage) ->
 	$scope.selectedRepository = currentRepository
 	$scope.selectedChange = currentChange
 	$scope.selectedStage = currentStage
+
+	$scope.lines = null
+	$scope.linesCache = {}
+
+	$scope.jUnitOrderByPredicate = 'status'
+	$scope.jUnitOrderByReverse = false
 
 	updateUrl = () ->
 		$scope.currentUrl = $location.absUrl()
@@ -29,15 +32,17 @@ window.RepositoryStageDetails = ['$scope', '$location', 'rpc', 'events', 'xmlPar
 		$scope.spinnerOn = true
 		rpc 'buildConsoles', 'read', 'getLines', id: $scope.selectedStage.getId(), (error, lines) ->
 			$scope.spinnerOn = false
+			processLines lines
 
-			$scope.lines ?= []
-			for lineNumber, lineText of lines
-				addLine lineNumber, lineText
+			# $scope.lines ?= []
+			# for lineNumber, lineText of lines
+			# 	addLine lineNumber, lineText
 
 	retrieveJUnitOutput = () ->
 		assert.ok $scope.outputType is 'junit'
 
-		$scope.lines = null
+		$scope.lines = []
+		$scope.linesCache = {}
 		return if not $scope.selectedStage.getId()?
 
 		$scope.spinnerOn = true
@@ -82,17 +87,35 @@ window.RepositoryStageDetails = ['$scope', '$location', 'rpc', 'events', 'xmlPar
 		$scope.exportUris ?= []
 		$scope.exportUris = $scope.exportUris.concat data.uris
 
-	addLine = (lineNumber, lineText) ->
-		$scope.lines[lineNumber-1] = lineText
+	# addLine = (lineNumber, lineText) ->
+	# 	$scope.lines[lineNumber-1] = lineText
 
 	handleLinesAdded = (data) ->
+		# $scope.lines ?= []
+		# for lineNumber, lineText of data
+		# 	addLine lineNumber, lineText
+
+		processLines data
+
+	processLines = (lines) ->
 		$scope.lines ?= []
-		for lineNumber, lineText of data
-			addLine lineNumber, lineText
+		$scope.linesCache ?= {}
+		for lineNumber, lineText of lines
+			lineNumber = integerConverter.toInteger lineNumber
+
+			if $scope.linesCache[lineNumber]?
+				$scope.linesCache[lineNumber].text = lineText
+			else
+				lineToAdd = 
+					number: lineNumber
+					text: lineText
+				$scope.lines.push lineToAdd
+				$scope.linesCache[lineNumber] = lineToAdd
 
 	clearOutput = () ->
 		$scope.outputType = null
-		$scope.lines = null
+		$scope.lines = []
+		$scope.linesCache = {}
 		$scope.junit = null
 
 	addedExportUrisEvents = null

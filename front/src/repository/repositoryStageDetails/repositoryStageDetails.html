@@ -55,7 +55,12 @@
 
 			<div id="lines" ng-show="outputType == 'lines'">
 				<div auto-scroll-to-bottom="lines" auto-scroll-to-bottom-buffer="40" start-at-bottom fading-content>
-					<console-text class="consoleText" console-text-lines="lines"></console-text>
+					<!-- <console-text class="consoleText" console-text-lines="lines"></console-text> -->
+					<ol class="prettyConsoleText">
+						<li ng-repeat="line in lines | orderBy:'number'">
+							<span class="prettyConsoleTextLineText" ng-bind-html="line.text | ansi"></span>
+						</li>
+					</ol>
 				</div>
 			</div>
 
