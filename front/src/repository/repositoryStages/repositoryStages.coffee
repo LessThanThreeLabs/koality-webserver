@@ -28,16 +28,16 @@ window.RepositoryStages = ['$scope', '$routeParams', 'StagesManager', 'currentRe
 
 	bringFailedMirrorStageToForeground = () ->
 		return if not $scope.selectedStage.getId()?
-
-		selectedStageInformation = $scope.selectedStage.getInformation()
-		return if selectedStageInformation.status is 'failed'
+		return if $scope.selectedStage.getInformation().status is 'failed'
 
 		mirrorsOfSelectedStage = $scope.stagesManager.getStages().filter (stage) ->
-			return stage.type is selectedStageInformation.type and stage.name is selectedStageInformation.name
+			return isMirrorStage stage, $scope.selectedStage.getInformation()
 
 		for mirrorStage in mirrorsOfSelectedStage
+			continue if $scope.selectedStage.getId() is mirrorStage.id
+
 			if mirrorStage.status is 'failed'
-				$scope.selectedStage.setId mirrorStage.id
+				$scope.selectedStage.setId $scope.selectedRepository.getId(), $scope.selectedChange.getId(), mirrorStage.id
 				$scope.selectedStage.setInformation mirrorStage
 				return
 
