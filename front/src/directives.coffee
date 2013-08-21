@@ -221,7 +221,6 @@ angular.module('koality.directive', []).
 		replace: true
 		scope: lines: '=lines'
 		template: '<ol class="prettyConsoleText"></ol>'
-		# template: '<ol></ol>'
 		link: (scope, element, attributes) ->
 			lineNumberBounds = null
 
@@ -237,15 +236,19 @@ angular.module('koality.directive', []).
 
 				return {min: minLineNumber, max: maxLineNumber}
 
+			setStartingNumber = (number) ->
+				element.css 'counter-reset', 'item ' + (number - 1)
+
 			clearLines = () ->
 				lineNumberBounds = null
 				element.empty()
+				setStartingNumber 1
 
 			renderInitialLines = (lines) ->
 				lineNumberBounds = getLineNumberBounds lines
 				return if not lineNumberBounds?
 
-				element.attr 'start', lineNumberBounds.min
+				setStartingNumber lineNumberBounds.min
 
 				for index in [lineNumberBounds.min..lineNumberBounds.max]
 					ansiParsedLine = ansiparse.parse lines[index].text
@@ -254,7 +257,7 @@ angular.module('koality.directive', []).
 
 			updateLines = (newLines, oldLines) ->
 				newLineNumberBounds = getLineNumberBounds newLines
-				element.attr 'start', newLineNumberBounds.min
+				setStartingNumber newLineNumberBounds.min
 
 				addLinesThatAreBeforeExistingLines = () ->
 					return if newLineNumberBounds.min >= lineNumberBounds.min
