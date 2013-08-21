@@ -7,8 +7,6 @@
 				<span ng-show="selectedStage.isSkipped()">skipped</span>
 				<span ng-show="selectedStage.isMerge()">merge</span>
 				<span ng-show="selectedStage.isDebug()">debug</span>
-
-				{{output.type}}
 			</div>
 
 			<div class="right" ng-show="selectedStage.getInformation() != null && output.type != null">

@@ -85,12 +85,16 @@ angular.module('koality.directive', []).
 			scrollBottomBuffer = integerConverter.toInteger(attributes.autoScrollToBottomBuffer) ? 20
 
 			scope.$watch attributes.autoScrollToBottom, ((newValue, oldValue) ->
-				if oldValue? and oldValue.length > 0
+				isFirstRender = () ->
+					return not oldValue? or oldValue.length is 0 or Object.keys(oldValue).length is 0
+
+				if isFirstRender()
+					scrollToBottom() if attributes.startAtBottom?
+				else
 					isScrolledToBottomIsh = element[0].scrollTop + element[0].offsetHeight + scrollBottomBuffer >= element[0].scrollHeight
 					scrollToBottom() if isScrolledToBottomIsh
-				else
-					scrollToBottom() if attributes.startAtBottom?
 			), true
+
 	]).
 	directive('onScrollToBottom', [() ->
 		restrict: 'A'
