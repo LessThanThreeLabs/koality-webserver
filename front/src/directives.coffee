@@ -221,30 +221,82 @@ angular.module('koality.directive', []).
 		replace: true
 		scope: lines: '=lines'
 		template: '<ol class="prettyConsoleText"></ol>'
+		# template: '<ol></ol>'
 		link: (scope, element, attributes) ->
-			addLine = (number, line="", linePreviouslyExisted) ->
-				ansiParsedLine = ansiparse.parse line
-				html = "<span class='prettyConsoleTextLineText textSelectable'>#{ansiParsedLine}</span>"
+			lineNumberBounds = null
 
-				if linePreviouslyExisted
-					element.find("li:nth-child(#{number})").html html
-				else
-					element.append '<li>' + html + '</li>'
+			getLineNumberBounds = (lines) ->
+				return null if Object.keys(lines).length is 0
+
+				minLineNumber = Number.MAX_VALUE
+				maxLineNumber = Number.MIN_VALUE
+
+				for lineNumber in Object.keys lines
+					minLineNumber = Math.min minLineNumber, lineNumber
+					maxLineNumber = Math.max maxLineNumber, lineNumber
+
+				return {min: minLineNumber, max: maxLineNumber}
+
+			clearLines = () ->
+				lineNumberBounds = null
+				element.empty()
+
+			renderInitialLines = (lines) ->
+				lineNumberBounds = getLineNumberBounds lines
+				return if not lineNumberBounds?
+
+				element.attr 'start', lineNumberBounds.min
+
+				for index in [lineNumberBounds.min..lineNumberBounds.max]
+					ansiParsedLine = ansiparse.parse lines[index].text
+					html = "<span class='prettyConsoleTextLineText' number=#{index}>#{ansiParsedLine}</span>"
+					element.append "<li>#{html}</li>"
+
+			updateLines = (newLines, oldLines) ->
+				newLineNumberBounds = getLineNumberBounds newLines
+				element.attr 'start', newLineNumberBounds.min
+
+				addLinesThatAreBeforeExistingLines = () ->
+					return if newLineNumberBounds.min >= lineNumberBounds.min
+
+					for index in [newLineNumberBounds.min...lineNumberBounds.min]
+						ansiParsedLine = ansiparse.parse newLines[index]?.text ? ''
+						html = "<span class='prettyConsoleTextLineText' number=#{index}>#{ansiParsedLine}</span>"
+
+						if index is newLineNumberBounds.min
+							element.prepend "<li>#{html}</li>"
+						else
+							previousChildIndex = index - newLineNumberBounds.min
+							element.find("li:nth-child(#{previousChildIndex})").after "<li>#{html}</li>"
+
+				updateLinesThatAlreadyExist = () ->
+					for index in [lineNumberBounds.min..lineNumberBounds.max]
+						continue if oldLines[index]?.hash? and oldLines[index]?.hash is newLines[index]?.hash
+
+						ansiParsedLine = ansiparse.parse newLines[index]?.text ? ''
+						element.find(".prettyConsoleTextLineText[number='#{index}']").html ansiParsedLine
+
+				addLinesThatAreAfterExistingLines = () ->
+					return if newLineNumberBounds.max <= lineNumberBounds.max
+
+					for index in [(lineNumberBounds.max + 1)..newLineNumberBounds.max]
+						ansiParsedLine = ansiparse.parse newLines[index]?.text ? ''
+						html = "<span class='prettyConsoleTextLineText' number=#{index}>#{ansiParsedLine}</span>"
+						element.append "<li>#{html}</li>"
+
+				addLinesThatAreBeforeExistingLines()
+				updateLinesThatAlreadyExist()
+				addLinesThatAreAfterExistingLines()
+
+				lineNumberBounds = newLineNumberBounds
 
 			handleLinesUpdate = (newValue=[], oldValue=[]) ->
-				console.log 'lines updated'
-				console.log newValue
-				# if newValue.length is 0
-				# 	element.empty()
-				# else
-				# 	for line, index in newValue
-				# 		if newValue[index] isnt oldValue[index] or index >= oldValue.length
-				# 			# It's possible that we get an event for line X although
-				# 			# lines [0, x) haven't loaded. When lines [0, x) come in,
-				# 			# we want those lines to replace the old lines [0, x),
-				# 			# which are null
-				# 			replacePrevious = oldValue[index]? or oldValue.length > index
-				# 			addLine index+1, line, replacePrevious
+				if Object.keys(newValue).length is 0
+					clearLines()
+				else if Object.keys(oldValue).length is 0
+					renderInitialLines newValue
+				else
+					updateLines newValue, oldValue
 
 			scope.$watch 'lines', handleLinesUpdate, true
 	])

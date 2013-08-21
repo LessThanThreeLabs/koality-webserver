@@ -77,7 +77,7 @@ angular.module('koality.service', []).
 
 			testSuites = getArrayOfTestSuites()
 			testCases = getAllSanitizedTestCases testSuites
-			retrun testCases
+			return testCases
 	]).
 	factory('stringHasher', [() ->
 		return hash: (text) =>

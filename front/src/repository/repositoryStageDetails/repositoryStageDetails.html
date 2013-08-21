@@ -7,11 +7,13 @@
 				<span ng-show="selectedStage.isSkipped()">skipped</span>
 				<span ng-show="selectedStage.isMerge()">merge</span>
 				<span ng-show="selectedStage.isDebug()">debug</span>
+
+				{{output.type}}
 			</div>
 
-			<div class="right" ng-show="selectedStage.getInformation() != null && outputType != null">
-				<a ng-click="outputType = 'lines'" ng-show="outputType != 'lines'">Show Text</a>
-				<a ng-click="outputType = 'junit'" ng-show="outputType != 'junit' && selectedStage.getInformation().hasJUnit">Show JUnit</a>
+			<div class="right" ng-show="selectedStage.getInformation() != null && output.type != null">
+				<a ng-click="output.type = 'lines'" ng-show="output.type != 'lines'">Show Text</a>
+				<a ng-click="output.type = 'xunit'" ng-show="output.type != 'xunit' && selectedStage.getInformation().hasXUnit">Show JUnit</a>
 			</div>
 		</panel-header>
 
@@ -53,13 +55,13 @@
 				</table>
 			</div>
 
-			<div id="lines" ng-show="outputType == 'lines'">
-				<div auto-scroll-to-bottom="lines" auto-scroll-to-bottom-buffer="40" start-at-bottom fading-content>
-					<console-text class="consoleText" lines="lines"></console-text>
+			<div id="lines" ng-show="output.type == 'lines'">
+				<div auto-scroll-to-bottom="output.lines" auto-scroll-to-bottom-buffer="40" start-at-bottom fading-content>
+					<console-text class="consoleText" lines="output.lines"></console-text>
 				</div>
 			</div>
 
-			<div id="junit" ng-show="outputType == 'junit'">
+			<div id="xunit" ng-show="output.type == 'xunit'">
 				<div fading-content>
 					<table class="delineated">
 						<tr>
@@ -76,7 +78,7 @@
 							Duration
 						</th>
 					</tr>
-						<tr ng-repeat="testCase in junit | orderBy:jUnitOrderByPredicate:jUnitOrderByReverse" ng-class="{red: testCase.status == 'failed'}" ng-click="testCase.showMore = !testCase.showMore">
+						<tr ng-repeat="testCase in output.xunit.testCases | orderBy:output.xunit.orderByPredicate:output.xunit.orderByReverse" ng-class="{red: testCase.status == 'failed'}" ng-click="testCase.showMore = !testCase.showMore">
 							<td class="nameColumn" ng-class="{selectable: testCase.failure != null || testCase.error != null}">
 								{{testCase.name}}
 								<div class="failureText" ng-show="testCase.showMore && testCase.failure != null">

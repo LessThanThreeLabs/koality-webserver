@@ -5,10 +5,13 @@ window.RepositoryStageDetails = ['$scope', '$location', 'rpc', 'events', 'xunit'
 	$scope.selectedChange = currentChange
 	$scope.selectedStage = currentStage
 
-	$scope.lines = {}
-
-	$scope.jUnitOrderByPredicate = 'status'
-	$scope.jUnitOrderByReverse = false
+	$scope.output =
+		type: null
+		lines: {}
+		xunit:
+			testCases: []
+			orderByPredicate: 'status'
+			orderByReverse: false
 
 	updateUrl = () ->
 		$scope.currentUrl = $location.absUrl()
@@ -23,9 +26,9 @@ window.RepositoryStageDetails = ['$scope', '$location', 'rpc', 'events', 'xunit'
 			$scope.exportUris = uris
 
 	retrieveLines = () ->
-		assert.ok $scope.outputType is 'lines'
+		assert.ok $scope.output.type is 'lines'
 
-		$scope.lines = {}
+		$scope.output.lines = {}
 		return if not $scope.selectedStage.getId()?
 		
 		$scope.spinnerOn = true
@@ -34,13 +37,13 @@ window.RepositoryStageDetails = ['$scope', '$location', 'rpc', 'events', 'xunit'
 			processLines lines
 
 	retrieveXUnitOutput = () ->
-		assert.ok $scope.outputType is 'xunit'
+		assert.ok $scope.output.type is 'xunit'
 
-		$scope.lines = {}
+		$scope.output.xunit.testCases = []
 		return if not $scope.selectedStage.getId()?
 
 		$scope.spinnerOn = true
-		rpc 'buildConsoles', 'read', 'getJUnit', id: $scope.selectedStage.getId(), (error, xunitOutputs) ->
+		rpc 'buildConsoles', 'read', 'getXUnit', id: $scope.selectedStage.getId(), (error, xunitOutputs) ->
 			$scope.spinnerOn = false
 			$scope.xunit = xunit.getTestCases xunitOutputs
 
@@ -56,17 +59,13 @@ window.RepositoryStageDetails = ['$scope', '$location', 'rpc', 'events', 'xunit'
 			lineNumber = integerConverter.toInteger lineNumber
 			lineHash = stringHasher.hash lineText
 
-			if $scope.lines[lineNumber]?
-				$scope.lines[lineNumber].text = lineText
-				$scope.lines[lineNumber].hash = lineHash
+			if $scope.output.lines[lineNumber]?
+				$scope.output.lines[lineNumber].text = lineText
+				$scope.output.lines[lineNumber].hash = lineHash
 			else
-				$scope.lines[lineNumber] =
+				$scope.output.lines[lineNumber] =
 					text: lineText
 					hash: lineHash
-
-	clearOutput = () ->
-		$scope.lines = {}
-		$scope.xunit = null
 
 	addedExportUrisEvents = null
 	updateExportUrisAddedListener = () ->
@@ -84,29 +83,29 @@ window.RepositoryStageDetails = ['$scope', '$location', 'rpc', 'events', 'xunit'
 			addedLineEvents.unsubscribe()
 			addedLineEvents = null
 
-		if $scope.selectedStage.getId()? and $scope.outputType is 'lines'
+		if $scope.selectedStage.getId()? and $scope.output.type is 'lines'
 			addedLineEvents = events('buildConsoles', 'new output', $scope.selectedStage.getId()).setCallback(handleLinesAdded).subscribe()
 	$scope.$on '$destroy', () -> addedLineEvents.unsubscribe() if addedLineEvents?
-
-	$scope.$watch 'outputType', () ->
-		console.log 'this does not have a . , so angular will probably mess up when setting this variable. Should create state object or something...'
-		clearOutput()
-
-		updateAddedLineListener()
-		if $scope.outputType is 'lines' then retrieveLines()
-		if $scope.outputType is 'xunit' then retrieveXUnitOutput()
 
 	$scope.$watch 'selectedChange.getId()', () ->
 		updateExportUrisAddedListener()
 		retrieveCurrentChangeExportUris()
 
 	$scope.$watch 'selectedStage.getId()', () ->
-		$scope.outputType = null
+		$scope.output.type = null if not $scope.selectedStage.getInformation()?
 
 	$scope.$watch 'selectedStage.getInformation()', (() ->
 		return if not $scope.selectedStage.getInformation()?
 
-		if $scope.selectedStage.getInformation().hasXUnit then $scope.outputType = 'xunit'
-		else $scope.outputType = 'lines'
+		if $scope.selectedStage.getInformation().hasXUnit then $scope.output.type = 'xunit'
+		else $scope.output.type = 'lines'
 	), true
+
+	$scope.$watch 'selectedStage.getId() + output.type', () ->
+		$scope.output.lines = {}
+		$scope.output.xunit.testCases = []
+
+		updateAddedLineListener()
+		if $scope.output.type is 'lines' then retrieveLines()
+		if $scope.output.type is 'xunit' then retrieveXUnitOutput()
 ]
