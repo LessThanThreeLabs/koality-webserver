@@ -5,7 +5,7 @@
 		</changes-menu-header>
 
 		<changes-menu-options>
-			<changes-menu-option ng-show="selectedChange.getInformation() != null && !stagesManager.isGettingStages()" ng-click="selectedStage.setSummary()" ng-class="{selected: selectedStage.isSummary(), green: selectedChange.getInformation().aggregateStatus == 'passed', red: selectedChange.getInformation().aggregateStatus == 'failed' || selectedChange.getInformation().aggregateStatus == 'skipped'}">
+			<changes-menu-option ng-show="selectedChange.getInformation() != null && !stagesManager.isRetrievingStages()" ng-click="selectedStage.setSummary()" ng-class="{selected: selectedStage.isSummary(), green: selectedChange.getInformation().aggregateStatus == 'passed', red: selectedChange.getInformation().aggregateStatus == 'failed' || selectedChange.getInformation().aggregateStatus == 'skipped'}">
 				<span>summary</span>
 			</changes-menu-option>
 
@@ -13,11 +13,11 @@
 				<span>{{stage.name}}</span>
 			</changes-menu-option>
 
-			<changes-menu-option ng-show="selectedChange.getInformation().aggregateStatus == 'skipped' && !stagesManager.isGettingStages()" ng-click="selectedStage.setSkipped()" ng-class="{selected: selectedStage.isSkipped(), red: true}">
+			<changes-menu-option ng-show="selectedChange.getInformation().aggregateStatus == 'skipped' && !stagesManager.isRetrievingStages()" ng-click="selectedStage.setSkipped()" ng-class="{selected: selectedStage.isSkipped(), red: true}">
 				<span>skipped</span>
 			</changes-menu-option>
 
-			<changes-menu-option menu-option-text="merge" ng-show="selectedChange.getInformation().mergeStatus != null && !stagesManager.isGettingStages()" ng-click="selectedStage.setMerge()" ng-class="{selected: selectedStage.isMerge(), green: selectedChange.getInformation().mergeStatus == 'passed', red: selectedChange.getInformation().mergeStatus == 'failed'}">
+			<changes-menu-option menu-option-text="merge" ng-show="selectedChange.getInformation().mergeStatus != null && !stagesManager.isRetrievingStages()" ng-click="selectedStage.setMerge()" ng-class="{selected: selectedStage.isMerge(), green: selectedChange.getInformation().mergeStatus == 'passed', red: selectedChange.getInformation().mergeStatus == 'failed'}">
 				<span>merge</span>
 			</changes-menu-option>
 

@@ -96,7 +96,7 @@ angular.module('koality.service.changes', []).
 			getChanges: () =>
 				return @_changes
 
-			isGettingMoreChanges: () =>
+			isRetrievingChanges: () =>
 				return @_gettingMoreChanges
 
 			listenToEvents: () =>
@@ -161,7 +161,7 @@ angular.module('koality.service.changes', []).
 			getStages: () =>
 				return @_stages
 
-			isGettingStages: () =>
+			isRetrievingStages: () =>
 				return @_gettingStages
 
 			listenToEvents: () =>
@@ -182,24 +182,27 @@ angular.module('koality.service.changes', []).
 		return create: () ->
 			return new StagesManager()
 	]).
-	factory('ConsoleTextManager', ['rpc', 'events', 'stringHasher', 'integerConverter', (rpc, events, stringHasher, integerConverter) ->
+	factory('ConsoleTextManager', ['ConsoleTextRpc', 'events', 'stringHasher', 'integerConverter', (ConsoleTextRpc, events, stringHasher, integerConverter) ->
 		class ConsoleTextManager
 			_stageId: null
+			_currentRequestId: null
 
 			_lines: {}
-			_gettingLines: false
+			_gettingMoreLines: false
 
 			_linesAddedListener: null
 
 			constructor: () ->
-				# @consoleTextRpc = ConsoleTextRpc.create()
+				@consoleTextRpc = ConsoleTextRpc.create()
 
-			_linesRetrievedHandler: (error, lines) =>
-				@_processLines lines
-				@_gettingLines = false
+			_linesRetrievedHandler: (error, linesData) =>
+				return if @_currentRequestId isnt linesData.requestId
+
+				@_processLines linesData.lines
+				@_gettingMoreLines = false
 
 			_handleLinesAdded: (data) =>
-				@_processLines lines
+				@_processLines data
 
 			_processLines: (data) =>
 				for lineNumber, lineText of data
@@ -217,34 +220,33 @@ angular.module('koality.service.changes', []).
 					@_lines = {}
 					@_stageId = stageId
 					@stopListeningToEvents()
+					@_currentRequestId = null
 
 			retrieveInitialLines: () =>
 				assert.ok @_stageId?
 
 				@_lines = {}
-				@_gettingLines = true
+				@_gettingMoreLines = true
+				@_currentRequestId = @consoleTextRpc.queueRequest @_stageId, 0, @_linesRetrievedHandler
 
-				rpc 'buildConsoles', 'read', 'getLines', id: @_stageId, @_linesRetrievedHandler
-
-			getMoreLines: () =>
+			retrieveMoreLines: () =>
 				return if Object.keys(@_lines).length is 0
 				return if @_gettingMoreLines
-				# return if not @consoleTextRpc.hasMoreLinesToRequest()
-				@_gettingMoreChanges = true
+				return if not @consoleTextRpc.hasMoreLinesToRequest()
 
-				rpc 'buildConsoles', 'read', 'getLines', id: @_stageId, @_linesRetrievedHandler
+				@_gettingMoreLines = true
+				@_currentRequestId = @consoleTextRpc.queueRequest @_stageId, Object.keys(@_lines).length, @_linesRetrievedHandler
 
 			getLines: () =>
 				return @_lines
 
-			isGettingLines: () =>
-				return @_gettingLines
+			isRetrievingLines: () =>
+				return @_gettingMoreLines
 
 			listenToEvents: () =>
 				assert.ok @_stageId?
 
 				@stopListeningToEvents()
-
 				@_linesAddedListener = events('buildConsoles', 'new output', @_stageId).setCallback(@_handleLinesAdded).subscribe()
 					
 			stopListeningToEvents: () =>

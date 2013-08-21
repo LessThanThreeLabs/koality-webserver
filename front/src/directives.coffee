@@ -103,8 +103,7 @@ angular.module('koality.directive', []).
 
 			addScrollListener = () ->
 				element.bind 'scroll', (event) ->
-					scrolledToTop = element[0].scrollTop is 0
-					scope.$apply attributes.onScrollToTop if scrolledToTop
+					scope.$apply attributes.onScrollToTop if element[0].scrollTop is 0
 
 			addScrollListener()
 	]).
@@ -232,7 +231,7 @@ angular.module('koality.directive', []).
 			element.css 'z-index', getZIndex attributes.type, attributes.durationInSeconds > 0
 			$timeout scope.hide, attributes.durationInSeconds * 1000 if attributes.durationInSeconds > 0
 	]).
-	directive('consoleText', ['ansiparse', (ansiparse) ->
+	directive('consoleText', ['$timeout', 'ansiparse', ($timeout, ansiparse) ->
 		restrict: 'E'
 		replace: true
 		scope: lines: '=lines'
@@ -275,18 +274,24 @@ angular.module('koality.directive', []).
 				newLineNumberBounds = getLineNumberBounds newLines
 				setStartingNumber newLineNumberBounds.min
 
+				keepScrollPosition = () ->
+					scrollableElement = element.closest '.onScrollToTopDirectiveAnchor'
+					oldScrollHeight = scrollableElement[0].scrollHeight
+
+					$timeout () -> 
+						newScrollHeight = scrollableElement[0].scrollHeight
+						scrollableElement[0].scrollTop = newScrollHeight - oldScrollHeight
+
 				addLinesThatAreBeforeExistingLines = () ->
 					return if newLineNumberBounds.min >= lineNumberBounds.min
 
+					htmlToPrepend = []
 					for index in [newLineNumberBounds.min...lineNumberBounds.min]
 						ansiParsedLine = ansiparse.parse newLines[index]?.text ? ''
 						html = "<span class='prettyConsoleTextLineText' number=#{index}>#{ansiParsedLine}</span>"
+						htmlToPrepend.push "<li>#{html}</li>"
 
-						if index is newLineNumberBounds.min
-							element.prepend "<li>#{html}</li>"
-						else
-							previousChildIndex = index - newLineNumberBounds.min
-							element.find("li:nth-child(#{previousChildIndex})").after "<li>#{html}</li>"
+					element.prepend htmlToPrepend.join ''
 
 				updateLinesThatAlreadyExist = () ->
 					for index in [lineNumberBounds.min..lineNumberBounds.max]
@@ -298,10 +303,16 @@ angular.module('koality.directive', []).
 				addLinesThatAreAfterExistingLines = () ->
 					return if newLineNumberBounds.max <= lineNumberBounds.max
 
+					htmlToAppend = []
 					for index in [(lineNumberBounds.max + 1)..newLineNumberBounds.max]
 						ansiParsedLine = ansiparse.parse newLines[index]?.text ? ''
 						html = "<span class='prettyConsoleTextLineText' number=#{index}>#{ansiParsedLine}</span>"
-						element.append "<li>#{html}</li>"
+						htmlToAppend.push "<li>#{html}</li>"
+					
+					element.append htmlToAppend.join ''
+
+				if newLineNumberBounds.min < lineNumberBounds.min and newLineNumberBounds.max is lineNumberBounds.max
+					keepScrollPosition()
 
 				addLinesThatAreBeforeExistingLines()
 				updateLinesThatAlreadyExist()

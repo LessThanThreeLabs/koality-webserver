@@ -59,10 +59,10 @@
 						</td>
 					</tr>
 
-					<tr ng-if="changesManager.isGettingMoreChanges()">
+					<tr ng-if="changesManager.isRetrievingChanges()">
 						<td class="retrievingMoreColumn" colspan="6">
 							<div class="retrievingMoreMessage">
-								<spinner id="retrievingMoreSpinner" running="changesManager.isGettingMoreChanges()"></spinner>
+								<spinner id="retrievingMoreSpinner" running="changesManager.isRetrievingChanges()"></spinner>
 								<span>Retrieving more changes...</span>
 							</div>
 						</td>

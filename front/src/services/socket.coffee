@@ -113,8 +113,8 @@ angular.module('koality.service.socket', []).
 			constructor: (@_numChangesToRequest) ->
 				assert.ok typeof @_numChangesToRequest is 'number'
 
-			_createChangesQuery: (id, repositoryIds, group, query, startIndex) =>
-				id: id
+			_createChangesQuery: (requestId, repositoryIds, group, query, startIndex) =>
+				requestId: requestId
 				repositoryIds: repositoryIds
 				group: group
 				query: query
@@ -145,7 +145,7 @@ angular.module('koality.service.socket', []).
 					rpc 'changes', 'read', 'getChanges', @_currentQuery, (error, changes) =>
 						@_noMoreChangesToRequest = changes.length < @_numChangesToRequest
 						@_currentCallback error,
-							requestId: @_currentQuery.id
+							requestId: @_currentQuery.requestId
 							changes: changes
 						@_shiftChangesRequest()
 
@@ -173,9 +173,82 @@ angular.module('koality.service.socket', []).
 					@_currentCallback = callback
 					@_retrieveMoreChanges()
 
-				return newQuery.id
+				return newQuery.requestId
 
 
 		return create: (numChangesToRequest=100) ->
 			return new ChangesRpc numChangesToRequest
+	]).
+	factory('ConsoleTextRpc', ['rpc', (rpc) ->
+
+		class ConsoleTextRpc
+			_requestIdCounter: 0
+			_noMoreLinesToRequest: false
+
+			_currentQuery: null
+			_currentCallback: null
+			_nextQuery: null
+			_nextCallback: null
+
+			constructor: (@_numLinesToRequest) ->
+				assert.ok typeof @_numLinesToRequest is 'number'
+
+			_createLinesQuery: (requestId, stageId, startIndex) =>
+				requestId: requestId
+				id: stageId
+				startIndex: startIndex
+				numToRetrieve: @_numLinesToRequest
+
+			_shiftConsoleTextRequest: () =>
+				if not @_nextQuery?
+					@_currentQuery = null
+					@_currentCallback = null
+				else
+					@_currentQuery = @_nextQuery
+					@_currentCallback = @_nextCallback
+					@_nextQuery = null
+					@_nextCallback = null
+
+					@_retrieveMoreConsoleText()
+
+			_retrieveMoreConsoleText: () =>
+				assert.ok @_currentQuery?
+				assert.ok @_currentCallback?
+
+				@_noMoreLinesToRequest = false if @_currentQuery.startIndex is 0
+
+				if @_noMoreLinesToRequest
+					@_shiftConsoleTextRequest()
+				else
+					rpc 'buildConsoles', 'read', 'getLines', @_currentQuery, (error, lines) =>
+						@_noMoreLinesToRequest = Object.keys(lines).length < @_numLinesToRequest
+						@_currentCallback error,
+							requestId: @_currentQuery.requestId
+							lines: lines
+						@_shiftConsoleTextRequest()
+
+			hasMoreLinesToRequest: () =>
+				return not @_noMoreLinesToRequest
+
+			queueRequest: (stageId, startIndex, callback) ->
+				assert.ok typeof stageId is 'number'
+				assert.ok typeof startIndex is 'number'
+				assert.ok typeof callback is 'function'
+
+				newQuery = @_createLinesQuery @_requestIdCounter, stageId, startIndex
+				@_requestIdCounter++
+
+				if @_currentQuery?
+					@_nextQuery = newQuery
+					@_nextCallback = callback
+				else
+					@_currentQuery = newQuery
+					@_currentCallback = callback
+					@_retrieveMoreConsoleText()
+
+				return newQuery.requestId
+
+
+		return create: (numChangesToRequest=500) ->
+			return new ConsoleTextRpc numChangesToRequest
 	])

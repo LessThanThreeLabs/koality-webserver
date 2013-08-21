@@ -7,6 +7,8 @@
 				<span ng-show="selectedStage.isSkipped()">skipped</span>
 				<span ng-show="selectedStage.isMerge()">merge</span>
 				<span ng-show="selectedStage.isDebug()">debug</span>
+
+				<span id="loadingText" ng-show="consoleTextManager.isRetrievingLines()">loading...</span>
 			</div>
 
 			<div class="right" ng-show="selectedStage.getInformation() != null && output.type != null">
@@ -16,8 +18,6 @@
 		</panel-header>
 
 		<panel-body>
-			<spinner id="loadingSpinner" running="spinnerOn"></spinner>
-
 			<div id="summary" ng-show="selectedStage.isSummary() && selectedChange.getInformation() != null">
 				<table>
 					<tr>
