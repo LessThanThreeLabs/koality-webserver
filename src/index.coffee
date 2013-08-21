@@ -24,7 +24,7 @@ startEverything = () ->
 
 	mailer = Mailer.create configurationParams.mailer, domainRetriever
 
-	logger = Logger.create mailer.logger, 'error'
+	logger = Logger.create mailer.logger, 'error', process.env.NODE_ENV is 'production'
 
 	modelConnection = ModelConnection.create configurationParams.modelConnection.messageBroker,
 		configurationParams.modelConnection.rpc,
