@@ -13,7 +13,7 @@
 			</div>
 		</changes-menu-header>
 
-		<changes-menu-options on-scroll-to-bottom="changesManager.getMoreChanges()">
+		<changes-menu-options on-scroll-to-bottom="changesManager.retrieveMoreChanges()">
 			<changes-menu-empty-message ng-show="!changesManager.isGettingMoreChanges() && changesManager.getChanges().length == 0">You have no changes</changes-menu-empty-message>
 
 			<changes-menu-option ng-repeat="change in changesManager.getChanges() | orderBy:'number':true" menu-option-spinning="{{change.verificationStatus == 'running'}}" ng-click="selectChange(change)" ng-class="{selected: change.id == selectedChange.getId(), green: change.aggregateStatus == 'passed', orange: change.aggregateStatus == 'skipped', red: change.aggregateStatus == 'failed'}">

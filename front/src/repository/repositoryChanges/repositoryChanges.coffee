@@ -11,7 +11,7 @@ window.RepositoryChanges = ['$scope', 'ChangesManager', 'currentRepository', 'cu
 	$scope.changesManager = ChangesManager.create [$scope.selectedRepository.getId()], $scope.search
 	$scope.changesManager.listenToEvents()
 	$scope.$on '$destroy', $scope.changesManager.stopListeningToEvents
-	$scope.changesManager.getInitialChanges()
+	$scope.changesManager.retrieveInitialChanges()
 
 	$scope.selectChange = (change) ->
 		$scope.selectedChange.setId $scope.selectedRepository.getId(), change.id
@@ -26,7 +26,7 @@ window.RepositoryChanges = ['$scope', 'ChangesManager', 'currentRepository', 'cu
 
 	$scope.$watch 'search', ((newValue, oldValue) ->
 		return if newValue is oldValue
-		$scope.changesManager.getInitialChanges()
+		$scope.changesManager.retrieveInitialChanges()
 		localStorage.repositoryChangesSearchMode = $scope.search.mode
 	), true
 ]

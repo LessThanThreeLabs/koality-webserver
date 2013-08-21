@@ -54,8 +54,8 @@
 			</div>
 
 			<div id="lines" ng-show="output.type == 'lines'">
-				<div auto-scroll-to-bottom="output.lines" auto-scroll-to-bottom-buffer="40" start-at-bottom fading-content>
-					<console-text class="consoleText" lines="output.lines"></console-text>
+				<div auto-scroll-to-bottom="consoleTextManager.getLines()" auto-scroll-to-bottom-buffer="40" start-at-bottom on-scroll-to-top="consoleTextManager.retrieveMoreLines()" fading-content>
+					<console-text class="consoleText" lines="consoleTextManager.getLines()"></console-text>
 				</div>
 			</div>
 

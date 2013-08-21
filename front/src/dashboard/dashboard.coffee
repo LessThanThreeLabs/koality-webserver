@@ -35,7 +35,7 @@ window.Dashboard = ['$scope', 'rpc', 'events', 'ChangesManager', 'localStorage',
 		$scope.changesManager.listenToEvents()
 		$scope.$on '$destroy', $scope.changesManager.stopListeningToEvents
 
-		$scope.changesManager.getInitialChanges()
+		$scope.changesManager.retrieveInitialChanges()
 
 	getRepositories()
 
@@ -45,7 +45,7 @@ window.Dashboard = ['$scope', 'rpc', 'events', 'ChangesManager', 'localStorage',
 
 	$scope.$watch 'search', ((newValue, oldValue) ->
 		return if newValue is oldValue
-		$scope.changesManager.getInitialChanges() if $scope.changesManager?
+		$scope.changesManager.retrieveInitialChanges() if $scope.changesManager?
 		localStorage.repositoryChangesSearchMode = $scope.search.mode
 	), true
 

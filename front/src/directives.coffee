@@ -64,7 +64,7 @@ angular.module('koality.directive', []).
 		transclude: true
 		template: '<div class="fadingContentContainer">
 				<div class="fadingContentTopBuffer"></div>
-				<div class="fadingContentScrollWrapper autoScrollToBottomDirectiveAnchor onScrollToBottomDirectiveAnchor">
+				<div class="fadingContentScrollWrapper onScrollToTopDirectiveAnchor onScrollToBottomDirectiveAnchor autoScrollToBottomDirectiveAnchor onScrollToBottomDirectiveAnchor">
 					<div class="fadingContent" ng-transclude></div>
 				</div>
 				<div class="fadingContentBottomBuffer"></div>
@@ -94,7 +94,19 @@ angular.module('koality.directive', []).
 					isScrolledToBottomIsh = element[0].scrollTop + element[0].offsetHeight + scrollBottomBuffer >= element[0].scrollHeight
 					scrollToBottom() if isScrolledToBottomIsh
 			), true
+	]).
+	directive('onScrollToTop', [() ->
+		restrict: 'A'
+		link: (scope, element, attributes) ->
+			if element.find('.onScrollToTopDirectiveAnchor').length > 0
+				element = element.find '.onScrollToTopDirectiveAnchor'
 
+			addScrollListener = () ->
+				element.bind 'scroll', (event) ->
+					scrolledToTop = element[0].scrollTop is 0
+					scope.$apply attributes.onScrollToTop if scrolledToTop
+
+			addScrollListener()
 	]).
 	directive('onScrollToBottom', [() ->
 		restrict: 'A'

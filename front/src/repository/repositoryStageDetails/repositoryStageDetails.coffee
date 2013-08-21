@@ -1,17 +1,19 @@
 'use strict'
 
-window.RepositoryStageDetails = ['$scope', '$location', 'rpc', 'events', 'xunit', 'stringHasher', 'integerConverter', 'currentRepository', 'currentChange', 'currentStage', ($scope, $location, rpc, events, xunit, stringHasher, integerConverter, currentRepository, currentChange, currentStage) ->
+window.RepositoryStageDetails = ['$scope', '$location', 'rpc', 'events', 'ConsoleTextManager', 'xunit', 'currentRepository', 'currentChange', 'currentStage', ($scope, $location, rpc, events, ConsoleTextManager, xunit, currentRepository, currentChange, currentStage) ->
 	$scope.selectedRepository = currentRepository
 	$scope.selectedChange = currentChange
 	$scope.selectedStage = currentStage
 
 	$scope.output =
 		type: null
-		lines: {}
 		xunit:
 			testCases: []
 			orderByPredicate: 'status'
 			orderByReverse: false
+
+	$scope.consoleTextManager = ConsoleTextManager.create()
+	$scope.$on '$destroy', $scope.consoleTextManager.stopListeningToEvents
 
 	updateUrl = () ->
 		$scope.currentUrl = $location.absUrl()
@@ -24,17 +26,6 @@ window.RepositoryStageDetails = ['$scope', '$location', 'rpc', 'events', 'xunit'
 
 		rpc 'changes', 'read', 'getChangeExportUris', id: $scope.selectedChange.getId(), (error, uris) ->
 			$scope.exportUris = uris
-
-	retrieveLines = () ->
-		assert.ok $scope.output.type is 'lines'
-
-		$scope.output.lines = {}
-		return if not $scope.selectedStage.getId()?
-		
-		$scope.spinnerOn = true
-		rpc 'buildConsoles', 'read', 'getLines', id: $scope.selectedStage.getId(), (error, lines) ->
-			$scope.spinnerOn = false
-			processLines lines
 
 	retrieveXUnitOutput = () ->
 		assert.ok $scope.output.type is 'xunit'
@@ -51,22 +42,6 @@ window.RepositoryStageDetails = ['$scope', '$location', 'rpc', 'events', 'xunit'
 		$scope.exportUris ?= []
 		$scope.exportUris = $scope.exportUris.concat data.uris
 
-	handleLinesAdded = (data) ->
-		processLines data
-
-	processLines = (data) ->
-		for lineNumber, lineText of data
-			lineNumber = integerConverter.toInteger lineNumber
-			lineHash = stringHasher.hash lineText
-
-			if $scope.output.lines[lineNumber]?
-				$scope.output.lines[lineNumber].text = lineText
-				$scope.output.lines[lineNumber].hash = lineHash
-			else
-				$scope.output.lines[lineNumber] =
-					text: lineText
-					hash: lineHash
-
 	addedExportUrisEvents = null
 	updateExportUrisAddedListener = () ->
 		if addedExportUrisEvents?
@@ -77,21 +52,14 @@ window.RepositoryStageDetails = ['$scope', '$location', 'rpc', 'events', 'xunit'
 			addedExportUrisEvents = events('changes', 'export uris added', $scope.selectedChange.getId()).setCallback(handleExportUrisAdded).subscribe()
 	$scope.$on '$destroy', () -> addedExportUrisEvents.unsubscribe() if addedExportUrisEvents?
 
-	addedLineEvents = null
-	updateAddedLineListener = () ->
-		if addedLineEvents?
-			addedLineEvents.unsubscribe()
-			addedLineEvents = null
-
-		if $scope.selectedStage.getId()? and $scope.output.type is 'lines'
-			addedLineEvents = events('buildConsoles', 'new output', $scope.selectedStage.getId()).setCallback(handleLinesAdded).subscribe()
-	$scope.$on '$destroy', () -> addedLineEvents.unsubscribe() if addedLineEvents?
-
 	$scope.$watch 'selectedChange.getId()', () ->
 		updateExportUrisAddedListener()
 		retrieveCurrentChangeExportUris()
 
 	$scope.$watch 'selectedStage.getId()', () ->
+		$scope.consoleTextManager.setStageId $scope.selectedStage.getId()
+		$scope.consoleTextManager.stopListeningToEvents()
+
 		$scope.output.type = null if not $scope.selectedStage.getInformation()?
 
 	$scope.$watch 'selectedStage.getInformation()', (() ->
@@ -102,10 +70,13 @@ window.RepositoryStageDetails = ['$scope', '$location', 'rpc', 'events', 'xunit'
 	), true
 
 	$scope.$watch 'selectedStage.getId() + output.type', () ->
-		$scope.output.lines = {}
 		$scope.output.xunit.testCases = []
 
-		updateAddedLineListener()
-		if $scope.output.type is 'lines' then retrieveLines()
-		if $scope.output.type is 'xunit' then retrieveXUnitOutput()
+		if $scope.selectedStage.getId()?
+			if $scope.output.type is 'lines'
+				$scope.consoleTextManager.listenToEvents()
+				$scope.consoleTextManager.retrieveInitialLines()
+			
+			if $scope.output.type is 'xunit'
+				retrieveXUnitOutput()
 ]

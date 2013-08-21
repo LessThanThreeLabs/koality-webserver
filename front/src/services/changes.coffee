@@ -80,13 +80,13 @@ angular.module('koality.service.changes', []).
 				listener.unsubscribe() for listener in listeners
 				listeners.length = 0
 
-			getInitialChanges: () =>
+			retrieveInitialChanges: () =>
 				@_changes = []
 				@_changesCache = {}
 				@_gettingMoreChanges = true
 				@_currentRequestId = @changesRpc.queueRequest @repositoryIds, @_getGroupFromMode(), @_getQuery(), 0, @_changesRetrievedHandler
 
-			getMoreChanges: () =>
+			retrieveMoreChanges: () =>
 				return if @_changes.length is 0
 				return if @_gettingMoreChanges
 				return if not @changesRpc.hasMoreChangesToRequest()
@@ -145,7 +145,7 @@ angular.module('koality.service.changes', []).
 
 				if @_changeId isnt changeId
 					@_stages = []
-					@_stagesCache = {}					
+					@_stagesCache = {}
 					@_changeId = changeId
 					@stopListeningToEvents()
 
@@ -169,8 +169,8 @@ angular.module('koality.service.changes', []).
 
 				@stopListeningToEvents()
 
-				buildConsoleAddedEvents = events('changes', 'new build console', @_changeId).setCallback(@_handleStageAdded).subscribe()
-				buildConsoleStatusUpdateEvents = events('changes', 'return code added', @_changeId).setCallback(@_handleStageUpdated).subscribe()
+				@_stageAddedListener = events('changes', 'new build console', @_changeId).setCallback(@_handleStageAdded).subscribe()
+				@_stageUpdatedListener = events('changes', 'return code added', @_changeId).setCallback(@_handleStageUpdated).subscribe()
 					
 			stopListeningToEvents: () =>
 				@_stageAddedListener.unsubscribe() if @_stageAddedListener?
@@ -181,4 +181,76 @@ angular.module('koality.service.changes', []).
 
 		return create: () ->
 			return new StagesManager()
+	]).
+	factory('ConsoleTextManager', ['rpc', 'events', 'stringHasher', 'integerConverter', (rpc, events, stringHasher, integerConverter) ->
+		class ConsoleTextManager
+			_stageId: null
+
+			_lines: {}
+			_gettingLines: false
+
+			_linesAddedListener: null
+
+			constructor: () ->
+				# @consoleTextRpc = ConsoleTextRpc.create()
+
+			_linesRetrievedHandler: (error, lines) =>
+				@_processLines lines
+				@_gettingLines = false
+
+			_handleLinesAdded: (data) =>
+				@_processLines lines
+
+			_processLines: (data) =>
+				for lineNumber, lineText of data
+					lineNumber = integerConverter.toInteger lineNumber
+					lineHash = stringHasher.hash lineText
+
+					@_lines[lineNumber] =
+						text: lineText
+						hash: lineHash
+
+			setStageId: (stageId) =>
+				assert.ok not stageId? or typeof stageId is 'number'
+
+				if @_stageId isnt stageId
+					@_lines = {}
+					@_stageId = stageId
+					@stopListeningToEvents()
+
+			retrieveInitialLines: () =>
+				assert.ok @_stageId?
+
+				@_lines = {}
+				@_gettingLines = true
+
+				rpc 'buildConsoles', 'read', 'getLines', id: @_stageId, @_linesRetrievedHandler
+
+			getMoreLines: () =>
+				return if Object.keys(@_lines).length is 0
+				return if @_gettingMoreLines
+				# return if not @consoleTextRpc.hasMoreLinesToRequest()
+				@_gettingMoreChanges = true
+
+				rpc 'buildConsoles', 'read', 'getLines', id: @_stageId, @_linesRetrievedHandler
+
+			getLines: () =>
+				return @_lines
+
+			isGettingLines: () =>
+				return @_gettingLines
+
+			listenToEvents: () =>
+				assert.ok @_stageId?
+
+				@stopListeningToEvents()
+
+				@_linesAddedListener = events('buildConsoles', 'new output', @_stageId).setCallback(@_handleLinesAdded).subscribe()
+					
+			stopListeningToEvents: () =>
+				@_linesAddedListener.unsubscribe() if @_linesAddedListener?
+				@_linesAddedListener = null
+
+		return create: () ->
+			return new ConsoleTextManager()
 	])
