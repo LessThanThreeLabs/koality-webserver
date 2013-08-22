@@ -244,13 +244,19 @@ angular.module('koality.service.changes', []).
 				@_currentRequestId = @consoleTextRpc.queueRequest @_stageId, 0, @_linesRetrievedHandler
 
 			retrieveMoreLines: () =>
+				getStartIndex = () =>
+					startIndex = Object.keys(@_oldLines).length
+					for lineNumber in Object.keys(@_newLines)
+						startIndex++ if not @_oldLines[lineNumber]?
+					return startIndex
+
 				return if Object.keys(@_newLines).length is 0
 				return if not @_allowGettingMoreLines
 				return if @_gettingMoreLines
 				return if not @consoleTextRpc.hasMoreLinesToRequest()
 
 				@_gettingMoreLines = true
-				@_currentRequestId = @consoleTextRpc.queueRequest @_stageId, Object.keys(@_lines).length, @_linesRetrievedHandler
+				@_currentRequestId = @consoleTextRpc.queueRequest @_stageId, getStartIndex(), @_linesRetrievedHandler
 
 			getNewLines: () =>
 				return @_newLines

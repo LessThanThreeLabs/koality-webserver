@@ -294,7 +294,6 @@ angular.module('koality.directive', []).
 
 				updateLinesThatAlreadyExist = () ->
 					for lineNumber, line of newLines
-						console.log lineNumber
 						continue if oldLines[lineNumber]?.hash is newLines[lineNumber]?.hash
 
 						ansiParsedLine = ansiparse.parse (line.text ? '')
@@ -309,8 +308,8 @@ angular.module('koality.directive', []).
 					
 					element.append htmlToAppend.join ''
 
-				# if newLineNumberBounds.min < oldLineNumberBounds.min and newLineNumberBounds.max is oldLineNumberBounds.max
-				# 	keepScrollPosition()
+				if newLineNumberBounds.min < oldLineNumberBounds.min and newLineNumberBounds.max <= oldLineNumberBounds.max
+					keepScrollPosition()
 
 				addLinesThatAreBeforeExistingLines()
 				updateLinesThatAlreadyExist()

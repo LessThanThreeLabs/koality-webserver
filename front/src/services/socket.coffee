@@ -249,6 +249,6 @@ angular.module('koality.service.socket', []).
 				return newQuery.requestId
 
 
-		return create: (numChangesToRequest=100) ->
-			return new ConsoleTextRpc numChangesToRequest
+		return create: (numLinesToRequest=1000) ->
+			return new ConsoleTextRpc numLinesToRequest
 	])
