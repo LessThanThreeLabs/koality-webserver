@@ -5,18 +5,23 @@
 	font-size: 12px;
 
 	.line {
+		&:hover {
+			background-color: lighten(@panelBackground, 4%);
+		}
+
 		.number {
 			display: inline-block;
 			margin-right: 5px;
 			width: 50px;
 			color: @koalityGray;
 			text-align: right;
-			vertical-align: top;	
+			vertical-align: top;
 		}
 
 		.text {
 			display: inline-block;
 			width: 90%;
+			word-wrap: break-word;
 		}
 	}
 }

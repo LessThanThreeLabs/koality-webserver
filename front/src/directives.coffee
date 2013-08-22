@@ -241,7 +241,7 @@ angular.module('koality.directive', []).
 		scope: 
 			oldLines: '=oldLines'
 			newLines: '=newLines'
-		template: '<div class="consoleText unselectable"></div>'
+		template: '<div class="consoleText"></div>'
 		link: (scope, element, attributes) ->
 			oldLineNumberBounds = null
 
@@ -263,7 +263,7 @@ angular.module('koality.directive', []).
 
 			generateLineHtml = (lineNumber, lineText) ->
 				ansiParsedLine = ansiparse.parse (lineText ? '')
-				return "<div class='line' number=#{lineNumber}><span class='number'>#{lineNumber}&nbsp;&nbsp;</span><span class='text textSelectable'>#{ansiParsedLine}</span></div>"
+				return "<div class='line' number=#{lineNumber}><span class='number'>#{lineNumber}&nbsp;&nbsp;</span><span class='text'>#{ansiParsedLine}</span></div>"
 
 			renderInitialLines = (lines) ->
 				lineNumberBounds = getLineNumberBounds lines
