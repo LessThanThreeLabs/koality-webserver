@@ -58,7 +58,7 @@ angular.module('koality.directive', []).
 
 				return if cleanedValue.length is 16 then cleanedValue else undefined
 	).
-	directive('fadingContent', () ->
+	directive('fadingContent', ['$window', ($window) ->
 		restrict: 'A'
 		replace: true
 		transclude: true
@@ -71,8 +71,13 @@ angular.module('koality.directive', []).
 			</div>'
 		link: (scope, element, attributes) ->
 			fadingContentElement = element.find('.fadingContent')
-			fadingContentElement.width element.width()
-	).
+			
+			setFadingContentWidth = () ->
+				fadingContentElement.width element.width()
+
+			setFadingContentWidth()
+			$($window).resize () -> setFadingContentWidth()
+	]).
 	directive('autoScrollToBottom', ['$timeout', 'integerConverter', ($timeout, integerConverter) ->
 		restrict: 'A'
 		link: (scope, element, attributes) ->
