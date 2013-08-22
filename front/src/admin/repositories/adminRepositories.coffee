@@ -20,9 +20,9 @@ window.AdminRepositories = ['$scope', '$routeParams', 'initialState', 'rpc', 'ev
 		return repository
 
 	getRepositories = () ->
-		rpc 'repositories', 'read', 'getRepositoriesWithForwardUrls', null, (error, repositories) ->
+		rpc 'repositories', 'read', 'getRepositories', null, (error, repositories) ->
 			if error? then notification.error error
-			else 
+			else
 				$scope.repositories = (addNewForwardUrl repository for repository in repositories)
 				updateRepositoryForwardUrlUpdatedListeners()
 				getMaxRepositoryCount()
@@ -30,7 +30,7 @@ window.AdminRepositories = ['$scope', '$routeParams', 'initialState', 'rpc', 'ev
 	getMaxRepositoryCount = () ->
 		rpc 'systemSettings', 'read', 'getMaxRepositoryCount', null, (error, maxRepositoryCount) ->
 			if error? then notification.error error
-			else 
+			else
 				$scope.maxRepositoryCount = maxRepositoryCount ? Number.POSITIVE_INFINITY
 				$scope.exceededMaxRepositoryCount = $scope.repositories.length >= $scope.maxRepositoryCount
 				showRepositoriesLimitWarningIfNecessary()
@@ -101,7 +101,7 @@ window.AdminRepositories = ['$scope', '$routeParams', 'initialState', 'rpc', 'ev
 			$scope.currentlyEditingRepositoryId = null
 
 			if error? then notification.error error
-			else 
+			else
 				repository.forwardUrl = repository.newForwardUrl
 				notification.success "Forward url changed for: #{repository.name}"
 

@@ -30,4 +30,19 @@ angular.module('koality.filter', ['koality.service']).
 		(input) ->
 			return null if not input? or typeof input isnt 'string'
 			return ansiParsedLine = ansiparse.parse input
+	]).
+	filter('shaLink', [() ->
+		(sha, forwardUrl) ->
+			return null if not sha? or typeof sha isnt 'string'
+			return null if not forwardUrl? or typeof forwardUrl isnt 'string'
+
+			githubMatch = /^git@github.com:(.*?)(.git)?$/.exec forwardUrl
+			if githubMatch? and githubMatch[1]?
+				return '<a href="https://github.com/' + githubMatch[1] + '/commit/' + sha + '">View in GitHub</a>'
+
+			bitbucketMatch = /^git@bitbucket.[org|com]:(.*?)(.git)?$/.exec forwardUrl
+			if bitbucketMatch? and bitbucketMatch[1]?
+				return '<a href="https://bitbucket.org/' + bitbucketMatch[1] + '/commits/' + sha + '">View in BitBucket</a>'
+
+			return null
 	])

@@ -44,6 +44,10 @@
 						<th>Head Commit</th>
 						<td ng-bind-html="selectedChange.getInformation().headCommit.message | ascii"></td>
 					</tr>
+					<tr ng-show="(selectedChange.getInformation().headCommit.sha | shaLink:selectedRepository.getInformation().forwardUrl) != null">
+						<th>Diff</th>
+						<td ng-bind-html="selectedChange.getInformation().headCommit.sha | shaLink:selectedRepository.getInformation().forwardUrl"></td>
+					</tr>
 					<tr ng-show="exportUris.length > 0">
 						<th>Exported Files</th>
 						<td>
