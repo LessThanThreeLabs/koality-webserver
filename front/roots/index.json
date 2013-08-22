@@ -9,13 +9,13 @@
 
 			"/css/src/elements/panel.css",
 			"/css/src/elements/changesMenu.css",
+			"/css/src/elements/consoleText.css",
 			"/css/src/elements/notification.css",
 			"/css/src/elements/dropdown.css",
 			"/css/src/elements/triangle.css",
 			"/css/src/elements/fadingContent.css",
 
 			"/css/src/prettyElements/prettyCenteredPanel.css",
-			"/css/src/prettyElements/prettyConsoleText.css",
 			"/css/src/prettyElements/prettyDivider.css",
 			"/css/src/prettyElements/prettyForm.css",
 			"/css/src/prettyElements/prettyModal.css",

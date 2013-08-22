@@ -21,7 +21,7 @@
 				<span>merge</span>
 			</changes-menu-option>
 
-			<changes-menu-option ng-show="selectedChange.getInformation().aggregateStatus == 'failed' && stagesManager.getStages().length == 0" ng-click="selectedStage.setDebug()" ng-class="{selected: selectedStage.isDebug(), red: true}">
+			<changes-menu-option ng-show="selectedChange.getInformation().aggregateStatus == 'failed' && !stagesManager.isRetrievingStages() && stagesManager.getStages().length == 0" ng-click="selectedStage.setDebug()" ng-class="{selected: selectedStage.isDebug(), red: true}">
 				<span>debug</span>
 			</changes-menu-option>
 		</changes-menu-options>

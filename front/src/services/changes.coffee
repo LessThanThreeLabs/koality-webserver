@@ -182,12 +182,14 @@ angular.module('koality.service.changes', []).
 		return create: () ->
 			return new StagesManager()
 	]).
-	factory('ConsoleTextManager', ['ConsoleTextRpc', 'events', 'stringHasher', 'integerConverter', (ConsoleTextRpc, events, stringHasher, integerConverter) ->
+	factory('ConsoleTextManager', ['$timeout', 'ConsoleTextRpc', 'events', 'stringHasher', 'integerConverter', ($timeout, ConsoleTextRpc, events, stringHasher, integerConverter) ->
 		class ConsoleTextManager
 			_stageId: null
 			_currentRequestId: null
 
-			_lines: {}
+			_oldLines: {}
+			_newLines: {}
+			_allowGettingMoreLines: true
 			_gettingMoreLines: false
 
 			_linesAddedListener: null
@@ -198,26 +200,37 @@ angular.module('koality.service.changes', []).
 			_linesRetrievedHandler: (error, linesData) =>
 				return if @_currentRequestId isnt linesData.requestId
 
-				@_processLines linesData.lines
+				@_processNewLines linesData.lines
 				@_gettingMoreLines = false
 
-			_handleLinesAdded: (data) =>
-				@_processLines data
+				@_allowGettingMoreLines = false
+				$timeout (() => @_allowGettingMoreLines = true), 100
 
-			_processLines: (data) =>
+			_handleLinesAdded: (data) =>
+				@_processNewLines data
+
+			_processNewLines: (data) =>
+				@_mergeNewLinesWithOldLines()
+				@_newLines = {}
+
 				for lineNumber, lineText of data
 					lineNumber = integerConverter.toInteger lineNumber
 					lineHash = stringHasher.hash lineText
 
-					@_lines[lineNumber] =
+					@_newLines[lineNumber] =
 						text: lineText
 						hash: lineHash
+
+			_mergeNewLinesWithOldLines: () =>
+				for lineNumber, line of @_newLines
+					@_oldLines[lineNumber] = line
 
 			setStageId: (stageId) =>
 				assert.ok not stageId? or typeof stageId is 'number'
 
 				if @_stageId isnt stageId
-					@_lines = {}
+					@_newLines = {}
+					@_oldLines = {}
 					@_stageId = stageId
 					@stopListeningToEvents()
 					@_currentRequestId = null
@@ -225,20 +238,25 @@ angular.module('koality.service.changes', []).
 			retrieveInitialLines: () =>
 				assert.ok @_stageId?
 
-				@_lines = {}
+				@_newLines = {}
+				@_oldLines = {}
 				@_gettingMoreLines = true
 				@_currentRequestId = @consoleTextRpc.queueRequest @_stageId, 0, @_linesRetrievedHandler
 
 			retrieveMoreLines: () =>
-				return if Object.keys(@_lines).length is 0
+				return if Object.keys(@_newLines).length is 0
+				return if not @_allowGettingMoreLines
 				return if @_gettingMoreLines
 				return if not @consoleTextRpc.hasMoreLinesToRequest()
 
 				@_gettingMoreLines = true
 				@_currentRequestId = @consoleTextRpc.queueRequest @_stageId, Object.keys(@_lines).length, @_linesRetrievedHandler
 
-			getLines: () =>
-				return @_lines
+			getNewLines: () =>
+				return @_newLines
+
+			getOldLines: () =>
+				return @_oldLines
 
 			isRetrievingLines: () =>
 				return @_gettingMoreLines

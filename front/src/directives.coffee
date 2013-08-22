@@ -84,7 +84,7 @@ angular.module('koality.directive', []).
 
 			scrollBottomBuffer = integerConverter.toInteger(attributes.autoScrollToBottomBuffer) ? 20
 
-			scope.$watch attributes.autoScrollToBottom, ((newValue, oldValue) ->
+			scope.$watch attributes.autoScrollToBottom, (newValue, oldValue) ->
 				isFirstRender = () ->
 					return not oldValue? or oldValue.length is 0 or Object.keys(oldValue).length is 0
 
@@ -93,7 +93,6 @@ angular.module('koality.directive', []).
 				else
 					isScrolledToBottomIsh = element[0].scrollTop + element[0].offsetHeight + scrollBottomBuffer >= element[0].scrollHeight
 					scrollToBottom() if isScrolledToBottomIsh
-			), true
 	]).
 	directive('onScrollToTop', [() ->
 		restrict: 'A'
@@ -234,10 +233,12 @@ angular.module('koality.directive', []).
 	directive('consoleText', ['$timeout', 'ansiparse', ($timeout, ansiparse) ->
 		restrict: 'E'
 		replace: true
-		scope: lines: '=lines'
-		template: '<ol class="prettyConsoleText"></ol>'
+		scope: 
+			oldLines: '=oldLines'
+			newLines: '=newLines'
+		template: '<div class="consoleText unselectable"></div>'
 		link: (scope, element, attributes) ->
-			lineNumberBounds = null
+			oldLineNumberBounds = null
 
 			getLineNumberBounds = (lines) ->
 				return null if Object.keys(lines).length is 0
@@ -251,28 +252,28 @@ angular.module('koality.directive', []).
 
 				return {min: minLineNumber, max: maxLineNumber}
 
-			setStartingNumber = (number) ->
-				element.css 'counter-reset', 'item ' + (number - 1)
-
 			clearLines = () ->
-				lineNumberBounds = null
 				element.empty()
-				setStartingNumber 1
+				oldLineNumberBounds = null
+
+			generateLineHtml = (lineNumber, lineText) ->
+				ansiParsedLine = ansiparse.parse (lineText ? '')
+				return "<div class='line' number=#{lineNumber}><span class='number'>#{lineNumber}&nbsp;&nbsp;</span><span class='text textSelectable'>#{ansiParsedLine}</span></div>"
 
 			renderInitialLines = (lines) ->
 				lineNumberBounds = getLineNumberBounds lines
 				return if not lineNumberBounds?
 
-				setStartingNumber lineNumberBounds.min
-
+				htmlToAppend = []
 				for index in [lineNumberBounds.min..lineNumberBounds.max]
-					ansiParsedLine = ansiparse.parse lines[index].text
-					html = "<span class='prettyConsoleTextLineText' number=#{index}>#{ansiParsedLine}</span>"
-					element.append "<li>#{html}</li>"
+					htmlToAppend.push generateLineHtml index, lines[index]?.text
+
+				element.append htmlToAppend.join ''
+
+				oldLineNumberBounds = lineNumberBounds
 
 			updateLines = (newLines, oldLines) ->
 				newLineNumberBounds = getLineNumberBounds newLines
-				setStartingNumber newLineNumberBounds.min
 
 				keepScrollPosition = () ->
 					scrollableElement = element.closest '.onScrollToTopDirectiveAnchor'
@@ -283,51 +284,50 @@ angular.module('koality.directive', []).
 						scrollableElement[0].scrollTop = newScrollHeight - oldScrollHeight
 
 				addLinesThatAreBeforeExistingLines = () ->
-					return if newLineNumberBounds.min >= lineNumberBounds.min
+					return if newLineNumberBounds.min >= oldLineNumberBounds.min
 
 					htmlToPrepend = []
-					for index in [newLineNumberBounds.min...lineNumberBounds.min]
-						ansiParsedLine = ansiparse.parse newLines[index]?.text ? ''
-						html = "<span class='prettyConsoleTextLineText' number=#{index}>#{ansiParsedLine}</span>"
-						htmlToPrepend.push "<li>#{html}</li>"
+					for index in [newLineNumberBounds.min...oldLineNumberBounds.min]
+						htmlToPrepend.push generateLineHtml index, newLines[index]?.text
 
 					element.prepend htmlToPrepend.join ''
 
 				updateLinesThatAlreadyExist = () ->
-					for index in [lineNumberBounds.min..lineNumberBounds.max]
-						continue if oldLines[index]?.hash? and oldLines[index]?.hash is newLines[index]?.hash
+					for lineNumber, line of newLines
+						console.log lineNumber
+						continue if oldLines[lineNumber]?.hash is newLines[lineNumber]?.hash
 
-						ansiParsedLine = ansiparse.parse newLines[index]?.text ? ''
-						element.find(".prettyConsoleTextLineText[number='#{index}']").html ansiParsedLine
+						ansiParsedLine = ansiparse.parse (line.text ? '')
+						element.find(".line[number='#{lineNumber}']").find('.text').html ansiParsedLine
 
 				addLinesThatAreAfterExistingLines = () ->
-					return if newLineNumberBounds.max <= lineNumberBounds.max
+					return if newLineNumberBounds.max <= oldLineNumberBounds.max
 
 					htmlToAppend = []
-					for index in [(lineNumberBounds.max + 1)..newLineNumberBounds.max]
-						ansiParsedLine = ansiparse.parse newLines[index]?.text ? ''
-						html = "<span class='prettyConsoleTextLineText' number=#{index}>#{ansiParsedLine}</span>"
-						htmlToAppend.push "<li>#{html}</li>"
+					for index in [(oldLineNumberBounds.max + 1)..newLineNumberBounds.max]
+						htmlToAppend.push generateLineHtml index, newLines[index]?.text
 					
 					element.append htmlToAppend.join ''
 
-				if newLineNumberBounds.min < lineNumberBounds.min and newLineNumberBounds.max is lineNumberBounds.max
-					keepScrollPosition()
+				# if newLineNumberBounds.min < oldLineNumberBounds.min and newLineNumberBounds.max is oldLineNumberBounds.max
+				# 	keepScrollPosition()
 
 				addLinesThatAreBeforeExistingLines()
 				updateLinesThatAlreadyExist()
 				addLinesThatAreAfterExistingLines()
 
-				lineNumberBounds = newLineNumberBounds
+				oldLineNumberBounds =
+					min: Math.min oldLineNumberBounds.min, newLineNumberBounds.min
+					max: Math.max oldLineNumberBounds.max, newLineNumberBounds.max
 
-			handleLinesUpdate = (newValue=[], oldValue=[]) ->
-				if Object.keys(newValue).length is 0
+			handleLinesUpdate = () ->
+				if Object.keys(scope.oldLines).length is 0 and Object.keys(scope.newLines).length is 0
 					clearLines()
-				else if Object.keys(oldValue).length is 0
-					renderInitialLines newValue
+				else if Object.keys(scope.oldLines).length is 0
+					renderInitialLines scope.newLines
 				else
-					updateLines newValue, oldValue
+					updateLines scope.newLines, scope.oldLines
 
-			scope.$watch 'lines', handleLinesUpdate, true
+			scope.$watch 'newLines', handleLinesUpdate
 	])
 	
