@@ -233,17 +233,19 @@ body {
 		&.delineated {
 			border-collapse: separate;
 
+			tr, th, td {
+				&.gray { color: @koalityGray; }
+				&.green { color: @koalityGreen; }
+				&.orange { color: @koalityOrange; }
+				&.red { color: @koalityRed; }
+			}
+
 			th, td {
 				overflow: hidden;
 				text-overflow: ellipsis;
 				white-space: nowrap;
 				border-top: 1px solid @koalityDarkGray;
 				border-bottom: 1px solid @platformBackground;
-
-				&.gray { color: @koalityGray; }
-				&.green { color: @koalityGreen; }
-				&.orange { color: @koalityOrange; }
-				&.red { color: @koalityRed; }
 			}
 
 			th {
@@ -268,8 +270,6 @@ body {
 						td { background-color: darken(@panelBackground, 3%); }
 					}
 				}
-
-				&.red { color: @koalityRed; }
 
 				&:first-child {
 					th, td { border-top-width: 0; }

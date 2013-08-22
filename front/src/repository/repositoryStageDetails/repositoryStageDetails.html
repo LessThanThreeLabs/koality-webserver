@@ -76,7 +76,7 @@
 							Duration
 						</th>
 					</tr>
-						<tr ng-repeat="testCase in output.xunit.testCases | orderBy:output.xunit.orderByPredicate:output.xunit.orderByReverse" ng-class="{red: testCase.status == 'failed'}" ng-click="testCase.showMore = !testCase.showMore">
+						<tr ng-repeat="testCase in output.xunit.testCases | orderBy:output.xunit.orderByPredicate:output.xunit.orderByReverse" ng-class="{red: testCase.status == 'failed', gray: testCase.status != 'failed'}" ng-click="testCase.showMore = !testCase.showMore">
 							<td class="nameColumn" ng-class="{selectable: testCase.failure != null || testCase.error != null}">
 								{{testCase.name}}
 								<div class="failureText" ng-show="testCase.showMore && testCase.failure != null">
