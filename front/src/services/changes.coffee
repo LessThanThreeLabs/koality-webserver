@@ -123,6 +123,7 @@ angular.module('koality.service.changes', []).
 
 			_stageAddedListener: null
 			_stageUpdatedListener: null
+			_stageOutputTypesListener: null
 
 			_stagesRetrievedHandler: (error, stagesToAdd) =>
 				stagesToAdd = stagesToAdd.filter (stage) => return not @_stagesCache[stage.id]?
@@ -139,6 +140,12 @@ angular.module('koality.service.changes', []).
 			_handleStageUpdated: (data) =>
 				stage = @_stagesCache[data.id]
 				$.extend true, stage, data if stage?
+
+			_handleStageOutputTypeAdded: (data) =>
+				stage = @_stagesCache[data.id]
+
+				if stage? and not (data.outputType in stage.outputTypes)
+					stage.outputTypes.push data.outputType
 
 			setChangeId: (changeId) =>
 				assert.ok not changeId? or typeof changeId is 'number'
@@ -171,13 +178,16 @@ angular.module('koality.service.changes', []).
 
 				@_stageAddedListener = events('changes', 'new build console', @_changeId).setCallback(@_handleStageAdded).subscribe()
 				@_stageUpdatedListener = events('changes', 'return code added', @_changeId).setCallback(@_handleStageUpdated).subscribe()
+				@_stageOutputTypesListener = events('changes', 'output type added', @_changeId).setCallback(@_handleStageOutputTypeAdded).subscribe()
 					
 			stopListeningToEvents: () =>
 				@_stageAddedListener.unsubscribe() if @_stageAddedListener?
 				@_stageUpdatedListener.unsubscribe() if @_stageUpdatedListener?
+				@_stageOutputTypesListener.unsubscribe() if @_stageOutputTypesListener
 
 				@_stageAddedListener = null
 				@_stageUpdatedListener = null
+				@_stageOutputTypesListener = null
 
 		return create: () ->
 			return new StagesManager()
@@ -225,15 +235,22 @@ angular.module('koality.service.changes', []).
 				for lineNumber, line of @_newLines
 					@_oldLines[lineNumber] = line
 
+			clear: () =>
+				@_stageId = null
+				@_newLines = {}
+				@_oldLines = {}
+				@_currentRequestId = null
+				@stopListeningToEvents()
+
 			setStageId: (stageId) =>
 				assert.ok not stageId? or typeof stageId is 'number'
 
 				if @_stageId isnt stageId
+					@_stageId = stageId
 					@_newLines = {}
 					@_oldLines = {}
-					@_stageId = stageId
-					@stopListeningToEvents()
 					@_currentRequestId = null
+					@stopListeningToEvents()
 
 			retrieveInitialLines: () =>
 				assert.ok @_stageId?

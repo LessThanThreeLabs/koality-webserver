@@ -68,10 +68,11 @@ angular.module('koality.service', []).
 
 				testCases = []
 				for testSuite in testSuites
-					if testSuite.testcase instanceof Array
-						testCases = testCases.concat (sanitizeTestCase testCase for testCase in testSuite.testcase)
-					else
-						testCases.push sanitizeTestCase testSuite.testcase
+					if testSuite.testcase?
+						if testSuite.testcase instanceof Array
+							testCases = testCases.concat (sanitizeTestCase testCase for testCase in testSuite.testcase)
+						else
+							testCases.push sanitizeTestCase testSuite.testcase
 
 				return testCases
 

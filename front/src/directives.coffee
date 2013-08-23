@@ -325,9 +325,10 @@ angular.module('koality.directive', []).
 					max: Math.max oldLineNumberBounds.max, newLineNumberBounds.max
 
 			handleLinesUpdate = () ->
-				if Object.keys(scope.oldLines).length is 0 and Object.keys(scope.newLines).length is 0
-					clearLines()
-				else if Object.keys(scope.oldLines).length is 0
+				if (not scope.oldLines? or Object.keys(scope.oldLines).length is 0) and 
+					(not scope.newLines? or Object.keys(scope.newLines).length is 0)
+						clearLines()
+				else if not scope.oldLines? or Object.keys(scope.oldLines).length is 0
 					renderInitialLines scope.newLines
 				else
 					updateLines scope.newLines, scope.oldLines
