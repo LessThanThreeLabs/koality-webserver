@@ -1,3 +1,5 @@
+'use strict'
+
 getAttribute = (testCaseString, attributeName) ->
     nameStartIndex = testCaseString.indexOf(" #{attributeName}=\"") + "#{attributeName}=\"".length + 1
     nameEndIndex = testCaseString.indexOf '"', nameStartIndex
@@ -41,6 +43,8 @@ getTestCaseString = (xunitOutput, startIndex) ->
     return toReturn
 
 window.xUnitParse = (xunitOutput) ->
+    assert.ok typeof xunitOutput is 'string'
+    
     currentTestCaseString = getTestCaseString xunitOutput, 0
 
     testCases = []
