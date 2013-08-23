@@ -1,3 +1,5 @@
+'use strict'
+
 class ConsoleLine
 
     class ConsoleCharacter
@@ -79,7 +81,7 @@ class ConsoleLine
         '<span class="' + styles + '">'
 
 
-window.ansiparse = (str) ->
+window.ansiParse = (str) ->
     return str if not str?
 
     if not _stringContainsAnsiCodes str

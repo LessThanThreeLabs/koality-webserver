@@ -33,50 +33,15 @@ angular.module('koality.service', []).
 			return null if isNaN integer
 			return integer
 	]).
-	factory('ansiparse', ['$window', ($window) ->
+	factory('ansiParser', ['$window', ($window) ->
 		return parse: (text) ->
-			return '<span class="ansi">' + $window.ansiparse(text) + '</span>'
+			return '<span class="ansi">' + $window.ansiParse(text) + '</span>'
 	]).
-	factory('xunit', [() ->
+	factory('xUnitParser', ['$window', ($window) ->
 		return getTestCases: (xunitOutputs) ->
-			getAttribute = (testCaseString, attributeName) ->
-				nameStartIndex = testCaseString.indexOf(" #{attributeName}=\"") + "#{attributeName}=\"".length + 1
-				nameEndIndex = testCaseString.indexOf '"', nameStartIndex
-				return testCaseString.substring nameStartIndex, nameEndIndex
-
-			getTextInElement = (testCaseString, elementName) ->
-				elementStartIndex = testCaseString.indexOf("<#{elementName}")
-				return null if elementStartIndex is -1
-
-				textStartIndex = testCaseString.indexOf('>', elementStartIndex) + 1
-				textEndIndex = testCaseString.indexOf("</#{elementName}>", textStartIndex)
-
-				return testCaseString.substring textStartIndex, textEndIndex
-
-			getTestCasesFromOutput = (xunitOutput) ->
-				currentTestCaseStart = 0
-				currentTestCaseEnd = 0
-
-				testCases = []
-				while currentTestCaseStart isnt -1
-					currentTestCaseStart = xunitOutput.indexOf '<testcase ', currentTestCaseEnd
-					currentTestCaseEnd = xunitOutput.indexOf('</testcase>', currentTestCaseStart) + '</testcase>'.length
-					testCaseString = xunitOutput.substring currentTestCaseStart, currentTestCaseEnd
-
-					testCase =
-						name: getAttribute testCaseString, 'name'
-						time: Number getAttribute testCaseString, 'time'
-						failure: getTextInElement testCaseString, 'failure'
-						error: getTextInElement testCaseString, 'system-err'
-					testCase.status = if testCase.failure? or testCase.error? then 'failed' else 'passed'
-
-					testCases.push testCase
-
-				return testCases
-
 			testCases = []
 			for xunitOutput in xunitOutputs
-				testCases = testCases.concat getTestCasesFromOutput xunitOutput
+				testCases = testCases.concat $window.xUnitParse xunitOutput
 			return testCases
 	]).
 	factory('stringHasher', [() ->

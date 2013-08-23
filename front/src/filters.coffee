@@ -26,10 +26,10 @@ angular.module('koality.filter', ['koality.service']).
 			return null if not input? or typeof input isnt 'string'
 			return input.split('\n')[0]
 	]).
-	filter('ansi', ['ansiparse', (ansiparse) ->
+	filter('ansi', ['ansiParser', (ansiParser) ->
 		(input) ->
 			return null if not input? or typeof input isnt 'string'
-			return ansiParsedLine = ansiparse.parse input
+			return ansiParsedLine = ansiParser.parse input
 	]).
 	filter('shaLink', [() ->
 		(sha, forwardUrl) ->

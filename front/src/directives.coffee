@@ -235,7 +235,7 @@ angular.module('koality.directive', []).
 			element.css 'z-index', getZIndex attributes.type, attributes.durationInSeconds > 0
 			$timeout scope.hide, attributes.durationInSeconds * 1000 if attributes.durationInSeconds > 0
 	]).
-	directive('consoleText', ['$timeout', 'ansiparse', ($timeout, ansiparse) ->
+	directive('consoleText', ['$timeout', 'ansiParser', ($timeout, ansiParser) ->
 		restrict: 'E'
 		replace: true
 		scope: 
@@ -262,7 +262,7 @@ angular.module('koality.directive', []).
 				oldLineNumberBounds = null
 
 			generateLineHtml = (lineNumber, lineText) ->
-				ansiParsedLine = ansiparse.parse (lineText ? '')
+				ansiParsedLine = ansiParser.parse (lineText ? '')
 				return "<div class='line' number=#{lineNumber}><span class='number'>#{lineNumber}&nbsp;&nbsp;</span><span class='text'>#{ansiParsedLine}</span></div>"
 
 			renderInitialLines = (lines) ->
@@ -301,7 +301,7 @@ angular.module('koality.directive', []).
 					for lineNumber, line of newLines
 						continue if oldLines[lineNumber]?.hash is newLines[lineNumber]?.hash
 
-						ansiParsedLine = ansiparse.parse (line.text ? '')
+						ansiParsedLine = ansiParser.parse (line.text ? '')
 						element.find(".line[number='#{lineNumber}']").find('.text').html ansiParsedLine
 
 				addLinesThatAreAfterExistingLines = () ->

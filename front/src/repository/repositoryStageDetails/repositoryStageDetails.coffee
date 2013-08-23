@@ -1,6 +1,6 @@
 'use strict'
 
-window.RepositoryStageDetails = ['$scope', '$location', 'rpc', 'events', 'ConsoleTextManager', 'xunit', 'currentRepository', 'currentChange', 'currentStage', ($scope, $location, rpc, events, ConsoleTextManager, xunit, currentRepository, currentChange, currentStage) ->
+window.RepositoryStageDetails = ['$scope', '$location', 'rpc', 'events', 'ConsoleTextManager', 'xUnitParser', 'currentRepository', 'currentChange', 'currentStage', ($scope, $location, rpc, events, ConsoleTextManager, xUnitParser, currentRepository, currentChange, currentStage) ->
 	$scope.selectedRepository = currentRepository
 	$scope.selectedChange = currentChange
 	$scope.selectedStage = currentStage
@@ -36,8 +36,7 @@ window.RepositoryStageDetails = ['$scope', '$location', 'rpc', 'events', 'Consol
 		$scope.spinnerOn = true
 		rpc 'buildConsoles', 'read', 'getXUnit', id: $scope.selectedStage.getId(), (error, xunitOutputs) ->
 			$scope.spinnerOn = false
-			testCases = xunit.getTestCases xunitOutputs
-			$scope.xunit.testCases = testCases
+			$scope.xunit.testCases = xUnitParser.getTestCases xunitOutputs
 
 	handleExportUrisAdded = (data) ->
 		$scope.exportUris ?= []

@@ -69,7 +69,8 @@
 			"/js/libs/d3.js",
 			"/js/libs/spinner.js",
 
-			"/js/src/util/ansiparse.js",
+			"/js/src/util/ansiParser.js",
+			"/js/src/util/xUnitParser.js",
 
 			"/js/src/util/d3/binner/d3Binner.js",
 			"/js/src/util/d3/lineGraph/d3ChangesLineGraph.js",

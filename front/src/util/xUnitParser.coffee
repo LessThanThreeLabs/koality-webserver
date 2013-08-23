@@ -1,0 +1,58 @@
+getAttribute = (testCaseString, attributeName) ->
+    nameStartIndex = testCaseString.indexOf(" #{attributeName}=\"") + "#{attributeName}=\"".length + 1
+    nameEndIndex = testCaseString.indexOf '"', nameStartIndex
+    return testCaseString.substring nameStartIndex, nameEndIndex
+
+getTextInElement = (testCaseString, elementName) ->
+    elementStartIndex = testCaseString.indexOf("<#{elementName}")
+    return null if elementStartIndex is -1
+
+    textStartIndex = testCaseString.indexOf('>', elementStartIndex) + 1
+    textEndIndex = testCaseString.indexOf("</#{elementName}>", textStartIndex)
+
+    return testCaseString.substring textStartIndex, textEndIndex
+
+getTestCaseString = (xunitOutput, startIndex) ->
+    testCaseStartTag = '<testcase '
+    testCaseEndTag = '</testcase>'
+    testCaseSelfClose = '/>'
+
+    testCaseStartIndex = xunitOutput.indexOf testCaseStartTag, startIndex
+    return null if testCaseStartIndex is -1
+
+    testCaseClosingTagIndex = xunitOutput.indexOf testCaseEndTag, testCaseStartIndex
+    testCaseSelfClosingTagIndex = xunitOutput.indexOf testCaseSelfClose, testCaseStartIndex
+
+    testCaseEndIndex = null
+    if testCaseSelfClosingTagIndex isnt -1 and testCaseClosingTagIndex is -1
+        testCaseEndIndex = testCaseSelfClosingTagIndex + testCaseSelfClose.length
+    else if testCaseSelfClosingTagIndex is -1 and testCaseClosingTagIndex isnt -1
+        testCaseEndIndex = testCaseClosingTagIndex + testCaseEndTag.length
+    else if testCaseSelfClosingTagIndex isnt -1 and testCaseClosingTagIndex isnt -1
+        testCaseEndIndex = Math.min testCaseSelfClosingTagIndex + testCaseSelfClose.length,
+            testCaseClosingTagIndex + testCaseEndTag.length
+    else
+        throw 'Nonexistent closing tag'
+
+    toReturn =
+        start: testCaseStartIndex
+        end: testCaseEndIndex
+        text: xunitOutput.substring testCaseStartIndex, testCaseEndIndex
+    return toReturn
+
+window.xUnitParse = (xunitOutput) ->
+    currentTestCaseString = getTestCaseString xunitOutput, 0
+
+    testCases = []
+    while currentTestCaseString isnt null
+        testCase =
+            name: getAttribute currentTestCaseString.text, 'name'
+            time: Number getAttribute currentTestCaseString.text, 'time'
+            failure: getTextInElement currentTestCaseString.text, 'failure'
+            error: getTextInElement currentTestCaseString.text, 'system-err'
+        testCase.status = if testCase.failure? or testCase.error? then 'failed' else 'passed'
+
+        testCases.push testCase
+        currentTestCaseString = getTestCaseString xunitOutput, currentTestCaseString.end
+
+    return testCases
