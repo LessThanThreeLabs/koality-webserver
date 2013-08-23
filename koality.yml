@@ -2,26 +2,27 @@
 languages:
   nodejs: 0.10.13
 setup:
-  - packages:
-    - system:
-      - fontconfig  # for phantomjs
-    - npm:
-      - iced-coffee-script
-      - grunt-cli
-      - jasmine-node
-      - karma
-      - npm install
-  - scripts:
-    - path: scripts
-      script: ./install_phantomjs.sh
+- packages:
+  - system:
+    - fontconfig  # for phantomjs
+  - npm:
+    - iced-coffee-script
+    - grunt-cli
+    - jasmine-node
+    - karma
+    - npm install
+- scripts:
+  - path: scripts
+    script: ./install_phantomjs.sh
 compile:
   scripts:
-    - grunt compile
+  - grunt compile
 test:
   scripts:
-    - frontend tests:
-        script:
-          - grunt test-front
-    - backend tests:
-        script:
-          - grunt test-back
+  - frontend tests:
+      script:
+      - grunt test-front
+  - backend tests:
+      script:
+      - grunt test-back
+      xunit: testResults
