@@ -1,4 +1,5 @@
 node_modules/
 /libs/
+testResults/
 .DS_Store
 koality-webserver-*.tgz
