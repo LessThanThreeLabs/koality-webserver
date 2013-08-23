@@ -10,6 +10,7 @@ window.RepositoryStageDetails = ['$scope', '$location', 'rpc', 'events', 'Consol
 		testCases: []
 		orderByPredicate: 'status'
 		orderByReverse: false
+		maxResults: 100
 
 	$scope.consoleTextManager = ConsoleTextManager.create()
 	$scope.$on '$destroy', $scope.consoleTextManager.stopListeningToEvents
@@ -35,7 +36,8 @@ window.RepositoryStageDetails = ['$scope', '$location', 'rpc', 'events', 'Consol
 		$scope.spinnerOn = true
 		rpc 'buildConsoles', 'read', 'getXUnit', id: $scope.selectedStage.getId(), (error, xunitOutputs) ->
 			$scope.spinnerOn = false
-			$scope.xunit.testCases = xunit.getTestCases xunitOutputs
+			testCases = xunit.getTestCases xunitOutputs
+			$scope.xunit.testCases = testCases
 
 	handleExportUrisAdded = (data) ->
 		$scope.exportUris ?= []

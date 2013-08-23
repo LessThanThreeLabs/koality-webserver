@@ -64,7 +64,7 @@
 			</div>
 
 			<div id="xunit" ng-show="output.type == 'xunit'">
-				<div fading-content>
+				<div on-scroll-to-bottom="xunit.maxResults = xunit.maxResults + 100" fading-content>
 					<table class="delineated">
 						<tr>
 						<th class="nameColumn sortableColumn unselectable" ng-click="xunit.orderByPredicate = 'name'; xunit.orderByReverse = !xunit.orderByReverse">
@@ -80,7 +80,7 @@
 							Duration
 						</th>
 					</tr>
-						<tr ng-repeat="testCase in xunit.testCases | orderBy:xunit.orderByPredicate:xunit.orderByReverse" ng-class="{red: testCase.status == 'failed', gray: testCase.status != 'failed'}" ng-click="testCase.showMore = !testCase.showMore">
+						<tr ng-repeat="testCase in xunit.testCases | orderBy:xunit.orderByPredicate:xunit.orderByReverse | limitTo:xunit.maxResults" ng-class="{red: testCase.status == 'failed', gray: testCase.status != 'failed'}" ng-click="testCase.showMore = !testCase.showMore">
 							<td class="nameColumn" ng-class="{selectable: testCase.failure != null || testCase.error != null}">
 								{{testCase.name}}
 								<div class="failureText" ng-show="testCase.showMore && testCase.failure != null">

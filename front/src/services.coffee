@@ -37,47 +37,46 @@ angular.module('koality.service', []).
 		return parse: (text) ->
 			return '<span class="ansi">' + $window.ansiparse(text) + '</span>'
 	]).
-	factory('xmlParser', ['$window', ($window) ->
-		return parse: (xml) ->
-			dom = $window.parseXml xml
-			json = $window.xml2json dom, ''
-			return JSON.parse json
-	]).
-	factory('xunit', ['xmlParser', (xmlParser) ->
+	factory('xunit', [() ->
 		return getTestCases: (xunitOutputs) ->
-			getArrayOfTestSuites = () ->
-				testSuites = []
-				for xunitOutput in xunitOutputs
-					parsed = xmlParser.parse xunitOutput
-					parsedTestSuites = if parsed.testsuites then parsed.testsuites.testsuite else parsed.testsuite
+			getAttribute = (testCaseString, attributeName) ->
+				nameStartIndex = testCaseString.indexOf(" #{attributeName}=\"") + "#{attributeName}=\"".length + 1
+				nameEndIndex = testCaseString.indexOf '"', nameStartIndex
+				return testCaseString.substring nameStartIndex, nameEndIndex
 
-					if parsedTestSuites instanceof Array
-						testSuites = testSuites.concat parsedTestSuites
-					else
-						testSuites.push parsedTestSuites
+			getTextInElement = (testCaseString, elementName) ->
+				elementStartIndex = testCaseString.indexOf("<#{elementName}")
+				return null if elementStartIndex is -1
 
-				return testSuites
+				textStartIndex = testCaseString.indexOf('>', elementStartIndex) + 1
+				textEndIndex = testCaseString.indexOf("</#{elementName}>", textStartIndex)
 
-			getAllSanitizedTestCases = (testSuites) ->
-				sanitizeTestCase = (testCase) ->
-					name: testCase.__name
-					time: testCase.__time
-					status: if testCase.failure? or testCase['system-err']? then 'failed' else 'passed'
-					failure: testCase.failure?.text if testCase.failure?.text?
-					error: testCase['system-err'] if testCase['system-err']?
+				return testCaseString.substring textStartIndex, textEndIndex
+
+			getTestCasesFromOutput = (xunitOutput) ->
+				currentTestCaseStart = 0
+				currentTestCaseEnd = 0
 
 				testCases = []
-				for testSuite in testSuites
-					if testSuite.testcase?
-						if testSuite.testcase instanceof Array
-							testCases = testCases.concat (sanitizeTestCase testCase for testCase in testSuite.testcase)
-						else
-							testCases.push sanitizeTestCase testSuite.testcase
+				while currentTestCaseStart isnt -1
+					currentTestCaseStart = xunitOutput.indexOf '<testcase ', currentTestCaseEnd
+					currentTestCaseEnd = xunitOutput.indexOf('</testcase>', currentTestCaseStart) + '</testcase>'.length
+					testCaseString = xunitOutput.substring currentTestCaseStart, currentTestCaseEnd
+
+					testCase =
+						name: getAttribute testCaseString, 'name'
+						time: Number getAttribute testCaseString, 'time'
+						failure: getTextInElement testCaseString, 'failure'
+						error: getTextInElement testCaseString, 'system-err'
+					testCase.status = if testCase.failure? or testCase.error? then 'failed' else 'passed'
+
+					testCases.push testCase
 
 				return testCases
 
-			testSuites = getArrayOfTestSuites()
-			testCases = getAllSanitizedTestCases testSuites
+			testCases = []
+			for xunitOutput in xunitOutputs
+				testCases = testCases.concat getTestCasesFromOutput xunitOutput
 			return testCases
 	]).
 	factory('stringHasher', [() ->

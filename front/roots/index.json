@@ -62,8 +62,6 @@
 	"js": {
 		"application/javascript": [
 			"/js/libs/assert.js",
-			"/js/libs/parseXml.js",
-			"/js/libs/xml2json.js",
 			"/js/libs/jquery.js",
 			"/js/libs/angular.js",
 			"/js/libs/angularSanitize.js",
