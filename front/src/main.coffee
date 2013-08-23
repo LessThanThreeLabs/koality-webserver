@@ -17,7 +17,7 @@ window.Main = ['$scope', '$timeout', 'rpc', 'events', 'initialState', 'notificat
 	createChangeFinishedHandler = (repository) ->
 		return (data) ->
 			if data.user.id is initialState.user.id
-				message = "<a href='/repository/#{repository.id}?change=#{data.id}'>Repository #{repository.name} - Change ##{data.number}</a> #{data.aggregateStatus}"
+				message = "<a href='/repository/#{repository.id}?change=#{data.id}'>Repository #{repository.name} - Change #{data.headCommit.sha.substring(0, 4)}</a> #{data.aggregateStatus}"
 				if data.aggregateStatus is 'passed' then notification.success message
 				else if data.aggregateStatus is 'failed' then notification.error message
 				else if data.aggregateStatus is 'skipped' then notification.warning message
