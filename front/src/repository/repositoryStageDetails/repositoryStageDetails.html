@@ -12,8 +12,8 @@
 			</div>
 
 			<div class="right" ng-show="selectedStage.getInformation() != null && output.type != null">
-				<a ng-click="output.type = 'lines'" ng-show="output.type != 'lines'">Show Text</a>
-				<a ng-click="output.type = 'xunit'" ng-show="output.type != 'xunit' && selectedStage.getInformation().hasXUnit">Show JUnit</a>
+				<a ng-click="output.type = 'console'" ng-show="output.type != 'console' && output.hasConsole">Show Text</a>
+				<a ng-click="output.type = 'xunit'" ng-show="output.type != 'xunit' && output.hasXUnit">Show XUnit</a>
 			</div>
 		</panel-header>
 
@@ -57,7 +57,7 @@
 				</table>
 			</div>
 
-			<div id="lines" ng-show="output.type == 'lines'">
+			<div id="console" ng-show="output.type == 'console'">
 				<div auto-scroll-to-bottom="consoleTextManager.getNewLines()" auto-scroll-to-bottom-buffer="40" start-at-bottom on-scroll-to-top="consoleTextManager.retrieveMoreLines()" fading-content>
 					<console-text class="consoleText" new-lines="consoleTextManager.getNewLines()" old-lines="consoleTextManager.getOldLines()" listener="contentTextManager.lastUpdateTime"></console-text>
 				</div>
@@ -67,20 +67,20 @@
 				<div fading-content>
 					<table class="delineated">
 						<tr>
-						<th class="nameColumn sortableColumn unselectable" ng-click="jUnitOrderByPredicate = 'name'; jUnitOrderByReverse = !jUnitOrderByReverse">
-							<div class="triangle gray" ng-class="{right: jUnitOrderByPredicate != 'name', up: jUnitOrderByPredicate == 'name' && !jUnitOrderByReverse, down: jUnitOrderByPredicate == 'name' && jUnitOrderByReverse}"></div>
+						<th class="nameColumn sortableColumn unselectable" ng-click="xunit.orderByPredicate = 'name'; xunit.orderByReverse = !xunit.orderByReverse">
+							<div class="triangle gray" ng-class="{right: xunit.orderByPredicate != 'name', up: xunit.orderByPredicate == 'name' && !xunit.orderByReverse, down: xunit.orderByPredicate == 'name' && xunit.orderByReverse}"></div>
 							Name
 						</th>
-						<th class="statusColumn sortableColumn unselectable" ng-click="jUnitOrderByPredicate = 'status'; jUnitOrderByReverse = !jUnitOrderByReverse">
-							<div class="triangle gray" ng-class="{right: jUnitOrderByPredicate != 'status', up: jUnitOrderByPredicate == 'status' && !jUnitOrderByReverse, down: jUnitOrderByPredicate == 'status' && jUnitOrderByReverse}"></div>
+						<th class="statusColumn sortableColumn unselectable" ng-click="xunit.orderByPredicate = 'status'; xunit.orderByReverse = !xunit.orderByReverse">
+							<div class="triangle gray" ng-class="{right: xunit.orderByPredicate != 'status', up: xunit.orderByPredicate == 'status' && !xunit.orderByReverse, down: xunit.orderByPredicate == 'status' && xunit.orderByReverse}"></div>
 							Status
 						</th>
-						<th class="timeColumn sortableColumn unselectable" ng-click="jUnitOrderByPredicate = 'time'; jUnitOrderByReverse = !jUnitOrderByReverse">
-							<div class="triangle gray" ng-class="{right: jUnitOrderByPredicate != 'time', up: jUnitOrderByPredicate == 'time' && !jUnitOrderByReverse, down: jUnitOrderByPredicate == 'time' && jUnitOrderByReverse}"></div>
+						<th class="timeColumn sortableColumn unselectable" ng-click="xunit.orderByPredicate = 'time'; xunit.orderByReverse = !xunit.orderByReverse">
+							<div class="triangle gray" ng-class="{right: xunit.orderByPredicate != 'time', up: xunit.orderByPredicate == 'time' && !xunit.orderByReverse, down: xunit.orderByPredicate == 'time' && xunit.orderByReverse}"></div>
 							Duration
 						</th>
 					</tr>
-						<tr ng-repeat="testCase in output.xunit.testCases | orderBy:output.xunit.orderByPredicate:output.xunit.orderByReverse" ng-class="{red: testCase.status == 'failed', gray: testCase.status != 'failed'}" ng-click="testCase.showMore = !testCase.showMore">
+						<tr ng-repeat="testCase in xunit.testCases | orderBy:xunit.orderByPredicate:xunit.orderByReverse" ng-class="{red: testCase.status == 'failed', gray: testCase.status != 'failed'}" ng-click="testCase.showMore = !testCase.showMore">
 							<td class="nameColumn" ng-class="{selectable: testCase.failure != null || testCase.error != null}">
 								{{testCase.name}}
 								<div class="failureText" ng-show="testCase.showMore && testCase.failure != null">

@@ -5,12 +5,11 @@ window.RepositoryStageDetails = ['$scope', '$location', 'rpc', 'events', 'Consol
 	$scope.selectedChange = currentChange
 	$scope.selectedStage = currentStage
 
-	$scope.output =
-		type: null
-		xunit:
-			testCases: []
-			orderByPredicate: 'status'
-			orderByReverse: false
+	$scope.output = type: null
+	$scope.xunit =
+		testCases: []
+		orderByPredicate: 'status'
+		orderByReverse: false
 
 	$scope.consoleTextManager = ConsoleTextManager.create()
 	$scope.$on '$destroy', $scope.consoleTextManager.stopListeningToEvents
@@ -30,13 +29,13 @@ window.RepositoryStageDetails = ['$scope', '$location', 'rpc', 'events', 'Consol
 	retrieveXUnitOutput = () ->
 		assert.ok $scope.output.type is 'xunit'
 
-		$scope.output.xunit.testCases = []
+		$scope.xunit.testCases = []
 		return if not $scope.selectedStage.getId()?
 
 		$scope.spinnerOn = true
 		rpc 'buildConsoles', 'read', 'getXUnit', id: $scope.selectedStage.getId(), (error, xunitOutputs) ->
 			$scope.spinnerOn = false
-			$scope.xunit = xunit.getTestCases xunitOutputs
+			$scope.xunit.testCases = xunit.getTestCases xunitOutputs
 
 	handleExportUrisAdded = (data) ->
 		$scope.exportUris ?= []
@@ -56,27 +55,30 @@ window.RepositoryStageDetails = ['$scope', '$location', 'rpc', 'events', 'Consol
 		updateExportUrisAddedListener()
 		retrieveCurrentChangeExportUris()
 
-	$scope.$watch 'selectedStage.getId()', () ->
-		$scope.consoleTextManager.setStageId $scope.selectedStage.getId()
-		$scope.consoleTextManager.stopListeningToEvents()
+	$scope.$watch 'selectedStage.getInformation().outputTypes', (() ->
+		return if not $scope.selectedStage.getInformation()?.outputTypes?
 
-		$scope.output.type = null if not $scope.selectedStage.getInformation()?
+		$scope.output.hasConsole = 'console' in $scope.selectedStage.getInformation().outputTypes
+		$scope.output.hasXUnit = 'xunit' in $scope.selectedStage.getInformation().outputTypes
 
-	$scope.$watch 'selectedStage.getInformation()', (() ->
-		return if not $scope.selectedStage.getInformation()?
-
-		if $scope.selectedStage.getInformation().hasXUnit then $scope.output.type = 'xunit'
-		else $scope.output.type = 'lines'
+		if 'xunit' in $scope.selectedStage.getInformation().outputTypes
+			$scope.output.type = 'xunit'
+		else
+			$scope.output.type = 'console'
 	), true
 
 	$scope.$watch 'selectedStage.getId() + output.type', () ->
-		$scope.output.xunit.testCases = []
+		$scope.consoleTextManager.clear()
+		$scope.xunit.testCases = []
 
-		if $scope.selectedStage.getId()?
-			if $scope.output.type is 'lines'
+		if not $scope.selectedStage.getId()?
+			$scope.output.type = null
+		else
+			if $scope.output.type is 'console'
+				$scope.consoleTextManager.setStageId $scope.selectedStage.getId()
 				$scope.consoleTextManager.listenToEvents()
 				$scope.consoleTextManager.retrieveInitialLines()
-			
+
 			if $scope.output.type is 'xunit'
 				retrieveXUnitOutput()
 ]
