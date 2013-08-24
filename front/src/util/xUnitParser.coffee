@@ -1,11 +1,18 @@
 'use strict'
 
 getAttribute = (testCaseString, attributeName) ->
+    assert.ok typeof testCaseString is 'string'
+    assert.ok typeof attributeName is 'string'
+
     nameStartIndex = testCaseString.indexOf(" #{attributeName}=\"") + "#{attributeName}=\"".length + 1
     nameEndIndex = testCaseString.indexOf '"', nameStartIndex
+
     return testCaseString.substring nameStartIndex, nameEndIndex
 
 getTextInElement = (testCaseString, elementName) ->
+    assert.ok typeof testCaseString is 'string'
+    assert.ok typeof elementName is 'string'
+
     elementStartIndex = testCaseString.indexOf("<#{elementName}")
     return null if elementStartIndex is -1
 
@@ -15,6 +22,9 @@ getTextInElement = (testCaseString, elementName) ->
     return testCaseString.substring textStartIndex, textEndIndex
 
 getTestCaseString = (xunitOutput, startIndex) ->
+    assert.ok typeof xunitOutput is 'string'
+    assert.ok typeof startIndex is 'number'
+
     testCaseStartTag = '<testcase '
     testCaseEndTag = '</testcase>'
     testCaseSelfClose = '/>'
@@ -48,7 +58,7 @@ window.xUnitParse = (xunitOutput) ->
     currentTestCaseString = getTestCaseString xunitOutput, 0
 
     testCases = []
-    while currentTestCaseString isnt null
+    while currentTestCaseString?
         testCase =
             name: getAttribute currentTestCaseString.text, 'name'
             time: Number getAttribute currentTestCaseString.text, 'time'
