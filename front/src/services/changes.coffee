@@ -1,7 +1,7 @@
 'use strict'
 
 angular.module('koality.service.changes', []).
-	factory('ChangesManager', ['ChangesRpc', 'events', (ChangesRpc, events) ->
+	factory('ChangesManager', ['initialState', 'ChangesRpc', 'events', (initialState, ChangesRpc, events) ->
 		class ChangesManager
 			_changes: []
 			_changesCache: {}
