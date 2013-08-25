@@ -11,9 +11,19 @@
 				<span id="loadingText" ng-show="consoleTextManager.isRetrievingLines()">loading...</span>
 			</div>
 
-			<div class="right" ng-show="selectedStage.getInformation() != null && output.type != null">
+			<!-- <div class="right" ng-show="selectedStage.getInformation() != null && output.type != null">
 				<a ng-click="output.type = 'console'" ng-show="output.type != 'console' && output.hasConsole">Show Text</a>
 				<a ng-click="output.type = 'xunit'" ng-show="output.type != 'xunit' && output.hasXUnit">Show XUnit</a>
+			</div> -->
+
+			<div class="right" ng-show="selectedStage.getInformation() != null && output.type != null">
+				<dropdown light>
+					<span>Text &nbsp;&nbsp;v</span>
+					<dropdown-options>
+						<dropdown-option>Text</dropdopwn-option>
+						<dropdown-option>XUnit</dropdopwn-option>
+					</dropdown-options>
+				</dropdown>
 			</div>
 		</panel-header>
 

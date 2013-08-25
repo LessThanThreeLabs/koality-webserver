@@ -81,9 +81,6 @@
 		padding-left: 12px;
 		padding-right: 12px;
 		height: @headerHeight;
-		overflow: hidden;
-		text-overflow: ellipsis;
-		white-space: nowrap;
 		color: @koalityWhite;
 		font-size: 18px;
 		font-weight: 500;
@@ -95,7 +92,11 @@
 
 		.left {
 			float: left;
+			width: 80%;
 			height: 100%;
+			overflow: hidden;
+			text-overflow: ellipsis;
+			white-space: nowrap;
 		}
 
 		.right {
@@ -128,7 +129,6 @@
 	}
 
 	.panelBody {
-
 		position: absolute;
 		top: @headerHeight;
 		left: 0;
