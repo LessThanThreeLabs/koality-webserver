@@ -1,7 +1,21 @@
 <div id="repositoryStages" ng-controller="RepositoryStages">
 	<changes-menu>
 		<changes-menu-header>
-			<span ng-show="selectedChange.getInformation() != null">Change {{selectedChange.getInformation().headCommit.sha | limitTo: 4}}</span>
+			<div class="left">
+				<span ng-show="selectedChange.getInformation() != null">{{selectedChange.getInformation().headCommit.sha | limitTo: 4}}</span>
+			</div>
+
+			<div class="right" ng-show="stagesManager.getStages().length > 0">
+				<dropdown right light>
+					<span ng-show="filter.type == 'all'">All</span>
+					<span ng-show="filter.type == 'failed'">Failed</span>
+					<span>&nbsp;&nbsp;v</span>
+					<dropdown-options>
+						<dropdown-option ng-click="filter.type = 'all'" ng-class="{disabled: filter.type == 'all'}">All</dropdown-option>
+						<dropdown-option ng-click="filter.type = 'failed'" ng-class="{disabled: filter.type == 'failed'}">Failed</dropdown-option>
+					</dropdown-options>
+				</dropdown>
+			</div>
 		</changes-menu-header>
 
 		<changes-menu-options>
@@ -17,7 +31,7 @@
 				<span>skipped</span>
 			</changes-menu-option>
 
-			<changes-menu-option menu-option-text="merge" ng-show="selectedChange.getInformation().mergeStatus != null && !stagesManager.isRetrievingStages()" ng-click="selectedStage.setMerge()" ng-class="{selected: selectedStage.isMerge(), green: selectedChange.getInformation().mergeStatus == 'passed', red: selectedChange.getInformation().mergeStatus == 'failed'}">
+			<changes-menu-option menu-option-text="merge" ng-show="selectedChange.getInformation().mergeStatus != null && !stagesManager.isRetrievingStages() && (filter.type != 'failed' || (filter.type == 'failed' && selectedChange.getInformation().mergeStatus == 'failed'))" ng-click="selectedStage.setMerge()" ng-class="{selected: selectedStage.isMerge(), green: selectedChange.getInformation().mergeStatus == 'passed', red: selectedChange.getInformation().mergeStatus == 'failed'}">
 				<span>merge</span>
 			</changes-menu-option>
 

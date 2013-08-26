@@ -5,6 +5,8 @@ window.RepositoryStages = ['$scope', '$routeParams', 'StagesManager', 'currentRe
 	$scope.selectedChange = currentChange
 	$scope.selectedStage = currentStage
 
+	$scope.filter = type: 'all'
+
 	$scope.stagesManager = StagesManager.create()
 	$scope.$on '$destroy', $scope.stagesManager.stopListeningToEvents
 
@@ -59,6 +61,7 @@ window.RepositoryStages = ['$scope', '$routeParams', 'StagesManager', 'currentRe
 			return 50000
 
 	$scope.shouldStageBeVisible = (stage) ->
+		return false if $scope.filter.type is 'failed' and stage.status isnt 'failed'
 		return true if stage.id is $scope.selectedStage.getId()
 		return false if isMirrorStage stage, $scope.selectedStage.getInformation()
 		return true if stage.id is getMostImportantStageWithTypeAndName(stage.type, stage.name).id
