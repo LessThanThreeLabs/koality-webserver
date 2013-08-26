@@ -69,6 +69,8 @@ window.RepositoryStageDetails = ['$scope', '$location', 'rpc', 'events', 'Consol
 			$scope.output.type = 'xunit'
 		else if 'console' in $scope.selectedStage.getInformation().outputTypes
 			$scope.output.type = 'console'
+		else
+			console.error 'No output type provided'
 	), true
 
 	$scope.$watch 'selectedStage.getId() + output.type', () ->

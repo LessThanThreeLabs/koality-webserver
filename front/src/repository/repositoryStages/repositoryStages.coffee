@@ -1,11 +1,11 @@
 'use strict'
 
-window.RepositoryStages = ['$scope', '$routeParams', 'StagesManager', 'currentRepository', 'currentChange', 'currentStage', ($scope, $routeParams, StagesManager, currentRepository, currentChange, currentStage) ->
+window.RepositoryStages = ['$scope', '$routeParams', 'StagesManager', 'currentRepository', 'currentChange', 'currentStage', 'localStorage', ($scope, $routeParams, StagesManager, currentRepository, currentChange, currentStage, localStorage) ->
 	$scope.selectedRepository = currentRepository
 	$scope.selectedChange = currentChange
 	$scope.selectedStage = currentStage
 
-	$scope.filter = type: 'all'
+	$scope.filter = type: localStorage.repositoryStagesFilterType ? 'all'
 
 	$scope.stagesManager = StagesManager.create()
 	$scope.$on '$destroy', $scope.stagesManager.stopListeningToEvents
@@ -61,8 +61,8 @@ window.RepositoryStages = ['$scope', '$routeParams', 'StagesManager', 'currentRe
 			return 50000
 
 	$scope.shouldStageBeVisible = (stage) ->
-		return false if $scope.filter.type is 'failed' and stage.status isnt 'failed'
 		return true if stage.id is $scope.selectedStage.getId()
+		return false if $scope.filter.type is 'failed' and stage.status isnt 'failed'
 		return false if isMirrorStage stage, $scope.selectedStage.getInformation()
 		return true if stage.id is getMostImportantStageWithTypeAndName(stage.type, stage.name).id
 		return false
@@ -70,6 +70,16 @@ window.RepositoryStages = ['$scope', '$routeParams', 'StagesManager', 'currentRe
 	$scope.selectStage = (stage) ->
 		$scope.selectedStage.setId $scope.selectedRepository.getId(), $scope.selectedChange.getId(), stage.id
 		$scope.selectedStage.setInformation stage
+
+	$scope.$watch 'filter.type', (newFilterType, oldFilterType) ->
+		return if newFilterType is oldFilterType
+
+		localStorage.repositoryStagesFilterType = $scope.filter.type
+
+		if $scope.filter.type is 'failed'
+			status = $scope.selectedStage.getInformation()?.status
+			if status? and status isnt 'failed'
+				$scope.selectedStage.setSummary()
 
 	$scope.$watch 'selectedChange.getId()', (newChangeId, oldChangeId) ->
 		$scope.selectedStage.setSummary() if newChangeId isnt oldChangeId
