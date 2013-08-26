@@ -49,7 +49,9 @@
 					</tr>
 					<tr>
 						<th>Head Commit</th>
-						<td ng-bind-html="selectedChange.getInformation().headCommit.message | ascii"></td>
+						<td>
+							<pre>{{selectedChange.getInformation().headCommit.message}}</pre>
+						</td>
 					</tr>
 					<tr ng-show="(selectedChange.getInformation().headCommit.sha | shaLink:selectedRepository.getInformation().forwardUrl) != null">
 						<th>Diff</th>

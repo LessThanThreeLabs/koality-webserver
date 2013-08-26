@@ -59,11 +59,13 @@ window.RepositoryStageDetails = ['$scope', '$location', 'rpc', 'events', 'Consol
 	$scope.$watch 'selectedStage.getId()', () ->
 		$scope.output.type = null
 
-	$scope.$watch 'selectedStage.getInformation().outputTypes', (() ->
+	$scope.$watch 'selectedStage.getInformation()', (() ->
 		return if not $scope.selectedStage.getInformation()?.outputTypes?
-		
+
 		$scope.output.hasConsole = 'console' in $scope.selectedStage.getInformation().outputTypes
 		$scope.output.hasXUnit = 'xunit' in $scope.selectedStage.getInformation().outputTypes
+
+		return if $scope.output.type?
 
 		if 'xunit' in $scope.selectedStage.getInformation().outputTypes
 			$scope.output.type = 'xunit'
