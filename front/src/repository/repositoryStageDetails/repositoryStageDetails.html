@@ -39,6 +39,14 @@
 						<th>Submit Time</th>
 						<td>{{selectedChange.getInformation().createTime | date:'EEEE, MM/dd hh:mm:ss a'}}</td>
 					</tr>
+					<tr ng-show="selectedChange.getInformation().startTime != null">
+						<th>Start Time</th>
+						<td>{{selectedChange.getInformation().startTime | date:'EEEE, MM/dd hh:mm:ss a'}}</td>
+					</tr>
+					<tr ng-show="selectedChange.getInformation().startTime != null && selectedChange.getInformation().endTime != null">
+						<th>Duration</th>
+						<td>{{(selectedChange.getInformation().endTime - selectedChange.getInformation().startTime) / 60000 | number:0}}m {{((selectedChange.getInformation().endTime - selectedChange.getInformation().startTime) % 60000) / 1000 | number:0}}s</td>
+					</tr>
 					<tr>
 						<th>Branch</th>
 						<td>{{selectedChange.getInformation().target}}</td>
