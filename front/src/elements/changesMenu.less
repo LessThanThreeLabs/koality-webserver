@@ -102,12 +102,11 @@
 			overflow-y: auto;
 
 			.changesMenuEmptyMessage {
-				position: absolute;
-				top: @headerHeight - @borderRadius;
-				left: 0;
-				width: @menuWidth - @toothWidth;
-				z-index: -1;
+				display: block;
+				position: relative;
 				padding: 12px;
+				width: @menuWidth - @toothWidth;
+				min-height: @optionHeight;
 				box-sizing: border-box;
 				-moz-box-sizing: border-box;
 			}

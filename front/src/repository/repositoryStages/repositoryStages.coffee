@@ -67,6 +67,10 @@ window.RepositoryStages = ['$scope', '$routeParams', 'StagesManager', 'currentRe
 		return true if stage.id is getMostImportantStageWithTypeAndName(stage.type, stage.name).id
 		return false
 
+	$scope.hasNoFailedStages = () ->
+		return not $scope.stagesManager.getStages().some (stage) -> 
+			return stage.status is 'failed'
+
 	$scope.selectStage = (stage) ->
 		$scope.selectedStage.setId $scope.selectedRepository.getId(), $scope.selectedChange.getId(), stage.id
 		$scope.selectedStage.setInformation stage
