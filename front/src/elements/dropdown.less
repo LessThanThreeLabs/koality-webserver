@@ -9,15 +9,6 @@
 	height: 100%;
 	vertical-align: top;
 
-	&.light {
-		padding: 5px 10px 5px 10px;
-		height: auto;
-		line-height: normal;
-		background-color: @panelBackground;
-		border-radius: @borderRadius;
-		vertical-align: baseline;
-	}
-
 	&:hover {
 		background-color: @koalityDarkGray;
 
@@ -25,6 +16,7 @@
 	}
 
 	.dropdownOptions {
+		cursor: default;
 		display: none;
 		position: absolute;
 		top: 100%;
@@ -44,15 +36,17 @@
 		a.dropdownOption {
 			@dropdownHeight: 40px;
 
-			display: block !important;
-			margin: 0 !important;
-			padding: 0 20px 0 20px !important;
+			display: block;
+			margin: 0;
+			padding: 0 20px 0 20px;
 			height: @dropdownHeight;
 			line-height: @dropdownHeight;
 			white-space: nowrap;
 			color: @koalityGreen;
 			background-color: @koalityDarkGray;
 			border-top: 1px solid @platformBackground;
+
+			&.disabled { color: @koalityWhite !important; }
 
 			&:last-child { 
 				border-bottom-left-radius: @borderRadius;
@@ -67,8 +61,58 @@
 
 			&:active {
 				color: @koalityWhite;
-				background-color: @koalityGreen;	
+				background-color: @koalityGreen;
 			}
+		}
+	}
+
+	&.dropdownLeft {
+		.dropdownOptions {
+			left: 0;
+			right: auto;
+		}
+	}
+
+	&.dropdownRight {
+		.dropdownOptions {
+			left: auto;
+			right: 0;
+		}
+	}
+
+	&.dropdownLight {
+		padding: 5px 10px 5px 10px;
+		height: auto;
+		font-size: 15px;
+		font-weight: 500;
+		line-height: normal;
+		background-color: @platformBackground;
+		border-radius: @borderRadius;
+		vertical-align: baseline;
+
+		a.dropdownOption {
+			color: @koalityGray;
+			font-size: 14px;
+			font-weight: 500;
+			border-top-width: 0;
+			background-color: @platformBackground;
+
+			&.disabled { color: @koalityWhite !important; }
+
+			&:first-child {
+				border-top-left-radius: @borderRadius;
+				border-top-right-radius: @borderRadius;
+			}
+
+			&:hover {
+				color: @koalityLightGray;
+				background-color: @platformBackground;
+			}
+
+			&:active {
+				color: @koalityLightGray;
+				background-color: @platformBackground;
+			}			
 		}
 	}
 }

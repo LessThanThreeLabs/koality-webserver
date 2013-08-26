@@ -5,7 +5,9 @@ angular.module('koality.directive.dropdown', []).
 		transclude: true
 		template: '<div class="dropdownContainer unselectable" ng-transclude></div>'
 		link: (scope, element, attributes) ->
-			element.addClass 'light' if attributes.light?
+			element.addClass 'dropdownLeft' if attributes.left?
+			element.addClass 'dropdownRight' if attributes.right?
+			element.addClass 'dropdownLight' if attributes.light?
 	]).
 	directive('dropdownOptions', ['$document', ($document) ->
 		restrict: 'E'
