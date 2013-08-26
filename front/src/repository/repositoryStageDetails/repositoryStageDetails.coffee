@@ -56,30 +56,32 @@ window.RepositoryStageDetails = ['$scope', '$location', 'rpc', 'events', 'Consol
 		updateExportUrisAddedListener()
 		retrieveCurrentChangeExportUris()
 
+	$scope.$watch 'selectedStage.getId()', () ->
+		$scope.output.type = null
+
 	$scope.$watch 'selectedStage.getInformation().outputTypes', (() ->
 		return if not $scope.selectedStage.getInformation()?.outputTypes?
-
+		
 		$scope.output.hasConsole = 'console' in $scope.selectedStage.getInformation().outputTypes
 		$scope.output.hasXUnit = 'xunit' in $scope.selectedStage.getInformation().outputTypes
 
 		if 'xunit' in $scope.selectedStage.getInformation().outputTypes
 			$scope.output.type = 'xunit'
-		else
+		else if 'console' in $scope.selectedStage.getInformation().outputTypes
 			$scope.output.type = 'console'
 	), true
 
 	$scope.$watch 'selectedStage.getId() + output.type', () ->
+		return if not $scope.selectedStage.getId()?
+
 		$scope.consoleTextManager.clear()
 		$scope.xunit.testCases = []
 
-		if not $scope.selectedStage.getId()?
-			$scope.output.type = null
-		else
-			if $scope.output.type is 'console'
-				$scope.consoleTextManager.setStageId $scope.selectedStage.getId()
-				$scope.consoleTextManager.listenToEvents()
-				$scope.consoleTextManager.retrieveInitialLines()
+		if $scope.output.type is 'console'
+			$scope.consoleTextManager.setStageId $scope.selectedStage.getId()
+			$scope.consoleTextManager.listenToEvents()
+			$scope.consoleTextManager.retrieveInitialLines()
 
-			if $scope.output.type is 'xunit'
-				retrieveXUnitOutput()
+		if $scope.output.type is 'xunit'
+			retrieveXUnitOutput()
 ]
