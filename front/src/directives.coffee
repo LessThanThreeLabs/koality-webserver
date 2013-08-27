@@ -58,7 +58,7 @@ angular.module('koality.directive', []).
 
 				return if cleanedValue.length is 16 then cleanedValue else undefined
 	).
-	directive('fadingContent', ['$window', ($window) ->
+	directive('fadingContent', ['$window', '$timeout', ($window, $timeout) ->
 		restrict: 'A'
 		replace: true
 		transclude: true
@@ -73,7 +73,7 @@ angular.module('koality.directive', []).
 			fadingContentElement = element.find('.fadingContent')
 			
 			setFadingContentWidth = () ->
-				fadingContentElement.width element.width()
+				fadingContentElement.width element.width() if element.width() > 100
 
 			setFadingContentWidth()
 			$($window).resize () -> setFadingContentWidth()
