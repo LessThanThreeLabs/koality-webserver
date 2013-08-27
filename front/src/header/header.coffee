@@ -28,6 +28,9 @@ window.Header = ['$scope', '$location', 'initialState', 'rpc', 'events', 'notifi
 	
 	getRepositories()
 
+	$scope.goToDashboard = () ->
+		$location.path('/').search({})
+
 	$scope.sendFeedback = () ->
 		if not $scope.feedback.message or $scope.feedback.message is ''
 			notification.error 'Feedback cannot be empty'

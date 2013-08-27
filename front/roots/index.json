@@ -131,6 +131,7 @@
 
 	"img": {
 		"image/png": [
+			"/img/headerLogo.png",
 			"/img/icons/search.png",
 			"/img/icons/link.png",
 			"/img/icons/error.png"
