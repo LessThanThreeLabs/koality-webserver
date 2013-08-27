@@ -32,6 +32,12 @@ window.AdminUpgrade = ['$scope', '$http', '$timeout', 'initialState', 'rpc', 'ev
 			handleUpgradeStatus upgradeStatus
 
 	handleUpgradeStatus = (upgradeStatus) ->
+		return if not upgradeStatus?
+
+		$scope.version = 
+			current: upgradeStatus.currentVersion
+			future: upgradeStatus.upgradeVersion
+
 		lastUpgradeStatus = upgradeStatus.lastUpgradeStatus
 		upgradeAvailable = upgradeStatus.upgradeAvailable ? false
 

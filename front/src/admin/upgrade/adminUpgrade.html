@@ -1,5 +1,12 @@
 <div id="adminUpgrade" ng-controller="AdminUpgrade">
-	<panel-header>Upgrade</panel-header>
+	<panel-header>
+		<div class="left">
+			Upgrade
+		</div>
+		<div class="right" ng-show="version.current != null">
+			<span class="versionNumber">Current version: {{version.current}}</span>
+		</div>
+	</panel-header>
 
 	<panel-body no-scroll>
 		<form name="updateForm" novalidate>
