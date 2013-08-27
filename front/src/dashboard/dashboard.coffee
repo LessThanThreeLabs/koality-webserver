@@ -4,7 +4,7 @@ window.Dashboard = ['$scope', 'rpc', 'events', 'ChangesManager', 'localStorage',
 	repositoryCache = {}
 
 	$scope.search =
-		mode: localStorage.repositoryChangesSearchMode ? 'all'
+		mode: localStorage.dashboardSearchMode ? 'all'
 		query: ''
 
 	getRepositories = () ->
@@ -46,7 +46,7 @@ window.Dashboard = ['$scope', 'rpc', 'events', 'ChangesManager', 'localStorage',
 	$scope.$watch 'search', ((newValue, oldValue) ->
 		return if newValue is oldValue
 		$scope.changesManager.retrieveInitialChanges() if $scope.changesManager?
-		localStorage.repositoryChangesSearchMode = $scope.search.mode
+		localStorage.dashboardSearchMode = $scope.search.mode
 	), true
 
 ]
