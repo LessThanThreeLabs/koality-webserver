@@ -38,11 +38,11 @@ angular.module('koality.filter', ['koality.service']).
 
 			gitHubMatch = /^git@github.com:(.*?)(.git)?$/.exec forwardUrl
 			if gitHubMatch? and gitHubMatch[1]?
-				return '<a href="https://github.com/' + gitHubMatch[1] + '/commit/' + sha + '">View Diff in GitHub</a>'
+				return "<a href='https://github.com/#{gitHubMatch[1]}/commit/#{sha}' target='_blank'>View Diff in GitHub</a>"
 
 			bitBucketMatch = /^git@bitbucket.[org|com]:(.*?)(.git)?$/.exec forwardUrl
 			if bitBucketMatch? and bitBucketMatch[1]?
-				return '<a href="https://bitbucket.org/' + bitBucketMatch[1] + '/commits/' + sha + '">View Diff in BitBucket</a>'
+				return "<a href='https://bitbucket.org/#{bitBucketMatch[1]}/commits/#{sha}' target='_blank'>View Diff in BitBucket</a>"
 
 			return null
 	])
