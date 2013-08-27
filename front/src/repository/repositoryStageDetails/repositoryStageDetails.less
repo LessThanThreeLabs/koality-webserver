@@ -11,10 +11,6 @@
 		color: @koalityGray;
 	}
 
-	.triangle {
-		margin-left: 10px;
-	}
-
 	#summary {
 
 		pre {
@@ -78,12 +74,6 @@
 			width: 100%;
 			table-layout: fixed;
 
-			.failureText, .errorText, .sysoutText, .syserrText {
-				margin-top: 10px;
-				color: @koalityWhite;
-				font-size: 13px;
-			}
-
 			.nameColumn {
 				padding-left: 25px;
 
@@ -92,16 +82,9 @@
 					cursor: pointer;
 				}
 
-				.testCaseExpand {
-					padding-left: 5px;
-				}
-
-				pre {
-					font-family: 'PT Mono', monospace;
-					font-size: 11px;
-					color: @koalityWhite;
-					white-space: pre-wrap;
-					word-wrap: break-word;
+				.triangleWrapper {
+					display: inline-block;
+					width: 17px;
 				}
 			}
 
@@ -111,6 +94,28 @@
 
 			.timeColumn {
 				width: 115px;
+			}
+
+			.textColumn {
+				padding: 0 25px 16px 25px;
+
+				.failureText, .errorText, .sysoutText, .syserrText {
+					margin-top: 10px;
+					color: @koalityWhite;
+					font-size: 13px;
+
+					&:first-child {
+						margin-top: 0;	
+					}
+				}
+
+				pre {
+					font-family: 'PT Mono', monospace;
+					font-size: 11px;
+					color: @koalityWhite;
+					white-space: pre-wrap;
+					word-wrap: break-word;
+				}
 			}
 		}
 	}

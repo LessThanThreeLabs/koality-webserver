@@ -84,53 +84,61 @@
 
 			<div id="xunit" ng-show="output.type == 'xunit'">
 				<div on-scroll-to-bottom="xunit.maxResults = xunit.maxResults + 100" fading-content>
-					<table class="delineated">
-						<tr>
-						<th class="nameColumn sortableColumn unselectable" ng-click="xunit.orderByPredicate = 'name'; xunit.orderByReverse = !xunit.orderByReverse">
-							<div class="triangle gray" ng-class="{right: xunit.orderByPredicate != 'name', up: xunit.orderByPredicate == 'name' && !xunit.orderByReverse, down: xunit.orderByPredicate == 'name' && xunit.orderByReverse}"></div>
-							Name
-						</th>
-						<th class="statusColumn sortableColumn unselectable" ng-click="xunit.orderByPredicate = 'status'; xunit.orderByReverse = !xunit.orderByReverse">
-							<div class="triangle gray" ng-class="{right: xunit.orderByPredicate != 'status', up: xunit.orderByPredicate == 'status' && !xunit.orderByReverse, down: xunit.orderByPredicate == 'status' && xunit.orderByReverse}"></div>
-							Status
-						</th>
-						<th class="timeColumn sortableColumn unselectable" ng-click="xunit.orderByPredicate = 'time'; xunit.orderByReverse = !xunit.orderByReverse">
-							<div class="triangle gray" ng-class="{right: xunit.orderByPredicate != 'time', up: xunit.orderByPredicate == 'time' && !xunit.orderByReverse, down: xunit.orderByPredicate == 'time' && xunit.orderByReverse}"></div>
-							Duration
-						</th>
-					</tr>
-						<tr ng-repeat="testCase in xunit.testCases | orderBy:xunit.orderByPredicate:xunit.orderByReverse | limitTo:xunit.maxResults" ng-class="{red: testCase.status == 'failed', gray: testCase.status != 'failed'}" ng-click="testCase.showMore = !testCase.showMore">
-							<td class="nameColumn" ng-class="{selectable: testCase.failure != null || testCase.error != null || testCase.sysout != null || testCase.syserr != null}">
-								<span>{{testCase.name}}</span>
+					<table class="delineated tbodyHack">
+						<tbody>
+							<tr>
+								<th class="nameColumn sortableColumn unselectable" ng-click="xunit.orderByPredicate = 'name'; xunit.orderByReverse = !xunit.orderByReverse">
+									<div class="triangle gray" ng-class="{right: xunit.orderByPredicate != 'name', up: xunit.orderByPredicate == 'name' && !xunit.orderByReverse, down: xunit.orderByPredicate == 'name' && xunit.orderByReverse}"></div>
+									Name
+								</th>
+								<th class="statusColumn sortableColumn unselectable" ng-click="xunit.orderByPredicate = 'status'; xunit.orderByReverse = !xunit.orderByReverse">
+									<div class="triangle gray" ng-class="{right: xunit.orderByPredicate != 'status', up: xunit.orderByPredicate == 'status' && !xunit.orderByReverse, down: xunit.orderByPredicate == 'status' && xunit.orderByReverse}"></div>
+									Status
+								</th>
+								<th class="timeColumn sortableColumn unselectable" ng-click="xunit.orderByPredicate = 'time'; xunit.orderByReverse = !xunit.orderByReverse">
+									<div class="triangle gray" ng-class="{right: xunit.orderByPredicate != 'time', up: xunit.orderByPredicate == 'time' && !xunit.orderByReverse, down: xunit.orderByPredicate == 'time' && xunit.orderByReverse}"></div>
+									Duration
+								</th>
+							</tr>
+						</tbody>
 
-								<span class="testCaseExpand" ng-show="testCase.failure != null || testCase.error != null || testCase.sysout != null || testCase.syserr != null">
-									<span ng-show="testCase.showMore">[-]</span>
-									<span ng-show="!testCase.showMore">[+]</span>
-								</span>
+						<tbody ng-repeat="testCase in xunit.testCases | orderBy:xunit.orderByPredicate:xunit.orderByReverse | limitTo:xunit.maxResults">
+							<tr ng-class="{red: testCase.status == 'failed', gray: testCase.status != 'failed', combineWithNext: testCase.showMore}">
+								<td class="nameColumn" ng-class="{selectable: testCase.failure != null || testCase.error != null || testCase.sysout != null || testCase.syserr != null}" ng-click="testCase.showMore = (testCase.failure != null || testCase.error != null || testCase.sysout != null || testCase.syserr != null) && !testCase.showMore">
+									<div class="triangleWrapper">
+										<div class="triangle" ng-class="{red: testCase.status == 'failed', gray: testCase.status != 'failed', right: !testCase.showMore, down: testCase.showMore}" ng-show="testCase.failure != null || testCase.error != null || testCase.sysout != null || testCase.syserr != null"></div>
+									</div>
+									
+									<span>{{testCase.name}}</span>
+								</td>
+								<td class="statusColumn">{{testCase.status}}</td>
+								<td class="timeColumn">{{testCase.time | number: 6}}</td>
+							</tr>
 
-								<div class="failureText" ng-show="testCase.showMore && testCase.failure != null">
-									<strong>Failure:</strong>
-									<pre>{{testCase.failure}}</pre>
-								</div>
+							<tr ng-show="testCase.showMore" ng-class="{combineWithPrevious: testCase.showMore}">
+								<td class="textColumn" colspan=3>
+									<div class="failureText" ng-if="testCase.failure != null">
+										<strong>Failure:</strong>
+										<pre>{{testCase.failure}}</pre>
+									</div>
 
-								<div class="errorText" ng-show="testCase.showMore && testCase.error != null">
-									<strong>Error:</strong>
-									<pre>{{testCase.error}}</pre>
-								</div>
+									<div class="errorText" ng-if="testCase.error != null">
+										<strong>Error:</strong>
+										<pre>{{testCase.error}}</pre>
+									</div>
 
-								<div class="sysoutText" ng-show="testCase.showMore && testCase.sysout != null">
-									<strong>System Out:</strong>
-									<pre>{{testCase.sysout}}</pre>
-								</div>
+									<div class="sysoutText" ng-if="testCase.sysout != null">
+										<strong>System Out:</strong>
+										<pre>{{testCase.sysout}}</pre>
+									</div>
 
-								<div class="syserrText" ng-show="testCase.showMore && testCase.syserr != null">
-									<strong>System Error:</strong>
-									<pre>{{testCase.syserr}}</pre>
-								</div>
-							</td>
-							<td class="statusColumn">{{testCase.status}}</td>
-							<td class="timeColumn">{{testCase.time | number: 6}}</td>
-						</tr>
+									<div class="syserrText" ng-if="testCase.syserr != null">
+										<strong>System Error:</strong>
+										<pre>{{testCase.syserr}}</pre>
+									</div>
+								</td>
+							</tr>
+						</tbody>
 					</table>
 				</div>
 			</div>

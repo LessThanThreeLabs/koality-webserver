@@ -233,7 +233,7 @@ body {
 		&.delineated {
 			border-collapse: separate;
 
-			tr, th, td {
+			tbody, tr, th, td {
 				&.gray { color: @koalityGray; }
 				&.green { color: @koalityGreen; }
 				&.orange { color: @koalityOrange; }
@@ -271,6 +271,14 @@ body {
 					}
 				}
 
+				&.combineWithNext {
+					th, td { border-bottom-width: 0; }
+				}
+
+				&.combineWithPrevious {
+					th, td { border-top-width: 0; }
+				}
+
 				&:first-child {
 					th, td { border-top-width: 0; }
 				}
@@ -280,6 +288,37 @@ body {
 				}
 
 				&:hover {
+					td { background-color: @koalityDarkGray; }
+				}
+			}
+
+			// Until Angular supports ng-repeat across multiple
+			// DOM elements, we have to use <tbody>...
+			// THIS WILL BE AVAILABLE IN ANGULAR 1.2.0
+			&.tbodyHack {
+				tr {
+					&:first-child {
+						th, td { border-top-width: 1px; }
+					}
+
+					&:last-child { 
+						th, td { border-bottom-width: 1px; }
+					}
+				}
+
+				tbody:first-child {
+					tr:first-child {
+						th, td { border-top-width: 0; }
+					}
+				}
+
+				tbody:last-child {
+					tr {
+						th, td { border-bottom-width: 0; }
+					}
+				}
+
+				tbody:hover {
 					td { background-color: @koalityDarkGray; }
 				}
 			}
