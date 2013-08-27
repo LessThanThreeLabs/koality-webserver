@@ -29,7 +29,8 @@ window.Header = ['$scope', '$location', 'initialState', 'rpc', 'events', 'notifi
 	getRepositories()
 
 	$scope.goToDashboard = () ->
-		$location.path('/').search({})
+		if $scope.rootPath isnt '/dashboard'
+			$location.path('/').search({})
 
 	$scope.sendFeedback = () ->
 		if not $scope.feedback.message or $scope.feedback.message is ''
