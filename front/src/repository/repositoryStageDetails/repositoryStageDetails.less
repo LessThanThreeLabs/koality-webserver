@@ -78,13 +78,10 @@
 			width: 100%;
 			table-layout: fixed;
 
-			.failureText, .errorText {
+			.failureText, .errorText, .sysoutText, .syserrText {
 				margin-top: 10px;
-				font-family: 'PT Mono', monospace;
-				font-size: 11px;
 				color: @koalityWhite;
-				white-space: pre-wrap;
-				word-wrap: break-word;
+				font-size: 13px;
 			}
 
 			.nameColumn {
@@ -97,6 +94,14 @@
 
 				.testCaseExpand {
 					padding-left: 5px;
+				}
+
+				pre {
+					font-family: 'PT Mono', monospace;
+					font-size: 11px;
+					color: @koalityWhite;
+					white-space: pre-wrap;
+					word-wrap: break-word;
 				}
 			}
 

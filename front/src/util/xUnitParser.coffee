@@ -77,8 +77,10 @@ window.xUnitParse = (xunitOutput) ->
             name: getAttribute currentTestCaseString.text, 'name'
             time: Number getAttribute currentTestCaseString.text, 'time'
             failure: getTextInElement currentTestCaseString.text, 'failure'
-            error: getTextInElement currentTestCaseString.text, 'system-err'
-        testCase.status = if testCase.failure? then 'failed' else 'passed'
+            error: getTextInElement currentTestCaseString.text, 'error'
+            sysout: getTextInElement currentTestCaseString.text, 'system-out'
+            syserr: getTextInElement currentTestCaseString.text, 'system-err'
+        testCase.status = if testCase.failure? or testCase.error? then 'failed' else 'passed'
 
         testCases.push testCase
         currentTestCaseString = getTestCaseString xunitOutput, currentTestCaseString.end
