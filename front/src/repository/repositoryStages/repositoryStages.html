@@ -9,7 +9,7 @@
 				<dropdown right light>
 					<span ng-show="filter.type == 'all'">All</span>
 					<span ng-show="filter.type == 'failed'">Failed</span>
-					<span>&nbsp;&nbsp;v</span>
+					<div class="triangle down white"></div>
 					<dropdown-options>
 						<dropdown-option ng-click="filter.type = 'all'" ng-class="{disabled: filter.type == 'all'}">All</dropdown-option>
 						<dropdown-option ng-click="filter.type = 'failed'" ng-class="{disabled: filter.type == 'failed'}">Failed</dropdown-option>

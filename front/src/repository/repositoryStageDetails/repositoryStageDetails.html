@@ -15,7 +15,7 @@
 				<dropdown right light>
 					<span ng-show="output.type == 'console'">Text</span>
 					<span ng-show="output.type == 'xunit'">XUnit</span>
-					<span>&nbsp;&nbsp;v</span>
+					<div class="triangle down white"></div>
 					<dropdown-options>
 						<dropdown-option ng-click="output.type = 'console'" ng-if="output.hasConsole" ng-class="{disabled: output.type == 'console'}">Text</dropdown-option>
 						<dropdown-option ng-click="output.type = 'xunit'" ng-if="output.hasXUnit" ng-class="{disabled: output.type == 'xunit'}">XUnit</dropdown-option>
