@@ -32,8 +32,12 @@ window.AdminRepositories = ['$scope', '$routeParams', 'initialState', 'rpc', 'ev
 			if error? then notification.error error
 			else
 				$scope.maxRepositoryCount = maxRepositoryCount ? Number.POSITIVE_INFINITY
-				$scope.exceededMaxRepositoryCount = $scope.repositories.length >= $scope.maxRepositoryCount
-				showRepositoriesLimitWarningIfNecessary()
+				updateRepositoryCountExceeded()
+
+	updateRepositoryCountExceeded = () ->
+		return if not $scope.maxRepositoryCount?
+		$scope.exceededMaxRepositoryCount = $scope.repositories.length >= $scope.maxRepositoryCount
+		showRepositoriesLimitWarningIfNecessary()
 
 	showRepositoriesLimitWarningIfNecessary = () ->
 		upgradeUrl = 'https://koalitycode.com/account/plan'
@@ -47,16 +51,17 @@ window.AdminRepositories = ['$scope', '$routeParams', 'initialState', 'rpc', 'ev
 
 	getIsConnectedToGitHub = () ->
 		rpc 'users', 'read', 'isConnectedToGitHub', null, (error, connectedToGitHub) ->
-			console.log connectedToGitHub
 			if error? then notification.error error
 			else $scope.isConnectedToGitHub = connectedToGitHub
 
 	handleAddedRepositoryUpdate = (data) ->
 		$scope.repositories.push addNewForwardUrl data
+		updateRepositoryCountExceeded()
 
 	handleRemovedRepositoryUpdate = (data) ->
 		repositoryToRemoveIndex = (index for repository, index in $scope.repositories when repository.id is data.id)[0]
 		$scope.repositories.splice repositoryToRemoveIndex, 1 if repositoryToRemoveIndex?
+		updateRepositoryCountExceeded()
 
 	createRepositoryForwardUrlUpdateHandler = (repository) ->
 		return (data) ->
