@@ -9,6 +9,19 @@ getAttribute = (testCaseString, attributeName) ->
 
     return testCaseString.substring nameStartIndex, nameEndIndex
 
+extractTextFromCData = (text) ->
+    assert.ok typeof text is 'string'
+
+    cdataStartTag = '<![CDATA['
+    cdataEndTag = ']]>'
+
+    return text if text.indexOf(cdataStartTag) is -1 or text.indexOf(cdataEndTag) is -1
+
+    textStartIndex = text.indexOf(cdataStartTag) + cdataStartTag.length
+    textEndIndex = text.indexOf cdataEndTag
+
+    return text.substring textStartIndex, textEndIndex
+
 getTextInElement = (testCaseString, elementName) ->
     assert.ok typeof testCaseString is 'string'
     assert.ok typeof elementName is 'string'
@@ -19,7 +32,8 @@ getTextInElement = (testCaseString, elementName) ->
     textStartIndex = testCaseString.indexOf('>', elementStartIndex) + 1
     textEndIndex = testCaseString.indexOf("</#{elementName}>", textStartIndex)
 
-    return testCaseString.substring textStartIndex, textEndIndex
+    text = testCaseString.substring textStartIndex, textEndIndex
+    return extractTextFromCData text
 
 getTestCaseString = (xunitOutput, startIndex) ->
     assert.ok typeof xunitOutput is 'string'
