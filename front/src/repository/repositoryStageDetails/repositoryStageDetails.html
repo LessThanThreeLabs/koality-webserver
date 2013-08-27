@@ -101,13 +101,16 @@
 					</tr>
 						<tr ng-repeat="testCase in xunit.testCases | orderBy:xunit.orderByPredicate:xunit.orderByReverse | limitTo:xunit.maxResults" ng-class="{red: testCase.status == 'failed', gray: testCase.status != 'failed'}" ng-click="testCase.showMore = !testCase.showMore">
 							<td class="nameColumn" ng-class="{selectable: testCase.failure != null || testCase.error != null}">
-								{{testCase.name}}
-								<pre class="failureText" ng-show="testCase.showMore && testCase.failure != null">
-									{{testCase.failure}}
-								</pre>
-								<pre class="errorText" ng-show="testCase.showMore && testCase.error != null">
-									{{testCase.error}}
-								</pre>
+								<span>{{testCase.name}}</span>
+
+								<span class="testCaseExpand" ng-show="testCase.failure != null || testCase.error != null">
+									<span ng-show="testCase.showMore">[-]</span>
+									<span ng-show="!testCase.showMore">[+]</span>
+								</span>
+
+								<pre class="failureText" ng-show="testCase.showMore && testCase.failure != null">{{testCase.failure}}</pre>
+
+								<pre class="errorText" ng-show="testCase.showMore && testCase.error != null">{{testCase.error}}</pre>
 							</td>
 							<td class="statusColumn">{{testCase.status}}</td>
 							<td class="timeColumn">{{testCase.time | number: 6}}</td>
