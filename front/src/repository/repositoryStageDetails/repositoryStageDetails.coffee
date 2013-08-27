@@ -24,8 +24,8 @@ window.RepositoryStageDetails = ['$scope', '$location', 'rpc', 'events', 'Consol
 		$scope.exportUris = []
 		return if not $scope.selectedChange.getId()?
 
-		rpc 'changes', 'read', 'getChangeExportUris', id: $scope.selectedChange.getId(), (error, uris) ->
-			$scope.exportUris = uris
+		rpc 'changes', 'read', 'getChangeExportUris', id: $scope.selectedChange.getId(), (error, exportUris) ->
+			$scope.exportUris = exportUris
 
 	retrieveXUnitOutput = () ->
 		assert.ok $scope.output.type is 'xunit'
@@ -40,7 +40,7 @@ window.RepositoryStageDetails = ['$scope', '$location', 'rpc', 'events', 'Consol
 
 	handleExportUrisAdded = (data) ->
 		$scope.exportUris ?= []
-		$scope.exportUris = $scope.exportUris.concat data.uris
+		$scope.exportUris = $scope.exportUris.concat data
 
 	addedExportUrisEvents = null
 	updateExportUrisAddedListener = () ->
@@ -49,7 +49,7 @@ window.RepositoryStageDetails = ['$scope', '$location', 'rpc', 'events', 'Consol
 			addedExportUrisEvents = null
 
 		if $scope.selectedChange.getId()?
-			addedExportUrisEvents = events('changes', 'export uris added', $scope.selectedChange.getId()).setCallback(handleExportUrisAdded).subscribe()
+			addedExportUrisEvents = events('changes', 'export metadata added', $scope.selectedChange.getId()).setCallback(handleExportUrisAdded).subscribe()
 	$scope.$on '$destroy', () -> addedExportUrisEvents.unsubscribe() if addedExportUrisEvents?
 
 	$scope.$watch 'selectedChange.getId()', () ->

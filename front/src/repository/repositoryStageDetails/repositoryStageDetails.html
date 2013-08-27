@@ -67,8 +67,10 @@
 					</tr>
 					<tr ng-show="exportUris.length > 0">
 						<th>Exported Files</th>
-						<td>
-							<div ng-repeat="uri in exportUris"><a ng-href="{{uri}}" target="_blank">{{uri}}</a></div>
+						<td class="exportUris">
+							<div ng-repeat="exportUri in exportUris">
+								<a ng-href="{{exportUri.uri}}" target="_blank">{{exportUri.uri}}</a>
+							</div>
 						</td>
 					</tr>
 				</table>

@@ -12,13 +12,13 @@ getAttribute = (testCaseString, attributeName) ->
 extractTextFromCData = (text) ->
     assert.ok typeof text is 'string'
 
-    cdataStartTag = '<![CDATA['
-    cdataEndTag = ']]>'
+    cDataStartTag = '<![CDATA['
+    cDataEndTag = ']]>'
 
-    return text if text.indexOf(cdataStartTag) is -1 or text.indexOf(cdataEndTag) is -1
+    return text if text.indexOf(cDataStartTag) is -1 or text.indexOf(cDataEndTag) is -1
 
-    textStartIndex = text.indexOf(cdataStartTag) + cdataStartTag.length
-    textEndIndex = text.indexOf cdataEndTag
+    textStartIndex = text.indexOf(cDataStartTag) + cDataStartTag.length
+    textEndIndex = text.indexOf cDataEndTag
 
     return text.substring textStartIndex, textEndIndex
 
