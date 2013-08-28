@@ -7,6 +7,8 @@ window.AdminRepositories = ['$scope', '$routeParams', 'initialState', 'rpc', 'ev
 	$scope.currentlyEditingRepositoryId = null
 	$scope.currentlyOpenDrawer = null
 
+	$scope.repositories = []
+
 	$scope.addRepository =
 		setupType: 'manual'
 		manual: {}
@@ -52,15 +54,31 @@ window.AdminRepositories = ['$scope', '$routeParams', 'initialState', 'rpc', 'ev
 	getIsConnectedToGitHub = () ->
 		rpc 'users', 'read', 'isConnectedToGitHub', null, (error, connectedToGitHub) ->
 			if error? then notification.error error
-			else $scope.isConnectedToGitHub = connectedToGitHub
+			else
+				$scope.isConnectedToGitHub = connectedToGitHub
+				if connectedToGitHub then getGitHubRepositories()
+
+	getGitHubRepositories = () ->
+		rpc 'repositories', 'read', 'getGitHubRepositories', null, (error, gitHubRepositories) ->
+			console.log gitHubRepositories
+			if error? then notification.error error
+			else $scope.gitHubRepositories = gitHubRepositories
 
 	handleAddedRepositoryUpdate = (data) ->
-		$scope.repositories.push addNewForwardUrl data
+		return if data.resourceId isnt initialState.user.id
+
+		$scope.repositories ?= []
+		repositoryExists = (repository for repository in $scope.repositories when repository.id is data.id).length isnt 0
+		$scope.repositories.push addNewForwardUrl(data) if not repositoryExists
+
 		updateRepositoryCountExceeded()
 
 	handleRemovedRepositoryUpdate = (data) ->
+		return if data.resourceId isnt initialState.user.id
+
 		repositoryToRemoveIndex = (index for repository, index in $scope.repositories when repository.id is data.id)[0]
 		$scope.repositories.splice repositoryToRemoveIndex, 1 if repositoryToRemoveIndex?
+
 		updateRepositoryCountExceeded()
 
 	createRepositoryForwardUrlUpdateHandler = (repository) ->
@@ -136,6 +154,9 @@ window.AdminRepositories = ['$scope', '$routeParams', 'initialState', 'rpc', 'ev
 			else
 				notification.success 'Created repository ' + $scope.addRepository.manual.name
 				$scope.clearAddRepository()
+
+	$scope.connectToGithub = () ->
+		console.log 'need to connect to GitHub...'
 
 	$scope.clearAddRepository = () ->
 		$scope.addRepository.setupType = 'manual'

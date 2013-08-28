@@ -17,13 +17,13 @@
 						<label>Setup Type</label>
 						<select ng-model="addRepository.setupType" required>
 							<option value="manual">Manual Setup</option>
-							<!-- <option value="gitHub">GitHub Setup</option> -->
+							<option value="gitHub">GitHub Setup</option>
 						</select>
 					</td>
 
 					<td class="setupColumn">
-						<form id="addRepositoryManualForm" name="addRepositoryManualForm" novalidate>
-							<table id="manualSetupTable" ng-show="addRepository.setupType == 'manual'">
+						<form id="addRepositoryManualForm" name="addRepositoryManualForm" ng-show="addRepository.setupType == 'manual'" novalidate>
+							<table id="manualSetupTable">
 								<tr>
 									<td class="manualNameColumn">
 										<label>Name</label>
@@ -50,12 +50,12 @@
 							</table>
 						</form>
 
-						<form id="addRepositoryGitHubForm" name="addRepositoryGitHubForm" novalidate>
-							<table id="gitHubSetupTable" ng-show="addRepository.setupType == 'gitHub'">
+						<form id="addRepositoryGitHubForm" name="addRepositoryGitHubForm" ng-show="addRepository.setupType == 'gitHub' && isConnectedToGitHub" novalidate>
+							<table id="gitHubSetupTable">
 								<tr>
 									<td class="gitHubNameColumn">
 										<label>Name</label>
-										<select ng-model="addRepository.gitHub.name" ng-options="repository as repository for repository in gitHubRepositories" required></select>
+										<select ng-model="addRepository.gitHub.name" ng-options="repository as repository.name for repository in gitHubRepositories | orderBy:'name'" required></select>
 									</td>
 									<td class="gitHubAddRepositorySubmitColumn">
 										<busy-button busy="addRepository.gitHub.makingRequest" click="createGitHubRepository()" disabled="addRepositoryGitHubForm.$invalid">Add</busy-button>
@@ -66,6 +66,11 @@
 								</tr>
 							</table>
 						</form>
+
+						<div id="connectToGitHub" ng-show="addRepository.setupType == 'gitHub' && !isConnectedToGitHub">
+							<span>Not yet connected to GitHub.</span>
+							<a ng-click="connectToGitHub()">Click here to connect</a>
+						</div>
 					</td>
 				</tr>
 			</table>
