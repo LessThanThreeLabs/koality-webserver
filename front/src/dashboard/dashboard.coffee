@@ -1,6 +1,6 @@
 'use strict'
 
-window.Dashboard = ['$scope', 'rpc', 'events', 'ChangesManager', 'localStorage', ($scope, rpc, events, ChangesManager, localStorage) ->
+window.Dashboard = ['$scope', 'rpc', 'ChangesManager', 'localStorage', ($scope, rpc, ChangesManager, localStorage) ->
 	repositoryCache = {}
 
 	$scope.search =

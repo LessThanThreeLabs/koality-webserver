@@ -57,15 +57,18 @@ angular.module('koality.service.changes', []).
 				@_gettingMoreChanges = false
 
 			_handleChangeAdded: (data) =>
+				return if not data.resourceId in @repositoryIds
 				if @_doesChangeMatchQuery(data) and not @_changesCache[data.id]?
 					@_changesCache[data.id] = data
 					@_changes.unshift data
 
 			_handleChangeStarted: (data) =>
+				return if not data.resourceId in @repositoryIds
 				change = @_changesCache[data.id]
 				$.extend true, change, data if change?
 
 			_handleChangeFinished: (data) =>
+				return if not data.resourceId in @repositoryIds
 				change = @_changesCache[data.id]
 				$.extend true, change, data if change?
 
@@ -133,15 +136,18 @@ angular.module('koality.service.changes', []).
 				@_gettingStages = false
 
 			_handleStageAdded: (data) =>
+				return if data.resourceId isnt @_changeId
 				if not @_stagesCache[data.id]?
 					@_stagesCache[data.id] = data
 					@_stages.push data
 
 			_handleStageUpdated: (data) =>
+				return if data.resourceId isnt @_changeId
 				stage = @_stagesCache[data.id]
 				$.extend true, stage, data if stage?
 
 			_handleStageOutputTypeAdded: (data) =>
+				return if data.resourceId isnt @_changeId
 				stage = @_stagesCache[data.id]
 
 				if stage? and not (data.outputType in stage.outputTypes)
@@ -217,7 +223,8 @@ angular.module('koality.service.changes', []).
 				$timeout (() => @_allowGettingMoreLines = true), 100
 
 			_handleLinesAdded: (data) =>
-				@_processNewLines data
+				return if data.resourceId isnt @_stageId
+				@_processNewLines data.lines
 
 			_processNewLines: (data) =>
 				@_mergeNewLinesWithOldLines()

@@ -39,8 +39,9 @@ window.RepositoryStageDetails = ['$scope', '$location', 'rpc', 'events', 'Consol
 			$scope.xunit.testCases = xUnitParser.getTestCases xunitOutputs
 
 	handleExportUrisAdded = (data) ->
+		return if data.resourceId isnt $scope.selectedChange.getId()
 		$scope.exportUris ?= []
-		$scope.exportUris = $scope.exportUris.concat data
+		$scope.exportUris = $scope.exportUris.concat data.exportMetadata
 
 	addedExportUrisEvents = null
 	updateExportUrisAddedListener = () ->

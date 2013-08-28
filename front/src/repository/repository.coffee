@@ -1,6 +1,6 @@
 'use strict'
 
-window.Repository = ['$scope', '$location', '$routeParams', 'rpc', 'events', 'currentRepository', 'currentChange', 'currentStage', ($scope, $location, $routeParams, rpc, events, currentRepository, currentChange, currentStage) ->
+window.Repository = ['$scope', '$location', '$routeParams', 'rpc', 'currentRepository', 'currentChange', 'currentStage', ($scope, $location, $routeParams, rpc, currentRepository, currentChange, currentStage) ->
 	$scope.selectedRepository = currentRepository
 	$scope.selectedChange = currentChange
 	$scope.selectedStage = currentStage

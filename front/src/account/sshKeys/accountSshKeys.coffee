@@ -22,9 +22,11 @@ window.AccountSshKeys = ['$scope', '$location', '$routeParams', '$timeout', 'rpc
 			$scope.keys = keys
 
 	handleAddedKey = (data) ->
+		return if data.resourceId isnt initialState.user.id
 		$scope.keys.push data
 
 	handleRemovedKey = (data) ->
+		return if data.resourceId isnt initialState.user.id
 		keyToRemoveIndex = (index for key, index in $scope.keys when key.id is data.id)[0]
 		$scope.keys.splice keyToRemoveIndex, 1 if keyToRemoveIndex?
 

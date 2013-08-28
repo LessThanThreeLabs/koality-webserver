@@ -12,11 +12,13 @@ window.Header = ['$scope', '$location', 'initialState', 'rpc', 'events', 'notifi
 			$scope.repositories = repositories
 
 	handleRepositoryAdded = (data) ->
+		return if data.resourceId isnt initialState.user.id
 		$scope.repositories ?= []
 		repositoryExists = (repository for repository in $scope.repositories when repository.id is data.id).length isnt 0
 		$scope.repositories.push data if not repositoryExists
 
 	handleRepositoryRemoved = (data) ->
+		return if data.resourceId isnt initialState.user.id
 		repositoryToRemoveIndex = (index for repository, index in $scope.repositories when repository.id is data.id)[0]
 		$scope.repositories.splice repositoryToRemoveIndex, 1 if repositoryToRemoveIndex?
 

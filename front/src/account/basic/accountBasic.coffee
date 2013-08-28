@@ -1,6 +1,6 @@
 'use strict'
 
-window.AccountBasic = ['$scope', 'initialState', 'rpc', 'notification', ($scope, initialState, rpc, notification) ->
+window.AccountBasic = ['$scope', 'initialState', 'rpc', 'events', 'notification', ($scope, initialState, rpc, events, notification) ->
 	$scope.makingRequest = false
 	$scope.account =
 		email: initialState.user.email
@@ -15,16 +15,26 @@ window.AccountBasic = ['$scope', 'initialState', 'rpc', 'notification', ($scope,
 			if error? then notification.error error
 			else
 				$scope.account.email = basicInformation.email
-				$scope.account.oldFirstName = basicInformation.firstName
-				$scope.account.oldLastName = basicInformation.lastName
+				processName basicInformation
 
-				if not $scope.account.firstName?
-					$scope.account.firstName = basicInformation.firstName
-					
-				if not $scope.account.lastName?
-					$scope.account.lastName = basicInformation.lastName
+	processName = (nameInformation) ->
+		$scope.account.oldFirstName = nameInformation.firstName
+		$scope.account.oldLastName = nameInformation.lastName
+
+		if not $scope.account.firstName?
+			$scope.account.firstName = nameInformation.firstName
+			
+		if not $scope.account.lastName?
+			$scope.account.lastName = nameInformation.lastName
+
+	handleNameUpdated = (data) ->
+		return if data.resourceId isnt initialState.user.id
+		processName data
 
 	getName()
+
+	nameUpdatedEvents = events('users', 'user name updated', initialState.user.id).setCallback(handleNameUpdated).subscribe()
+	$scope.$on '$destroy', nameUpdatedEvents.unsubscribe
 
 	$scope.submit = () ->
 		return if $scope.makingRequest
