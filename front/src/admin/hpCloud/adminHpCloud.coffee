@@ -1,6 +1,6 @@
 'use strict'
 
-window.AdminHpCloud = ['$scope', 'rpc', 'notification', ($scope, rpc, notification) ->
+window.AdminHpCloud = ['$scope', 'rpc', 'events', 'notification', ($scope, rpc, events, notification) ->
 	$scope.makingRequest = false
 
 	getHpCloudKeys = () ->
@@ -27,12 +27,28 @@ window.AdminHpCloud = ['$scope', 'rpc', 'notification', ($scope, rpc, notificati
 		rpc 'systemSettings', 'read', 'getVerifierPoolSettings', null, (error, verifierPoolSettings) ->
 			$scope.verifierPoolSettings = verifierPoolSettings
 
+	handleHpCloudKeysUpdated = (data) ->
+		$scope.hpCloudKeys = data
+
+	handleHpCloudInstanceSettingsUpdated = (data) ->
+		$scope.instanceSettings = data
+
+	handleVerifierPoolUpdated = (data) ->
+		$scope.verifierPoolSettings = data
+
 	getHpCloudKeys()
 	getAllowedInstanceSizes()
 	getAllowedRegions()
 	getAllowedSecurityGroups()
 	getInstanceSettings()
 	getVerifierPoolSettings()
+
+	hpCloudKeysUpdatedEvents = events('systemSettings', 'hpcloud keys updated', null).setCallback(handleHpCloudKeysUpdated).subscribe()
+	hpCloudInstanceSettingsUpdatedEvents = events('systemSettings', 'hpcloud instance settings updated', null).setCallback(handleHpCloudInstanceSettingsUpdated).subscribe()
+	verifierPoolUpdatedEvents = events('systemSettings', 'verifier pool settings updated', null).setCallback(handleVerifierPoolUpdated).subscribe()
+	$scope.$on '$destroy', hpCloudKeysUpdatedEvents.unsubscribe
+	$scope.$on '$destroy', hpCloudInstanceSettingsUpdatedEvents.unsubscribe
+	$scope.$on '$destroy', verifierPoolUpdatedEvents.unsubscribe
 
 	$scope.submit = () ->
 		return if $scope.makingRequest

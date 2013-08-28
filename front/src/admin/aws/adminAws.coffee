@@ -1,6 +1,6 @@
 'use strict'
 
-window.AdminAws = ['$scope', 'rpc', 'notification', ($scope, rpc, notification) ->
+window.AdminAws = ['$scope', 'rpc', 'events', 'notification', ($scope, rpc, events, notification) ->
 	$scope.makingRequest = false
 
 	getAwsKeys = () ->
@@ -23,11 +23,27 @@ window.AdminAws = ['$scope', 'rpc', 'notification', ($scope, rpc, notification) 
 		rpc 'systemSettings', 'read', 'getVerifierPoolSettings', null, (error, verifierPoolSettings) ->
 			$scope.verifierPoolSettings = verifierPoolSettings
 
+	handleAwsKeysUpdated = (data) ->
+		$scope.awsKeys = data
+
+	handleAwsInstanceSettingsUpdated = (data) ->
+		$scope.instanceSettings = data
+
+	handleVerifierPoolUpdated = (data) ->
+		$scope.verifierPoolSettings = data
+
 	getAwsKeys()
 	getAllowedInstanceSizes()
 	getAllowedSecurityGroups()
 	getInstanceSettings()
 	getVerifierPoolSettings()
+
+	awsKeysUpdatedEvents = events('systemSettings', 'aws keys updated', null).setCallback(handleAwsKeysUpdated).subscribe()
+	awsInstanceSettingsUpdatedEvents = events('systemSettings', 'aws instance settings updated', null).setCallback(handleAwsInstanceSettingsUpdated).subscribe()
+	verifierPoolUpdatedEvents = events('systemSettings', 'verifier pool settings updated', null).setCallback(handleVerifierPoolUpdated).subscribe()
+	$scope.$on '$destroy', awsKeysUpdatedEvents.unsubscribe
+	$scope.$on '$destroy', awsInstanceSettingsUpdatedEvents.unsubscribe
+	$scope.$on '$destroy', verifierPoolUpdatedEvents.unsubscribe
 
 	$scope.submit = () ->
 		return if $scope.makingRequest

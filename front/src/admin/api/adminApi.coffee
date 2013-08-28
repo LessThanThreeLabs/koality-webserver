@@ -1,6 +1,6 @@
 'use strict'
 
-window.AdminApi = ['$scope', 'rpc', 'notification', ($scope, rpc, notification) ->
+window.AdminApi = ['$scope', 'rpc', 'events', 'notification', ($scope, rpc, events, notification) ->
 	$scope.mustConfirmRegenerateKey = false
 	$scope.makingRequest = false
 
@@ -12,8 +12,14 @@ window.AdminApi = ['$scope', 'rpc', 'notification', ($scope, rpc, notification) 
 		rpc 'systemSettings', 'read', 'getWebsiteSettings', null, (error, websiteSettings) ->
 			$scope.domainName = websiteSettings.domainName
 
+	handleApiKeyUpdated = (data) ->
+		$scope.apiKey = data
+
 	getApiKey()
 	getDomainName()
+
+	apiKeyUpdatedEvents = events('systemSettings', 'admin api key updated', null).setCallback(handleApiKeyUpdated).subscribe()
+	$scope.$on '$destroy', apiKeyUpdatedEvents.unsubscribe
 
 	$scope.regenerateKey = () ->
 		$scope.mustConfirmRegenerateKey = true

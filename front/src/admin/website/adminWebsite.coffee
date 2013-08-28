@@ -18,7 +18,13 @@ window.AdminWebsite = ['$scope', 'rpc', 'events', 'notification', ($scope, rpc, 
 			if error? then notification.error error
 			else notification.success 'Updated website ssl certificates'
 
+	handleDomainNameUpdated = (data) ->
+		$scope.domain.domainName = data
+
 	getWebsiteSettings()
+
+	domainNameUpdatedEvents = events('systemSettings', 'domain name updated', null).setCallback(handleDomainNameUpdated).subscribe()
+	$scope.$on '$destroy', domainNameUpdatedEvents.unsubscribe
 
 	$scope.submit = () ->
 		submitDomainName() if $scope.domain.domainName? and $scope.domain.domainName isnt ''
