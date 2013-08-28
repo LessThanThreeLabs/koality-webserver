@@ -40,6 +40,8 @@
 			</changes-menu-option>
 
 			<changes-menu-empty-message ng-show="selectedChange.getInformation().aggregateStatus == 'running' && filter.type == 'failed' && hasNoFailedStages()">This change is currently running. No stage has failed yet...</changes-menu-empty-message>
+
+			<changes-menu-empty-message ng-show="selectedChange.getInformation().aggregateStatus != 'running' && filter.type == 'failed' && hasNoFailedStages()">There are no failed stages</changes-menu-empty-message>
 		</changes-menu-options>
 	</changes-menu>
 </div>
