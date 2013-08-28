@@ -156,7 +156,7 @@ angular.module('koality.directive', []).
 				bottom: 0
 				'z-index': -1
 
-			element.width Math.max button.outerWidth(), 25 if not attributes.centered?
+			element.width Math.max button.outerWidth() + 1, 25 if not attributes.centered?
 			element.height Math.max button.outerHeight(), 25
 
 			# This allows us to have more responsive buttons that respond to
