@@ -12,10 +12,8 @@ window.AccountSshKeys = ['$scope', '$location', '$routeParams', '$timeout', 'rpc
 		drawerOpen: false
 
 	if $routeParams.importGitHubKeys
-		$timeout (() -> 
-			$scope.importFromGitHub()
-			$location.search 'importGitHubKeys', null
-		), 100
+		$location.search 'importGitHubKeys', null
+		$timeout (() -> $scope.importFromGitHub()), 100
 
 	getKeys = () ->
 		rpc 'users', 'read', 'getSshKeys', null, (error, keys) ->
