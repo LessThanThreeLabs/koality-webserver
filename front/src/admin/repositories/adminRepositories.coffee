@@ -115,6 +115,9 @@ window.AdminRepositories = ['$scope', '$routeParams', 'initialState', 'rpc', 'ev
 			$scope.currentlyOpenDrawer = drawerName
 			$scope.currentlyEditingRepositoryId = null
 
+	$scope.connectToGithub = () ->
+		console.log 'need to connect to GitHub...'
+
 	$scope.editRepository = (repository) ->
 		otherRepository.deleting = false for otherRepository in $scope.repositories
 		$scope.currentlyEditingRepositoryId = repository?.id
@@ -155,11 +158,23 @@ window.AdminRepositories = ['$scope', '$routeParams', 'initialState', 'rpc', 'ev
 			$scope.addRepository.manual.makingRequest = false
 			if error? then notification.error error
 			else
-				notification.success 'Created repository ' + $scope.addRepository.manual.name
+				notification.success 'Created repository ' + $scope.addRepository.manual.name, 15
 				$scope.clearAddRepository()
 
-	$scope.connectToGithub = () ->
-		console.log 'need to connect to GitHub...'
+	$scope.createGitHubRepository = () ->
+		return if $scope.addRepository.gitHub.makingRequest
+		$scope.addRepository.gitHub.makingRequest = true
+
+		rpc 'repositories', 'create', 'createGitHubRepository', $scope.addRepository.gitHub.repository, false, (error, repositoryInformation) ->
+			$scope.addRepository.gitHub.makingRequest = false
+			if error? then notification.error error
+			else
+				successString = 'Created repository ' + $scope.addRepository.gitHub.name
+				if not repositoryInformation.keyAlreadyAdded
+					successString += '. A Koality SSH Key has been added to your account'
+				notification.success successString, 15
+
+				$scope.clearAddRepository()
 
 	$scope.clearAddRepository = () ->
 		$scope.addRepository.setupType = 'manual'
