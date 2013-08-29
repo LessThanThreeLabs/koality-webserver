@@ -22,54 +22,61 @@
 					</td>
 
 					<td class="setupColumn">
-						<form id="addRepositoryManualForm" name="addRepositoryManualForm" ng-show="addRepository.setupType == 'manual'" novalidate>
-							<table id="manualSetupTable">
-								<tr>
-									<td class="manualNameColumn">
-										<label>Name</label>
-										<input type="text" ng-model="addRepository.manual.name" name="name" ng-maxlength=64 focused required>
-									</td>
-									<td class="manualForwardUrlColumn">
-										<label>Forward Url</label>
-										<input type="text" ng-model="addRepository.manual.forwardUrl" name="forwardUrl" ng-maxlength=256 required>
-									</td>
-									<td class="manualTypeColumn">
-										<label>Type</label>
-										<select ng-model="addRepository.manual.type" required>
-											<option value="git">Git</option>
-											<option value="hg">Hg</option>
-										</select>
-									</td>
-									<td class="manualAddRepositorySubmitColumn">
-										<busy-button busy="addRepository.manual.makingRequest" click="createManualRepository()" disabled="addRepositoryManualForm.$invalid">Add</busy-button>
-									</td>
-									<td class="manualAddRepositoryCancelColumn">
-										<a ng-click="clearAddRepository()">Cancel</a>
-									</td>
-								</tr>
-							</table>
-						</form>
+						<div id="manualSetup">
+							<form id="addRepositoryManualForm" name="addRepositoryManualForm" ng-show="addRepository.setupType == 'manual'" novalidate>
+								<table id="manualSetupTable">
+									<tr>
+										<td class="manualNameColumn">
+											<label>Name</label>
+											<input type="text" ng-model="addRepository.manual.name" name="name" ng-maxlength=64 focused required>
+										</td>
+										<td class="manualForwardUrlColumn">
+											<label>Forward Url</label>
+											<input type="text" ng-model="addRepository.manual.forwardUrl" name="forwardUrl" ng-maxlength=256 required>
+										</td>
+										<td class="manualTypeColumn">
+											<label>Type</label>
+											<select ng-model="addRepository.manual.type" required>
+												<option value="git">Git</option>
+												<option value="hg">Hg</option>
+											</select>
+										</td>
+										<td class="manualAddRepositorySubmitColumn">
+											<busy-button busy="addRepository.manual.makingRequest" click="createManualRepository()" disabled="addRepositoryManualForm.$invalid">Add</busy-button>
+										</td>
+										<td class="manualAddRepositoryCancelColumn">
+											<a ng-click="clearAddRepository()">Cancel</a>
+										</td>
+									</tr>
+								</table>
+							</form>
+						</div>
 
-						<form id="addRepositoryGitHubForm" name="addRepositoryGitHubForm" ng-show="addRepository.setupType == 'gitHub' && isConnectedToGitHub" novalidate>
-							<table id="gitHubSetupTable">
-								<tr>
-									<td class="gitHubNameColumn">
-										<label>Name</label>
-										<select ng-model="addRepository.gitHub.name" ng-options="repository as repository.name for repository in gitHubRepositories | orderBy:'name'" required></select>
-									</td>
-									<td class="gitHubAddRepositorySubmitColumn">
-										<busy-button busy="addRepository.gitHub.makingRequest" click="createGitHubRepository()" disabled="addRepositoryGitHubForm.$invalid">Add</busy-button>
-									</td>
-									<td class="gitHubAddRepositoryCancelColumn">
-										<a ng-click="clearAddRepository()">Cancel</a>
-									</td>
-								</tr>
-							</table>
-						</form>
+						<div id="gitHubSetup">
+							<spinner id="gitHubInformationSpinner" running="addRepository.setupType == 'gitHub' && retrievingGitHubInformation" ng-if="addRepository.setupType == 'gitHub' && retrievingGitHubInformation"></spinner>
 
-						<div id="connectToGitHub" ng-show="addRepository.setupType == 'gitHub' && !isConnectedToGitHub">
-							<span>Not yet connected to GitHub.</span>
-							<a ng-click="connectToGitHub()">Click here to connect</a>
+							<div id="connectToGitHub" ng-show="addRepository.setupType == 'gitHub' && !isConnectedToGitHub && !retrievingGitHubInformation">
+								<span>Not yet connected to GitHub.</span>
+								<a ng-click="connectToGitHub()">Click here to connect</a>
+							</div>
+
+							<form id="addRepositoryGitHubForm" name="addRepositoryGitHubForm" ng-show="addRepository.setupType == 'gitHub' && isConnectedToGitHub && !retrievingGitHubInformation" novalidate>
+
+								<table id="gitHubSetupTable" ng-show="!retrievingGitHubInformation">
+									<tr>
+										<td class="gitHubNameColumn">
+											<label>Name</label>
+											<select ng-model="addRepository.gitHub.name" ng-options="repository as repository.name for repository in gitHubRepositories | orderBy:'name'" required></select>
+										</td>
+										<td class="gitHubAddRepositorySubmitColumn">
+											<busy-button busy="addRepository.gitHub.makingRequest" click="createGitHubRepository()" disabled="addRepositoryGitHubForm.$invalid">Add</busy-button>
+										</td>
+										<td class="gitHubAddRepositoryCancelColumn">
+											<a ng-click="clearAddRepository()">Cancel</a>
+										</td>
+									</tr>
+								</table>
+							</form>
 						</div>
 					</td>
 				</tr>

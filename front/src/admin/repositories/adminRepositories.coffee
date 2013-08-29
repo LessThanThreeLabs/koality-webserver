@@ -52,15 +52,18 @@ window.AdminRepositories = ['$scope', '$routeParams', 'initialState', 'rpc', 'ev
 			else $scope.publicKey.key = publicKey
 
 	getIsConnectedToGitHub = () ->
+		$scope.retrievingGitHubInformation = true
 		rpc 'users', 'read', 'isConnectedToGitHub', null, (error, connectedToGitHub) ->
+			$scope.retrievingGitHubInformation = false
 			if error? then notification.error error
 			else
 				$scope.isConnectedToGitHub = connectedToGitHub
 				if connectedToGitHub then getGitHubRepositories()
 
 	getGitHubRepositories = () ->
+		$scope.retrievingGitHubInformation = true
 		rpc 'repositories', 'read', 'getGitHubRepositories', null, (error, gitHubRepositories) ->
-			console.log gitHubRepositories
+			$scope.retrievingGitHubInformation = false
 			if error? then notification.error error
 			else $scope.gitHubRepositories = gitHubRepositories
 
