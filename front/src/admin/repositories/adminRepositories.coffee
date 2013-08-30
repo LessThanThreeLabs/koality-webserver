@@ -1,6 +1,6 @@
 'use strict'
 
-window.AdminRepositories = ['$scope', '$routeParams', 'initialState', 'rpc', 'events', 'notification', ($scope, $routeParams, initialState, rpc, events, notification) ->
+window.AdminRepositories = ['$scope', '$location', '$routeParams', '$timeout', 'initialState', 'rpc', 'events', 'notification', ($scope, $location, $routeParams, $timeout, initialState, rpc, events, notification) ->
 	$scope.orderByPredicate = 'name'
 	$scope.orderByReverse = false
 
@@ -16,6 +16,13 @@ window.AdminRepositories = ['$scope', '$routeParams', 'initialState', 'rpc', 'ev
 
 	$scope.publicKey =
 		key: null
+
+	if $routeParams.addGitHubRepository
+		$location.search 'addGitHubRepository', null
+		$timeout (() ->
+			$scope.addRepository.setupType = 'gitHub'
+			$scope.toggleDrawer 'addRepository'
+		), 500
 
 	addNewForwardUrl = (repository) ->
 		repository.newForwardUrl = repository.forwardUrl # needed when editing repository
@@ -115,8 +122,10 @@ window.AdminRepositories = ['$scope', '$routeParams', 'initialState', 'rpc', 'ev
 			$scope.currentlyOpenDrawer = drawerName
 			$scope.currentlyEditingRepositoryId = null
 
-	$scope.connectToGithub = () ->
-		console.log 'need to connect to GitHub...'
+	$scope.connectToGitHub = () ->
+		rpc 'repositories', 'read', 'getGitHubConnectRedirectUri', null, (error, redirectUri) ->
+			if error? then notification.error error
+			else window.location.href = redirectUri
 
 	$scope.editRepository = (repository) ->
 		otherRepository.deleting = false for otherRepository in $scope.repositories
