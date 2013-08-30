@@ -1,6 +1,6 @@
 'use strict'
 
-window.RepositoryStageDetails = ['$scope', '$location', 'rpc', 'events', 'ConsoleTextManager', 'xUnitParser', 'currentRepository', 'currentChange', 'currentStage', ($scope, $location, rpc, events, ConsoleTextManager, xUnitParser, currentRepository, currentChange, currentStage) ->
+window.RepositoryStageDetails = ['$scope', '$location', 'rpc', 'events', 'ConsoleTextManager', 'xUnitParser', 'currentRepository', 'currentChange', 'currentStage', 'notification', ($scope, $location, rpc, events, ConsoleTextManager, xUnitParser, currentRepository, currentChange, currentStage, notification) ->
 	$scope.selectedRepository = currentRepository
 	$scope.selectedChange = currentChange
 	$scope.selectedStage = currentStage
@@ -11,6 +11,10 @@ window.RepositoryStageDetails = ['$scope', '$location', 'rpc', 'events', 'Consol
 		orderByPredicate: 'status'
 		orderByReverse: false
 		maxResults: 100
+
+	$scope.debugInstance =
+		makingRequest: false
+		spawned: false
 
 	$scope.consoleTextManager = ConsoleTextManager.create()
 	$scope.$on '$destroy', $scope.consoleTextManager.stopListeningToEvents
@@ -52,6 +56,15 @@ window.RepositoryStageDetails = ['$scope', '$location', 'rpc', 'events', 'Consol
 		if $scope.selectedChange.getId()?
 			addedExportUrisEvents = events('changes', 'export metadata added', $scope.selectedChange.getId()).setCallback(handleExportUrisAdded).subscribe()
 	$scope.$on '$destroy', () -> addedExportUrisEvents.unsubscribe() if addedExportUrisEvents?
+
+	$scope.spawnDebugInstance = () ->
+		$scope.debugInstance.makingRequest = true
+		rpc 'changes', 'create', 'launchDebugInstance', id: $scope.selectedChange.getId(), (error) ->
+			$scope.debugInstance.makingRequest = false
+			if error? then notification.error error
+			else
+				$scope.debugInstance.spawned = true
+				notification.success 'You will be emailed shortly with information for accessing your debug instance', 30
 
 	$scope.$watch 'selectedChange.getId()', () ->
 		updateExportUrisAddedListener()

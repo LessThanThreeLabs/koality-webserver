@@ -11,6 +11,10 @@
 				<span id="loadingText" ng-show="consoleTextManager.isRetrievingLines()">loading...</span>
 			</div>
 
+			<div class="right" ng-show="selectedStage.isSummary()">
+				<a ng-class="{disabled: debugInstance.makingRequest || debugInstance.spawned}" ng-click="spawnDebugInstance()">Launch debug instance</a>
+			</div>
+
 			<div class="right" ng-show="selectedStage.getInformation().outputTypes.length > 1">
 				<dropdown right light>
 					<span ng-show="output.type == 'console'">Text</span>
