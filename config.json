@@ -3,7 +3,7 @@
 
 	"server": {
 		"http": {
-			"port": 1080
+			"port": 80
 		},
 
 		"staticFiles": {
