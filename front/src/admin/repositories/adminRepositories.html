@@ -112,6 +112,7 @@
 						<div class="triangle gray" ng-class="{right: orderByPredicate != 'timestamp', up: orderByPredicate == 'timestamp' && !orderByReverse, down: orderByPredicate == 'timestamp' && orderByReverse}"></div>
 						Date Created
 					</th>
+					<th class="verificationColumn unselectable">Verification</th>
 					<th class="editColumn unselectable">Actions</th>
 				</tr>
 
@@ -140,6 +141,10 @@
 
 					<td class="createdColumn" ng-show="!repository.deleting">
 						{{repository.timestamp | date:'MM/dd/yyyy'}}
+					</td>
+
+					<td class="verificationColumn">
+						<button ng-click="addPostVerificationHook(repository)">Post</button>
 					</td>
 
 					<td class="editColumn" ng-show="!repository.deleting">

@@ -127,6 +127,11 @@ window.AdminRepositories = ['$scope', '$location', '$routeParams', '$timeout', '
 			if error? then notification.error error
 			else window.location.href = redirectUri
 
+	$scope.addPostVerificationHook = (repository) ->
+		rpc 'repositories', 'update', 'addPostVerificationHook', id: repository.id, (error) ->
+			if error? then notification.error error
+			else notification.success 'Successfully added verificaiton hook to GitHub repository ' + repository.name
+
 	$scope.editRepository = (repository) ->
 		otherRepository.deleting = false for otherRepository in $scope.repositories
 		$scope.currentlyEditingRepositoryId = repository?.id
