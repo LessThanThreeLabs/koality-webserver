@@ -130,7 +130,8 @@ class Server
 
 			expressServer.get '/ping', @_handlePing
 			expressServer.post '/extendCookieExpiration', @_handleExtendCookieExpiration
-			expressServer.get '/github/oAuthToken', @_handleSetGitHubOAuthToken
+			expressServer.get '/gitHub/oAuthToken', @_handleSetGitHubOAuthToken
+			expressServer.post '/gitHub/verifyChange', @_handleGitHubHook
 			
 			@apiServer.addRoutes expressServer
 			expressServer.get '*', @staticServer.handleRequest
@@ -231,3 +232,17 @@ class Server
 					if action is 'sshKeys' then response.redirect '/account?view=sshKeys&importGitHubKeys'
 					else if action is 'addRepository' then response.redirect '/admin?view=repositories&addGitHubRepository'
 					else response.redirect '/'
+
+
+	_handleGitHubHook: (request, response) =>
+		beforeSha = request.body.before
+		afterSha = request.body.after
+		target = request.body.ref
+		repositoryName = request.body.repository?.name
+
+		console.log 'beforeSha: ' + beforeSha
+		console.log 'afterSha: ' + afterSha
+		console.log 'target: ' + target
+		console.log 'repositoryName: ' + repositoryName
+
+		response.send 'ok'
