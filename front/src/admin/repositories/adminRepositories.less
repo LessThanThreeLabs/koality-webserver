@@ -142,12 +142,18 @@
 				}
 			}
 
-			.createdColumn {
-				width: 180px;
-			}
-
 			.verificationColumn {
-				width: 150px;
+				width: 200px;
+
+				.preVerification, .postVerification {
+					display: inline-block;
+					width: 70px;
+				}
+
+				.white { color: @koalityWhite; }
+				.gray { color: @koalityGray; }
+				.check { color: @koalityGreen; }
+				.cross { color: @koalityGray; }
 			}
 
 			.editColumn {

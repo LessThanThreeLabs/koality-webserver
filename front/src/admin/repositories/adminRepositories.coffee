@@ -24,15 +24,17 @@ window.AdminRepositories = ['$scope', '$location', '$routeParams', '$timeout', '
 			$scope.toggleDrawer 'addRepository'
 		), 500
 
-	addNewForwardUrl = (repository) ->
-		repository.newForwardUrl = repository.forwardUrl # needed when editing repository
+	addRepositoryEditFields = (repository) ->
+		repository.newForwardUrl = repository.forwardUrl
+		repository.verification.newPre = repository.verification.pre
+		repository.verification.newPost = repository.verification.post
 		return repository
 
 	getRepositories = () ->
 		rpc 'repositories', 'read', 'getRepositories', null, (error, repositories) ->
 			if error? then notification.error error
 			else
-				$scope.repositories = (addNewForwardUrl repository for repository in repositories)
+				$scope.repositories = (addRepositoryEditFields repository for repository in repositories)
 				updateRepositoryForwardUrlUpdatedListeners()
 				getMaxRepositoryCount()
 
@@ -79,7 +81,7 @@ window.AdminRepositories = ['$scope', '$location', '$routeParams', '$timeout', '
 
 		$scope.repositories ?= []
 		repositoryExists = (repository for repository in $scope.repositories when repository.id is data.id).length isnt 0
-		$scope.repositories.push addNewForwardUrl(data) if not repositoryExists
+		$scope.repositories.push addRepositoryEditFields(data) if not repositoryExists
 
 		updateRepositoryCountExceeded()
 
@@ -130,23 +132,47 @@ window.AdminRepositories = ['$scope', '$location', '$routeParams', '$timeout', '
 	$scope.addPostVerificationHook = (repository) ->
 		rpc 'repositories', 'update', 'addPostVerificationHook', id: repository.id, (error) ->
 			if error? then notification.error error
-			else notification.success 'Successfully added verificaiton hook to GitHub repository ' + repository.name
+			else notification.success 'Successfully added verification hook to GitHub repository ' + repository.name
 
 	$scope.editRepository = (repository) ->
 		otherRepository.deleting = false for otherRepository in $scope.repositories
 		$scope.currentlyEditingRepositoryId = repository?.id
 
 	$scope.saveRepository = (repository) ->
-		requestParams =
-			id: repository.id
-			forwardUrl: repository.newForwardUrl
-		rpc 'repositories', 'update', 'setForwardUrl', requestParams, (error) ->
-			$scope.currentlyEditingRepositoryId = null
+		updateForwardUrl = (callback) ->
+			requestParams =
+				id: repository.id
+				forwardUrl: repository.newForwardUrl
+			rpc 'repositories', 'update', 'setForwardUrl', requestParams, (error) ->
+				if error? then callback error, false
+				else
+					repository.forwardUrl = repository.newForwardUrl
+					callback null, true
 
-			if error? then notification.error error
-			else
-				repository.forwardUrl = repository.newForwardUrl
-				notification.success "Forward url changed for: #{repository.name}"
+		updatePostVerificationHook = (callback) ->
+			requestParams =
+				id: repository.id
+				on: repository.verification.newPost
+			rpc 'repositories', 'update', 'setGitHubPostVerificationHook', requestParams, (error) ->
+				if error? then callback error, false
+				else
+					repository.verification.post = repository.verification.newPost
+					callback null, true
+
+		await
+			if repository.forwardUrl isnt repository.newForwardUrl
+				updateForwardUrl defer forwardUrlError, forwardUrlSuccess
+
+			if repository.verification.post isnt repository.verification.newPost
+				updatePostVerificationHook defer postVerificationError, postVerificationSuccess
+
+		$scope.currentlyEditingRepositoryId = null
+
+		if forwardUrlError? then notification.error forwardUrlError
+		else if postVerificationError? then notification.error postVerificationError
+		else if forwardUrlSuccess or postVerificationSuccess
+			notification.success "Repository #{repository.name} successfully updated"
+
 
 	$scope.deleteRepository = (repository) ->
 		if not repository.password? or repository.password is ''
