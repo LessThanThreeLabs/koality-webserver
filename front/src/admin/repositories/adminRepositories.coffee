@@ -67,9 +67,16 @@ window.AdminRepositories = ['$scope', '$location', '$routeParams', '$timeout', '
 			if error? then notification.error error
 			else
 				$scope.isConnectedToGitHub = connectedToGitHub
-				if connectedToGitHub then getGitHubRepositories()
 
+				if connectedToGitHub and $scope.addRepository.setupType is 'gitHub'
+					getGitHubRepositories() 
+
+	hasRequestedGitHubRepositories = false
 	getGitHubRepositories = () ->
+		return if !$scope.isConnectedToGitHub
+		return if hasRequestedGitHubRepositories
+
+		hasRequestedGitHubRepositories = true
 		$scope.retrievingGitHubInformation = true
 		rpc 'repositories', 'read', 'getGitHubRepositories', null, (error, gitHubRepositories) ->
 			$scope.retrievingGitHubInformation = false
@@ -225,4 +232,8 @@ window.AdminRepositories = ['$scope', '$location', '$routeParams', '$timeout', '
 		$scope.addRepository.manual = {}
 		$scope.addRepository.gitHub = {}
 		$scope.currentlyOpenDrawer = null
+
+	$scope.$watch 'addRepository.setupType', () ->
+		if $scope.addRepository.setupType is 'gitHub'
+			getGitHubRepositories()
 ]
