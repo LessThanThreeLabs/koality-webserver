@@ -108,11 +108,7 @@
 						<div class="triangle gray" ng-class="{right: orderByPredicate != 'forwardUrl', up: orderByPredicate == 'forwardUrl' && !orderByReverse, down: orderByPredicate == 'forwardUrl' && orderByReverse}"></div>
 						Forward URL
 					</th>
-					<th class="createdColumn sortableColumn unselectable" ng-click="orderByPredicate = 'timestamp'; orderByReverse = !orderByReverse">
-						<div class="triangle gray" ng-class="{right: orderByPredicate != 'timestamp', up: orderByPredicate == 'timestamp' && !orderByReverse, down: orderByPredicate == 'timestamp' && orderByReverse}"></div>
-						Date Created
-					</th>
-					<th class="verificationColumn unselectable">Verification</th>
+					<th class="verificationColumn unselectable">Verification Type &nbsp;<a href="koalitycode.com/documentation?view=verification">[?]</a></th>
 					<th class="editColumn unselectable">Actions</th>
 				</tr>
 
@@ -139,12 +135,32 @@
 						</div>
 					</td>
 
-					<td class="createdColumn" ng-show="!repository.deleting">
-						{{repository.timestamp | date:'MM/dd/yyyy'}}
-					</td>
+					<td class="verificationColumn" ng-show="!repository.deleting">
+						<div class="preVerification" ng-show="repository.verification.preAllowed">
+							<div ng-show="repository.id != currentlyEditingRepositoryId">
+								<span class="check" ng-show="true">&#x2713;</span>
+								<span class="cross" ng-show="false">&#x2718;</span>
+								<span ng-class="{white: repository.verification.pre, gray: !repository.verification.pre}">Pre</span>
+							</div>
 
-					<td class="verificationColumn">
-						<button ng-click="addPostVerificationHook(repository)">Post</button>
+							<div ng-show="repository.id == currentlyEditingRepositoryId">
+								<input type="checkbox" ng-model="repository.verification.newPre">
+								<span ng-class="{white: repository.verification.newPre, gray: !repository.verification.newPre}">Pre</span>
+							</div>
+						</div>
+
+						<div class="postVerification" ng-show="repository.verification.postAllowed">
+							<div ng-show="repository.id != currentlyEditingRepositoryId">
+								<span class="check" ng-show="repository.verification.post">&#x2713;</span>
+								<span class="cross" ng-show="!repository.verification.post">&#x2718;</span>
+								<span ng-class="{white: repository.verification.post, gray: !repository.verification.post}">Post</span>
+							</div>
+
+							<div ng-show="repository.id == currentlyEditingRepositoryId">
+								<input type="checkbox" ng-model="repository.verification.newPost">
+								<span ng-class="{white: repository.verification.newPost, gray: !repository.verification.newPost}">Post</span>
+							</div>
+						</div>
 					</td>
 
 					<td class="editColumn" ng-show="!repository.deleting">

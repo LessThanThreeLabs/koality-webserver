@@ -24,7 +24,7 @@ startEverything = () ->
 
 	mailer = Mailer.create configurationParams.mailer, domainRetriever
 
-	loggerPrintLevel = if process.env.NODE_ENV is 'production' then 'info' else 'error'
+	loggerPrintLevel = if process.env.NODE_ENV is 'production' then 'info' else 'warn'
 	logger = Logger.create mailer.logger, 'error', loggerPrintLevel
 
 	modelConnection = ModelConnection.create configurationParams.modelConnection.messageBroker,
