@@ -18,6 +18,7 @@ compile:
   scripts:
   - grunt compile
 test:
+  machines: 1
   scripts:
   - frontend tests:
       script:
