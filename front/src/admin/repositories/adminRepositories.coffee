@@ -159,6 +159,9 @@ window.AdminRepositories = ['$scope', '$location', '$routeParams', '$timeout', '
 					repository.verification.post = repository.verification.newPost
 					callback null, true
 
+		return if repository.saving
+		repository.saving = true
+
 		await
 			if repository.forwardUrl isnt repository.newForwardUrl
 				updateForwardUrl defer forwardUrlError, forwardUrlSuccess
@@ -166,6 +169,7 @@ window.AdminRepositories = ['$scope', '$location', '$routeParams', '$timeout', '
 			if repository.verification.post isnt repository.verification.newPost
 				updatePostVerificationHook defer postVerificationError, postVerificationSuccess
 
+		repository.saving = false
 		$scope.currentlyEditingRepositoryId = null
 
 		if forwardUrlError? then notification.error forwardUrlError

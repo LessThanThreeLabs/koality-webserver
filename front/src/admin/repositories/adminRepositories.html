@@ -164,10 +164,14 @@
 					</td>
 
 					<td class="editColumn" ng-show="!repository.deleting">
-						<a ng-click="editRepository(repository)" ng-show="repository.id != currentlyEditingRepositoryId">Edit</a>
-						<a ng-click="saveRepository(repository)" ng-show="repository.id == currentlyEditingRepositoryId">Save</a>
-						<a class="red" ng-click="repository.deleting = true" ng-show="repository.id == currentlyEditingRepositoryId">Delete</a>
-						<a class="gray" ng-click="editRepository(null)" ng-show="repository.id == currentlyEditingRepositoryId">Cancel</a>
+						<div ng-show="!repository.saving">
+							<a ng-click="editRepository(repository)" ng-show="repository.id != currentlyEditingRepositoryId">Edit</a>
+							<a ng-click="saveRepository(repository)" ng-show="repository.id == currentlyEditingRepositoryId">Save</a>
+							<a class="red" ng-click="repository.deleting = true" ng-show="repository.id == currentlyEditingRepositoryId">Delete</a>
+							<a class="gray" ng-click="editRepository(null)" ng-show="repository.id == currentlyEditingRepositoryId">Cancel</a>
+						</div>
+
+						<spinner class="repositorySavingSpinner" running="repository.saving" ng-if="repository.saving"></spinner>
 					</td>
 
 					<td class="deleteColumn" colspan="2" ng-show="repository.deleting">
