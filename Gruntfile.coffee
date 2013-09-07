@@ -56,9 +56,9 @@ module.exports = (grunt) ->
 			removeCompile:
 				command: [
 					'rm -rf <%= backCompiledDirectory %>',
+					'rm -rf <%= frontHtmlDirectory %>',
 					'rm -rf <%= frontCoffeeCompiledDirectory %>',
-					'rm -rf <%= frontLessCompiledDirectory %>',
-					'rm -rf <%= frontHtmlDirectory %>'
+					'rm -rf <%= frontLessCompiledDirectory %>'
 				].join ' && '
 
 			removeUglify:
