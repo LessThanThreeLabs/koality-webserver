@@ -8,7 +8,7 @@
 				<span ng-show="selectedStage.isMerge()">merge</span>
 				<span ng-show="selectedStage.isDebug()">debug</span>
 
-				<span id="loadingText" ng-show="consoleTextManager.isRetrievingLines()">loading...</span>
+				<span id="loadingText" ng-show="consoleTextManager.isRetrievingLines() || xunit.makingRequest">loading...</span>
 			</div>
 
 			<div class="right" ng-show="selectedStage.isSummary()">

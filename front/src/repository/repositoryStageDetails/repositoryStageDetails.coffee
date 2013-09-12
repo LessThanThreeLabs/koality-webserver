@@ -7,6 +7,7 @@ window.RepositoryStageDetails = ['$scope', '$location', 'rpc', 'events', 'Consol
 
 	$scope.output = type: null
 	$scope.xunit =
+		makingRequest: false
 		testCases: []
 		orderByPredicate: 'status'
 		orderByReverse: false
@@ -37,9 +38,9 @@ window.RepositoryStageDetails = ['$scope', '$location', 'rpc', 'events', 'Consol
 		$scope.xunit.testCases = []
 		return if not $scope.selectedStage.getId()?
 
-		$scope.spinnerOn = true
+		$scope.xunit.makingRequest = true
 		rpc 'buildConsoles', 'read', 'getXUnit', id: $scope.selectedStage.getId(), (error, xunitOutputs) ->
-			$scope.spinnerOn = false
+			$scope.xunit.makingRequest = false
 			$scope.xunit.testCases = xUnitParser.getTestCases xunitOutputs
 
 	handleExportUrisAdded = (data) ->
