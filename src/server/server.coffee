@@ -235,14 +235,23 @@ class Server
 
 
 	_handleGitHubHook: (request, response) =>
+		repositoryOwner = request.body.repository?.owner?.name
+		repositoryName = request.body.repository?.name
+		ref = request.body.ref
 		beforeSha = request.body.before
 		afterSha = request.body.after
-		target = request.body.ref
-		repositoryName = request.body.repository?.name
+		branchName = ref.substring ref.lastIndexOf('/') + 1
 
-		console.log 'beforeSha: ' + beforeSha
-		console.log 'afterSha: ' + afterSha
-		console.log 'target: ' + target
-		console.log 'repositoryName: ' + repositoryName
-
-		response.send 'ok'
+		if not repositoryOwner? then response.send 400, 'No repository owner provided'
+		else if not repositoryName? then response.send 400, 'No repository name provided'
+		else if not branchName? then response.send 400, 'No branch provided'
+		else if not beforeSha? then response.send 400, 'No before sha provided'
+		else if not afterSha? then response.send 400, 'No after sha provided'
+		else 
+			@modelConnection.rpcConnection.changes.create.create_github_commit_and_change 3, repositoryOwner, repositoryName, beforeSha, afterSha, branchName, (error) =>
+				if error?
+					@logger.warn error
+					response.send 500, 'Error while creating GitHub commit and change'
+				else
+					@logger.info 'Successfully created GitHub commit and change'
+					response.send 'ok'
