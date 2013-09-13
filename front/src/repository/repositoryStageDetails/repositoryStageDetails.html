@@ -72,7 +72,7 @@
 					<tr>
 						<th>Head Commit</th>
 						<td>
-							<pre ng-bind-html="selectedChange.getInformation().headCommit.message"></pre>
+							<pre ng-bind-html="selectedChange.getInformation().headCommit.message | linky"></pre>
 						</td>
 					</tr>
 					<tr ng-show="(selectedChange.getInformation().headCommit.sha | shaLink: selectedChange.getInformation().headCommit.baseSha:selectedRepository.getInformation().forwardUrl) != null">
