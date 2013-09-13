@@ -26,7 +26,7 @@
 						<th class="branchColumn">Branch</th>
 						<th class="changeColumn">Change</th>
 						<th class="commitMessageColumn">Commit Message</th>
-						<th class="userColumn">Commiter</th>
+						<th class="userColumn">User</th>
 						<th class="timeColumn">Submit Time</th>
 					</tr>
 
@@ -54,8 +54,12 @@
 						</td>
 
 						<td class="userColumn">
-							<a ng-href="mailto:{{change.user.email}}?subject=Koality%3A%20{{change.repository.name}}%20-%20change%20%23{{change.headCommit.sha | limitTo:4}}" target="_blank">
+							<a ng-href="mailto:{{change.user.email}}?subject=Koality%3A%20{{change.repository.name}}%20-%20change%20%23{{change.headCommit.sha | limitTo:4}}" target="_blank" ng-show="change.user.id >= 1000">
 								{{change.user.name.first}} {{change.user.name.last}}
+							</a>
+
+							<a ng-href="mailto:{{change.headCommit.user.email}}?subject=Koality%3A%20{{change.repository.name}}%20-%20change%20%23{{change.headCommit.sha | limitTo:4}}" target="_blank" ng-show="change.user.id < 1000">
+								{{change.headCommit.user.name}}
 							</a>
 						</td>
 
