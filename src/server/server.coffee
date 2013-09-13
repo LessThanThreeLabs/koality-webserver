@@ -242,6 +242,8 @@ class Server
 		afterSha = request.body.after
 		branchName = ref.substring ref.lastIndexOf('/') + 1
 
+		@logger.info 'Received call from GitHub'
+
 		if not repositoryOwner? then response.send 400, 'No repository owner provided'
 		else if not repositoryName? then response.send 400, 'No repository name provided'
 		else if not branchName? then response.send 400, 'No branch provided'
