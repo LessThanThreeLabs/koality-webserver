@@ -7,6 +7,8 @@ window.AdminRepositories = ['$scope', '$location', '$routeParams', '$timeout', '
 	$scope.currentlyEditingRepositoryId = null
 	$scope.currentlyOpenDrawer = null
 
+	$scope.isConnectedToGitHub = false
+
 	$scope.repositories = []
 
 	$scope.addRepository =
@@ -73,7 +75,7 @@ window.AdminRepositories = ['$scope', '$location', '$routeParams', '$timeout', '
 
 	hasRequestedGitHubRepositories = false
 	getGitHubRepositories = () ->
-		return if !$scope.isConnectedToGitHub
+		return if not $scope.isConnectedToGitHub
 		return if hasRequestedGitHubRepositories
 
 		hasRequestedGitHubRepositories = true
