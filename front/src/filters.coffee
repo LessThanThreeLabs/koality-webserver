@@ -7,6 +7,8 @@ angular.module('koality.filter', ['koality.service']).
 	]).
 	filter('emailToAlias', [() ->
 		(input) ->
+			return null if not input? or typeof input isnt 'string'
+			
 			if input.indexOf '@' isnt -1
 				return input.substring 0, input.indexOf '@'
 			else
