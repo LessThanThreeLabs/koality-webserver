@@ -34,17 +34,23 @@ angular.module('koality.filter', ['koality.service']).
 			return ansiParsedLine = ansiParser.parse input
 	]).
 	filter('shaLink', [() ->
-		(sha, forwardUrl) ->
-			return null if not sha? or typeof sha isnt 'string'
+		(headSha, baseSha, forwardUrl) ->
+			return null if not headSha? or typeof headSha isnt 'string'
 			return null if not forwardUrl? or typeof forwardUrl isnt 'string'
+
+			generateLink = (url, text) ->
+				"<a href='#{url}' target='_blank'>#{text}</a>"
 
 			gitHubMatch = /^git@github.com:(.*?)(.git)?$/.exec forwardUrl
 			if gitHubMatch? and gitHubMatch[1]?
-				return "<a href='https://github.com/#{gitHubMatch[1]}/commit/#{sha}' target='_blank'>View Diff in GitHub</a>"
+				if baseSha? and typeof baseSha is 'string' and baseSha.length > 0
+					return generateLink "https://github.com/#{gitHubMatch[1]}/compare/#{baseSha}...#{headSha}" 'View Diff in GitHub'
+				else
+					return generateLink "https://github.com/#{gitHubMatch[1]}/commit/#{headSha}" 'View Diff in GitHub'
 
 			bitBucketMatch = /^git@bitbucket.[org|com]:(.*?)(.git)?$/.exec forwardUrl
 			if bitBucketMatch? and bitBucketMatch[1]?
-				return "<a href='https://bitbucket.org/#{bitBucketMatch[1]}/commits/#{sha}' target='_blank'>View Diff in BitBucket</a>"
+				return generateLink "https://bitbucket.org/#{bitBucketMatch[1]}/commits/#{headSha}" 'View Diff in BitBucket'
 
 			return null
 	])
