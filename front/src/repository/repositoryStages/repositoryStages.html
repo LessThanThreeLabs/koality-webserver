@@ -19,7 +19,7 @@
 		</changes-menu-header>
 
 		<changes-menu-options>
-			<changes-menu-option ng-show="selectedChange.getInformation() != null && !stagesManager.isRetrievingStages()" ng-click="selectedStage.setSummary()" ng-class="{selected: selectedStage.isSummary(), green: selectedChange.getInformation().aggregateStatus == 'passed', red: selectedChange.getInformation().aggregateStatus == 'failed' || selectedChange.getInformation().aggregateStatus == 'skipped'}">
+			<changes-menu-option ng-show="selectedChange.getInformation() != null && !stagesManager.isRetrievingStages()" ng-click="selectedStage.setSummary()" ng-class="{selected: selectedStage.isSummary(), green: selectedChange.getInformation().aggregateStatus == 'passed', orange: selectedChange.getInformation().aggregateStatus == 'skipped', red: selectedChange.getInformation().aggregateStatus == 'failed'}">
 				<span>summary</span>
 			</changes-menu-option>
 
@@ -27,7 +27,7 @@
 				<span>{{stage.name}}</span>
 			</changes-menu-option>
 
-			<changes-menu-option ng-show="selectedChange.getInformation().aggregateStatus == 'skipped' && !stagesManager.isRetrievingStages()" ng-click="selectedStage.setSkipped()" ng-class="{selected: selectedStage.isSkipped(), red: true}">
+			<changes-menu-option ng-show="selectedChange.getInformation().aggregateStatus == 'skipped' && !stagesManager.isRetrievingStages()" ng-click="selectedStage.setSkipped()" ng-class="{selected: selectedStage.isSkipped(), orange: true}">
 				<span>skipped</span>
 			</changes-menu-option>
 
