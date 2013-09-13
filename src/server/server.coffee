@@ -235,14 +235,14 @@ class Server
 
 
 	_handleGitHubHook: (request, response) =>
+		@logger.info 'Received call from GitHub'
+
 		repositoryOwner = request.body.repository?.owner?.name
 		repositoryName = request.body.repository?.name
 		ref = request.body.ref
 		beforeSha = request.body.before
 		afterSha = request.body.after
 		branchName = ref.substring ref.lastIndexOf('/') + 1
-
-		@logger.info 'Received call from GitHub'
 
 		if not repositoryOwner? then response.send 400, 'No repository owner provided'
 		else if not repositoryName? then response.send 400, 'No repository name provided'
