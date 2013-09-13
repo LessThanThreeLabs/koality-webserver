@@ -18,7 +18,14 @@
 
 			<changes-menu-option ng-repeat="change in changesManager.getChanges() | orderBy:'number':true" menu-option-spinning="{{change.verificationStatus == 'running'}}" ng-click="selectChange(change)" ng-class="{selected: change.id == selectedChange.getId(), green: change.aggregateStatus == 'passed', orange: change.aggregateStatus == 'skipped', red: change.aggregateStatus == 'failed'}">
 				<span class="changeSha">{{change.headCommit.sha | limitTo:4}}</span>
-				<span class="changeAlias" ng-show="change.aggregateStatus != 'queued'">{{change.user.email | emailToAlias | lowercase}}</span>
+				<span class="changeAlias" ng-show="change.aggregateStatus != 'queued'">
+					<span ng-show="selectedChange.getInformation().user.id >= 1000">
+						{{change.user.email | emailToAlias | lowercase}}
+					</span>
+					<span ng-show="selectedChange.getInformation().user.id < 1000">
+						{{change.headCommit.user.email | emailToAlias | lowercase}}
+					</span>
+				</span>
 				<span class="changeQueued" ng-show="change.aggregateStatus == 'queued'">queued</span>
 			</changes-menu-option>
 			

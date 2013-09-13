@@ -33,11 +33,21 @@
 				<table>
 					<tr>
 						<th>Name</th>
-						<td>{{selectedChange.getInformation().user.name.first}} {{selectedChange.getInformation().user.name.last}}</td>
+						<td ng-show="selectedChange.getInformation().user.id >= 1000">
+							{{selectedChange.getInformation().user.name.first}} {{selectedChange.getInformation().user.name.last}}
+						</td>
+						<td ng-show="selectedChange.getInformation().user.id < 1000">
+							{{selectedChange.getInformation().headCommit.user.name}}
+						</td>
 					</tr>
 					<tr>
 						<th>Email</th>
-						<td><a ng-href="mailto:{{selectedChange.getInformation().user.email}}?subject=Koality%3A%20{{selectedRepository.getInformation().name}}%20-%20change%20%23{{selectedChange.getInformation().headCommit.sha | limitTo:4}}&body=Link%20to%20change%3A%20{{currentUrl}}" target="_blank">{{selectedChange.getInformation().user.email}}</a></td>
+						<td ng-show="selectedChange.getInformation().user.id >= 1000">
+							<a ng-href="mailto:{{selectedChange.getInformation().user.email}}?subject=Koality%3A%20{{selectedRepository.getInformation().name}}%20-%20change%20%23{{selectedChange.getInformation().headCommit.sha | limitTo:4}}&body=Link%20to%20change%3A%20{{currentUrl}}" target="_blank">{{selectedChange.getInformation().user.email}}</a>
+						</td>
+						<td ng-show="selectedChange.getInformation().user.id < 1000">
+							<a ng-href="mailto:{{selectedChange.getInformation().headCommit.user.email}}?subject=Koality%3A%20{{selectedRepository.getInformation().name}}%20-%20change%20%23{{selectedChange.getInformation().headCommit.sha | limitTo:4}}&body=Link%20to%20change%3A%20{{currentUrl}}" target="_blank">{{selectedChange.getInformation().headCommit.user.email}}</a>
+						</td>
 					</tr>
 					<tr>
 						<th>Submit Time</th>
