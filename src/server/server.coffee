@@ -237,7 +237,7 @@ class Server
 	_handleGitHubHook: (request, response) =>
 		@logger.info 'Received call from GitHub'
 
-		hookData = JSON.parse request.body?.payload
+		hookData = request.body
 
 		repositoryOwner = hookData?.repository?.owner?.name
 		repositoryName = hookData?.repository?.name
