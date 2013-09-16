@@ -72,11 +72,6 @@
 		],
 
 		"image/svg+xml": [
-			"/font/din/bold/bold.svg",
-			"/font/din/light/light.svg",
-			"/font/din/medium/medium.svg",
-			"/font/din/regular/regular.svg",
-
 			"/font/ptMono/regular/regular.svg"
 		],
 
