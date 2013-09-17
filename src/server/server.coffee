@@ -2,6 +2,7 @@ fs = require 'fs'
 assert = require 'assert'
 colors = require 'colors'
 http = require 'http'
+crypto = require 'crypto'
 express = require 'express'
 expressResource = require 'express-resource'  # required for koality-api-server
 csrf = require './csrf'
@@ -235,6 +236,26 @@ class Server
 
 
 	_handleGitHubHook: (request, response) =>
+		# { host: 'staging.koalitycode.com',
+		# accept: '*/*',
+		# 'user-agent': 'GitHub Hookshot bbde025',
+		# 'x-github-event': 'push',
+		# 'x-github-delivery': 'c4b07f7c-1f17-11e3-968e-68e5dd676335',
+		# 'content-type': 'application/json',
+		# 'x-hub-signature': 'sha1=8bab5e1b10b8dc64b86c17a540e141a2e59835e5',
+		# 'content-length': '3788',
+		# 'x-forwarded-proto': 'https',
+		# 'x-forwarded-for': '192.30.252.48',
+		# connection: 'close' }
+
+		# doesSecretMatch = (hookSecret, hash) =>
+		# 	shaHasher = crypto.createHash 'sha1'
+		# 	shaHasher.update request.body
+		# 	shaHasher.update hookSecret
+		# 	expectedHash = shaHasher.digest 'hex'
+
+		# 	return hash is expectedHash
+
 		@logger.info 'Received call from GitHub'
 
 		hookData = request.body
@@ -252,10 +273,15 @@ class Server
 		else if not beforeSha? then response.send 400, 'No before sha provided'
 		else if not afterSha? then response.send 400, 'No after sha provided'
 		else 
-			@modelConnection.rpcConnection.changes.create.create_github_commit_and_change 3, repositoryOwner, repositoryName, beforeSha, afterSha, branchName, (error) =>
-				if error?
-					@logger.warn error
-					response.send 500, 'Error while creating GitHub commit and change'
-				else
-					@logger.info 'Successfully created GitHub commit and change'
-					response.send 'ok'
+			# @modelConnection.rpcConnection.repositories.read.get_github_repo repositoryOwner, repositoryName, (error, repository) =>
+			# 	if error? then response.send 500, 'Error finding associated repository'
+			# 	else if not doesSecretMatch repository.github.hook_secret, request.headers['x-hub-signature']
+			# 		response.send 403, 'Invalid signature'
+			# 	else
+					@modelConnection.rpcConnection.changes.create.create_github_commit_and_change 3, repositoryOwner, repositoryName, beforeSha, afterSha, branchName, (error) =>
+						if error?
+							@logger.warn error
+							response.send 500, 'Error while creating GitHub commit and change'
+						else
+							@logger.info 'Successfully created GitHub commit and change'
+							response.send 'ok'
