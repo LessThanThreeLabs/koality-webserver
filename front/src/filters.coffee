@@ -43,7 +43,7 @@ angular.module('koality.filter', ['koality.service']).
 
 			gitHubMatch = /^git@github.com:(.*?)(.git)?$/.exec forwardUrl
 			if gitHubMatch? and gitHubMatch[1]?
-				if baseSha? and typeof baseSha is 'string' and baseSha.length > 0
+				if typeof baseSha is 'string' and baseSha.length > 0
 					return generateLink "https://github.com/#{gitHubMatch[1]}/compare/#{baseSha}...#{headSha}", 'View Diff in GitHub'
 				else
 					return generateLink "https://github.com/#{gitHubMatch[1]}/commit/#{headSha}", 'View Diff in GitHub'
