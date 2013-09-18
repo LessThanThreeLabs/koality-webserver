@@ -222,7 +222,7 @@ window.AdminRepositories = ['$scope', '$location', '$routeParams', '$timeout', '
 			$scope.addRepository.gitHub.makingRequest = false
 			if error? then notification.error error
 			else
-				successString = 'Created repository ' + $scope.addRepository.gitHub.name
+				successString = 'Created repository ' + $scope.addRepository.gitHub.repository.name
 				if not repositoryInformation.keyAlreadyAdded
 					successString += '. A Koality SSH Key has been added to your account'
 				notification.success successString, 15
