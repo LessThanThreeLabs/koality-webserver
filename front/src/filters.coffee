@@ -41,16 +41,20 @@ angular.module('koality.filter', ['koality.service']).
 			generateLink = (url, text) ->
 				"<a href='#{url}' target='_blank'>#{text}</a>"
 
-			gitHubMatch = /^git@github.com:(.*?)(.git)?$/.exec forwardUrl
+			gitHubMatch = /^git@github.com:(.+?)(\.git)?$/.exec forwardUrl
 			if gitHubMatch? and gitHubMatch[1]?
 				if typeof baseSha is 'string' and baseSha.length > 0
 					return generateLink "https://github.com/#{gitHubMatch[1]}/compare/#{baseSha}...#{headSha}", 'View Diff in GitHub'
 				else
 					return generateLink "https://github.com/#{gitHubMatch[1]}/commit/#{headSha}", 'View Diff in GitHub'
 
-			bitBucketMatch = /^git@bitbucket.[org|com]:(.*?)(.git)?$/.exec forwardUrl
-			if bitBucketMatch? and bitBucketMatch[1]?
-				return generateLink "https://bitbucket.org/#{bitBucketMatch[1]}/commits/#{headSha}", 'View Diff in BitBucket'
+			bitBucketGitMatch = /^git@bitbucket.(org|com):(.+?)(\.git)?$/.exec forwardUrl
+			if bitBucketGitMatch? and bitBucketGitMatch[2]?
+				return generateLink "https://bitbucket.org/#{bitBucketGitMatch[2]}/commits/#{headSha}", 'View Diff in BitBucket'
+
+			bitBucketHgMatch = /^ssh:\/\/hg@bitbucket.(org|com)\/(.+?)(\.hg)?$/.exec forwardUrl
+			if bitBucketHgMatch? and bitBucketHgMatch[2]?
+				return generateLink "https://bitbucket.org/#{bitBucketHgMatch[2]}/commits/#{headSha}", 'View Diff in BitBucket'
 
 			return null
 	])
