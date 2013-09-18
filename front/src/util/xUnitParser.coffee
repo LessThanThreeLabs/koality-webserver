@@ -4,10 +4,14 @@ getAttribute = (testCaseString, attributeName) ->
     assert.ok typeof testCaseString is 'string'
     assert.ok typeof attributeName is 'string'
 
-    nameStartIndex = testCaseString.indexOf(" #{attributeName}=\"") + "#{attributeName}=\"".length + 1
+    tagStartIndex = testCaseString.indexOf(" #{attributeName}=\"")
+    return null if tagStartIndex is -1
+
+    nameStartIndex = tagStartIndex + " #{attributeName}=\"".length + 1
     nameEndIndex = testCaseString.indexOf '"', nameStartIndex
 
-    return testCaseString.substring nameStartIndex, nameEndIndex
+    if nameStartIndex is -1 or nameEndIndex is -1 then return null
+    else return testCaseString.substring nameStartIndex, nameEndIndex
 
 extractTextFromCData = (text) ->
     assert.ok typeof text is 'string'
@@ -73,8 +77,11 @@ window.xUnitParse = (xunitOutput) ->
 
     testCases = []
     while currentTestCaseString?
+        className = getAttribute currentTestCaseString.text, 'classname'
+        testName = getAttribute currentTestCaseString.text, 'name'
+
         testCase =
-            name: getAttribute currentTestCaseString.text, 'name'
+            name: if className? then className + '.' + testName else testName
             time: Number getAttribute currentTestCaseString.text, 'time'
             failure: getTextInElement currentTestCaseString.text, 'failure'
             error: getTextInElement currentTestCaseString.text, 'error'
