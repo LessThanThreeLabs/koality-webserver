@@ -248,13 +248,20 @@ class Server
 		# 'x-forwarded-for': '192.30.252.48',
 		# connection: 'close' }
 
-		# doesSecretMatch = (hookSecret, hash) =>
-		# 	shaHasher = crypto.createHash 'sha1'
-		# 	shaHasher.update request.body
-		# 	shaHasher.update hookSecret
-		# 	expectedHash = shaHasher.digest 'hex'
+		doesSecretMatch = (hookSecret, hash) =>
+			console.log hookSecret
+			console.log hash
 
-		# 	return hash is expectedHash
+			shaHasher = crypto.createHash 'sha1'
+			shaHasher.update hookSecret
+			shaHasher.update request.body
+			expectedHash = shaHasher.digest 'hex'
+
+			console.log hash
+			console.log expectedHash
+			console.log hash is expectedHash
+
+			return true
 
 		@logger.info 'Received call from GitHub'
 
@@ -273,11 +280,14 @@ class Server
 		else if not beforeSha? then response.send 400, 'No before sha provided'
 		else if not afterSha? then response.send 400, 'No after sha provided'
 		else 
-			# @modelConnection.rpcConnection.repositories.read.get_github_repo repositoryOwner, repositoryName, (error, repository) =>
-			# 	if error? then response.send 500, 'Error finding associated repository'
-			# 	else if not doesSecretMatch repository.github.hook_secret, request.headers['x-hub-signature']
-			# 		response.send 403, 'Invalid signature'
-			# 	else
+			@modelConnection.rpcConnection.repositories.read.get_github_repo repositoryOwner, repositoryName, (error, repository) =>
+				if error?
+					@logger.warn error
+					response.send 500, 'Error finding associated repository'
+				else if not doesSecretMatch repository.github.hook_secret, request.headers['x-hub-signature']?.substring 4
+					@logger.warn 'Invalid signature'
+					response.send 403, 'Invalid signature'
+				else
 					@modelConnection.rpcConnection.changes.create.create_github_commit_and_change 3, repositoryOwner, repositoryName, beforeSha, afterSha, branchName, (error) =>
 						if error?
 							@logger.warn error
