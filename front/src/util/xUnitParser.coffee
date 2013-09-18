@@ -7,7 +7,7 @@ getAttribute = (testCaseString, attributeName) ->
     tagStartIndex = testCaseString.indexOf(" #{attributeName}=\"")
     return null if tagStartIndex is -1
 
-    nameStartIndex = tagStartIndex + " #{attributeName}=\"".length + 1
+    nameStartIndex = tagStartIndex + " #{attributeName}=\"".length
     nameEndIndex = testCaseString.indexOf '"', nameStartIndex
 
     if nameStartIndex is -1 or nameEndIndex is -1 then return null
