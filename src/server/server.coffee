@@ -279,8 +279,8 @@ class Server
 		else if not branchName? then response.send 400, 'No branch provided'
 		else if not beforeSha? then response.send 400, 'No before sha provided'
 		else if not afterSha? then response.send 400, 'No after sha provided'
-		else 
-			@modelConnection.rpcConnection.repositories.read.get_github_repo repositoryOwner, repositoryName, (error, repository) =>
+		else
+			@modelConnection.rpcConnection.repositories.read.get_github_repo 1, repositoryOwner, repositoryName, (error, repository) =>
 				if error?
 					@logger.warn error
 					response.send 500, 'Error finding associated repository'
