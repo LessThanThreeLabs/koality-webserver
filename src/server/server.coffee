@@ -5,6 +5,7 @@ http = require 'http'
 crypto = require 'crypto'
 express = require 'express'
 expressResource = require 'express-resource'  # required for koality-api-server
+request = require 'request'
 csrf = require './csrf'
 gzip = require './gzip'
 
@@ -131,6 +132,7 @@ class Server
 
 			expressServer.get '/ping', @_handlePing
 			expressServer.post '/extendCookieExpiration', @_handleExtendCookieExpiration
+			expressServer.get '/google/oAuthToken', @_handleSetGoogleOAuthToken
 			expressServer.get '/gitHub/oAuthToken', @_handleSetGitHubOAuthToken
 			expressServer.post '/gitHub/verifyChange', @_handleGitHubHook
 			
@@ -212,6 +214,41 @@ class Server
 			request.session.cookieExpirationIncreased ?= 0 
 			request.session.cookieExpirationIncreased++
 			response.send 'ok'
+
+
+	_handleSetGoogleOAuthToken: (req, res) =>
+		handleLogin = () =>
+			requestParams =
+				uri: 'https://www.googleapis.com/oauth2/v2/userinfo'
+				qs:
+					access_token: oauthToken
+				json: true
+			request.get requestParams, (error, response, body) =>
+				if error?
+					@logger.warn error
+					res.send 500, 'Unable to handle Google OAuth'
+				else if response.statusCode isnt 200
+					@logger.warn response.statusCode
+					res.send 500, 'Unable to handle Google OAuth'
+				else
+					if not body.email? and not body.verified_email
+						@logger.info 'No email or email not verified'
+						res.send 403, 'Bad email'
+					else
+						@modelConnection.rpcConnection.users.read.get_user body.email, (error, user) =>
+							if error? then res.send 500, 'Unable to login'
+							else 
+								req.session.userId = user.id
+								res.redirect '/'
+
+		oauthToken = req.query?.token
+		action = req.query?.action
+
+		if not oauthToken? then res.send 400, 'No OAuth Token provided'
+		else if not action? then res.send 400, 'No action provided'
+		else
+			if action is 'login' then handleLogin()
+			else res.send 500, 'Unexpceted action type: ' + action
 
 
 	_handleSetGitHubOAuthToken: (request, response) =>
