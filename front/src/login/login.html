@@ -7,6 +7,7 @@
 				<input ng-model="account.email" name="email" type="email" placeholder="Email" maxlength=256 autocomplete="on" focused required>
 				<input ng-model="account.password" name="password" type="password" placeholder="Password" ng-maxlength=256 auto-fillable-field required>
 				<busy-button full-width busy="makingRequest" click="login()" disabled="loginForm.$invalid">Log In</busy-button>
+				<busy-button full-width busy="makingRequest" click="googleLogin()">Google</busy-button>
 
 				<table>
 					<tr>

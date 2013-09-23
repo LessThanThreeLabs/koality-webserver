@@ -226,17 +226,18 @@ class Server
 			request.get requestParams, (error, response, body) =>
 				if error?
 					@logger.warn error
-					res.send 500, 'Unable to handle Google OAuth'
+					res.redirect '/login?googleLoginError=Unable to handle Google OAuth'
 				else if response.statusCode isnt 200
 					@logger.warn response.statusCode
-					res.send 500, 'Unable to handle Google OAuth'
+					res.redirect '/login?googleLoginError=Unable to handle Google OAuth'
 				else
 					if not body.email? and not body.verified_email
 						@logger.info 'No email or email not verified'
-						res.send 403, 'Bad email'
+						res.redirect '/login?googleLoginError=Invalid email address'
 					else
 						@modelConnection.rpcConnection.users.read.get_user body.email, (error, user) =>
-							if error? then res.send 500, 'Unable to login'
+							if error?
+								res.redirect '/login?googleLoginError=No matching email address for ' + body.email
 							else 
 								req.session.userId = user.id
 								res.redirect '/'

@@ -1,8 +1,14 @@
 'use strict'
 
-window.Login = ['$scope', 'rpc', 'cookieExtender', 'notification', ($scope, rpc, cookieExtender, notification) ->
+window.Login = ['$scope', '$location', '$routeParams', '$timeout', 'rpc', 'cookieExtender', 'notification', ($scope, $location, $routeParams, $timeout, rpc, cookieExtender, notification) ->
+
 	$scope.makingRequest = false
 	$scope.account = {}
+
+	if $routeParams.googleLoginError
+		googleLoginError = $routeParams.googleLoginError
+		$location.search 'googleLoginError', null
+		$timeout (() -> notification.error googleLoginError), 100
 
 	redirectToHome = () ->
 		# this will force a refresh, rather than do html5 pushstate
@@ -25,4 +31,15 @@ window.Login = ['$scope', 'rpc', 'cookieExtender', 'notification', ($scope, rpc,
 						redirectToHome()
 				else
 					redirectToHome()
+
+	$scope.googleLogin = () ->
+		return if $scope.makingRequest
+		$scope.makingRequest = true
+
+		rpc 'users', 'read', 'getGoogleLoginRedirect', null, (error, redirectUri) ->
+			$scope.makingRequest = false
+			
+			if error? then notification.error error
+			else
+				window.location.href = redirectUri
 ]
