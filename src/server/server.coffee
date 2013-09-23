@@ -217,30 +217,60 @@ class Server
 
 
 	_handleSetGoogleOAuthToken: (req, res) =>
-		handleLogin = () =>
+		getEmailFromOAuthToken = (callback) =>
 			requestParams =
 				uri: 'https://www.googleapis.com/oauth2/v2/userinfo'
 				qs:
 					access_token: oauthToken
 				json: true
 			request.get requestParams, (error, response, body) =>
+				if error? then callback error
+				else if response.statusCode isnt 200 then callback response.statusCode
+				else callback null, body
+
+		handleLogin = () =>
+			getEmailFromOAuthToken (error, userInfo) =>
 				if error?
 					@logger.warn error
 					res.redirect '/login?googleLoginError=Unable to handle Google OAuth'
-				else if response.statusCode isnt 200
-					@logger.warn response.statusCode
-					res.redirect '/login?googleLoginError=Unable to handle Google OAuth'
+				else if not userInfo.email? and not userInfo.verified_email
+					@logger.info 'No email or email not verified'
+					res.redirect '/login?googleLoginError=Invalid email address'
 				else
-					if not body.email? and not body.verified_email
-						@logger.info 'No email or email not verified'
-						res.redirect '/login?googleLoginError=Invalid email address'
-					else
-						@modelConnection.rpcConnection.users.read.get_user body.email, (error, user) =>
-							if error?
-								res.redirect '/login?googleLoginError=No matching email address for ' + body.email
-							else 
-								req.session.userId = user.id
-								res.redirect '/'
+					@modelConnection.rpcConnection.users.read.get_user userInfo.email, (error, user) =>
+						if error?
+							res.redirect '/login?googleLoginError=No matching email address for ' + userInfo.email
+						else 
+							req.session.userId = user.id
+							res.redirect '/'
+
+		handleCreateAccount = () =>
+			getEmailFromOAuthToken (error, userInfo) =>
+				if error?
+					@logger.warn error
+					res.redirect '/create/account?googleCreateAccountError=Unable to handle Google OAuth'
+				else if not userInfo.email? and not userInfo.verified_email
+					@logger.info 'No email or email not verified'
+					res.redirect '/create/account?googleCreateAccountError=Invalid email address'
+				else if not userInfo.given_name? or not userInfo.family_name?
+					@logger.info 'No name information'
+					res.redirect '/create/account?googleCreateAccountError=Not enough user information to complete account'
+				else
+					crypto.randomBytes 16, (error, salt) =>
+						if error
+							@logger.warn error
+							res.redirect '/create/account?googleCreateAccountError=Error while creating account'
+						else
+							@modelConnection.rpcConnection.users.create.create_user userInfo.email, userInfo.given_name, userInfo.family_name, 
+								'/cyY3wu1VgzFhjxwCMY6+5emuoorhb/NciATN10ypZrlCKiOsjv4KaVGP9xFa2Obveg+G1ZwXgPxI+heN2y/vQ==', salt.toString('base64'), false, 
+								(error, userId) =>
+									if error?.type is 'UserAlreadyExistsError'
+										res.redirect '/create/account?googleCreateAccountError=User already exists'
+									else if error?
+										res.redirect '/create/account?googleCreateAccountError=Error while creating account'
+									else
+										req.session.userId = userId
+										res.redirect '/'
 
 		oauthToken = req.query?.token
 		action = req.query?.action
@@ -249,6 +279,7 @@ class Server
 		else if not action? then res.send 400, 'No action provided'
 		else
 			if action is 'login' then handleLogin()
+			else if action is 'createAccount' then handleCreateAccount()
 			else res.send 500, 'Unexpceted action type: ' + action
 
 

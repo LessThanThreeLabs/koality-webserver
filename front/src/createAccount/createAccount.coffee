@@ -1,17 +1,22 @@
 'use strict'
 
-window.CreateAccount = ['$scope', '$routeParams', 'rpc', 'notification', ($scope, $routeParams, rpc, notification) ->
+window.CreateAccount = ['$scope', '$location', '$routeParams', '$timeout', 'rpc', 'notification', ($scope, $location, $routeParams, $timeout, rpc, notification) ->
+	$scope.account = {}
 	$scope.makingRequest = false
 
-	getEmailFromToken = () ->
-		rpc 'users', 'create', 'getEmailFromToken', token: $routeParams.token, (error, email) ->
-			$scope.account.email = email
+	if $routeParams.googleCreateAccountError
+		googleCreateAccountError = $routeParams.googleCreateAccountError
+		$location.search 'googleCreateAccountError', null
+		$timeout (() -> notification.error googleCreateAccountError), 100
 
-	$scope.account = {}
-	$scope.account.token = $routeParams.token
-	getEmailFromToken()
+	# getEmailFromToken = () ->
+	# 	rpc 'users', 'create', 'getEmailFromToken', token: $routeParams.token, (error, email) ->
+	# 		$scope.account.email = email
+
+	# $scope.account.token = $routeParams.token
+	# getEmailFromToken()
 	
-	$scope.submit = () ->
+	$scope.createAccount = () ->
 		return if $scope.makingRequest
 		$scope.makingRequest = true
 
@@ -21,4 +26,16 @@ window.CreateAccount = ['$scope', '$routeParams', 'rpc', 'notification', ($scope
 			else
 				# this will force a refresh, rather than do html5 pushstate
 				window.location.href = '/'
+
+
+	$scope.googleCreateAccount = () ->
+		return if $scope.makingRequest
+		$scope.makingRequest = true
+
+		rpc 'users', 'read', 'getGoogleCreateAccountRedirect', null, (error, redirectUri) ->
+			$scope.makingRequest = false
+			
+			if error? then notification.error error
+			else
+				window.location.href = redirectUri
 ]
