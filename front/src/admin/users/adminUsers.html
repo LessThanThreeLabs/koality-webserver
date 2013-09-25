@@ -10,7 +10,7 @@
 
 	<panel-body no-padding open-drawer="currentlyOpenDrawer">
 		<panel-drawer drawer-name="addUsers">
-			<form id="addUsersForm" name="addUsersForm" novalidate>
+			<!-- <form id="addUsersForm" name="addUsersForm" novalidate>
 				<table>
 					<tr>
 						<td class="addUsersColumn">
@@ -22,6 +22,36 @@
 						</td>
 						<td class="addUsersCancelColumn">
 							<a ng-click="clearAddUsers()">Cancel</a>
+						</td>
+					</tr>
+				</table>
+			</form> -->
+
+			<form id="addUsersForm" name="addUsersForm" novalidate>
+				<table id="addUsersTable">
+					<tr>
+						<td id="addUsersLinkColumn">
+							<label>Link to Send New Users</label>
+							<div ng-show="addUsers.domainName != null">
+								<a ng-href="https://{{addUsers.domainName}}/create/account">{{addUsers.domainName}}/create/account</a>
+							</div>
+						</td>
+						<td id="addUsersLoginTypeColumn">
+							<label>Users Login With</label>
+							<select ng-model="addUsers.newConnectionType" required>
+								<option value="default">Default</option>
+								<option value="google">Google OAuth</option>
+							</select>
+						</td>
+						<td id="addUsersDomainsColumn">
+							<label>Authorized Email Domains &nbsp;<a href="https://koalitycode.com/documentation?view=authorizedDomains">[?]</a></label>
+							<input type="text" ng-model="addUsers.newEmailDomains" name="emailDomains" ng-maxlength="256" required>
+						</td>
+						<td id="addUsersSaveColumn">
+							<busy-button busy="addUsers.makingRequest" click="saveAddUsersConfig()" disabled="addUsersForm.$invalid">Save</busy-button>
+						</td>
+						<td id="addUsersCancelColumn">
+							<a ng-click="clearAddUserConfig()" ng-show="!addUsers.makingRequest">Cancel</a>
 						</td>
 					</tr>
 				</table>

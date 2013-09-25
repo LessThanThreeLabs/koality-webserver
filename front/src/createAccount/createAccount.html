@@ -8,10 +8,10 @@
 				<input ng-model="account.email" name="email" type="email" placeholder="Email" autocomplete="on" required focused>
 
 				<label>First Name</label>
-				<input type="text" ng-model="account.firstName" name="firstName" placeholder="First" autocomplete="on" required>
+				<input type="text" ng-model="account.firstName" name="firstName" placeholder="First" ng-maxlength="64" autocomplete="on" required>
 
 				<label>Last Name</label>
-				<input type="text" ng-model="account.lastName" name="lastName" placeholder="Last" autocomplete="on" required>
+				<input type="text" ng-model="account.lastName" name="lastName" placeholder="Last" ng-maxlength="64" autocomplete="on" required>
 
 				<label>Password<span class="sublabel">Min 8 characters, one letter, one number</span></label>
 				<input type="password" ng-model="account.password" name="password" placeholder="Password" auto-fillable-field required>

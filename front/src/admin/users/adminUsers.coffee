@@ -11,6 +11,20 @@ window.AdminUsers = ['$scope', 'initialState', 'rpc', 'events', 'notification', 
 	$scope.addUsers =
 		makingRequest: false
 
+	getDomainName = () ->
+		rpc 'systemSettings', 'read', 'getWebsiteSettings', null, (error, websiteSettings) ->
+			$scope.addUsers.domainName = websiteSettings.domainName
+
+	getAllowedConnectionTypes = () ->
+		rpc 'systemSettings', 'read', 'getAllowedUserConnectionTypes', null, (error, allowedConnectionTypes) ->
+			$scope.addUsers.connectionType = allowedConnectionTypes[0]
+			$scope.addUsers.newConnectionType = allowedConnectionTypes[0]
+
+	getAllowedEmailDomains = () ->
+		rpc 'systemSettings', 'read', 'getAllowedUserEmailDomains', null, (error, allowedEmailDomains) ->
+			$scope.addUsers.emailDomains = allowedEmailDomains.join ' '
+			$scope.addUsers.newEmailDomains = allowedEmailDomains.join ' '
+
 	addUserPrivilege = (user) ->
 		user.privilege = if user.isAdmin then 'Admin' else 'User'
 		user.newPrivilege = user.privilege  # used while in edit mode
@@ -19,6 +33,14 @@ window.AdminUsers = ['$scope', 'initialState', 'rpc', 'events', 'notification', 
 	getUsers = () ->
 		rpc 'users', 'read', 'getAllUsers', null, (error, users) ->
 			$scope.users = (addUserPrivilege user for user in users)
+
+	handleConnectionTypesUpdated = (data) ->
+		$scope.addUsers.connectionType = data[0]
+		$scope.addUsers.newConnectionType = data[0]
+
+	handleEmailDomainsUpdated = (data) ->
+		$scope.addUsers.emailDomains = data.join ' '
+		$scope.addUsers.newEmailDomains = data.join ' '
 
 	handleUserAdded = (data) ->
 		$scope.users.push addUserPrivilege data
@@ -33,14 +55,21 @@ window.AdminUsers = ['$scope', 'initialState', 'rpc', 'events', 'notification', 
 		userToUpdate.privilege = privilege if userToUpdate?
 		userToUpdate.newPrivilege = privilege if userToUpdate?
 
+	allowedConnectionTypesEvents = events('systemSettings', 'allowed connection types updated', null).setCallback(handleConnectionTypesUpdated).subscribe()
+	allowedEmailDomainsEvents = events('systemSettings', 'allowed email domains updated', null).setCallback(handleEmailDomainsUpdated).subscribe()
 	addUserEvents = events('users', 'user created', initialState.user.id).setCallback(handleUserAdded).subscribe()
 	removeUserEvents = events('users', 'user removed', initialState.user.id).setCallback(handleUserRemoved).subscribe()
 	adminStatusEvents = events('users', 'user admin status', initialState.user.id).setCallback(handleUserAdminStatusChanged).subscribe()
+	$scope.$on '$destroy', allowedConnectionTypesEvents.unsubscribe
+	$scope.$on '$destroy', allowedEmailDomainsEvents.unsubscribe
 	$scope.$on '$destroy', addUserEvents.unsubscribe
 	$scope.$on '$destroy', removeUserEvents.unsubscribe
 	$scope.$on '$destroy', adminStatusEvents.unsubscribe
 
 	getUsers()
+	getDomainName()
+	getAllowedConnectionTypes()
+	getAllowedEmailDomains()
 
 	$scope.toggleDrawer = (drawerName) ->
 		if $scope.currentlyOpenDrawer is drawerName
@@ -69,18 +98,26 @@ window.AdminUsers = ['$scope', 'initialState', 'rpc', 'events', 'notification', 
 			if error? then notification.error error
 			else notification.success "Deleted user #{user.firstName} #{user.lastName}"
 
-	$scope.submitUsers = () ->
+	$scope.saveAddUsersConfig = () ->
 		return if $scope.addUsers.makingRequest
 		$scope.addUsers.makingRequest = true
 
-		rpc 'users', 'create', 'inviteUsers', emails: $scope.addUsers.emails, (error) ->
-			$scope.addUsers.makingRequest = false
-			if error? then notification.error error
-			else 
-				notification.success 'Invited new users'
-				$scope.clearAddUsers()
+		await
+			rpc 'systemSettings', 'update', 'setAllowedUserConnectionTypes', connectionTypes: [$scope.addUsers.newConnectionType], defer connectionTypeError
+			rpc 'systemSettings', 'update', 'setAllowedUserEmailDomains', emailDomains: $scope.addUsers.newEmailDomains.split(' '), defer emailDomainsError
 
-	$scope.clearAddUsers = () ->
-		$scope.addUsers.emails = ''
+		$scope.addUsers.makingRequest = false
+
+		if connectionTypeError then notification.error connectionTypeError
+		else if emailDomainsError then notification.error emailDomainsError
+		else
+			$scope.addUsers.connectionType = $scope.addUsers.newConnectionType
+			$scope.addUsers.emailDomains = $scope.addUsers.newEmailDomains
+			notification.success 'Updated new user configuration'
+			$scope.clearAddUserConfig()
+
+	$scope.clearAddUserConfig = () ->
+		$scope.addUsers.newConnectionType = $scope.addUsers.connectionType
+		$scope.addUsers.newEmailDomains = $scope.addUsers.emailDomains
 		$scope.currentlyOpenDrawer = null
 ]
