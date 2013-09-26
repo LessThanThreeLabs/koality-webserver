@@ -14,7 +14,6 @@ StaticServer = require 'koality-static-server'
 ApiServer = require 'koality-api-server'
 
 SessionStore = require './stores/sessionStore'
-CreateAccountStore = require './stores/createAccountStore'
 
 IndexHandler = require './handlers/indexHandler'
 InstallationWizardHandler = require './handlers/installationWizardHandler'
@@ -25,7 +24,6 @@ InvalidPermissionsHandler = require './handlers/invalidPermissionsHandler'
 exports.create = (configurationParams, modelConnection, gitHubConnection, mailer, logger) ->
 	stores =
 		sessionStore: SessionStore.create configurationParams
-		createAccountStore: CreateAccountStore.create configurationParams
 	
 	cookieName = 'koality.session.id'
 	resourceConnection = ResourceConnection.create modelConnection, stores, gitHubConnection, cookieName, mailer, logger
@@ -245,6 +243,14 @@ class Server
 							res.redirect '/'
 
 		handleCreateAccount = () =>
+			isEmailAllowed = (userEmail, callback) =>
+				@modelConnection.rpcConnection.systemSettings.read.get_allowed_email_domains 1, (error, emailDomains) =>
+					if error? then callback error
+					else if userEmail.indexOf('@') is -1 then callback 'Invaild email'
+					else 
+						userEmailDomain = userEmail.substring userEmail.indexOf('@') + 1
+						callback null, userEmailDomain in emailDomains
+
 			getEmailFromOAuthToken (error, userInfo) =>
 				if error?
 					@logger.warn error
@@ -256,21 +262,30 @@ class Server
 					@logger.info 'No name information'
 					res.redirect '/create/account?googleCreateAccountError=Not enough user information to complete account'
 				else
-					crypto.randomBytes 16, (error, salt) =>
-						if error
-							@logger.warn error
-							res.redirect '/create/account?googleCreateAccountError=Error while creating account'
-						else
-							@modelConnection.rpcConnection.users.create.create_user userInfo.email, userInfo.given_name, userInfo.family_name, 
-								'/cyY3wu1VgzFhjxwCMY6+5emuoorhb/NciATN10ypZrlCKiOsjv4KaVGP9xFa2Obveg+G1ZwXgPxI+heN2y/vQ==', salt.toString('base64'), false, 
-								(error, userId) =>
-									if error?.type is 'UserAlreadyExistsError'
-										res.redirect '/create/account?googleCreateAccountError=User already exists'
-									else if error?
-										res.redirect '/create/account?googleCreateAccountError=Error while creating account'
-									else
-										req.session.userId = userId
-										res.redirect '/'
+					await
+						isEmailAllowed userInfo.email, defer emailAllowedError, emailAllowed
+						crypto.randomBytes 16, defer saltError, salt
+
+					if emailAllowedError?
+						@logger.warn emailAllowedError
+						res.redirect '/create/account?googleCreateAccountError=Error while creating account'
+					else if saltError?
+						@logger.warn saltError
+						res.redirect '/create/account?googleCreateAccountError=Error while creating account'
+					else if not emailAllowed
+						@logger.info 'Tried to create account with invaild email ' + userInfo.email
+						res.redirect '/create/account?googleCreateAccountError=Invalid email address ' + userInfo.email + '. Contact your admin if you feel this is in error'
+					else
+						@modelConnection.rpcConnection.users.create.create_user userInfo.email, userInfo.given_name, userInfo.family_name, 
+							'/cyY3wu1VgzFhjxwCMY6+5emuoorhb/NciATN10ypZrlCKiOsjv4KaVGP9xFa2Obveg+G1ZwXgPxI+heN2y/vQ==', salt.toString('base64'), false, 
+							(error, userId) =>
+								if error?.type is 'UserAlreadyExistsError'
+									res.redirect '/create/account?googleCreateAccountError=User already exists'
+								else if error?
+									res.redirect '/create/account?googleCreateAccountError=Error while creating account'
+								else
+									req.session.userId = userId
+									res.redirect '/'
 
 		oauthToken = req.query?.token
 		action = req.query?.action
