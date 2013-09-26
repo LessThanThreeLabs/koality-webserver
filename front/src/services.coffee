@@ -54,13 +54,24 @@ angular.module('koality.service', []).
 			return hash
 	]).
 	factory('cookieExtender', ['$http', ($http) ->
-		return extendCookie: (callback) ->
-			successHandler = (data, status, headers, config) ->
-				callback()
-			errorHandler = (data, status, headers, config) ->
-				callback 'unable to extend cookie expiration'
+		toReturn =
+			extendCookie: (callback) ->
+				successHandler = (data, status, headers, config) ->
+					callback()
+				errorHandler = (data, status, headers, config) ->
+					callback 'unable to extend cookie expiration'
 
-			$http.post('/extendCookieExpiration').success(successHandler).error(errorHandler)
+				$http.post('/extendCookieExpiration').success(successHandler).error(errorHandler)
+
+			extendOAuthCookie: (callback) ->
+				successHandler = (data, status, headers, config) ->
+					callback()
+				errorHandler = (data, status, headers, config) ->
+					callback 'unable to extend cookie expiration'
+
+				$http.post('/extendOAuthCookieExpiration').success(successHandler).error(errorHandler)
+
+		return toReturn
 	]).
 	factory('notification', ['$compile', '$rootScope', '$document', '$timeout', ($compile, $rootScope, $document, $timeout) ->
 		container = $document.find '#notificationsContainer'

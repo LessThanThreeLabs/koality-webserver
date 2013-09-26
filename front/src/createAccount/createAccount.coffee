@@ -39,7 +39,7 @@ window.CreateAccount = ['$scope', '$location', '$routeParams', '$timeout', 'init
 			if error? then notification.error error
 			else
 				if $scope.account.rememberMe is 'yes'
-					cookieExtender.extendCookie (error) ->
+					cookieExtender.extendOAuthCookie (error) ->
 						console.error error if error?
 						window.location.href = redirectUri
 				else

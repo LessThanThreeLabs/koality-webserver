@@ -130,6 +130,7 @@ class Server
 
 			expressServer.get '/ping', @_handlePing
 			expressServer.post '/extendCookieExpiration', @_handleExtendCookieExpiration
+			expressServer.post '/extendOAuthCookieExpiration', @_handleOAuthExtendCookieExpiration
 			expressServer.get '/google/oAuthToken', @_handleSetGoogleOAuthToken
 			expressServer.get '/gitHub/oAuthToken', @_handleSetGitHubOAuthToken
 			expressServer.post '/gitHub/verifyChange', @_handleGitHubHook
@@ -203,14 +204,24 @@ class Server
 
 
 	_handleExtendCookieExpiration: (request, response) =>
-		# if not request.session.userId?
-		# 	@logger.warn 'Tried to extend cookie expiration for user not logged in'
-		# 	response.send 403, 'User not logged in'
-		# else
-		# 	@logger.info 'Extending cookie expiration for: ' + request.session.userId
+		if not request.session.userId?
+			@logger.warn 'Tried to extend cookie expiration for user not logged in'
+			response.send 403, 'User not logged in'
+		else
+			@logger.info 'Extending cookie expiration for: ' + request.session.userId
 			request.session.cookie.maxAge = 2592000000 # one month
 			request.session.cookieExpirationIncreased ?= 0 
 			request.session.cookieExpirationIncreased++
+			response.send 'ok'
+
+
+	_handleOAuthExtendCookieExpiration: (request, response) =>
+		if request.session.userId?
+			@logger.warn 'Tried to extend cookie expiration for user already logged in'
+			response.send 403, 'User already logged in'
+		else
+			@logger.info 'Extending cookie expiration for oauth login'
+			request.session.oAuthExtendCookie = true
 			response.send 'ok'
 
 
@@ -240,6 +251,11 @@ class Server
 							res.redirect '/login?googleLoginError=No matching email address for ' + userInfo.email
 						else 
 							req.session.userId = user.id
+							if req.session.oAuthExtendCookie
+								req.session.cookie.maxAge = 2592000000 # one month
+								req.session.cookieExpirationIncreased ?= 0 
+								req.session.cookieExpirationIncreased++
+								delete req.session.oAuthExtendCookie
 							res.redirect '/'
 
 		handleCreateAccount = () =>
@@ -249,7 +265,7 @@ class Server
 					else if userEmail.indexOf('@') is -1 then callback 'Invaild email'
 					else 
 						userEmailDomain = userEmail.substring userEmail.indexOf('@') + 1
-						callback null, userEmailDomain in emailDomains
+						callback null, (emailDomains.length is 0) or (userEmailDomain in emailDomains)
 
 			getEmailFromOAuthToken (error, userInfo) =>
 				if error?
@@ -285,6 +301,11 @@ class Server
 									res.redirect '/create/account?googleCreateAccountError=Error while creating account'
 								else
 									req.session.userId = userId
+									if req.session.oAuthExtendCookie
+										req.session.cookie.maxAge = 2592000000 # one month
+										req.session.cookieExpirationIncreased ?= 0 
+										req.session.cookieExpirationIncreased++
+										delete req.session.oAuthExtendCookie
 									res.redirect '/'
 
 		oauthToken = req.query?.token
