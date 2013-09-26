@@ -22,18 +22,22 @@ class IndexHandler extends RequestHandler
 
 
 	getTemplateValues: (session, callback) =>
-		if session.userId?
-			@modelRpcConnection.users.read.get_user_from_id session.userId, (error, user) =>
-				if error? then callback error
-				else callback null, @_generateTemplateValues session, user
-		else
-			callback null, @_generateTemplateValues session, null
+		@modelRpcConnection.systemSettings.read.get_allowed_connection_types 1, (error, connectionTypes) =>
+			if error? then callback error
+			else 
+				if session.userId?
+					@modelRpcConnection.users.read.get_user_from_id session.userId, (error, user) =>
+						if error? then callback error
+						else callback null, @_generateTemplateValues session, user, connectionTypes[0]
+				else
+					callback null, @_generateTemplateValues session, null, connectionTypes[0]
 
 
-	_generateTemplateValues: (session, user={}) =>
+	_generateTemplateValues: (session, user={}, userConnectionType) =>
 		fileSuffix: @fileSuffix
 		csrfToken: session.csrfToken
 		cssFiles: @cssFilesString
 		jsFiles: @jsFilesString
 		userId: session.userId
 		isAdmin: user.admin	? false
+		userConnectionType: userConnectionType
