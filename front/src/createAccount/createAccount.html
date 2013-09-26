@@ -1,5 +1,6 @@
 <div id="createAccount">
-	<panel>
+
+	<panel id="defaultCreateAccountPanel" ng-show="createAccountType == 'default'">
 		<panel-header>Create Account</panel-header>
 
 		<panel-body no-scroll>
@@ -18,12 +19,19 @@
 
 				<busy-button full-width busy="makingRequest" click="createAccount()" disabled="createAccountForm.$invalid">Create Account</busy-button>
 
-				<busy-button full-width busy="makingRequest" click="googleCreateAccount()">Google</busy-button>
-
-				<div>
-					<input ng-model="account.rememberMe" ng-true-value="yes" ng-false-value="no" name="rememberMe" type="checkbox">Stay Logged In
-				</div>
+				<input ng-model="account.rememberMe" ng-true-value="yes" ng-false-value="no" name="rememberMe" type="checkbox"><span>Stay Logged In</span>
 			</form>
 		</panel-body>
 	</panel>
+
+	<panel id="googleCreateAccountPanel" ng-show="createAccountType == 'google'">
+		<panel-header>Create Account</panel-header>
+
+		<panel-body no-scroll>
+			<busy-button full-width busy="makingRequest" click="googleCreateAccount()">Google</busy-button>
+
+			<input ng-model="account.rememberMe" ng-true-value="yes" ng-false-value="no" name="rememberMe" type="checkbox"><span>Stay Logged In</span>
+		</panel-body>
+	</panel>
+
 </div>

@@ -1,11 +1,9 @@
 'use strict'
 
 window.Login = ['$scope', '$location', '$routeParams', '$timeout', 'initialState', 'rpc', 'cookieExtender', 'notification', ($scope, $location, $routeParams, $timeout, initialState, rpc, cookieExtender, notification) ->
-
 	$scope.loginType = initialState.userConnectionType
-
-	$scope.makingRequest = false
 	$scope.account = {}
+	$scope.makingRequest = false
 
 	if $routeParams.googleLoginError
 		googleLoginError = $routeParams.googleLoginError

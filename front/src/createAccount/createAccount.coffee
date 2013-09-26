@@ -1,6 +1,7 @@
 'use strict'
 
-window.CreateAccount = ['$scope', '$location', '$routeParams', '$timeout', 'rpc', 'notification', ($scope, $location, $routeParams, $timeout, rpc, notification) ->
+window.CreateAccount = ['$scope', '$location', '$routeParams', '$timeout', 'initialState', 'rpc', 'cookieExtender', 'notification', ($scope, $location, $routeParams, $timeout, initialState, rpc, cookieExtender, notification) ->
+	$scope.createAccountType = initialState.userConnectionType
 	$scope.account = {}
 	$scope.makingRequest = false
 
@@ -9,12 +10,9 @@ window.CreateAccount = ['$scope', '$location', '$routeParams', '$timeout', 'rpc'
 		$location.search 'googleCreateAccountError', null
 		$timeout (() -> notification.error googleCreateAccountError), 100
 
-	# getEmailFromToken = () ->
-	# 	rpc 'users', 'create', 'getEmailFromToken', token: $routeParams.token, (error, email) ->
-	# 		$scope.account.email = email
-
-	# $scope.account.token = $routeParams.token
-	# getEmailFromToken()
+	redirectToHome = () ->
+		# this will force a refresh, rather than do html5 pushstate
+		window.location.href = '/'
 	
 	$scope.createAccount = () ->
 		return if $scope.makingRequest
@@ -24,9 +22,12 @@ window.CreateAccount = ['$scope', '$location', '$routeParams', '$timeout', 'rpc'
 			$scope.makingRequest = false
 			if error then notification.error error
 			else
-				# this will force a refresh, rather than do html5 pushstate
-				window.location.href = '/'
-
+				if $scope.account.rememberMe is 'yes'
+					cookieExtender.extendCookie (error) ->
+						console.error error if error?
+						redirectToHome()
+				else
+					redirectToHome()
 
 	$scope.googleCreateAccount = () ->
 		return if $scope.makingRequest
@@ -37,5 +38,10 @@ window.CreateAccount = ['$scope', '$location', '$routeParams', '$timeout', 'rpc'
 			
 			if error? then notification.error error
 			else
-				window.location.href = redirectUri
+				if $scope.account.rememberMe is 'yes'
+					cookieExtender.extendCookie (error) ->
+						console.error error if error?
+						window.location.href = redirectUri
+				else
+					window.location.href = redirectUri
 ]
