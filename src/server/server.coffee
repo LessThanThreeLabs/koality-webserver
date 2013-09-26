@@ -14,6 +14,7 @@ StaticServer = require 'koality-static-server'
 ApiServer = require 'koality-api-server'
 
 SessionStore = require './stores/sessionStore'
+CreateAccountStore = require './stores/createAccountStore'
 
 IndexHandler = require './handlers/indexHandler'
 InstallationWizardHandler = require './handlers/installationWizardHandler'
@@ -24,6 +25,7 @@ InvalidPermissionsHandler = require './handlers/invalidPermissionsHandler'
 exports.create = (configurationParams, modelConnection, gitHubConnection, mailer, logger) ->
 	stores =
 		sessionStore: SessionStore.create configurationParams
+		createAccountStore: CreateAccountStore.create configurationParams
 	
 	cookieName = 'koality.session.id'
 	resourceConnection = ResourceConnection.create modelConnection, stores, gitHubConnection, cookieName, mailer, logger
@@ -131,6 +133,7 @@ class Server
 			expressServer.get '/ping', @_handlePing
 			expressServer.post '/extendCookieExpiration', @_handleExtendCookieExpiration
 			expressServer.post '/extendOAuthCookieExpiration', @_handleOAuthExtendCookieExpiration
+			expressServer.get '/verifyAccount', @_handleVerifyEmail
 			expressServer.get '/google/oAuthToken', @_handleSetGoogleOAuthToken
 			expressServer.get '/gitHub/oAuthToken', @_handleSetGitHubOAuthToken
 			expressServer.post '/gitHub/verifyChange', @_handleGitHubHook
@@ -225,6 +228,46 @@ class Server
 			response.send 'ok'
 
 
+	_isEmailAllowed: (userEmail, callback) =>
+		@modelConnection.rpcConnection.systemSettings.read.get_allowed_email_domains 1, (error, emailDomains) =>
+			if error? then callback error
+			else if userEmail.indexOf('@') is -1 then callback 'Invaild email'
+			else 
+				userEmailDomain = userEmail.substring userEmail.indexOf('@') + 1
+				callback null, (emailDomains.length is 0) or (userEmailDomain in emailDomains)
+
+
+	_handleVerifyEmail: (request, response) =>
+		token = request.query?.token
+
+		if not token? then response.send 400, 'No token provided'
+		else if request.session.userId?
+			@logger.warn 'Tried to create account when user already logged in'
+			response.send 403, 'Already logged in'
+		else
+			@stores.createAccountStore.getAccount token, (error, account) =>
+				if error? then response.send 500, 'Error while verifying email address'
+				else if not account? then response.send 500, 'No matching account information found'
+				else 
+					@_isEmailAllowed account.email, (error, emailAllowed) =>
+						if error? then response.send 500, 'Error while verifying email address'
+						else if not emailAllowed
+							response.send "Email address #{account.email} is not allowed. Contact your admin if you feel this is in error"
+							@stores.createAccountStore.removeAccount token
+						else
+							@modelConnection.rpcConnection.users.create.create_user account.email, account.firstName, account.lastName, 
+								account.passwordHash, account.passwordSalt, account.isAdmin, (error, userId) =>
+									if error?.type is 'UserAlreadyExistsError'
+										@stores.createAccountStore.removeAccount token
+										response.send 403, 'User already exists'
+									else if error?
+										response.send 500, 'Error while verifying email address'
+									else
+										@stores.createAccountStore.removeAccount token
+										request.session.userId = userId
+										response.redirect '/'
+
+
 	_handleSetGoogleOAuthToken: (req, res) =>
 		getEmailFromOAuthToken = (callback) =>
 			requestParams =
@@ -269,14 +312,6 @@ class Server
 						res.redirect '/'
 
 		handleCreateAccount = () =>
-			isEmailAllowed = (userEmail, callback) =>
-				@modelConnection.rpcConnection.systemSettings.read.get_allowed_email_domains 1, (error, emailDomains) =>
-					if error? then callback error
-					else if userEmail.indexOf('@') is -1 then callback 'Invaild email'
-					else 
-						userEmailDomain = userEmail.substring userEmail.indexOf('@') + 1
-						callback null, (emailDomains.length is 0) or (userEmailDomain in emailDomains)
-
 			getEmailFromOAuthToken (error, userInfo) =>
 				if error?
 					@logger.warn error
@@ -290,7 +325,7 @@ class Server
 				else
 					await
 						@modelConnection.rpcConnection.systemSettings.read.get_allowed_connection_types 1, defer connectionTypesError, connectionTypes
-						isEmailAllowed userInfo.email, defer emailAllowedError, emailAllowed
+						@_isEmailAllowed userInfo.email, defer emailAllowedError, emailAllowed
 						crypto.randomBytes 16, defer saltError, salt
 
 					if connectionTypesError?
@@ -307,7 +342,7 @@ class Server
 						res.redirect '/create/account?googleCreateAccountError=Not allowed to create account using Google OAuth'
 					else if not emailAllowed
 						@logger.info 'Tried to create account with invaild email ' + userInfo.email
-						res.redirect '/create/account?googleCreateAccountError=Invalid email address ' + userInfo.email + '. Contact your admin if you feel this is in error'
+						res.redirect '/create/account?googleCreateAccountError=Email address ' + userInfo.email + ' is not allowed. Contact your admin if you feel this is in error'
 					else
 						@modelConnection.rpcConnection.users.create.create_user userInfo.email, userInfo.given_name, userInfo.family_name, 
 							'/cyY3wu1VgzFhjxwCMY6+5emuoorhb/NciATN10ypZrlCKiOsjv4KaVGP9xFa2Obveg+G1ZwXgPxI+heN2y/vQ==', salt.toString('base64'), false, 

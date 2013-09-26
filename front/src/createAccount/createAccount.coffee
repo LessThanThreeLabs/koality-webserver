@@ -4,6 +4,7 @@ window.CreateAccount = ['$scope', '$location', '$routeParams', '$timeout', 'init
 	$scope.createAccountType = initialState.userConnectionType
 	$scope.account = {}
 	$scope.makingRequest = false
+	$scope.showVerifyEmailSent = false
 
 	if $routeParams.googleCreateAccountError
 		googleCreateAccountError = $routeParams.googleCreateAccountError
@@ -22,12 +23,7 @@ window.CreateAccount = ['$scope', '$location', '$routeParams', '$timeout', 'init
 			$scope.makingRequest = false
 			if error then notification.error error
 			else
-				if $scope.account.rememberMe is 'yes'
-					cookieExtender.extendCookie (error) ->
-						console.error error if error?
-						redirectToHome()
-				else
-					redirectToHome()
+				$scope.showVerifyEmailSent = true
 
 	$scope.googleCreateAccount = () ->
 		return if $scope.makingRequest

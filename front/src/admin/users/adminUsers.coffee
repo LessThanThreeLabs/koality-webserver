@@ -102,9 +102,13 @@ window.AdminUsers = ['$scope', 'initialState', 'rpc', 'events', 'notification', 
 		return if $scope.addUsers.makingRequest
 		$scope.addUsers.makingRequest = true
 
+		emailDomains = []
+		if $scope.addUsers.newEmailDomains isnt ''
+			emailDomains = $scope.addUsers.newEmailDomains.split(' ')
+
 		await
 			rpc 'systemSettings', 'update', 'setAllowedUserConnectionTypes', connectionTypes: [$scope.addUsers.newConnectionType], defer connectionTypeError
-			rpc 'systemSettings', 'update', 'setAllowedUserEmailDomains', emailDomains: $scope.addUsers.newEmailDomains.split(' '), defer emailDomainsError
+			rpc 'systemSettings', 'update', 'setAllowedUserEmailDomains', emailDomains: emailDomains, defer emailDomainsError
 
 		$scope.addUsers.makingRequest = false
 

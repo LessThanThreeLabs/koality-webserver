@@ -62,7 +62,7 @@
 			"password": "41acnysnz3s9"
 		},
 
-		"inviteUser": {
+		"verifyEmail": {
 			"from": {
 				"name": "Koality",
 				"email": "koality"
