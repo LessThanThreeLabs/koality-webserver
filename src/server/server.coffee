@@ -181,14 +181,14 @@ class Server
 		expressServer.use express.query()
 		expressServer.use express.bodyParser()
 		expressServer.use express.session
-	    	secret: 'e0140cbb6dee1e7ceea9ca2219081c95b8e14a14'
-	    	key: @cookieName
-	    	cookie:
-	    		path: '/'
-	    		httpOnly: true
-	    		secure: true if process.env.NODE_ENV is 'production'
-	    	store: @stores.sessionStore
-	    	proxy: true if process.env.NODE_ENV is 'production'
+			secret: 'e0140cbb6dee1e7ceea9ca2219081c95b8e14a14'
+			key: @cookieName
+			cookie:
+				path: '/'
+				httpOnly: true
+				secure: true if process.env.NODE_ENV is 'production'
+			store: @stores.sessionStore
+			proxy: true if process.env.NODE_ENV is 'production'
 		expressServer.use csrf()
 		expressServer.use gzip()
 
@@ -246,17 +246,27 @@ class Server
 					@logger.info 'No email or email not verified'
 					res.redirect '/login?googleLoginError=Invalid email address'
 				else
-					@modelConnection.rpcConnection.users.read.get_user userInfo.email, (error, user) =>
-						if error?
-							res.redirect '/login?googleLoginError=No matching email address for ' + userInfo.email
-						else 
-							req.session.userId = user.id
-							if req.session.oAuthExtendCookie
-								req.session.cookie.maxAge = 2592000000 # one month
-								req.session.cookieExpirationIncreased ?= 0 
-								req.session.cookieExpirationIncreased++
-								delete req.session.oAuthExtendCookie
-							res.redirect '/'
+					await
+						@modelConnection.rpcConnection.systemSettings.read.get_allowed_connection_types 1, defer connectionTypesError, connectionTypes
+						@modelConnection.rpcConnection.users.read.get_user userInfo.email, defer userError, user
+
+					if connectionTypesError?
+						@logger.warn connectionTypesError
+						res.redirect '/login?googleLoginError=Error while loggin in'
+					else if not ('google' in connectionTypes)
+						@logger.warn 'Tried to connect using Google OAuth when not an allowed connection type'
+						res.redirect '/login?googleLoginError=Not allowed to login using Google OAuth'
+					else if userError?
+						@logger.info userError
+						res.redirect '/login?googleLoginError=No matching email address for ' + userInfo.email
+					else
+						req.session.userId = user.id
+						if req.session.oAuthExtendCookie
+							req.session.cookie.maxAge = 2592000000 # one month
+							req.session.cookieExpirationIncreased ?= 0 
+							req.session.cookieExpirationIncreased++
+							delete req.session.oAuthExtendCookie
+						res.redirect '/'
 
 		handleCreateAccount = () =>
 			isEmailAllowed = (userEmail, callback) =>
@@ -279,15 +289,22 @@ class Server
 					res.redirect '/create/account?googleCreateAccountError=Not enough user information to complete account'
 				else
 					await
+						@modelConnection.rpcConnection.systemSettings.read.get_allowed_connection_types 1, defer connectionTypesError, connectionTypes
 						isEmailAllowed userInfo.email, defer emailAllowedError, emailAllowed
 						crypto.randomBytes 16, defer saltError, salt
 
-					if emailAllowedError?
+					if connectionTypesError?
+						@logger.warn connectionTypesError
+						res.redirect '/create/account?googleCreateAccountError=Error while creating account'
+					else if emailAllowedError?
 						@logger.warn emailAllowedError
 						res.redirect '/create/account?googleCreateAccountError=Error while creating account'
 					else if saltError?
 						@logger.warn saltError
 						res.redirect '/create/account?googleCreateAccountError=Error while creating account'
+					else if not ('google' in connectionTypes)
+						@logger.warn 'Tried to connect using Google OAuth when not an allowed connection type'
+						res.redirect '/create/account?googleCreateAccountError=Not allowed to create account using Google OAuth'
 					else if not emailAllowed
 						@logger.info 'Tried to create account with invaild email ' + userInfo.email
 						res.redirect '/create/account?googleCreateAccountError=Invalid email address ' + userInfo.email + '. Contact your admin if you feel this is in error'
