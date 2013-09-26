@@ -1,7 +1,9 @@
 'use strict'
 
 window.Login = ['$scope', '$location', '$routeParams', '$timeout', 'initialState', 'rpc', 'cookieExtender', 'notification', ($scope, $location, $routeParams, $timeout, initialState, rpc, cookieExtender, notification) ->
-	$scope.loginType = initialState.userConnectionType
+	$scope.loginConfig = 
+		type: initialState.userConnectionType
+		defaultType: initialState.userConnectionType
 	$scope.account = {}
 	$scope.makingRequest = false
 

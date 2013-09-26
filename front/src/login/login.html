@@ -1,7 +1,12 @@
 <div id="login">
 
-	<panel id="defaultLoginPanel" ng-show="loginType == 'default'">
-		<panel-header>Login</panel-header>
+	<panel id="defaultLoginPanel" ng-show="loginConfig.type == 'default'">
+		<panel-header>
+			<div class="left">Login</div>
+			<div class="right">
+				<a ng-click="loginConfig.type = 'google'" ng-show="loginConfig.defaultType == 'google'">Google Login</a>
+			</div>
+		</panel-header>
 
 		<panel-body no-scroll>
 			<form name="loginForm" novalidate>
@@ -20,8 +25,13 @@
 		</panel-body>
 	</panel>
 
-	<panel id="googleLoginPanel" ng-show="loginType == 'google'">
-		<panel-header>Login</panel-header>
+	<panel id="googleLoginPanel" ng-show="loginConfig.type == 'google'">
+		<panel-header>
+			<div class="left">Login</div>
+			<div class="right">
+				<a ng-click="loginConfig.type = 'default'">Manual Login</a>
+			</div>
+		</panel-header>
 
 		<panel-body no-scroll>
 			<busy-button full-width busy="makingRequest" click="googleLogin()">Login with Google</busy-button>
