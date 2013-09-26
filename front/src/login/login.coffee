@@ -1,6 +1,8 @@
 'use strict'
 
-window.Login = ['$scope', '$location', '$routeParams', '$timeout', 'rpc', 'cookieExtender', 'notification', ($scope, $location, $routeParams, $timeout, rpc, cookieExtender, notification) ->
+window.Login = ['$scope', '$location', '$routeParams', '$timeout', 'initialState', 'rpc', 'cookieExtender', 'notification', ($scope, $location, $routeParams, $timeout, initialState, rpc, cookieExtender, notification) ->
+
+	$scope.loginType = initialState.userConnectionType
 
 	$scope.makingRequest = false
 	$scope.account = {}
@@ -41,5 +43,10 @@ window.Login = ['$scope', '$location', '$routeParams', '$timeout', 'rpc', 'cooki
 			
 			if error? then notification.error error
 			else
-				window.location.href = redirectUri
+				if $scope.account.rememberMe is 'yes'
+					cookieExtender.extendCookie (error) ->
+						console.error error if error?
+						window.location.href = redirectUri
+				else
+					window.location.href = redirectUri
 ]

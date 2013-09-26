@@ -1,5 +1,6 @@
 <div id="login">
-	<panel>
+
+	<panel id="defaultLoginPanel" ng-show="loginType == 'default'">
 		<panel-header>Login</panel-header>
 
 		<panel-body no-scroll>
@@ -7,7 +8,6 @@
 				<input ng-model="account.email" name="email" type="email" placeholder="Email" autocomplete="on" focused required>
 				<input ng-model="account.password" name="password" type="password" placeholder="Password" auto-fillable-field required>
 				<busy-button full-width busy="makingRequest" click="login()" disabled="loginForm.$invalid">Log In</busy-button>
-				<busy-button full-width busy="makingRequest" click="googleLogin()">Google</busy-button>
 
 				<table>
 					<tr>
@@ -19,4 +19,15 @@
 			</form>
 		</panel-body>
 	</panel>
+
+	<panel id="googleLoginPanel" ng-show="loginType == 'google'">
+		<panel-header>Login</panel-header>
+
+		<panel-body no-scroll>
+			<busy-button full-width busy="makingRequest" click="googleLogin()">Login with Google</busy-button>
+
+			<input ng-model="account.rememberMe" ng-true-value="yes" ng-false-value="no" name="rememberMe" type="checkbox"><span>Stay Logged In</span>
+		</panel-body>
+	</panel>
+
 </div>

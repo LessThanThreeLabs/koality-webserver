@@ -8,6 +8,7 @@ angular.module('koality.service', []).
 		toReturn =
 			fileSuffix: if $window.fileSuffix is '' then null else $window.fileSuffix
 			csrfToken: if $window.csrfToken is '' then null else $window.csrfToken
+			userConnectionType: if $window.userConnectionType is '' then null else $window.userConnectionType
 			user:
 				id: if isNaN(parseInt($window.accountInformation?.id)) then null else parseInt($window.accountInformation.id)
 				isAdmin: $window.accountInformation?.isAdmin

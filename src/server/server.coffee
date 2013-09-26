@@ -205,11 +205,11 @@ class Server
 
 
 	_handleExtendCookieExpiration: (request, response) =>
-		if not request.session.userId?
-			@logger.warn 'Tried to extend cookie expiration for user not logged in'
-			response.send 403, 'User not logged in'
-		else
-			@logger.info 'Extending cookie expiration for: ' + request.session.userId
+		# if not request.session.userId?
+		# 	@logger.warn 'Tried to extend cookie expiration for user not logged in'
+		# 	response.send 403, 'User not logged in'
+		# else
+		# 	@logger.info 'Extending cookie expiration for: ' + request.session.userId
 			request.session.cookie.maxAge = 2592000000 # one month
 			request.session.cookieExpirationIncreased ?= 0 
 			request.session.cookieExpirationIncreased++
