@@ -411,7 +411,7 @@ class Server
 
 			shaHasher = crypto.createHash 'sha1'
 			shaHasher.update hookSecret
-			shaHasher.update request.body
+			shaHasher.update JSON.stringify request.body
 			expectedHash = shaHasher.digest 'hex'
 
 			console.log hash
