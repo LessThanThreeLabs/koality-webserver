@@ -19,7 +19,7 @@ angular.module('koality.filter', ['koality.service']).
 			return null if not input? or typeof input isnt 'string'
 
 			input = input.replace /\n/g, '<br>'
-			input = input.replace /\t/g, '    '
+			input = input.replace /\t/g, '&nbsp;&nbsp;&nbsp;&nbsp;'
 			input = input.replace /\040/g, '&nbsp;'
 			return input
 	]).
