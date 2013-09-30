@@ -136,6 +136,7 @@ class Server
 			expressServer.get '/verifyAccount', @_handleVerifyEmail
 			expressServer.get '/google/oAuthToken', @_handleSetGoogleOAuthToken
 			expressServer.get '/gitHub/oAuthToken', @_handleSetGitHubOAuthToken
+			expressServer.get '/gitHubEnterprise/authenticated', @_handleGitHubEnterpriseOAuthAuthenticated
 			expressServer.post '/gitHub/verifyChange', @_handleGitHubHook
 			
 			@apiServer.addRoutes expressServer
@@ -390,6 +391,48 @@ class Server
 					if action is 'sshKeys' then response.redirect '/account?view=sshKeys&importGitHubKeys'
 					else if action is 'addRepository' then response.redirect '/admin?view=repositories&addGitHubRepository'
 					else response.redirect '/'
+
+
+	_handleGitHubEnterpriseOAuthAuthenticated: (req, res) =>
+		getGitHubEnterpriseConfig = (callback) =>
+			setTimeout (() =>
+				callback null, 
+					uri: 'http://github.local.com'
+					clientId: 'e05a85caf2dff66187fb'
+					clientSecret: '5b46ded61e026ea9f3b272cd70fd3e89091fb482'
+				# callback null, ''
+			), 200
+
+		userId = req.session.userId
+		code = req.query?.code
+		state = req.query?.state
+
+		if not userId then res.send 500, 'Not logged in'
+		else if not code? then res.send 500, 'Invalid code'
+		else if not state? then res.send 500, 'Invalid state'
+		else
+			getGitHubEnterpriseConfig (error, gitHubEnterpriseConfig) =>
+				requestParams =
+					uri: "#{gitHubEnterpriseConfig.uri}/login/oauth/access_token"
+					form:
+						client_id: gitHubEnterpriseConfig.clientId
+						client_secret: gitHubEnterpriseConfig.clientSecret
+						code: code
+					json: true
+				request.post requestParams, (error, response, body) =>
+					if error? or not body?.access_token? then res.send 500, 'Failed to complete OAuth'
+					else
+						@modelConnection.rpcConnection.users.update.change_github_oauth_token userId, body.access_token, (error) =>
+							if error?
+								@logger.warn error
+								res.send 500, 'Error while trying to update oauth token'
+							else
+								@logger.info 'Successfully connected user to GitHub: ' + userId
+
+								action = state
+								if action is 'sshKeys' then res.redirect '/account?view=sshKeys&importGitHubKeys'
+								else if action is 'addRepository' then res.redirect '/admin?view=repositories&addGitHubRepository'
+								else res.redirect '/'
 
 
 	_handleGitHubHook: (request, response) =>
