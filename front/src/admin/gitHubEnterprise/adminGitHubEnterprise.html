@@ -2,29 +2,27 @@
 	<panel-header>GitHub Enterprise</panel-header>
 
 	<panel-body no-scroll>
-		hello
-
-		<!-- <form name="gitHubEnterpriseForm" novalidate>
+		<form name="gitHubEnterpriseForm" novalidate>
 			<div class="formContainer centered">
-				<label>Rest API Location</label>
-				<div id="adminGitHubEnterpriseUrl">https://{{domainName}}/api/v/0/...</div>
+				<label>Enabled</label>
+				<input type="radio" ng-model="settings.enabled" name="enabled" value="yes">Yes
+				<input class="bufferLeft" type="radio" ng-model="settings.enabled" name="enabled" value="no">No
 
-				<label>API Key</label>
-				<div id="adminGitHubEnterpriseKey">{{apiKey}}</div>
+				<label>GitHub Enterprise URL</label>
+				<input type="text" ng-model="settings.uri" ng-class="{disabled: settings.enabled == 'no'}" name="uri" ng-disabled="settings.enabled == 'no'" focused required>
+
+				<label>Client ID</label>
+				<input type="text" ng-model="settings.clientId" ng-class="{disabled: settings.enabled == 'no'}" name="uri" ng-disabled="settings.enabled == 'no'" required>
+
+				<label>Client Secret</label>
+				<input type="text" ng-model="settings.clientSecret" ng-class="{disabled: settings.enabled == 'no'}" name="uri" ng-disabled="settings.enabled == 'no'" required>
 			</div>
 
 			<div class="bottomContanier">
 				<div class="formDivider"></div>
 
-				<button class="centered" ng-click="regenerateKey()" ng-show="!mustConfirmRegenerateKey">Regenerate Key</button>
-
-				<div id="adminGitHubEnterpriseConfirmRegenerate" ng-show="mustConfirmRegenerateKey">
-					<p>Are you sure? This <strong>cannot</strong> be undone.</p>
-
-					<busy-button busy="makingRequest" click="confirmRegenerateKey()">Continue</busy-button>
-					<button class="red" ng-click="cancelRegenerateKey()">Cancel</button>
-				</div>
+				<busy-button centered busy="makingRequest" click="submit()" disabled="settings.enabled == 'yes' && gitHubEnterpriseForm.$invalid">Save Changes</busy-button>
 			</div>
-		</form> -->
+		</form>
 	</panel-body>
 </div>
