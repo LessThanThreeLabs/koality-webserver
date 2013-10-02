@@ -1,16 +1,16 @@
 <div id="admin">
 	<panel>
-		<panel-options>
-			<panel-option selected="view == 'users'" ng-click="selectView('users')" ng-show="cloudProvider != null">Users</panel-option>
-			<panel-option selected="view == 'repositories'" ng-click="selectView('repositories')" ng-show="cloudProvider != null">Repositories</panel-option>
+		<panel-options ng-show="cloudProvider != null && gitHubEnterpriseAllowed != null">
+			<panel-option selected="view == 'users'" ng-click="selectView('users')">Users</panel-option>
+			<panel-option selected="view == 'repositories'" ng-click="selectView('repositories')">Repositories</panel-option>
 			<panel-option selected="view == 'aws'" ng-click="selectView('aws')" ng-show="cloudProvider == 'aws'">AWS</panel-option>
 			<panel-option selected="view == 'hpCloud'" ng-click="selectView('hpCloud')" ng-show="cloudProvider == 'hpcloud'">HP Cloud</panel-option>
 			<panel-option selected="view == 'exporter'" ng-click="selectView('exporter')" ng-show="cloudProvider == 'aws'">Exporter</panel-option>
-			<panel-option selected="view == 'website'" ng-click="selectView('website')" ng-show="cloudProvider != null">Website</panel-option>
+			<panel-option selected="view == 'website'" ng-click="selectView('website')">Website</panel-option>
 			<panel-option selected="view == 'gitHubEnterprise'" ng-click="selectView('gitHubEnterprise')" ng-show="gitHubEnterpriseAllowed">GitHub Enterprise</panel-option>
-			<panel-option selected="view == 'api'" ng-click="selectView('api')" ng-show="cloudProvider != null">API</panel-option>
-			<panel-option selected="view == 'plan'" ng-click="selectView('plan')" ng-show="cloudProvider != null">Plan</panel-option>
-			<panel-option selected="view == 'upgrade'" ng-click="selectView('upgrade')" ng-show="cloudProvider != null">Upgrade</panel-option>
+			<panel-option selected="view == 'api'" ng-click="selectView('api')">API</panel-option>
+			<panel-option selected="view == 'plan'" ng-click="selectView('plan')">Plan</panel-option>
+			<panel-option selected="view == 'upgrade'" ng-click="selectView('upgrade')">Upgrade</panel-option>
 		</panel-options>
 
 		<panel-header style="z-index: -1;"></panel-header>
