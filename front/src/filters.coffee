@@ -34,27 +34,37 @@ angular.module('koality.filter', ['koality.service']).
 			return ansiParsedLine = ansiParser.parse input
 	]).
 	filter('shaLink', [() ->
-		(headSha, baseSha, forwardUrl) ->
+		(headSha, baseSha, repositoryInformation) ->
 			return null if not headSha? or typeof headSha isnt 'string'
-			return null if not forwardUrl? or typeof forwardUrl isnt 'string'
+			return null if not repositoryInformation? or typeof repositoryInformation isnt 'object'
 
-			generateLink = (url, text) ->
-				"<a href='#{url}' target='_blank'>#{text}</a>"
+			generateLink = (path, text) ->
+				url = 'http://' + domain + path
+				return "<a href='#{url}' target='_blank'>#{text}</a>"
 
-			gitHubMatch = /^git@github.com:(.+?)(\.git)?$/.exec forwardUrl
-			if gitHubMatch? and gitHubMatch[1]?
+			getGitHubLink = () ->
+				baseSha = null if baseSha is '0000000000000000000000000000000000000000'
+				
 				if typeof baseSha is 'string' and baseSha.length > 0 and baseSha isnt headSha
-					return generateLink "https://github.com/#{gitHubMatch[1]}/compare/#{baseSha}...#{headSha}", 'View Diff in GitHub'
+					return generateLink "/#{gitHubMatch[1]}/compare/#{baseSha}...#{headSha}", 'View Diff in GitHub'
 				else
-					return generateLink "https://github.com/#{gitHubMatch[1]}/commit/#{headSha}", 'View Diff in GitHub'
+					return generateLink "/#{gitHubMatch[1]}/commit/#{headSha}", 'View Diff in GitHub'
 
-			bitBucketGitMatch = /^git@bitbucket.(org|com):(.+?)(\.git)?$/.exec forwardUrl
+			getBitBucketLink = () ->
+				return generateLink "/#{bitBucketGitMatch[2]}/commits/#{headSha}", 'View Diff in BitBucket'
+
+			forwardUrl = repositoryInformation.forwardUrl
+			domain = forwardUrl.substring forwardUrl.indexOf('@') + 1, forwardUrl.indexOf(':')
+
+			gitHubRegex = new RegExp "^git@#{domain}:(.+?)(\.git)?$"
+			gitHubMatch = gitHubRegex.exec repositoryInformation.forwardUrl
+			if repositoryInformation.github? or (domain is 'github.com' and gitHubMatch? and gitHubMatch[1]?)
+				return getGitHubLink()
+
+			bitBucketRegex = new RegExp "^git@bitbucket.(org|com):(.+?)(\.git)?$"
+			bitBucketGitMatch = bitBucketRegex.exec repositoryInformation.forwardUrl
 			if bitBucketGitMatch? and bitBucketGitMatch[2]?
-				return generateLink "https://bitbucket.org/#{bitBucketGitMatch[2]}/commits/#{headSha}", 'View Diff in BitBucket'
-
-			bitBucketHgMatch = /^ssh:\/\/hg@bitbucket.(org|com)\/(.+?)(\.hg)?$/.exec forwardUrl
-			if bitBucketHgMatch? and bitBucketHgMatch[2]?
-				return generateLink "https://bitbucket.org/#{bitBucketHgMatch[2]}/commits/#{headSha}", 'View Diff in BitBucket'
+				return getBitBucketLink()
 
 			return null
 	])

@@ -395,13 +395,13 @@ class Server
 
 	_handleGitHubEnterpriseOAuthAuthenticated: (req, res) =>
 		getGitHubEnterpriseConfig = (callback) =>
-			setTimeout (() =>
-				callback null, 
-					uri: 'http://github.local.com'
-					clientId: 'e05a85caf2dff66187fb'
-					clientSecret: '5b46ded61e026ea9f3b272cd70fd3e89091fb482'
-				# callback null, ''
-			), 200
+			@modelConnection.rpcConnection.systemSettings.read.get_github_enterprise_config 1, (error, gitHubEnterpriseConfig) =>
+				if error? then callback error
+				else if gitHubEnterpriseConfig.url is '' then callback null, null
+				else callback null,
+					uri: gitHubEnterpriseConfig.url
+					clientId: gitHubEnterpriseConfig.client_id
+					clientSecret: gitHubEnterpriseConfig.client_secret
 
 		userId = req.session.userId
 		code = req.query?.code
@@ -420,7 +420,13 @@ class Server
 						code: code
 					json: true
 				request.post requestParams, (error, response, body) =>
-					if error? or not body?.access_token? then res.send 500, 'Failed to complete OAuth'
+					if error?
+						@logger.warn error
+						res.send 500, 'Failed to complete OAuth'
+					else if not body?.access_token?
+						@logger.warn body
+						@logger.warn 'No access token in body'
+						res.send 500, 'Failed to complete OAuth'
 					else
 						@modelConnection.rpcConnection.users.update.change_github_oauth_token userId, body.access_token, (error) =>
 							if error?
