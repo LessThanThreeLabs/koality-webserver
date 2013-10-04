@@ -11,6 +11,10 @@ window.AdminAws = ['$scope', 'rpc', 'events', 'notification', ($scope, rpc, even
 		rpc 'systemSettings', 'read', 'getAwsAllowedInstanceSizes', null, (error, allowedInstanceSizes) ->
 			$scope.allowedInstanceSizes = allowedInstanceSizes
 
+	getAllowedBaseAmis = () ->
+		rpc 'systemSettings', 'read', 'getAwsBaseAmis', null, (error, baseAmis) ->
+			$scope.allowedBaseAmis = baseAmis
+
 	getAllowedSecurityGroups = () ->
 		rpc 'systemSettings', 'read', 'getAwsSecurityGroups', null, (error, securityGroups) ->
 			$scope.allowedSecurityGroups = securityGroups
@@ -34,6 +38,7 @@ window.AdminAws = ['$scope', 'rpc', 'events', 'notification', ($scope, rpc, even
 
 	getAwsKeys()
 	getAllowedInstanceSizes()
+	getAllowedBaseAmis()
 	getAllowedSecurityGroups()
 	getInstanceSettings()
 	getVerifierPoolSettings()
