@@ -5,6 +5,7 @@ setup:
 - packages:
   - system:
     - fontconfig  # for phantomjs
+    - "gcc-c++.x86_64"
   - npm:
     - iced-coffee-script
     - grunt-cli
