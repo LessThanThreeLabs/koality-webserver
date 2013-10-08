@@ -480,11 +480,21 @@ class Server
 		afterSha = hookData?.after
 		branchName = if ref? then ref.substring(ref.lastIndexOf('/') + 1) else null
 
-		if not repositoryOwner? then response.send 400, 'No repository owner provided'
-		else if not repositoryName? then response.send 400, 'No repository name provided'
-		else if not branchName? then response.send 400, 'No branch provided'
-		else if not beforeSha? then response.send 400, 'No before sha provided'
-		else if not afterSha? then response.send 400, 'No after sha provided'
+		if not repositoryOwner?
+			@logger.warn 'No repository owned provided'
+			response.send 400, 'No repository owner provided'
+		else if not repositoryName?
+			@logger.warn 'No repository name provided'
+			response.send 400, 'No repository name provided'
+		else if not branchName?
+			@logger.warn 'No branch provided'
+			response.send 400, 'No branch provided'
+		else if not beforeSha?
+			@logger.warn 'No before sha provided'
+			response.send 400, 'No before sha provided'
+		else if not afterSha?
+			@logger.warn 'No after sha provided'
+			response.send 400, 'No after sha provided'
 		else
 			@modelConnection.rpcConnection.repositories.read.get_github_repo 1, repositoryOwner, repositoryName, (error, repository) =>
 				if error?
