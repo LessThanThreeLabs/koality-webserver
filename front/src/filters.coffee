@@ -58,7 +58,7 @@ angular.module('koality.filter', ['koality.service']).
 
 			gitHubRegex = new RegExp "^git@#{domain}:(.+?)(\.git)?$"
 			gitHubMatch = gitHubRegex.exec repositoryInformation.forwardUrl
-			if repositoryInformation.github? or (domain is 'github.com' and gitHubMatch? and gitHubMatch[1]?)
+			if (repositoryInformation.github? or domain is 'github.com') and gitHubMatch? and gitHubMatch[1]?
 				return getGitHubLink()
 
 			bitBucketRegex = new RegExp "^git@bitbucket.(org|com):(.+?)(\.git)?$"
