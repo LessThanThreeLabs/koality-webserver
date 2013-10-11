@@ -13,7 +13,6 @@
 
 			<div class="right" ng-show="selectedStage.isSummary()">
 				<a ng-click="toggleDrawer('launchDebugInstance')">Launch Debug Instance</a>
-				<!-- <a ng-class="{disabled: debugInstance.makingRequest || debugInstance.spawned}" ng-click="spawnDebugInstance()">Launch debug instance</a> -->
 			</div>
 
 			<div class="right" ng-show="selectedStage.getInformation().outputTypes.length > 1">
@@ -40,7 +39,7 @@
 						<tr>
 							<td id="debugInstanceDurationColumn">
 								<label>Instance Duration</label>
-								<input type="number" ng-model="debugInstance.duration" name="duration">
+								<input type="number" ng-model="debugInstance.durationInMinutes" name="durationInMinutes">
 								<span>minutes</span>
 							</td>
 							<td id="debugInstanceCreateColumn">

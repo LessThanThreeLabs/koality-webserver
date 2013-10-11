@@ -13,7 +13,7 @@ window.RepositoryStageDetails = ['$scope', '$location', 'rpc', 'events', 'Consol
 		orderByReverse: false
 		maxResults: 100
 	$scope.debugInstance =
-		duration: 60
+		durationInMinutes: 60
 		makingRequest: false
 
 	$scope.currentlyOpenDrawer = null
@@ -70,7 +70,7 @@ window.RepositoryStageDetails = ['$scope', '$location', 'rpc', 'events', 'Consol
 
 		requestParams =
 			id: $scope.selectedChange.getId()
-			duration: $scope.debugInstance.duration
+			duration: $scope.debugInstance.durationInMinutes * 60 * 1000
 		rpc 'changes', 'create', 'launchDebugInstance', requestParams, (error) ->
 			$scope.debugInstance.makingRequest = false
 			if error? then notification.error error
@@ -79,7 +79,7 @@ window.RepositoryStageDetails = ['$scope', '$location', 'rpc', 'events', 'Consol
 				$scope.clearLaunchDebugInstance()
 
 	$scope.clearLaunchDebugInstance = () ->
-		$scope.debugInstance.duration = 60
+		$scope.debugInstance.durationInMinutes = 60
 		$scope.currentlyOpenDrawer = null
 
 	$scope.$watch 'selectedChange.getId()', () ->
