@@ -16,6 +16,9 @@
 
 			<div class="formContainer">
 				<label>Base AMI</label>
+				<div id="baseAmiWarning" ng-show="instanceSettings.amiId != null && instanceSettings.amiId != 'default'">
+					Warning! Specifying custom Base AMIs is experimental
+				</div>
 				<select ng-model="instanceSettings.amiId" ng-options="baseAmi.id as baseAmi.name for baseAmi in allowedBaseAmis" required></select>
 
 				<label>Machine Username</label>
