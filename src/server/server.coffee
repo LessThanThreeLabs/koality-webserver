@@ -183,6 +183,16 @@ class Server
 		expressServer.use express.favicon 'front/favicon.ico'
 		expressServer.use express.cookieParser()
 		expressServer.use express.query()
+
+		expressServer.use (req, res, next) ->
+			data = ''
+			req.setEncoding 'utf8'
+			req.on 'data', (chunk) ->
+				data += chunk
+			req.on 'end', () ->
+				req.rawBody = data
+			next()
+
 		expressServer.use express.bodyParser()
 		expressServer.use express.session
 			secret: 'e0140cbb6dee1e7ceea9ca2219081c95b8e14a14'
@@ -195,6 +205,7 @@ class Server
 			proxy: true if process.env.NODE_ENV is 'production'
 		expressServer.use csrf()
 		expressServer.use gzip()
+
 
 		expressServer.enable 'trust proxy' if process.env.NODE_ENV is 'production'
 
@@ -442,36 +453,23 @@ class Server
 
 
 	_handleGitHubHook: (request, response) =>
-		# { host: 'staging.koalitycode.com',
-		# accept: '*/*',
-		# 'user-agent': 'GitHub Hookshot bbde025',
-		# 'x-github-event': 'push',
-		# 'x-github-delivery': 'c4b07f7c-1f17-11e3-968e-68e5dd676335',
-		# 'content-type': 'application/json',
-		# 'x-hub-signature': 'sha1=8bab5e1b10b8dc64b86c17a540e141a2e59835e5',
-		# 'content-length': '3788',
-		# 'x-forwarded-proto': 'https',
-		# 'x-forwarded-for': '192.30.252.48',
-		# connection: 'close' }
-
 		doesSecretMatch = (hookSecret, hash) =>
-			console.log hookSecret
-			console.log hash
-
-			shaHasher = crypto.createHash 'sha1'
-			shaHasher.update hookSecret
-			shaHasher.update JSON.stringify request.body
+			shaHasher = crypto.createHmac 'sha1', hookSecret
+			shaHasher.update request.rawBody
 			expectedHash = shaHasher.digest 'hex'
-
-			console.log hash
-			console.log expectedHash
-			console.log hash is expectedHash
-
-			return true
+			return hash is expectedHash
 
 		@logger.info 'Received call from GitHub'
 
-		hookData = request.body
+		hookData = null
+		if request.headers['content-type'] is 'application/json'
+			hookData = request.body
+		else if request.headers['content-type'] is 'application/x-www-form-urlencoded'
+			hookData = JSON.parse(request.body.payload)
+		else
+			@logger.warn 'Unsupported content-type used with GitHub hook'
+			response.send 'Unsupported content-type'
+			return
 
 		repositoryOwner = hookData?.repository?.owner?.name
 		repositoryName = hookData?.repository?.name
@@ -481,7 +479,7 @@ class Server
 		branchName = if ref? then ref.substring(ref.lastIndexOf('/') + 1) else null
 
 		if not repositoryOwner?
-			@logger.warn 'No repository owned provided'
+			@logger.warn 'No repository owner provided'
 			response.send 400, 'No repository owner provided'
 		else if not repositoryName?
 			@logger.warn 'No repository name provided'
@@ -500,9 +498,10 @@ class Server
 				if error?
 					@logger.warn error
 					response.send 500, 'Error finding associated repository'
-				else if not doesSecretMatch repository.github.hook_secret, request.headers['x-hub-signature']?.substring 4
-					@logger.warn 'Invalid signature'
-					response.send 403, 'Invalid signature'
+				else if request.headers['content-type'] is 'application/x-www-form-urlencoded' and 
+					not doesSecretMatch repository.github.hook_secret, request.headers['x-hub-signature']?.substring 5
+						@logger.warn 'Invalid signature'
+						response.send 403, 'Invalid signature'
 				else
 					@modelConnection.rpcConnection.changes.create.create_github_commit_and_change 3, repositoryOwner, repositoryName, beforeSha, afterSha, branchName, (error) =>
 						if error?
