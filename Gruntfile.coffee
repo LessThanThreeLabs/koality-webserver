@@ -79,7 +79,7 @@ module.exports = (grunt) ->
 				command: 'npm pack'
 
 			publish:
-				command: 's3cmd put --acl-public --guess-mime-type <%= tarredPackageName %> <%= s3TarredPackageLocation %>'
+				command: 'aws s3 cp <%= tarredPackageName %> <%= s3TarredPackageLocation %> --acl public-read'
 
 			testFront:
 				command: 'echo "REIMPLEMENT THIS"'
