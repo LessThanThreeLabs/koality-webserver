@@ -7,6 +7,7 @@
 			<panel-option selected="view == 'hpCloud'" ng-click="selectView('hpCloud')" ng-show="cloudProvider == 'hpcloud'">HP Cloud</panel-option>
 			<panel-option selected="view == 'exporter'" ng-click="selectView('exporter')" ng-show="cloudProvider == 'aws'">Exporter</panel-option>
 			<panel-option selected="view == 'website'" ng-click="selectView('website')">Website</panel-option>
+			<panel-option selected="view == 'notifications'" ng-click="selectView('notifications')">Notifications</panel-option>
 			<panel-option selected="view == 'gitHubEnterprise'" ng-click="selectView('gitHubEnterprise')" ng-show="gitHubEnterpriseAllowed">GitHub Enterprise</panel-option>
 			<panel-option selected="view == 'api'" ng-click="selectView('api')">API</panel-option>
 			<panel-option selected="view == 'plan'" ng-click="selectView('plan')">Plan</panel-option>
@@ -23,6 +24,7 @@
 			<div ng-switch-when="hpCloud" ng-include="'html/admin/hpCloud/adminHpCloud.html' | fileSuffix"></div>
 			<div ng-switch-when="exporter" ng-include="'html/admin/exporter/adminExporter.html' | fileSuffix"></div>
 			<div ng-switch-when="website" ng-include="'html/admin/website/adminWebsite.html' | fileSuffix"></div>
+			<div ng-switch-when="notifications" ng-include="'html/admin/notifications/adminNotifications.html' | fileSuffix"></div>
 			<div ng-switch-when="gitHubEnterprise" ng-include="'html/admin/gitHubEnterprise/adminGitHubEnterprise.html' | fileSuffix"></div>
 			<div ng-switch-when="api" ng-include="'html/admin/api/adminApi.html' | fileSuffix"></div>
 			<div ng-switch-when="plan" ng-include="'html/admin/plan/adminPlan.html' | fileSuffix"></div>
