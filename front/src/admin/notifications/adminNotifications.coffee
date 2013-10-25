@@ -39,7 +39,7 @@ window.AdminNotifications = ['$scope', 'rpc', 'events', 'notification', ($scope,
 			hipChat:
 				type: if $scope.settings?.hipChat?.enabled is 'yes' then $scope.settings?.hipChat?.type else '' 
 				token: if $scope.settings?.hipChat?.enabled is 'yes' then $scope.settings?.hipChat?.token else ''
-				rooms: if $scope.settings?.hipChat?.enabled is 'yes' then getHipChatRooms() else ''
+				rooms: if $scope.settings?.hipChat?.enabled is 'yes' then getHipChatRooms() else []
 		rpc 'systemSettings', 'update', 'setNotificationSettings', requestParams, (error) =>
 			$scope.makingRequest = false
 			if error? then notification.error error
