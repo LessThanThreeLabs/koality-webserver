@@ -56,9 +56,11 @@ window.RepositoryStages = ['$scope', '$routeParams', 'StagesManager', 'currentRe
 			return 30000 + stage.orderNumber
 		else if stage.type is 'test'
 			return 40000 + stage.orderNumber
+		else if stage.type is 'export'
+			return 50000 + stage.orderNumber
 		else
 			console.error 'Cannot sort stage'
-			return 50000
+			return 60000
 
 	$scope.shouldStageBeVisible = (stage) ->
 		return true if stage.id is $scope.selectedStage.getId()
