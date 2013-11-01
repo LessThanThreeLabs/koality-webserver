@@ -471,12 +471,27 @@ class Server
 			response.send 'Unsupported content-type'
 			return
 
-		repositoryOwner = hookData?.repository?.owner?.name
-		repositoryName = hookData?.repository?.name
-		ref = hookData?.ref
-		beforeSha = hookData?.before
-		afterSha = hookData?.after
-		branchName = if ref? then ref.substring(ref.lastIndexOf('/') + 1) else null
+		repositoryOwner = null
+		repositoryName = null
+		ref = null
+		beforeSha = null
+		afterSha = null
+		branchName = null
+
+		if hookData.pull_request?
+			repositoryOwner = hookData?.pull_request?.base?.repo?.owner?.login
+			repositoryName = hookData?.pull_request?.base?.repo?.name
+			ref = hookData?.pull_request?.base?.ref
+			beforeSha = hookData?.pull_request?.base?.sha
+			afterSha = hookData?.pull_request?.head?.sha
+			branchName = if ref? then ref.substring(ref.lastIndexOf('/') + 1) else null
+		else
+			repositoryOwner = hookData?.repository?.owner?.name
+			repositoryName = hookData?.repository?.name
+			ref = hookData?.ref
+			beforeSha = hookData?.before
+			afterSha = hookData?.after
+			branchName = if ref? then ref.substring(ref.lastIndexOf('/') + 1) else null
 
 		if not repositoryOwner?
 			@logger.warn 'No repository owner provided'
