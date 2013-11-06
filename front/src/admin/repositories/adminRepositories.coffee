@@ -138,11 +138,6 @@ window.AdminRepositories = ['$scope', '$location', '$routeParams', '$timeout', '
 			if error? then notification.error error
 			else window.location.href = redirectUri
 
-	$scope.addPostVerificationHook = (repository) ->
-		rpc 'repositories', 'update', 'addPostVerificationHook', id: repository.id, (error) ->
-			if error? then notification.error error
-			else notification.success 'Successfully added verification hook to GitHub repository ' + repository.name
-
 	$scope.editRepository = (repository) ->
 		otherRepository.deleting = false for otherRepository in $scope.repositories
 		$scope.currentlyEditingRepositoryId = repository?.id
@@ -182,7 +177,10 @@ window.AdminRepositories = ['$scope', '$location', '$routeParams', '$timeout', '
 		$scope.currentlyEditingRepositoryId = null
 
 		if forwardUrlError? then notification.error forwardUrlError
-		else if postVerificationError? then notification.error postVerificationError
+		else if postVerificationError?
+			if error?
+				if postVerificationError.redirect? then window.location.href = postVerificationError.redirect
+				else notification.error postVerificationError
 		else if forwardUrlSuccess or postVerificationSuccess
 			notification.success "Repository #{repository.name} successfully updated"
 
