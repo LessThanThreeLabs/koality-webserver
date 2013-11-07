@@ -29,7 +29,8 @@ window.AdminRepositories = ['$scope', '$location', '$routeParams', '$timeout', '
 	addRepositoryEditFields = (repository) ->
 		repository.newForwardUrl = repository.forwardUrl
 		repository.verification.newPre = repository.verification.pre
-		repository.verification.newPost = repository.verification.post
+		repository.verification.newPush = repository.verification.push
+		repository.verification.newPullRequest = repository.verification.pullRequest
 		return repository
 
 	getRepositories = () ->
@@ -153,14 +154,16 @@ window.AdminRepositories = ['$scope', '$location', '$routeParams', '$timeout', '
 					repository.forwardUrl = repository.newForwardUrl
 					callback null, true
 
-		updatePostVerificationHook = (callback) ->
+		updateVerificationHook = (callback) ->
 			requestParams =
 				id: repository.id
-				on: repository.verification.newPost
-			rpc 'repositories', 'update', 'setGitHubPostVerificationHook', requestParams, (error) ->
+				pushEnabled: repository.verification.newPush
+				pullRequestEnabled: repository.verification.newPullRequest
+			rpc 'repositories', 'update', 'setGitHubVerificationHook', requestParams, (error) ->
 				if error? then callback error, false
 				else
-					repository.verification.post = repository.verification.newPost
+					repository.verification.push = repository.verification.newPush
+					repository.verification.pullRequest = repository.verification.newPullRequest
 					callback null, true
 
 		return if repository.saving
@@ -170,18 +173,18 @@ window.AdminRepositories = ['$scope', '$location', '$routeParams', '$timeout', '
 			if repository.forwardUrl isnt repository.newForwardUrl
 				updateForwardUrl defer forwardUrlError, forwardUrlSuccess
 
-			if repository.verification.post isnt repository.verification.newPost
-				updatePostVerificationHook defer postVerificationError, postVerificationSuccess
+			if repository.verification.push isnt repository.verification.newPost or 
+				repository.verification.pullRequest isnt repository.verification.newPullRequest
+					updateVerificationHook defer verificationHookError, verificationHookSuccess
 
 		repository.saving = false
 		$scope.currentlyEditingRepositoryId = null
 
 		if forwardUrlError? then notification.error forwardUrlError
-		else if postVerificationError?
-			if error?
-				if postVerificationError.redirect? then window.location.href = postVerificationError.redirect
-				else notification.error postVerificationError
-		else if forwardUrlSuccess or postVerificationSuccess
+		else if verificationHookError?
+			if verificationHookError.redirect? then window.location.href = verificationHookError.redirect
+			else notification.error verificationHookError
+		else if forwardUrlSuccess or verificationHookSuccess
 			notification.success "Repository #{repository.name} successfully updated"
 
 
