@@ -18,6 +18,11 @@ window.AdminAws = ['$scope', 'rpc', 'events', 'notification', ($scope, rpc, even
 	getAllowedSecurityGroups = () ->
 		rpc 'systemSettings', 'read', 'getAwsSecurityGroups', null, (error, securityGroups) ->
 			$scope.allowedSecurityGroups = securityGroups
+			for securityGroup in $scope.allowedSecurityGroups
+				if securityGroup.id is securityGroup.name
+					securityGroup.displayName = securityGroup.name
+				else
+					securityGroup.displayName = "#{securityGroup.name} (#{securityGroup.id})"
 
 	getInstanceSettings = () ->
 		rpc 'systemSettings', 'read', 'getAwsInstanceSettings', null, (error, instanceSettings) ->

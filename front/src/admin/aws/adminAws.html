@@ -25,7 +25,7 @@
 				<input type="text" ng-model="instanceSettings.username" name="username" ng-maxlength="128" required>
 
 				<label>Security Group</label>
-				<select ng-model="instanceSettings.securityGroupId" ng-options="securityGroup.id as securityGroup.name for securityGroup in allowedSecurityGroups" required></select>
+				<select ng-model="instanceSettings.securityGroupId" ng-options="securityGroup.id as securityGroup.displayName for securityGroup in allowedSecurityGroups" required></select>
 
 				<label>VPC Subnet ID</label>
 				<input type="text" ng-model="instanceSettings.subnetId" name="subnetId" ng-maxlength="128">
