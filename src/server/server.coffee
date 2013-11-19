@@ -430,6 +430,7 @@ class Server
 						client_secret: gitHubEnterpriseConfig.clientSecret
 						code: code
 					json: true
+					strictSSL: false
 				request.post requestParams, (error, response, body) =>
 					if error?
 						@logger.warn error
@@ -479,6 +480,11 @@ class Server
 		branchName = null
 
 		if hookData.pull_request?
+			if hookData?.pull_request?.state is 'closed'
+				@logger.info 'Ignoring closed pull request'
+				response.send 'ok'
+				return
+
 			repositoryOwner = hookData?.pull_request?.base?.repo?.owner?.login
 			repositoryName = hookData?.pull_request?.base?.repo?.name
 			ref = hookData?.pull_request?.base?.ref
