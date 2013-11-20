@@ -84,7 +84,10 @@ window.AdminRepositories = ['$scope', '$location', '$routeParams', '$timeout', '
 		rpc 'repositories', 'read', 'getGitHubRepositories', null, (error, gitHubRepositories) ->
 			$scope.retrievingGitHubInformation = false
 			if error? then notification.error error
-			else $scope.gitHubRepositories = gitHubRepositories
+			else
+				$scope.gitHubRepositories = gitHubRepositories
+				for repository in $scope.gitHubRepositories
+					repository.displayName = "#{repository.owner}/#{repository.name}"
 
 	handleAddedRepositoryUpdate = (data) ->
 		return if data.resourceId isnt initialState.user.id
