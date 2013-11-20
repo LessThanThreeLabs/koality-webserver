@@ -85,9 +85,11 @@ window.RepositoryStageDetails = ['$scope', '$location', 'rpc', 'events', 'Consol
 	$scope.$watch 'selectedChange.getId()', () ->
 		updateExportUrisAddedListener()
 		retrieveCurrentChangeExportUris()
+		$scope.clearLaunchDebugInstance()
 
 	$scope.$watch 'selectedStage.getId()', () ->
 		$scope.output.type = null
+		$scope.clearLaunchDebugInstance()
 
 	$scope.$watch 'selectedStage.getInformation()', (() ->
 		return if not $scope.selectedStage.getInformation()?.outputTypes?
