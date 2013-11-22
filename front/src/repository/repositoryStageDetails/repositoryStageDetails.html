@@ -155,7 +155,7 @@
 										<div class="triangle" ng-class="{red: testCase.status == 'failed', gray: testCase.status != 'failed', right: !testCase.showMore, down: testCase.showMore}" ng-show="testCase.failure != null || testCase.error != null || testCase.sysout != null || testCase.syserr != null"></div>
 									</div>
 
-									<span>{{testCase.name}}</span>
+									<span ng-bind-html="testCase.name"></span>
 								</td>
 								<td class="statusColumn">{{testCase.status}}</td>
 								<td class="timeColumn">{{testCase.time | number: 6}}</td>
