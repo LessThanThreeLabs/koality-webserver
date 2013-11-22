@@ -490,14 +490,16 @@ class Server
 			ref = hookData?.pull_request?.base?.ref
 			beforeSha = hookData?.pull_request?.base?.sha
 			afterSha = hookData?.pull_request?.head?.sha
-			branchName = if ref? then ref.substring(ref.lastIndexOf('/') + 1) else null
+			# branchName = if ref? then ref.substring(ref.lastIndexOf('/') + 1) else null
+			branchName = ref ? null
 		else
 			repositoryOwner = hookData?.repository?.owner?.name
 			repositoryName = hookData?.repository?.name
 			ref = hookData?.ref
 			beforeSha = hookData?.before
 			afterSha = hookData?.after
-			branchName = if ref? then ref.substring(ref.lastIndexOf('/') + 1) else null
+			# branchName = if ref? then ref.substring(ref.lastIndexOf('/') + 1) else null
+			branchName = ref ? null
 
 		if not repositoryOwner?
 			@logger.warn 'No repository owner provided'
