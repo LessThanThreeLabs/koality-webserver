@@ -108,7 +108,7 @@
 						<div class="triangle gray" ng-class="{right: orderByPredicate != 'forwardUrl', up: orderByPredicate == 'forwardUrl' && !orderByReverse, down: orderByPredicate == 'forwardUrl' && orderByReverse}"></div>
 						Forward URL
 					</th>
-					<th class="verificationColumn unselectable">Verification Type &nbsp;<a href="koalitycode.com/documentation?view=verification">[?]</a></th>
+					<th class="verificationColumn unselectable">Verification Type &nbsp;<a href="https://koalitycode.com/documentation?view=adminRepositories">[?]</a></th>
 					<th class="editColumn unselectable">Actions</th>
 				</tr>
 
@@ -149,16 +149,29 @@
 							</div>
 						</div>
 
-						<div class="postVerification" ng-show="repository.verification.postAllowed">
+						<div class="postVerification" ng-show="repository.verification.pushAllowed">
 							<div ng-show="repository.id != currentlyEditingRepositoryId">
-								<span class="check" ng-show="repository.verification.post">&#x2713;</span>
-								<span class="cross" ng-show="!repository.verification.post">&#x2718;</span>
-								<span ng-class="{white: repository.verification.post, gray: !repository.verification.post}">Post</span>
+								<span class="check" ng-show="repository.verification.push">&#x2713;</span>
+								<span class="cross" ng-show="!repository.verification.push">&#x2718;</span>
+								<span ng-class="{white: repository.verification.push, gray: !repository.verification.push}">Push</span>
 							</div>
 
-							<div ng-show="repository.id == currentlyEditingRepositoryId" ng-click="repository.verification.newPost = !repository.verification.newPost">
-								<input type="checkbox" ng-checked="repository.verification.newPost">
-								<span ng-class="{white: repository.verification.newPost, gray: !repository.verification.newPost}">Post</span>
+							<div ng-show="repository.id == currentlyEditingRepositoryId" ng-click="repository.verification.newPush = !repository.verification.newPush">
+								<input type="checkbox" ng-checked="repository.verification.newPush">
+								<span ng-class="{white: repository.verification.newPush, gray: !repository.verification.newPush}">Push</span>
+							</div>
+						</div>
+
+						<div class="pullRequestVerification" ng-show="repository.verification.pullRequestAllowed">
+							<div ng-show="repository.id != currentlyEditingRepositoryId">
+								<span class="check" ng-show="repository.verification.pullRequest">&#x2713;</span>
+								<span class="cross" ng-show="!repository.verification.pullRequest">&#x2718;</span>
+								<span ng-class="{white: repository.verification.pullRequest, gray: !repository.verification.pullRequest}">Pull Request</span>
+							</div>
+
+							<div ng-show="repository.id == currentlyEditingRepositoryId" ng-click="repository.verification.newPullRequest = !repository.verification.newPullRequest">
+								<input type="checkbox" ng-checked="repository.verification.newPullRequest">
+								<span ng-class="{white: repository.verification.newPullRequest, gray: !repository.verification.newPullRequest}">Pull Request</span>
 							</div>
 						</div>
 					</td>

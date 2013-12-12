@@ -12,10 +12,11 @@ window.RepositoryStageDetails = ['$scope', '$location', 'rpc', 'events', 'Consol
 		orderByPredicate: 'status'
 		orderByReverse: false
 		maxResults: 100
-
 	$scope.debugInstance =
+		durationInMinutes: 60
 		makingRequest: false
-		spawned: false
+
+	$scope.currentlyOpenDrawer = null
 
 	$scope.consoleTextManager = ConsoleTextManager.create()
 	$scope.$on '$destroy', $scope.consoleTextManager.stopListeningToEvents
@@ -58,14 +59,28 @@ window.RepositoryStageDetails = ['$scope', '$location', 'rpc', 'events', 'Consol
 			addedExportUrisEvents = events('changes', 'export metadata added', $scope.selectedChange.getId()).setCallback(handleExportUrisAdded).subscribe()
 	$scope.$on '$destroy', () -> addedExportUrisEvents.unsubscribe() if addedExportUrisEvents?
 
-	$scope.spawnDebugInstance = () ->
+	$scope.toggleDrawer = (drawerName) ->
+		if $scope.currentlyOpenDrawer is drawerName
+			$scope.currentlyOpenDrawer = null
+		else
+			$scope.currentlyOpenDrawer = drawerName
+
+	$scope.launchDebugInstance = () ->
 		$scope.debugInstance.makingRequest = true
-		rpc 'changes', 'create', 'launchDebugInstance', id: $scope.selectedChange.getId(), (error) ->
+
+		requestParams =
+			id: $scope.selectedChange.getId()
+			duration: $scope.debugInstance.durationInMinutes * 60 * 1000
+		rpc 'changes', 'create', 'launchDebugInstance', requestParams, (error) ->
 			$scope.debugInstance.makingRequest = false
 			if error? then notification.error error
 			else
-				$scope.debugInstance.spawned = true
 				notification.success 'You will be emailed shortly with information for accessing your debug instance', 30
+				$scope.clearLaunchDebugInstance()
+
+	$scope.clearLaunchDebugInstance = () ->
+		$scope.debugInstance.durationInMinutes = 60
+		$scope.currentlyOpenDrawer = null
 
 	$scope.$watch 'selectedChange.getId()', () ->
 		updateExportUrisAddedListener()

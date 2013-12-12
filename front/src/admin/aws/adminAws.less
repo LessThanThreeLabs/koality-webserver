@@ -6,22 +6,22 @@
 		text-align: center;
 
 		.formContainer {
+			width: 250px;
+			height: 260px;
 			text-align: left;
-		}
-
-		.halfWidthFormElement {
-			display: inline-block;
-			width: 45%;
-			vertical-align: top;
-
-			&.left { float: left; }
-			&.right { float: right; }
 		}
 
 		#userDataField {
 			font-family: 'PT Mono', monospace;
 			font-size: 11px;
 			white-space: nowrap;
+		}
+
+		#baseAmiWarning {
+			margin-bottom: 8px;
+			font-size: 16px;
+			font-weight: 500;
+			color: @koalityRed;
 		}
 	}
 }

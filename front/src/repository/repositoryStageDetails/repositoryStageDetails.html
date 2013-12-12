@@ -12,7 +12,7 @@
 			</div>
 
 			<div class="right" ng-show="selectedStage.isSummary()">
-				<a ng-class="{disabled: debugInstance.makingRequest || debugInstance.spawned}" ng-click="spawnDebugInstance()">Launch debug instance</a>
+				<a ng-click="toggleDrawer('launchDebugInstance')">Launch Debug Instance</a>
 			</div>
 
 			<div class="right" ng-show="selectedStage.getInformation().outputTypes.length > 1">
@@ -28,7 +28,31 @@
 			</div>
 		</panel-header>
 
-		<panel-body>
+		<panel-body open-drawer="currentlyOpenDrawer">
+			<panel-drawer drawer-name="launchDebugInstance">
+				<form id="launchDebugInstanceForm" name="launchDebugInstanceForm" novalidate>
+					<div id="debugInstanceDescription">
+						Koality will provision a virtual machine with the contents of this change and email you when it's ready. The machine will automatically spin down after the instance duration.
+					</div>
+
+					<table>
+						<tr>
+							<td id="debugInstanceDurationColumn">
+								<label>Instance Duration</label>
+								<input type="number" ng-model="debugInstance.durationInMinutes" name="durationInMinutes">
+								<span>minutes</span>
+							</td>
+							<td id="debugInstanceCreateColumn">
+								<busy-button busy="debugInstance.makingRequest" click="launchDebugInstance()" disabled="launchDebugInstanceForm.$invalid">Launch</busy-button>
+							</td>
+							<td id="debugInstanceCancelColumn">
+								<a ng-click="clearLaunchDebugInstance()" ng-show="!debugInstance.makingRequest">Cancel</a>
+							</td>
+						</tr>
+					</table>
+				</form>
+			</panel-drawer>
+
 			<div id="summary" ng-show="selectedStage.isSummary() && selectedChange.getInformation() != null">
 				<table>
 					<tr>
@@ -51,7 +75,7 @@
 							<a ng-href="mailto:{{selectedChange.getInformation().user.email}}?subject=Koality%3A%20{{selectedRepository.getInformation().name}}%20-%20change%20%23{{selectedChange.getInformation().headCommit.sha | limitTo:4}}&body=Link%20to%20change%3A%20{{currentUrl}}" target="_blank" ng-show="selectedChange.getInformation().user.id >= 1000">
 								{{selectedChange.getInformation().user.email}}
 							</a>
-							
+
 							<a ng-href="mailto:{{selectedChange.getInformation().headCommit.user.email}}?subject=Koality%3A%20{{selectedRepository.getInformation().name}}%20-%20change%20%23{{selectedChange.getInformation().headCommit.sha | limitTo:4}}&body=Link%20to%20change%3A%20{{currentUrl}}" target="_blank" ng-show="selectedChange.getInformation().user.id < 1000">
 								{{selectedChange.getInformation().headCommit.user.email}}
 							</a>
@@ -83,9 +107,9 @@
 							<pre ng-bind-html="selectedChange.getInformation().headCommit.message | linky"></pre>
 						</td>
 					</tr>
-					<tr ng-show="(selectedChange.getInformation().headCommit.sha | shaLink: selectedChange.getInformation().headCommit.baseSha:selectedRepository.getInformation().forwardUrl) != null">
+					<tr ng-show="(selectedChange.getInformation().headCommit.sha | shaLink: selectedChange.getInformation().headCommit.baseSha:selectedRepository.getInformation()) != null">
 						<th>Diff</th>
-						<td ng-bind-html="selectedChange.getInformation().headCommit.sha | shaLink: selectedChange.getInformation().headCommit.baseSha:selectedRepository.getInformation().forwardUrl"></td>
+						<td ng-bind-html="selectedChange.getInformation().headCommit.sha | shaLink: selectedChange.getInformation().headCommit.baseSha:selectedRepository.getInformation()"></td>
 					</tr>
 					<tr ng-show="exportUris.length > 0">
 						<th>Exported Files</th>

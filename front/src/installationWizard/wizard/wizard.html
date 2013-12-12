@@ -33,17 +33,17 @@
 
 			<form name="adminForm" novalidate>
 				<label>First Name</label>
-				<input type="text" ng-model="admin.firstName" name="firstName" ng-pattern="/^[-'a-zA-Z]+$/" ng-maxlength=64 autocomplete="on" required>
+				<input type="text" ng-model="admin.firstName" name="firstName" ng-maxlength="64" autocomplete="on" required>
 				<form-field-error tooltip="Invalid first name" error-visible="adminForm.firstName.$dirty && adminForm.firstName.$invalid"></form-field-error>
 				<br>
 
 				<label>Last Name</label>
-				<input type="text" ng-model="admin.lastName" name="lastName" ng-pattern="/^[-'a-zA-Z]+$/" ng-maxlength=64 autocomplete="on" required>
+				<input type="text" ng-model="admin.lastName" name="lastName" ng-maxlength="64" autocomplete="on" required>
 				<form-field-error tooltip="Invalid last name" error-visible="adminForm.lastName.$dirty && adminForm.lastName.$invalid"></form-field-error>
 				<br>
 
 				<label>Password<span class="sublabel">Min 8 characters, one letter, one number</span></label>
-				<input type="password" ng-model="admin.password" name="password" ng-pattern="/^(?=.*[a-zA-Z])(?=.*\d).+$/" ng-minlength="8" ng-maxlength=256 required>
+				<input type="password" ng-model="admin.password" name="password" auto-fillable-field required>
 				<form-field-error tooltip="Password must contain at least 8 characters, a letter, and a number" error-visible="adminForm.password.$dirty && adminForm.password.$invalid"></form-field-error>
 				<br>
 
@@ -62,7 +62,7 @@
 
 			<form name="verifyAdminForm" novalidate>
 				<label>Token</label>
-				<input type="text" ng-model="admin.verifyToken" name="verifyToken" ng-pattern="/^[a-zA-Z0-9]+$/" ng-maxlength="32" required>
+				<input type="text" ng-model="admin.verifyToken" name="verifyToken" required>
 
 				<busy-button centered busy="waitingOnRequest" click="completeVerifyAdmin()" disabled="verifyAdminForm.$invalid">Continue</busy-button>
 			</form>
@@ -74,7 +74,7 @@
 
 			<form name="websiteForm" novalidate>
 				<label>Domain Name</label>
-				<input type="text" ng-model="website.domainName" name="domainName" placeholder="koality.companyname.com" ng-pattern="/^[a-zA-Z0-9]+(-+[a-zA-Z0-9]+)*(.[a-zA-Z0-9]+(-+[a-zA-Z0-9]+)*)*$/" ng-maxlength="256" required>
+				<input type="text" ng-model="website.domainName" name="domainName" placeholder="koality.companyname.com" ng-maxlength="256" required>
 				<form-field-error tooltip="Invalid domain name. Do not include any modifiers, such as https:// or /path" error-visible="websiteForm.domainName.$dirty && websiteForm.domainName.$invalid"></form-field-error>
 
 				<busy-button centered busy="waitingOnRequest" click="completeWebsiteInformation()" disabled="websiteForm.$invalid">Continue</busy-button>
