@@ -30,7 +30,8 @@ window.AdminAws = ['$scope', 'rpc', 'events', 'notification', ($scope, rpc, even
 
 	getVerifierPoolSettings = () ->
 		rpc 'systemSettings', 'read', 'getVerifierPoolSettings', null, (error, verifierPoolSettings) ->
-			$scope.verifierPoolSettings = verifierPoolSettings
+			console.log verifierPoolSettings[0]
+			$scope.verifierPoolSettings = verifierPoolSettings[0]
 
 	handleAwsKeysUpdated = (data) ->
 		$scope.awsKeys = data

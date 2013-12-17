@@ -11,18 +11,18 @@
 				<input type="text" ng-model="awsKeys.secretKey" name="secretKey" ng-maxlength="128" required>
 
 				<label>User Data</label>
-				<textarea id="userDataField" type="text" ng-model="instanceSettings.userData" name="userData"></textarea>
+				<textarea id="userDataField" type="text" ng-model="verifierPoolSettings.userData" name="userData"></textarea>
 			</div>
 
 			<div class="formContainer">
 				<label>Base AMI</label>
-				<div id="baseAmiWarning" ng-show="instanceSettings.amiId != null && instanceSettings.amiId != 'default'">
+				<div id="baseAmiWarning" ng-show="verifierPoolSettings.amiId != null && verifierPoolSettings.amiId != 'default'">
 					Warning! Specifying custom Base AMIs is experimental
 				</div>
-				<select ng-model="instanceSettings.amiId" ng-options="baseAmi.id as baseAmi.name for baseAmi in allowedBaseAmis" required></select>
+				<select ng-model="verifierPoolSettings.amiId" ng-options="baseAmi.id as baseAmi.name for baseAmi in allowedBaseAmis" required></select>
 
 				<label>Machine Username</label>
-				<input type="text" ng-model="instanceSettings.username" name="username" ng-maxlength="128" required>
+				<input type="text" ng-model="verifierPoolSettings.username" name="username" ng-maxlength="128" required>
 
 				<label>Security Group</label>
 				<select ng-model="instanceSettings.securityGroupId" ng-options="securityGroup.id as securityGroup.displayName for securityGroup in allowedSecurityGroups" required></select>
@@ -33,7 +33,7 @@
 
 			<div class="formContainer">
 				<label>Instance Size</label>
-				<select ng-model="instanceSettings.instanceSize" ng-options="instanceSize as instanceSize for instanceSize in allowedInstanceSizes" required></select>
+				<select ng-model="verifierPoolSettings.instanceSize" ng-options="instanceSize as instanceSize for instanceSize in allowedInstanceSizes" required></select>
 
 				<div class="halfWidthFormElement left">
 					<label>Ready Instances</label>
@@ -47,7 +47,7 @@
 
 				<div class="halfWidthFormElement left">
 					<label>Root Drive Size</label>
-					<input type="number" ng-model="instanceSettings.rootDriveSize" name="rootDriveSize" min=8 required>
+					<input type="number" ng-model="verifierPoolSettings.rootDriveSize" name="rootDriveSize" min=8 required>
 				</div>
 			</div>
 
