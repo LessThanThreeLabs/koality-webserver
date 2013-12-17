@@ -478,7 +478,6 @@ class Server
 		beforeSha = null
 		afterSha = null
 		branchName = null
-		emailToNotify = null
 
 		if hookData.pull_request?
 			if hookData?.pull_request?.state is 'closed'
@@ -494,7 +493,6 @@ class Server
 			if ref?
 				refsIndex = ref.indexOf('refs/heads/')
 				branchName = if refsIndex is 0 then ref.substring('refs/heads/'.length) else ref
-			emailToNotify = hookData?.
 		else
 			repositoryOwner = hookData?.repository?.owner?.name
 			repositoryName = hookData?.repository?.name
@@ -504,7 +502,6 @@ class Server
 			if ref?
 				refsIndex = ref.indexOf('refs/heads/')
 				branchName = if refsIndex is 0 then ref.substring('refs/heads/'.length) else ref
-			emailToNotify = hookData?.
 
 		if not repositoryOwner?
 			@logger.warn 'No repository owner provided'
@@ -531,7 +528,7 @@ class Server
 						@logger.warn 'Invalid signature'
 						response.send 403, 'Invalid signature'
 				else
-					@modelConnection.rpcConnection.changes.create.create_github_commit_and_change 3, repositoryOwner, repositoryName, beforeSha, afterSha, branchName, false, false, null, emailToNotify, (error) =>
+					@modelConnection.rpcConnection.changes.create.create_github_commit_and_change 3, repositoryOwner, repositoryName, beforeSha, afterSha, branchName, (error) =>
 						if error?
 							@logger.warn error
 							response.send 500, 'Error while creating GitHub commit and change'
