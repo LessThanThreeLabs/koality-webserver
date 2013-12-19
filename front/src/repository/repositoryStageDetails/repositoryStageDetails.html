@@ -165,22 +165,22 @@
 								<td class="textColumn" colspan=3>
 									<div class="failureText" ng-if="testCase.failure != null">
 										<strong>Failure:</strong>
-										<pre>{{testCase.failure}}</pre>
+										<pre ng-bind-html="testCase.failure"></pre>
 									</div>
 
 									<div class="errorText" ng-if="testCase.error != null">
 										<strong>Error:</strong>
-										<pre>{{testCase.error}}</pre>
+										<pre ng-bind-html="testCase.error"></pre>
 									</div>
 
 									<div class="sysoutText" ng-if="testCase.sysout != null">
 										<strong>System Out:</strong>
-										<pre>{{testCase.sysout}}</pre>
+										<pre ng-bind-html="testCase.sysout"></pre>
 									</div>
 
 									<div class="syserrText" ng-if="testCase.syserr != null">
 										<strong>System Error:</strong>
-										<pre>{{testCase.syserr}}</pre>
+										<pre ng-bind-html="testCase.syserr"></pre>
 									</div>
 								</td>
 							</tr>
