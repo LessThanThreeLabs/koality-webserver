@@ -26,4 +26,5 @@ test:
   - backend tests:
       script:
       - grunt test-back
+      - scripts/generateLotsOfLines.sh
       xunit: testResults
