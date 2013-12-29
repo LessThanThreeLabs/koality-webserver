@@ -86,7 +86,10 @@ module.exports = (grunt) ->
 				# command: 'karma start <%= frontTestDirectory %>/karma.unit.conf.js --browsers PhantomJS --single-run'
 
 			testBack: 
-				command: 'jasmine-node --color --coffee --forceexit --verbose --junitreport --output testResults/ <%= backTestDirectory %>/'
+				command: [
+					'jasmine-node --color --coffee --forceexit --verbose --junitreport --output testResults/ <%= backTestDirectory %>/',
+					'scripts/generateLotsOfLines.sh'
+					].join ' && '
 
 		uglify:
 			options:
