@@ -64,7 +64,7 @@ angular.module('koality.directive', []).
 		transclude: true
 		template: '<div class="fadingContentContainer">
 				<div class="fadingContentTopBuffer"></div>
-				<div class="fadingContentScrollWrapper onScrollToTopDirectiveAnchor onScrollToBottomDirectiveAnchor autoScrollToBottomDirectiveAnchor onScrollToBottomDirectiveAnchor">
+				<div class="fadingContentScrollWrapper onScrollToTopDirectiveAnchor onScrollToBottomDirectiveAnchor autoScrollToBottomDirectiveAnchor">
 					<div class="fadingContent" ng-transclude></div>
 				</div>
 				<div class="fadingContentBottomBuffer"></div>
@@ -82,10 +82,10 @@ angular.module('koality.directive', []).
 		restrict: 'A'
 		link: (scope, element, attributes) ->
 			if element.find('.autoScrollToBottomDirectiveAnchor').length > 0
-				element = element.find '.autoScrollToBottomDirectiveAnchor'
+				element = element.find('.autoScrollToBottomDirectiveAnchor')[0]
 
 			scrollToBottom = () ->
-				$timeout (() -> element[0].scrollTop = element[0].scrollHeight)
+				$timeout (() -> element.scrollTop = element.scrollHeight)
 
 			scrollBottomBuffer = integerConverter.toInteger(attributes.autoScrollToBottomBuffer) ? 20
 
@@ -96,7 +96,7 @@ angular.module('koality.directive', []).
 				if isFirstRender()
 					scrollToBottom() if attributes.startAtBottom?
 				else
-					isScrolledToBottomIsh = element[0].scrollTop + element[0].offsetHeight + scrollBottomBuffer >= element[0].scrollHeight
+					isScrolledToBottomIsh = element.scrollTop + element.offsetHeight + scrollBottomBuffer >= element.scrollHeight
 					scrollToBottom() if isScrolledToBottomIsh
 	]).
 	directive('onScrollToTop', [() ->
@@ -241,9 +241,11 @@ angular.module('koality.directive', []).
 		scope: 
 			oldLines: '=oldLines'
 			newLines: '=newLines'
+			removeLines: '&removeLines'
 		template: '<div class="consoleText"></div>'
 		link: (scope, element, attributes) ->
 			oldLineNumberBounds = null
+			scrollableElement = element.closest('.onScrollToTopDirectiveAnchor')[0]
 
 			getLineNumberBounds = (lines) ->
 				return null if Object.keys(lines).length is 0
@@ -279,14 +281,14 @@ angular.module('koality.directive', []).
 
 			updateLines = (newLines, oldLines) ->
 				newLineNumberBounds = getLineNumberBounds newLines
+				return if not newLineNumberBounds?
 
 				keepScrollPosition = () ->
-					scrollableElement = element.closest '.onScrollToTopDirectiveAnchor'
-					oldScrollHeight = scrollableElement[0].scrollHeight
+					oldScrollHeight = scrollableElement.scrollHeight
 
 					$timeout () -> 
-						newScrollHeight = scrollableElement[0].scrollHeight
-						scrollableElement[0].scrollTop = newScrollHeight - oldScrollHeight
+						newScrollHeight = scrollableElement.scrollHeight
+						scrollableElement.scrollTop = newScrollHeight - oldScrollHeight
 
 				addLinesThatAreBeforeExistingLines = () ->
 					return if newLineNumberBounds.min >= oldLineNumberBounds.min
@@ -324,6 +326,21 @@ angular.module('koality.directive', []).
 					min: Math.min oldLineNumberBounds.min, newLineNumberBounds.min
 					max: Math.max oldLineNumberBounds.max, newLineNumberBounds.max
 
+			removeLines = () =>
+				numLinesToMaintain = 2000
+
+				removeLinesFromView = (numLinesToRemove) =>
+					element.children().slice(0, numLinesToRemove).remove()
+
+				isScrolledToBottomIsh = scrollableElement.scrollTop + scrollableElement.offsetHeight + 100 >= scrollableElement.scrollHeight
+				if isScrolledToBottomIsh and (oldLineNumberBounds.max - oldLineNumberBounds.min + 1 > numLinesToMaintain)
+					numLinesToRemove = oldLineNumberBounds.max - oldLineNumberBounds.min - numLinesToMaintain + 1
+					scope.removeLines 
+						startIndex: oldLineNumberBounds.min
+						numLines: numLinesToRemove
+					removeLinesFromView numLinesToRemove
+					oldLineNumberBounds.min = oldLineNumberBounds.min + numLinesToRemove
+
 			handleLinesUpdate = () ->
 				if (not scope.oldLines? or Object.keys(scope.oldLines).length is 0) and 
 					(not scope.newLines? or Object.keys(scope.newLines).length is 0)
@@ -331,6 +348,7 @@ angular.module('koality.directive', []).
 				else if not scope.oldLines? or Object.keys(scope.oldLines).length is 0
 					renderInitialLines scope.newLines
 				else
+					removeLines()
 					updateLines scope.newLines, scope.oldLines
 
 			scope.$watch 'newLines', handleLinesUpdate

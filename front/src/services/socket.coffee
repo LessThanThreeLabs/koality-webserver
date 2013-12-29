@@ -230,6 +230,9 @@ angular.module('koality.service.socket', []).
 			hasMoreLinesToRequest: () =>
 				return not @_noMoreLinesToRequest
 
+			notifyLinesRemoved: () =>
+				@_noMoreLinesToRequest = false
+
 			queueRequest: (stageId, startIndex, callback) ->
 				assert.ok typeof stageId is 'number'
 				assert.ok typeof startIndex is 'number'

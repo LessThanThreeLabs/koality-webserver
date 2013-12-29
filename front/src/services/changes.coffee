@@ -198,7 +198,8 @@ angular.module('koality.service.changes', []).
 		return create: () ->
 			return new StagesManager()
 	]).
-	factory('ConsoleTextManager', ['$timeout', 'ConsoleTextRpc', 'events', 'stringHasher', 'integerConverter', ($timeout, ConsoleTextRpc, events, stringHasher, integerConverter) ->
+	# factory('ConsoleTextManager', ['$timeout', 'ConsoleTextRpc', 'events', 'stringHasher', 'integerConverter', ($timeout, ConsoleTextRpc, events, stringHasher, integerConverter) ->
+	factory('ConsoleTextManager', ['$rootScope', '$timeout', 'ConsoleTextRpc', 'events', 'stringHasher', 'integerConverter', ($rootScope, $timeout, ConsoleTextRpc, events, stringHasher, integerConverter) ->
 		class ConsoleTextManager
 			_stageId: null
 			_currentRequestId: null
@@ -288,11 +289,22 @@ angular.module('koality.service.changes', []).
 			getOldLines: () =>
 				return @_oldLines
 
+			removeLines: (startIndex, numLines) =>
+				startIndex = integerConverter.toInteger startIndex
+				numLines = integerConverter.toInteger numLines
+
+				for lineNumber in [startIndex...(startIndex+numLines)]
+					delete @_oldLines[lineNumber]
+				@consoleTextRpc.notifyLinesRemoved()
+
 			isRetrievingLines: () =>
 				return @_gettingMoreLines
 
 			listenToEvents: () =>
 				assert.ok @_stageId?
+
+				# @stopGenerateFakeLines()
+				# @startGenerateFakeLines()
 
 				@stopListeningToEvents()
 				@_linesAddedListener = events('buildConsoles', 'new output', @_stageId).setCallback(@_handleLinesAdded).subscribe()
@@ -300,6 +312,28 @@ angular.module('koality.service.changes', []).
 			stopListeningToEvents: () =>
 				@_linesAddedListener.unsubscribe() if @_linesAddedListener?
 				@_linesAddedListener = null
+
+			# @_interval = null
+			# stopGenerateFakeLines: () =>
+			# 	clearInterval(@_interval) if @_interval?
+
+			# startGenerateFakeLines: () =>
+			# 	lineNumber = 1
+
+			# 	fireNewLinesEvent = () =>
+			# 		lines = {}
+			# 		for blah in [0...100]
+			# 			lines[lineNumber] = lineNumber + " " + lineNumber + " " + lineNumber  + " " + lineNumber + " " + lineNumber
+			# 			lineNumber++
+
+			# 		data = 
+			# 			resourceId: @_stageId
+			# 			lines: lines
+			# 		$rootScope.$apply () => @_handleLinesAdded data
+
+			# 		@stopGenerateFakeLines() if lineNumber > 2500
+
+			# 	@_interval = setInterval fireNewLinesEvent, 400
 
 		return create: () ->
 			return new ConsoleTextManager()

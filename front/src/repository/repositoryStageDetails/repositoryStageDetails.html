@@ -124,7 +124,7 @@
 
 			<div id="console" ng-show="output.type == 'console'">
 				<div auto-scroll-to-bottom="consoleTextManager.getNewLines()" auto-scroll-to-bottom-buffer="40" start-at-bottom on-scroll-to-top="consoleTextManager.retrieveMoreLines()" fading-content>
-					<console-text class="consoleText" new-lines="consoleTextManager.getNewLines()" old-lines="consoleTextManager.getOldLines()" listener="contentTextManager.lastUpdateTime"></console-text>
+					<console-text class="consoleText" new-lines="consoleTextManager.getNewLines()" old-lines="consoleTextManager.getOldLines()" remove-lines="consoleTextManager.removeLines(startIndex, numLines)" listener="contentTextManager.lastUpdateTime"></console-text>
 				</div>
 			</div>
 
