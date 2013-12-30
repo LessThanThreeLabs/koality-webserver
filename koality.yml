@@ -28,3 +28,4 @@ test:
       - grunt test-back
       - scripts/generateLotsOfLines.sh
       xunit: testResults
+      timeout: 3000
