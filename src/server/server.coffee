@@ -455,7 +455,11 @@ class Server
 
 	_handleGitHubHook: (request, response) =>
 		doesSecretMatch = (hookSecret, hash) =>
-			shaHasher = crypto.createHmac 'sha1', hookSecret
+			if not hookSecret?
+				@logger.warn 'Hook secret was null'
+				return false
+
+			shaHasher = crypto.createHmac 'sha1', hookSecret.toString()
 			shaHasher.update request.rawBody
 			expectedHash = shaHasher.digest 'hex'
 			return hash is expectedHash
