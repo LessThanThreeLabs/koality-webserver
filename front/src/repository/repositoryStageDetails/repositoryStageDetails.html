@@ -12,6 +12,7 @@
 			</div>
 
 			<div class="right" ng-show="selectedStage.isSummary()">
+				<a ng-show="selectedChange.getInformation().aggregateStatus == 'failed'" ng-click="toggleDrawer('retrigger')">Retrigger</a>
 				<a ng-click="toggleDrawer('launchDebugInstance')">Launch Debug Instance</a>
 			</div>
 
@@ -29,6 +30,25 @@
 		</panel-header>
 
 		<panel-body open-drawer="currentlyOpenDrawer">
+			<panel-drawer drawer-name="retrigger">
+				<form id="retriggerForm" name="retriggerForm" novalidate>
+					<div id="retriggerDescription">
+						Koality will relaunch this change. Do this if you're confident this change should have passed.
+					</div>
+
+					<table>
+						<tr>
+							<td id="retriggerCreateColumn">
+								<busy-button busy="retrigger.makingRequest" click="retrigger()" disabled="retriggerForm.$invalid">Retrigger</busy-button>
+							</td>
+							<td id="retriggerCancelColumn">
+								<a ng-click="clearRetrigger()" ng-show="!retrigger.makingRequest">Cancel</a>
+							</td>
+						</tr>
+					</table>
+				</form>
+			</panel-drawer>
+
 			<panel-drawer drawer-name="launchDebugInstance">
 				<form id="launchDebugInstanceForm" name="launchDebugInstanceForm" novalidate>
 					<div id="debugInstanceDescription">

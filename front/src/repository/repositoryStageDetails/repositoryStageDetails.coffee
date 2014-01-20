@@ -15,6 +15,8 @@ window.RepositoryStageDetails = ['$scope', '$location', 'rpc', 'events', 'Consol
 	$scope.debugInstance =
 		durationInMinutes: 60
 		makingRequest: false
+	$scope.retrigger =
+		makingRequest: false
 
 	$scope.currentlyOpenDrawer = null
 
@@ -35,6 +37,7 @@ window.RepositoryStageDetails = ['$scope', '$location', 'rpc', 'events', 'Consol
 
 	retrieveXUnitOutput = () ->
 		assert.ok $scope.output.type is 'xunit'
+		return if $scope.xunit.makingRequest
 
 		$scope.xunit.testCases = []
 		return if not $scope.selectedStage.getId()?
@@ -65,7 +68,29 @@ window.RepositoryStageDetails = ['$scope', '$location', 'rpc', 'events', 'Consol
 		else
 			$scope.currentlyOpenDrawer = drawerName
 
+	$scope.retrigger = () ->
+		return if $scope.retrigger.makingRequest
+		$scope.retrigger.makingRequest = true
+
+		requestParams = id: $scope.selectedChange.getId()
+		rpc 'changes', 'create', 'retrigger', requestParams, (error, createdChange) ->
+			console.log error
+			console.log createdChange
+
+			$scope.retrigger.makingRequest = false
+			if error? then notification.error error
+			else
+				notification.success 'Change has been retriggered'
+				$scope.clearRetrigger()
+
+				$scope.selectedChange.setId $scope.selectedRepository.getId(), createdChange.id
+				$scope.selectedChange.retrieveInformation $scope.selectedRepository.getId(), createdChange.id
+
+	$scope.clearRetrigger = () ->
+		$scope.currentlyOpenDrawer = null
+
 	$scope.launchDebugInstance = () ->
+		return if $scope.debugInstance.makingRequest
 		$scope.debugInstance.makingRequest = true
 
 		requestParams =
