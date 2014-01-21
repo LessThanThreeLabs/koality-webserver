@@ -74,9 +74,6 @@ window.RepositoryStageDetails = ['$scope', '$location', 'rpc', 'events', 'Consol
 
 		requestParams = id: $scope.selectedChange.getId()
 		rpc 'changes', 'create', 'retrigger', requestParams, (error, createdChange) ->
-			console.log error
-			console.log createdChange
-
 			$scope.retrigger.makingRequest = false
 			if error? then notification.error error
 			else
