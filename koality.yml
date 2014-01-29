@@ -26,6 +26,6 @@ test:
   - backend tests:
       script:
       - grunt test-back
-      - scripts/generateLotsOfLines.sh
+#      - scripts/generateLotsOfLines.sh
       xunit: testResults
       timeout: 3000
