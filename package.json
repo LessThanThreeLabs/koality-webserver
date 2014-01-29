@@ -8,7 +8,7 @@
     "connect-redis": "1.4.5",
     "cookie": "0.0.5",
     "ejs": "0.8.3",
-    "express":  "3.0.5",
+    "express":  "3.4.8",
     "express-resource": "1.0.0",
     "iced-coffee-script": "1.6.3-b",
     "koality-api-server": "https://s3.amazonaws.com/koality_code/libraries/private-cd855575be99a357/koality-api-server-0.8.0.tgz",
