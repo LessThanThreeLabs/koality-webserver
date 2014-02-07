@@ -31,7 +31,7 @@
 				<span>skipped</span>
 			</changes-menu-option>
 
-			<changes-menu-option menu-option-text="merge" ng-show="selectedChange.getInformation().mergeStatus != null && !stagesManager.isRetrievingStages() && (filter.type != 'failed' || (filter.type == 'failed' && selectedChange.getInformation().mergeStatus == 'failed'))" ng-click="selectedStage.setMerge()" ng-class="{selected: selectedStage.isMerge(), green: selectedChange.getInformation().mergeStatus == 'passed', red: selectedChange.getInformation().mergeStatus == 'failed'}">
+			<changes-menu-option menu-option-text="merge" ng-show="selectedChange.getInformation().mergeStatus != null && selectedChange.getInformation().mergeStatus != 'todo' && !stagesManager.isRetrievingStages() && (filter.type != 'failed' || (filter.type == 'failed' && selectedChange.getInformation().mergeStatus == 'failed'))" ng-click="selectedStage.setMerge()" ng-class="{selected: selectedStage.isMerge(), green: selectedChange.getInformation().mergeStatus == 'passed', red: selectedChange.getInformation().mergeStatus == 'failed'}">
 				<span>merge</span>
 			</changes-menu-option>
 
